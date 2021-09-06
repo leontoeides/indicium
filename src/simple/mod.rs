@@ -14,22 +14,11 @@ use std::iter::Iterator;
 // -----------------------------------------------------------------------------
 //
 /// To make a struct indexable, the programmer must implement the
-/// `IndexableStruct` trait for it. This trait returns a `IndexComponents<K>`
-/// struct for each record.
+/// `IndexableStruct` trait for it. The trait will return a `Vec<String>` of all
+/// content that is to be indexed.
 
-#[derive(Debug)]
-pub struct IndexComponents<K: Debug> {
-    pub key: K,
-    pub strings: Vec<String>,
-} // IndexComponents
-
-// -----------------------------------------------------------------------------
-//
-/// To make a struct indexable, the programmer must implement the
-/// `IndexableStruct` trait for it.
-
-pub trait IndexableStruct<K: Debug> {
-    fn components(&self) -> IndexComponents<K>;
+pub trait IndexableStruct {
+    fn strings(&self) -> Vec<String>;
 } // IndexableStruct
 
 // -----------------------------------------------------------------------------
@@ -55,15 +44,45 @@ pub struct SearchIndex<K: Debug> {
 
 fn string_keywords<'a>(
     regex: &'a Regex,
-    text: &'a str,
+    string: &'a str,
     minimum_keyword_length: usize,
     maximum_keyword_length: usize,
 ) -> Vec<&'a str> {
     regex
-        .split(text)
+        .split(string)
         .into_iter()
         .filter(|keyword| keyword.len() >= minimum_keyword_length)
         .filter(|keyword| keyword.len() <= maximum_keyword_length)
+        .collect()
+} // fn
+
+/// A helper function that returns all keywords for the given `IndexableStruct`
+/// using a previously defined `Regex` expression and other settings.
+
+fn struct_keywords(
+    regex: &Regex,
+    case_sensitive: &bool,
+    minimum_keyword_length: &usize,
+    maximum_keyword_length: &usize,
+    value: &dyn IndexableStruct,
+) -> Vec<String> {
+    // Iterate over all of the strings returned for the record:
+    value.strings().iter()
+        // Split each string into keywords:
+        .map(|string| string_keywords(
+            regex,
+            string,
+            *minimum_keyword_length,
+            *maximum_keyword_length
+        )) // map
+        // Flatten the string's keywords:
+        .flatten()
+        // If case insensitivity set, convert each keyword to lower case:
+        .map(|string| match case_sensitive {
+            true => string.to_string(),
+            false => string.to_lowercase(),
+        }) // map
+        // Collect all keywords into a Vec:
         .collect()
 } // fn
 
@@ -98,16 +117,15 @@ impl<K: Clone + Debug + PartialEq + Ord> SearchIndex<K> {
         self.b_tree_map.clear()
     } // fn
 
-    /// Inserts a record into the search index.
+    /// Inserts a key-value pair into the search index.
 
-    pub fn insert(&mut self, indexable_struct: &dyn IndexableStruct<K>) {
-        let struct_components = indexable_struct.components();
-        let keywords = SearchIndex::<K>::struct_keywords(
+    pub fn insert(&mut self, key: &K, value: &dyn IndexableStruct) {
+        let keywords = struct_keywords(
             &self.regex,
             &self.case_sensitive,
             &self.minimum_keyword_length,
             &self.maximum_keyword_length,
-            indexable_struct
+            value,
         ); // struct_keywords
         println!("Keywords found on insert: {:#?}", keywords);
         keywords
@@ -115,47 +133,47 @@ impl<K: Clone + Debug + PartialEq + Ord> SearchIndex<K> {
             .for_each(|keyword|
                 match self.b_tree_map.get_mut(keyword) {
                     Some(keys) => {
-                        keys.push(struct_components.key.clone())
+                        keys.push(key.clone())
                     }, // Some
                     None => {
                         self.b_tree_map.insert(
                             keyword.to_string(),
-                            vec![struct_components.key.clone()]
+                            vec![key.clone()]
                         ); // insert
                     }, // None
                 } // match
             ) // for_each
     } // fn
 
-    /// Removes a record from the search index.
+    /// Removes a key-value pair from the search index.
 
-    pub fn remove(&mut self, indexable_struct: &dyn IndexableStruct<K>) {
-        let struct_components = indexable_struct.components();
-        let keywords = SearchIndex::<K>::struct_keywords(
+    pub fn remove(&mut self, key: &K, value: &dyn IndexableStruct) {
+        let keywords = struct_keywords(
             &self.regex,
             &self.case_sensitive,
             &self.minimum_keyword_length,
             &self.maximum_keyword_length,
-            indexable_struct
+            value,
         ); // struct_keywords
         keywords
             .iter()
             .for_each(|keyword|
                 if let Some(keys) = self.b_tree_map.get_mut(keyword) {
-                    keys.retain(|value| value != &struct_components.key)
+                    keys.retain(|value| value != key)
                 } // if let
             ) // for_each
     } // fn
 
-    /// Updates a record in the search index.
+    /// Replaces or updates the value for a key-value pair in the search index.
 
     pub fn replace(
         &mut self,
-        before: &dyn IndexableStruct<K>,
-        after: &dyn IndexableStruct<K>
+        key: &K,
+        before: &dyn IndexableStruct,
+        after: &dyn IndexableStruct,
     ) {
-        self.remove(before);
-        self.insert(after);
+        self.remove(key, before);
+        self.insert(key, after);
     } // fn
 
     /// Return all matching _typeahead_ or _autocomplete_ keywords for the
@@ -198,36 +216,6 @@ impl<K: Clone + Debug + PartialEq + Ord> SearchIndex<K> {
                 .take(self.maximum_search_results)
                 .collect()
             ) // map
-    } // fn
-
-    /// An associated helper function that returns all keywords for the given
-    /// struct using a previously defined `Regex` expression.
-
-    fn struct_keywords(
-        regex: &Regex,
-        case_sensitive: &bool,
-        minimum_keyword_length: &usize,
-        maximum_keyword_length: &usize,
-        indexable_struct: &dyn IndexableStruct<K>
-    ) -> Vec<String> {
-        // Iterate over all of the strings returned for the record:
-        indexable_struct.components().strings.iter()
-            // Split each string into keywords:
-            .map(|string| string_keywords(
-                regex,
-                string,
-                *minimum_keyword_length,
-                *maximum_keyword_length
-            )) // map
-            // Flatten the string's keywords:
-            .flatten()
-            // If case insensitivity set, convert each keyword to lower case:
-            .map(|string| match case_sensitive {
-                true => string.to_string(),
-                false => string.to_lowercase(),
-            }) // map
-            // Collect all keywords into a Vec:
-            .collect()
     } // fn
 
 } // impl
