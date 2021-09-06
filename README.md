@@ -58,8 +58,8 @@ let keywords: Vec<String> = search_index.autocomplete(&"ass".to_string());
 
 ```
 
-The `autocomplete` function will return all keys for indexed structs that
-exactly match the `String` provided by the caller:
+The `search` function will return all keys for indexed structs that exactly
+match the `String` keyword provided by the caller:
 
 ```rust
 let keys: Vec<u32> = search_index.search(&"Helicopter".to_string());
