@@ -35,8 +35,8 @@ impl IndexableStruct for MyStruct {
 The idea is to return a string for every field that we would like to be indexed.
 Once this trait is implemented, the struct can be indexed by `indicium`.
 
-To index our collection we can iterate over the collection. For each record,
-insert it into the index. It might look like something like this:
+To index an existing collection, we should iterate over the collection. For each
+record, insert it into the index. It might look like something like this:
 
 ```rust
 let mut search_index: SearchIndex<usize> = SearchIndex::default();
