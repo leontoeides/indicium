@@ -1,6 +1,6 @@
 [package]
 name = "indicium"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2018"
 categories = [ "database-implementations" ]
 description = "A simple search engine for collections and key-value stores."
@@ -9,7 +9,7 @@ keywords = [ "search", "typeahead", "autocomplete", "struct", "hashmap" ]
 license = "MIT OR Apache-2.0"
 publish = true
 readme = "README.md"
-repository = "https://github.com/leontoeides/incidium"
+repository = "https://github.com/leontoeides/indicium"
 
 [lib]
 doctest = false

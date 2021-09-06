@@ -56,8 +56,10 @@ fn string_keywords<'a>(
         .collect()
 } // fn
 
+// -----------------------------------------------------------------------------
+//
 /// A helper function that returns all keywords for the given `IndexableStruct`
-/// using a previously defined `Regex` expression and other settings.
+/// using a previously defined `Regex` expression.
 
 fn struct_keywords(
     regex: &Regex,
@@ -90,6 +92,8 @@ fn struct_keywords(
 
 impl<K: Clone + Debug + PartialEq + Ord> SearchIndex<K> {
 
+    // -------------------------------------------------------------------------
+    //
     /// Makes a new, empty `SearchIndex`.
 
     pub fn new(
@@ -111,12 +115,16 @@ impl<K: Clone + Debug + PartialEq + Ord> SearchIndex<K> {
         } // SearchIndex
     } // fn
 
+    // -------------------------------------------------------------------------
+    //
     /// Clears the search index, removing all elements.
 
     pub fn clear(&mut self) {
         self.b_tree_map.clear()
     } // fn
 
+    // -------------------------------------------------------------------------
+    //
     /// Inserts a key-value pair into the search index.
 
     pub fn insert(&mut self, key: &K, value: &dyn IndexableStruct) {
@@ -145,6 +153,8 @@ impl<K: Clone + Debug + PartialEq + Ord> SearchIndex<K> {
             ) // for_each
     } // fn
 
+    // -------------------------------------------------------------------------
+    //
     /// Removes a key-value pair from the search index.
 
     pub fn remove(&mut self, key: &K, value: &dyn IndexableStruct) {
@@ -164,7 +174,10 @@ impl<K: Clone + Debug + PartialEq + Ord> SearchIndex<K> {
             ) // for_each
     } // fn
 
-    /// Replaces or updates the value for a key-value pair in the search index.
+    // -------------------------------------------------------------------------
+    //
+    /// Replaces (or updates) the value for a key-value pair in the search
+    /// index.
 
     pub fn replace(
         &mut self,
@@ -176,39 +189,43 @@ impl<K: Clone + Debug + PartialEq + Ord> SearchIndex<K> {
         self.insert(key, after);
     } // fn
 
+    // -------------------------------------------------------------------------
+    //
     /// Return all matching _typeahead_ or _autocomplete_ keywords for the
-    /// provided search string.
+    /// provided keyword string.
 
     pub fn autocomplete(&self, string: &str) -> Vec<&String> {
-        // If case insensitivity set, convert the search string to lower case:
+        // If case insensitivity set, convert the search keyword to lower case:
         let string = match self.case_sensitive {
             true => string.to_string(),
             false => string.to_lowercase(),
-        };
+        }; // match
         // Attempt to get matching keywords from BTreeMap:
         self.b_tree_map
-            // Attempt to get matching keywords for search string:
+            // Attempt to get matching keywords for search keyword:
             .range(string.to_string()..)
             .map(|(key, _value)| key)
-            // Only return keywords starting with with search string:
+            // Only return keywords starting with with search keyword:
             .take_while(|keyword| keyword.starts_with(&string))
             // Only return `maximum_autocomplete_results` number of keywords:
             .take(self.maximum_autocomplete_results)
             .collect()
     } // fn
 
-    /// Return all matching _search results_ for the provided search string.
+    // -------------------------------------------------------------------------
+    //
+    /// Returns the keys resulting from the keyword search.
 
-    pub fn search(&self, string: &str) -> Option<Vec<&K>> {
-        // If case insensitivity set, convert the search string to lower case:
-        let string = match self.case_sensitive {
-            true => string.to_string(),
-            false => string.to_lowercase(),
-        };
+    pub fn search_keyword(&self, keyword: &str) -> Option<Vec<&K>> {
+        // If case insensitivity set, convert the keyword to lower case:
+        let keyword = match self.case_sensitive {
+            true => keyword.to_string(),
+            false => keyword.to_lowercase(),
+        }; // match
         // Attempt to get matching keys from BTreeMap:
         self.b_tree_map
-            // Attempt to get matching keys for search string:
-            .get(&string)
+            // Attempt to get matching keys for search keyword:
+            .get(&keyword)
             // Iterate over all matching keys and only return
             // `maximum_search_results` number of keys:
             .map(|search_result| search_result
@@ -216,6 +233,26 @@ impl<K: Clone + Debug + PartialEq + Ord> SearchIndex<K> {
                 .take(self.maximum_search_results)
                 .collect()
             ) // map
+    } // fn
+
+    // -------------------------------------------------------------------------
+    //
+    /// Returns the keys resulting from the search string. The search string may
+    /// contain several keywords.
+
+    pub fn search_string(&self, string: &str) -> Option<Vec<&K>> {
+        let keywords = string_keywords(
+            &self.regex,
+            string,
+            self.minimum_keyword_length,
+            self.maximum_keyword_length
+        ); // string_keywords
+        //let keys: Vec<(u8, &K)> = vec![];
+        // count hits by each keyword, sort descernding order
+
+
+        None
+
     } // fn
 
 } // impl
