@@ -1,11 +1,11 @@
 [package]
 name = "indicium"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2018"
 categories = [ "database-implementations" ]
-description = "A simple search engine for collections and key-value stores with typeahead/autocomplete."
+description = "A simple search engine for collections and key-value stores with autocomplete/typeahead."
 documentation = "https://docs.rs/indicium"
-keywords = [ "search", "typeahead", "autocomplete", "struct", "hashmap" ]
+keywords = [ "search", "autocomplete", "typeahead", "struct", "collection" ]
 license = "MIT OR Apache-2.0"
 publish = true
 readme = "README.md"

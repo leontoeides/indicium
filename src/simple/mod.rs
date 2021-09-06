@@ -37,7 +37,6 @@ pub struct SearchIndex<K: Debug> {
     maximum_search_results: usize,
 } // SearchIndex
 
-
 // -----------------------------------------------------------------------------
 
 impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
@@ -97,33 +96,6 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
             .collect()
     } // fn
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     // -------------------------------------------------------------------------
     //
     /// Makes a new, empty `SearchIndex`.
@@ -146,29 +118,6 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
             maximum_search_results,
         } // SearchIndex
     } // fn
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     // -------------------------------------------------------------------------
     //
@@ -229,28 +178,6 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
         self.insert(key, after);
     } // fn
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     // -------------------------------------------------------------------------
     //
     /// Return all matching _typeahead_ or _autocomplete_ keywords for the
@@ -288,7 +215,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
     /// provided search string. The search string may contain several keywords.
     /// The last keyword in the string will be autocompleted.
 
-    pub fn autocomplete_string(&self, string: &str) -> Vec<String> {
+    pub fn autocomplete(&self, string: &str) -> Vec<String> {
 
         // Split search string into keywords, according to the rules:
         let mut keywords = self.string_keywords(string);
@@ -306,10 +233,10 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
 
             // Build search strings from the last keyword autocompletions:
             autocompletions
-                // Iterate over each returned autocompleted keyword:
+                // Iterate over each autocompleted last keyword:
                 .iter()
-                // Use the `keywords` and autocompleted last keyword to build
-                // an search string:
+                // Use the prepended `keywords` and autocompleted last keyword
+                // to build an autocompleted search string:
                 .map(|last_keyword| {
                     // Remove previous autocompleted last keyword from list:
                     keywords.pop();
@@ -331,27 +258,11 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
 
     } // fn
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     // -------------------------------------------------------------------------
     //
     /// Returns the keys resulting from the single keyword search.
 
-    pub fn search_keyword(&self, keyword: &str) -> Option<Vec<&K>> {
+    pub fn search_keyword(&self, keyword: &str) -> Vec<&K> {
 
         // If case insensitivity set, convert the keyword to lower case:
         let keyword = match self.case_sensitive {
@@ -359,17 +270,27 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
             false => keyword.to_lowercase(),
         }; // match
 
-        // Attempt to get matching keys from BTreeMap:
-        self.b_tree_map
+        // Attempt to get matching keys for the search keyword from BTreeMap:
+        if let Some(keys) = self.b_tree_map.get(&keyword) {
+
             // Attempt to get matching keys for search keyword:
-            .get(&keyword)
-            // Iterate over all matching keys and only return
-            // `maximum_search_results` number of keys:
-            .map(|search_result| search_result
+            keys
+                // Iterate over all matching keys and only return
+                // `maximum_search_results` number of keys:
                 .iter()
+                // Only return `maximum_search_results` number of keys:
                 .take(self.maximum_search_results)
+                // Collect all resulting keys into a `Vec`:
                 .collect()
-            ) // map
+
+        } else {
+
+            // The search keyword did not result in any matching. Return an
+            // empty `Vec`:
+
+            vec![]
+
+        } // if
 
     } // fn
 
@@ -378,66 +299,65 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
     /// Returns the keys resulting from the search string. The search string may
     /// contain several keywords.
 
-    pub fn search_string(&self, string: &str) -> Vec<K> {
+    pub fn search(&self, string: &str) -> Vec<K> {
 
         // Split search string into keywords, according to the rules:
         let keywords = self.string_keywords(string);
 
-
-
-
+        // This `HashMap` is used to count the number of hits for each resulting
+        // key. This is so we can return search results in order of relevance:
         let mut search_results: HashMap<K, usize> = HashMap::new();
 
-        // Search for each keyword:
+        // Get each keyword from our `BTreeMap`, record the resulting keys in
+        // a our `HashMap`, and track the hit-count for each key:
         keywords
+            // Iterate over the keywords supplied in the search string:
             .iter()
-            .for_each(|keyword| {
-                let keys = self.search_keyword(keyword).unwrap();
-                keys
+            // For each keyword in the search string:
+            .for_each(|keyword|
+                // Search for keyword in our `BTreeMap`:
+                self.search_keyword(keyword)
+                    // Iterate over the resulting keys (if any):
                     .iter()
+                    // For each resulting key from the keyword search:
                     .for_each(|key| match search_results.get_mut(key) {
+                        // Add "hit" to counter for an already existing key:
                         Some(result_entry) => { *result_entry += 1 },
-                        None => { search_results.insert((*key).clone(), 0); },
-                    })
-            });
+                        // No record for this key, initialize to one hit:
+                        None => { search_results.insert((*key).clone(), 1); },
+                    }) // for_each
+            ); // for_each
 
-
+        // At this point, we have a list of keys in a `HashMap`. The hash map
+        // value holds the number of times each key has been returned in the
+        // above keywords search.
+        //
+        // We want to sort these keys by descending hit-count. We'll convert it
+        // to a `Vec` so this can be done:
 
         let mut search_results: Vec<(K, usize)> = search_results
+            // Iterate over keys in the hash map:
             .iter()
+            // Convert the key-value pair into a tuple element:
             .map(|(key, value)| (key.clone(), *value))
+            // Collect the tuple elements into a `Vec`:
             .collect();
 
-
+        // Sort the tuple elements by hit-count descending:
         search_results.sort_unstable_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
 
-
+        // Return the search results to the user:
         search_results
+            // Iterate over the tuple elements:
             .iter()
+            // Only return `maximum_search_results` number of keys:
+            .take(self.maximum_search_results)
+            // Remove the hit-count from the tuple, returning only the key:
             .map(|(key, _value)| key.clone())
+            // Collect the keys into a `Vec`:
             .collect()
 
-        //let keys: Vec<(u8, &K)> = vec![];
-        // weighted intersection - count hits by each keyword, sort descernding order
-
-
-        //None
-
     } // fn
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 } // impl
 
