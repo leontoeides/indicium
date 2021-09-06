@@ -1,11 +1,11 @@
 # Indicium
 
-A simple search engine for collections and key-value stores with
-autocomplete/typeahead.
+A simple search engine for collections and key-value stores. Includes
+capability for autocomplete / typeahead.
 
-# Quick Guide
+# Quick Start Guide
 
-For our **Quick Guide** example, we will be searching inside of the
+For our **Quick Start Guide** example, we will be searching inside of the
 following `struct`:
 
 ```rust
@@ -33,9 +33,9 @@ impl Indexable for MyStruct {
 }
 ```
 
-Don't forget - you may make numbers, numeric identifiers, enums, and other types
-indexable by converting them to a `String` and including them in the returned
-`Vec<String>`.
+Don't forget that you may make numbers, numeric identifiers, enums, and other
+types indexable by converting them to a `String` and including them in the
+returned `Vec<String>`.
 
 ## Indexing a Collection
 
@@ -44,6 +44,8 @@ record, insert it into the search index. This might look like something like
 these two examples:
 
 ```rust
+use indicium::simple::SearchIndex;
+
 let mut search_index: SearchIndex<usize> =
     SearchIndex::default();
 
@@ -56,6 +58,8 @@ my_vec
 ```
 
 ```rust
+use indicium::simple::SearchIndex;
+
 let mut search_index: SearchIndex<usize> =
     SearchIndex::default();
 
@@ -66,14 +70,14 @@ my_hashmap
     );
 ```
 
-The above examples will work for a previously populated `Vec` or `HashMap`.
-However, the preferred method is to index your collection (Vec, HashMap, etc.)
-as it is being populated.
-
-## Searching
+The above examples will index a previously populated `Vec` or `HashMap`.
+However, the preferred method is to `insert` into the `SearchIndex` as you
+insert into your collection (Vec, HashMap, etc.).
 
 Once the index has been populated, you can use the `autocomplete` and `search`
 functions.
+
+## Autocompletion
 
 The `autocomplete` function will provide several autocompletion options for the
 last keyword in the supplied string. The results are returned in lexographic
@@ -86,39 +90,49 @@ let keywords: Vec<String> =
 assert_eq!(keywords, vec!["huge assassin", "huge assistance"]);
 ```
 
-The `search` function will return the keys for found records. The results are
-returned in order of descending relevance. Each resulting key can then be used
-to retrieve the corresponding record from its collection. Example usage:
+With a bit of imagination you could create a typeahead microservice for your web
+application using a crate like `actix-web` or `rocket`.
+
+## Searching
+
+The `search` function will return the keys for search results. Each resulting
+key can then be used to retrieve the corresponding record from its collection.
+Search keywords must be an exact match. The results are returned in order of
+descending relevance. Example usage:
 
 ```rust
-let indicies: Vec<u32> =
+let keys: Vec<u32> =
     search_index.search_keyword(&"Helicopter".to_string());
 
-assert_eq!(indicies, Some(vec![&1]));
+assert_eq!(keys, Some(vec![1]));
 ```
 
 ## The Keyword Methods
 
 The `autocomplete_keyword` and `search_keyword` methods work on strings that are
-expected to contain only a single keyword. For small collections this might be a
-workable & lighter-weight alternative to using their big brothers.
+expected to contain only a single keyword - as opposed to strings with multiple
+keywords. For small collections this might be a lighter-weight alternative to
+their big brothers.
 
 The `autocomplete_keyword` function will return all indexed keywords that begin
 with the single `String` provided by the caller. Example usage:
 
 ```rust
-let keywords: Vec<String> = search_index.autocomplete_keyword(&"ass".to_string());
+let keywords: Vec<String> =
+	search_index.autocomplete_keyword(&"ass".to_string());
 
 assert_eq!(keywords, vec!["assassin", "assistance"]);
 ```
 
 The `search_keyword` function will return all keys for indexed structs that
-exactly match the single `String` keyword provided by the caller. Each resulting
-key can then be used to retrieve the corresponding record from its collection.
-Example usage:
+exactly match the single `String` keyword provided by the caller. Search
+keywords must be an exact match. Each resulting key can then be used to retrieve
+the corresponding record from its collection. The results are returned in
+undefined order. Example usage:
 
 ```rust
-let indicies: Vec<u32> = search_index.search_keyword(&"Helicopter".to_string());
+let keys: Vec<u32> =
+	search_index.search_keyword(&"Helicopter".to_string());
 
-assert_eq!(indicies, Some(vec![&1]));
+assert_eq!(keys, Some(vec![&1]));
 ```

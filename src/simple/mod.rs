@@ -29,7 +29,7 @@ pub trait Indexable {
 #[derive(Debug)]
 pub struct SearchIndex<K: Debug> {
     b_tree_map: BTreeMap<String, Vec<K>>,
-    regex: Regex,
+    regex_split: Regex,
     case_sensitive: bool,
     minimum_keyword_length: usize,
     maximum_keyword_length: usize,
@@ -53,7 +53,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
     ) -> Vec<&'a str> {
         // Use the `Regex` expression to split the `String` into keywords and
         // filter the results:
-        self.regex
+        self.regex_split
             // `Regex` will split the `String` into smaller keyword strings:
             .split(string)
             // Iterate over each resulting keyword `String`:
@@ -71,18 +71,19 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
     /// An associated helper function that returns all keywords for the given
     /// `Indexable`.
 
-    fn struct_keywords(
+    fn indexable_keywords(
         &self,
         value: &dyn Indexable,
     ) -> Vec<String> {
-        // Process the value for the key-value pair:
+        // Process the `Indexable` struct:
         value
-            // The implemented trait function will return several strings from
-            // the struct that are to be indexed:
+            // The implemented trait method `strings` will return several
+            // strings from the struct that are to be indexed:
             .strings()
             // Iterate over each returned `String`:
             .iter()
-            // Split search string into keywords, according to the rules:
+            // Split each `String` into keywords according to the `SearchIndex`
+            // settings:
             .map(|string| self.string_keywords(string))
             // Flatten the string's keywords:
             .flatten()
@@ -101,7 +102,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
     /// Makes a new, empty `SearchIndex`.
 
     pub fn new(
-        regex: Regex,
+        regex_split: Regex,
         case_sensitive: bool,
         minimum_keyword_length: usize,
         maximum_keyword_length: usize,
@@ -110,7 +111,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
     ) -> SearchIndex<K> {
         SearchIndex {
             b_tree_map: BTreeMap::new(),
-            regex,
+            regex_split,
             case_sensitive,
             minimum_keyword_length,
             maximum_keyword_length,
@@ -132,7 +133,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
     /// Inserts a key-value pair into the search index.
 
     pub fn insert(&mut self, key: &K, value: &dyn Indexable) {
-        let keywords = self.struct_keywords(value);
+        let keywords = self.indexable_keywords(value);
         keywords
             .iter()
             .for_each(|keyword|
@@ -153,7 +154,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
     /// Removes a key-value pair from the search index.
 
     pub fn remove(&mut self, key: &K, value: &dyn Indexable) {
-        let keywords = self.struct_keywords(value);
+        let keywords = self.indexable_keywords(value);
         keywords
             .iter()
             .for_each(|keyword|
@@ -181,7 +182,10 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
     // -------------------------------------------------------------------------
     //
     /// Return all matching _typeahead_ or _autocomplete_ keywords for the
-    /// provided single keyword string.
+    /// provided keyword.
+    ///
+    /// The provided string is expected to be only a single keyword. For
+    /// multi-keyword support see the `autocomplete` method.
 
     pub fn autocomplete_keyword(&self, string: &str) -> Vec<&String> {
 
@@ -192,18 +196,21 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
             false => string.to_lowercase(),
         }; // match
 
-        // Attempt to get matching keywords from BTreeMap:
+        // Attempt to get matching keywords from `BTreeMap`:
         self.b_tree_map
-            // Get matching keywords for starting with keyword string:
+            // Get matching keywords for starting with (partial) keyword string:
             .range(string.to_string()..)
             // `range` returns a key-value pair. We're autocompleting the key,
             // so discard the value:
             .map(|(key, _value)| key)
-            // There was no end bound for our `range` function above. Only
-            // return keywords starting with with search keyword:
-            .take_while(|keyword| keyword.starts_with(&string))
             // Only return `maximum_autocomplete_results` number of keywords:
             .take(self.maximum_autocomplete_results)
+            // We did not specify an end bound for our `range` function (see
+            // above.) `range` will return every keyword greater than the
+            // supplied keyword. The below `take_while` will effectively break
+            // iteration when an autocompletion that does not start with our
+            // supplied (partial) keyword is encountered.
+            .take_while(|keyword| keyword.starts_with(&string))
             // Collect all keyword autocompletions into a `Vec`:
             .collect()
 
@@ -217,21 +224,24 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
 
     pub fn autocomplete(&self, string: &str) -> Vec<String> {
 
-        // Split search string into keywords, according to the rules:
+        // Split search `String` into keywords according to the `SearchIndex`
+        // settings:
         let mut keywords = self.string_keywords(string);
 
-        // Pop the last keyword off collection. It's the keyword that we'll be
+        // Pop the last keyword off the list. It's the keyword that we'll be
         // autocompleting:
         if let Some(last_keyword) = keywords.pop() {
 
             // Autocomplete the last keyword:
             let autocompletions = self.autocomplete_keyword(last_keyword);
 
-            // Push a blank placeholder for the autocompleted last keyword onto
-            // the end of the list:
+            // Push a blank placeholder onto the end of the keyword list. We
+            // will be putting our autocompletions for the last keyword into
+            // this spot:
             keywords.push("");
 
-            // Build search strings from the last keyword autocompletions:
+            // Build autocompleted search strings from the autocompletions
+            // derived from the last keyword:
             autocompletions
                 // Iterate over each autocompleted last keyword:
                 .iter()
@@ -242,7 +252,8 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
                     keywords.pop();
                     // Add current autocompleted last keyword:
                     keywords.push(last_keyword);
-                    // Join all keywords together using a space delimiter:
+                    // Join all keywords together into a single `String` using a
+                    // space delimiter:
                     keywords.join(" ")
                 })
                 // Collect all string autocompletions into a `Vec`:
@@ -261,6 +272,9 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
     // -------------------------------------------------------------------------
     //
     /// Returns the keys resulting from the single keyword search.
+    ///
+    /// The provided string is expected to be only a single keyword. For
+    /// multi-keyword support see the `search` method.
 
     pub fn search_keyword(&self, keyword: &str) -> Vec<&K> {
 
@@ -301,7 +315,8 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
 
     pub fn search(&self, string: &str) -> Vec<K> {
 
-        // Split search string into keywords, according to the rules:
+        // Split search `String` into keywords according to the `SearchIndex`
+        // settings:
         let keywords = self.string_keywords(string);
 
         // This `HashMap` is used to count the number of hits for each resulting

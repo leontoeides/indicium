@@ -71,12 +71,12 @@ fn simple() {
     println!("Search keyword: {:#?}", search_index.search_keyword(&"AsSisTanCe".to_string()));
     assert_eq!(search_index.search_keyword(&"AsSisTanCe".to_string()), vec![&3]);
 
-    // Test `search_keyword` method:
+    // Test `search` method:
 
     println!("Search string: {:#?}", search_index.search(&"Helicopter around".to_string()));
     assert_eq!(search_index.search(&"Helicopter around".to_string()), vec![1]);
 
-    // Test `search_keyword` method:
+    // Test `search` method:
 
     println!("Search string: {:#?}", search_index.search(&"Helicopter around help".to_string()));
     assert_eq!(search_index.search(&"Helicopter around help".to_string()), vec![1, 3]);
