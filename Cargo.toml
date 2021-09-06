@@ -11,8 +11,5 @@ publish = true
 readme = "README.md"
 repository = "https://github.com/leontoeides/indicium"
 
-[lib]
-doctest = false
-
 [dependencies]
 regex = "1"
