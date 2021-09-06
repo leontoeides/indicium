@@ -4,10 +4,8 @@ A simple search engine for collections and key-value stores.
 
 # Getting Started:
 
-To begin you must make your structs indexable by implementing the
-`IndexableStruct` trait.
-
-For our **Getting Started** example, we will be using the following struct:
+For our **Getting Started** example, we will be searching inside of the
+following `struct`:
 
 ```rust
 struct MyStruct {
@@ -17,8 +15,8 @@ struct MyStruct {
 }
 ```
 
-The following code demonstrates how to implement the `IndexableStruct` trait for
-this struct:
+To begin we must make our struct indexable. We do this by implementing the
+`IndexableStruct` trait for our `struct`:
 
 ```rust
 use indicium::simple::IndexableStruct;
@@ -29,20 +27,25 @@ impl IndexableStruct for MyStruct {
             self.id.to_string(),
             self.title.clone(),
             self.description.clone(),
-        ] // vec!
-    } // fn
-} // impl
+        ]
+    }
+}
 ```
 
-The idea is to return a string for every field that you would like to be
-indexed. Once this trait is implemented it can now be indexed by `indicium`.
+The idea is to return a string for every field that we would like to be indexed.
+Once this trait is implemented it can now be indexed by `indicium`.
 
-To index your collection: iterate over the collection and for each record,
+To index our collection we can iterate over the collection. For each record,
 insert it into the index. It might look like something like this:
 
 ```rust
+let mut search_index: SearchIndex<u32> = SearchIndex::default();
+
 my_vec.iter().for_each(|record| search_index.insert(&record.id, record));
 ```
+
+While this is one line of code looks very simple, the preferred method would be
+to index your collection (Vec, HashMap, etc.) as it is being populated.
 
 Once the index has been populated, you can use the `autocomplete` and `search`
 functions.
