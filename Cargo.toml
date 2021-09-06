@@ -1,0 +1,18 @@
+[package]
+name = "indicium"
+version = "0.1.0"
+edition = "2018"
+categories = [ "database-implementations" ]
+description = "A simple search engine for your structs, collections, and key-value stores."
+documentation = "https://docs.rs/indicium"
+keywords = [ "search", "struct", "collection", "vec", "hashmap" ]
+license = "MIT OR Apache-2.0"
+publish = true
+readme = "README.md"
+repository = "https://github.com/leontoeides/incidium"
+
+[lib]
+doctest = false
+
+[dependencies]
+regex = "1"
