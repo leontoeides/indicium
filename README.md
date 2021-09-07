@@ -1,12 +1,12 @@
 # Indicium
 
 A simple search engine for collections (Vec, HashMap, BTreeMap, etc) and
-key-value stores. Includes capability for autocomplete / typeahead.
+key-value stores. Includes capability for autocomplete.
 
-There are many incredible search engines available for Rust but many of them
-seem to require compiling a separate server binary or are too heavy for my
-use-case. I also couldn't find many options for searching structs and
-collections, hence `indicium`.
+There are many incredible search engines available for Rust but many seem to
+require compiling a separate server binary or are too heavy for my use-case. I
+also couldn't find options for searching structs and collections, hence
+`indicium`.
 
 # Quick Start Guide
 
@@ -20,7 +20,7 @@ struct MyStruct {
 }
 ```
 
-## Implementing Indexable
+## 1. Implementing Indexable
 
 To begin, we must make our record indexable. We'll do this by implementing the
 `Indexable` trait for our `struct`. The idea is to return a `String` for every
@@ -43,7 +43,7 @@ Don't forget that you may make numbers, numeric identifiers, enums, and other
 types indexable by converting them to a `String` and including them in the
 returned `Vec<String>`.
 
-## Indexing a Collection
+## 2. Indexing a Collection
 
 To index an existing collection, we can iterate over the collection. For each
 record, we will insert it into the search index. This should look something
@@ -77,13 +77,13 @@ my_hashmap
 ```
 
 The above examples will index a previously populated `Vec` or `HashMap`.
-However, the preferred method is to `insert` into the `SearchIndex` as you
-insert into your collection (Vec, HashMap, etc.)
+However, the preferred method for large collections is to `insert` into the
+`SearchIndex` as you insert into your collection (Vec, HashMap, etc.)
 
 Once the index has been populated, you can use the `autocomplete` and `search`
 functions.
 
-## Autocompletion
+## 3. Autocompletion
 
 The `autocomplete` function will provide several autocompletion options for the
 last keyword in the supplied string. The results are returned in lexographic
@@ -99,12 +99,13 @@ assert_eq!(autocomplete_options, vec!["huge assassin", "huge assistance"]);
 With a bit of imagination you could create a typeahead microservice for your web
 application using a crate like `actix-web` or `rocket`.
 
-## Searching
+## 4. Searching
 
 The `search` function will return keys as the search results. Each resulting
 key can then be used to retrieve the corresponding record from its collection.
-Search keywords must be an exact match. The results are returned in order of
-descending relevance. Example usage:
+Search keywords must be an exact match. The logical conjuction for multiple
+keywords is `or`. The results are returned in order of descending relevance.
+Example usage:
 
 ```rust
 let resulting_keys: Vec<usize> =
@@ -113,12 +114,17 @@ let resulting_keys: Vec<usize> =
 assert_eq!(resulting_keys, Some(vec![1]));
 ```
 
-## The Keyword Methods
+Since search only supports exact keyword matches and does not fuzzy matching,
+consider implementing `autocomplete` for your search.
+
+# The Keyword Methods
 
 The `autocomplete_keyword` and `search_keyword` methods work on strings that are
 expected to contain only a single keyword (as opposed to strings containing
 multiple keywords.) For small collections, these might be a lighter-weight
 alternative to their big brothers.
+
+## Autocompletion
 
 The `autocomplete_keyword` function will return several keywords that begin with
 the partial keyword string provided by the caller. Example usage:
@@ -129,6 +135,8 @@ let autocomplete_options: Vec<String> =
 
 assert_eq!(autocomplete_options, vec!["assassin", "assistance"]);
 ```
+
+## Searching
 
 The `search_keyword` function will return several keys for indexed records that
 exactly match the string keyword provided by the caller. Each resulting key can
@@ -142,3 +150,6 @@ let resulting_keys: Vec<usize> =
 
 assert_eq!(resulting_keys, Some(vec![&1]));
 ```
+
+Since search only supports exact keyword matches and does not fuzzy matching,
+consider implementing `autocomplete` for your search.
