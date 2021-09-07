@@ -15,8 +15,8 @@ use std::iter::{IntoIterator, Iterator};
 // -----------------------------------------------------------------------------
 //
 /// To make a struct indexable, the programmer must implement the
-/// `Indexable` trait for it. The trait will return a `Vec<String>` of all
-/// content that is to be indexed.
+/// `Indexable` trait for it. The trait returns a `Vec<String>` of all content
+/// that is to be indexed.
 
 pub trait Indexable {
     fn strings(&self) -> Vec<String>;
@@ -382,11 +382,11 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> Default for SearchIndex<K> {
     fn default() -> Self {
         Self::new(
             Regex::new(r"([ ,.]+)").expect("Invalid regex"),
-            false,      // Case sensitive?
-            3,          // Minimum keyword length.
-            24,         // Maximum keyword length.
-            5,          // Maximum number of auto-complete results.
-            20          // Maximum number of search results.
+            false,  // Case sensitive?
+            3,      // Minimum keyword length.
+            24,     // Maximum keyword length.
+            5,      // Maximum number of auto-complete results.
+            100,    // Maximum number of search results.
         ) // SearchIndex
     } // fn
 } // impl
