@@ -4,13 +4,10 @@ mod tests;
 
 use regex::Regex;
 use std::clone::Clone;
-use std::cmp::Eq;
-use std::cmp::PartialEq;
-use std::collections::BTreeMap;
-use std::collections::HashMap;
+use std::cmp::{Eq, PartialEq};
+use std::collections::{BTreeMap, HashMap};
 use std::fmt::Debug;
 use std::hash::Hash;
-use std::iter::{IntoIterator, Iterator};
 
 // -----------------------------------------------------------------------------
 //
@@ -28,12 +25,20 @@ pub trait Indexable {
 
 #[derive(Debug)]
 pub struct SearchIndex<K: Debug> {
+    /// The search index data structure.
     b_tree_map: BTreeMap<String, Vec<K>>,
+    /// The `Regex` that splits strings into keywords.
     regex_split: Regex,
+    /// Whether the search index is case sensitive or not. If set to false (case
+    /// insensitive), all keywords will be converted to lower case.
     case_sensitive: bool,
+    /// Minimum keyword length (in bytes) to be utilized.
     minimum_keyword_length: usize,
+    /// Maximum keyword length (in bytes) to be utilized.
     maximum_keyword_length: usize,
+    /// Maximum number of auto-complete options to return.
     maximum_autocomplete_results: usize,
+    /// Maximum number of search results to return.
     maximum_search_results: usize,
 } // SearchIndex
 
@@ -125,6 +130,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
     /// Clears the search index, removing all elements.
 
     pub fn clear(&mut self) {
+        // Clear `BTreeMap`:
         self.b_tree_map.clear()
     } // fn
 
@@ -133,15 +139,24 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
     /// Inserts a key-value pair into the search index.
 
     pub fn insert(&mut self, key: &K, value: &dyn Indexable) {
+        // Get all keywords for the `Indexable` record:
         let keywords = self.indexable_keywords(value);
+        // Iterate over the keywords:
         keywords
             .iter()
+            // For each keyword, add this record's _key_ to the _keyword entry_:
             .for_each(|keyword|
+                // Attempt to get mutuable reference to the _keyword entry_ in
+                // the search index:
                 match self.b_tree_map.get_mut(keyword) {
+                    // If keyword found in search index, add _key entry_ for
+                    // this record to _keyword entry_:
                     Some(keys) => keys.push(key.clone()),
+                    // If keyword not found in search index, initialize _keyword
+                    // entry_ with the _key entry_ for this record:
                     None => {
                         self.b_tree_map.insert(
-                            keyword.to_string(),
+                            keyword.clone(),
                             vec![key.clone()]
                         ); // insert
                     }, // None
@@ -154,14 +169,33 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
     /// Removes a key-value pair from the search index.
 
     pub fn remove(&mut self, key: &K, value: &dyn Indexable) {
+        // Get all keywords for the `Indexable` record:
         let keywords = self.indexable_keywords(value);
+        // Iterate over the keywords:
         keywords
             .iter()
-            .for_each(|keyword|
-                if let Some(keys) = self.b_tree_map.get_mut(keyword) {
-                    keys.retain(|value| value != key)
-                } // if let
-            ) // for_each
+            // For each keyword, remove this record's _key_ from the _keyword
+            // entry_:
+            .for_each(|keyword| {
+                // Attempt to get mutuable reference to the _keyword entry_ in
+                // the search index:
+                let is_empty = if let Some(keys) = self.b_tree_map.get_mut(keyword) {
+                    // If keyword found in search index, remove the _key entry_
+                    // for this record from _keyword entry_:
+                    keys.retain(|value| value != key);
+                    // Return whether the _keyword entry_ is now empty or not:
+                    keys.is_empty()
+                } else {
+                    // If keyword not found in search index, signal that we
+                    // should **not** remove the _keyword entry_ because that
+                    // would result in an error:
+                    false
+                }; // if
+                // If the _keyword entry_ no longer contains any _key entries_,
+                // it is empty and we should remove the keyword from the search
+                // index:
+                if is_empty { self.b_tree_map.remove(keyword); }
+            }) // for_each
     } // fn
 
     // -------------------------------------------------------------------------
@@ -175,7 +209,9 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
         before: &dyn Indexable,
         after: &dyn Indexable,
     ) {
+        // Remove all references to the old record's keywords:
         self.remove(key, before);
+        // Index the new & updated record:
         self.insert(key, after);
     } // fn
 
@@ -206,10 +242,10 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
             // Only return `maximum_autocomplete_results` number of keywords:
             .take(self.maximum_autocomplete_results)
             // We did not specify an end bound for our `range` function (see
-            // above.) `range` will return every keyword greater than the
+            // above.) `range` will return _every_ keyword greater than the
             // supplied keyword. The below `take_while` will effectively break
-            // iteration when an autocompletion that does not start with our
-            // supplied (partial) keyword is encountered.
+            // iteration when we reach a keyword that does not start with our
+            // supplied (partial) keyword.
             .take_while(|keyword| keyword.starts_with(&string))
             // Collect all keyword autocompletions into a `Vec`:
             .collect()
@@ -250,7 +286,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
                 .map(|last_keyword| {
                     // Remove previous autocompleted last keyword from list:
                     keywords.pop();
-                    // Add current autocompleted last keyword:
+                    // Add current autocompleted last keyword to end of list:
                     keywords.push(last_keyword);
                     // Join all keywords together into a single `String` using a
                     // space delimiter:
@@ -299,7 +335,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
 
         } else {
 
-            // The search keyword did not result in any matching. Return an
+            // The search keyword did not result in any matches. Return an
             // empty `Vec`:
 
             vec![]
@@ -383,9 +419,9 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> Default for SearchIndex<K> {
         Self::new(
             Regex::new(r"([ ,.]+)").expect("Invalid regex"),
             false,  // Case sensitive?
-            3,      // Minimum keyword length.
-            24,     // Maximum keyword length.
-            5,      // Maximum number of auto-complete results.
+            3,      // Minimum keyword length (in bytes.)
+            24,     // Maximum keyword length (in bytes.)
+            5,      // Maximum number of auto-complete options.
             100,    // Maximum number of search results.
         ) // SearchIndex
     } // fn

@@ -4,9 +4,9 @@ A simple search engine for collections (Vec, HashMap, BTreeMap, etc) and
 key-value stores. Includes capability for autocomplete / typeahead.
 
 There are many incredible search engines available for Rust but many of them
-seem to require compiling a separate server binary and are too heavy for my
+seem to require compiling a separate server binary or are too heavy for my
 use-case. I also couldn't find many options for searching structs and
-collections. Hence `indicium`.
+collections, hence `indicium`.
 
 # Quick Start Guide
 
@@ -90,10 +90,10 @@ last keyword in the supplied string. The results are returned in lexographic
 order. Example usage:
 
 ```rust
-let options: Vec<String> =
+let autocomplete_options: Vec<String> =
     search_index.autocomplete(&"huge ass".to_string());
 
-assert_eq!(options, vec!["huge assassin", "huge assistance"]);
+assert_eq!(autocomplete_options, vec!["huge assassin", "huge assistance"]);
 ```
 
 With a bit of imagination you could create a typeahead microservice for your web
@@ -107,38 +107,38 @@ Search keywords must be an exact match. The results are returned in order of
 descending relevance. Example usage:
 
 ```rust
-let keys: Vec<usize> =
+let resulting_keys: Vec<usize> =
     search_index.search_keyword(&"Helicopter".to_string());
 
-assert_eq!(keys, Some(vec![1]));
+assert_eq!(resulting_keys, Some(vec![1]));
 ```
 
 ## The Keyword Methods
 
 The `autocomplete_keyword` and `search_keyword` methods work on strings that are
 expected to contain only a single keyword (as opposed to strings containing
-multiple keywords.) These might be a lighter-weight alternative to their big
-brothers for small collections.
+multiple keywords.) For small collections, these might be a lighter-weight
+alternative to their big brothers.
 
 The `autocomplete_keyword` function will return several keywords that begin with
-the single `String` provided by the caller. Example usage:
+the partial keyword string provided by the caller. Example usage:
 
 ```rust
-let keywords: Vec<String> =
+let autocomplete_options: Vec<String> =
 	search_index.autocomplete_keyword(&"ass".to_string());
 
-assert_eq!(keywords, vec!["assassin", "assistance"]);
+assert_eq!(autocomplete_options, vec!["assassin", "assistance"]);
 ```
 
 The `search_keyword` function will return several keys for indexed records that
-exactly match the single `String` keyword provided by the caller. Each resulting
-key can then be used to retrieve the corresponding record from its collection.
-The search keyword must be an exact match. The results are returned in undefined
+exactly match the string keyword provided by the caller. Each resulting key can
+then be used to retrieve the corresponding record from its collection. The
+search keyword must be an exact match. The results are returned in undefined
 order. Example usage:
 
 ```rust
-let keys: Vec<usize> =
+let resulting_keys: Vec<usize> =
 	search_index.search_keyword(&"Helicopter".to_string());
 
-assert_eq!(keys, Some(vec![&1]));
+assert_eq!(resulting_keys, Some(vec![&1]));
 ```
