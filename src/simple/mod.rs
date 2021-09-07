@@ -29,8 +29,8 @@ pub struct SearchIndex<K: Debug> {
     b_tree_map: BTreeMap<String, Vec<K>>,
     /// The `Regex` that splits strings into keywords.
     regex_split: Regex,
-    /// Whether the search index is case sensitive or not. If set to false (case
-    /// insensitive), all keywords will be converted to lower case.
+    /// Indicates whether the search index is case sensitive or not. If set to
+    /// false (case insensitive), all keywords will be converted to lower case.
     case_sensitive: bool,
     /// Minimum keyword length (in chars or codepoints) to be utilized.
     minimum_keyword_length: usize,
@@ -223,96 +223,6 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
-    /// Return all matching _typeahead_ or _autocomplete_ keywords for the
-    /// provided keyword.
-    ///
-    /// The provided string is expected to be only a single keyword. For
-    /// multi-keyword support see the `autocomplete` method.
-
-    pub fn keyword_autocomplete(&self, string: &str) -> Vec<&String> {
-
-        // If case sensitivity set, leave case intact. Otherwise, convert
-        // keyword to lower case.
-        let string = match self.case_sensitive {
-            true => string.to_string(),
-            false => string.to_lowercase(),
-        }; // match
-
-        // Attempt to get matching keywords from `BTreeMap`:
-        self.b_tree_map
-            // Get matching keywords for starting with (partial) keyword string:
-            .range(string.to_string()..)
-            // `range` returns a key-value pair. We're autocompleting the key,
-            // so discard the value:
-            .map(|(key, _value)| key)
-            // Only return `maximum_autocomplete_results` number of keywords:
-            .take(self.maximum_autocomplete_results)
-            // We did not specify an end bound for our `range` function (see
-            // above.) `range` will return _every_ keyword greater than the
-            // supplied keyword. The below `take_while` will effectively break
-            // iteration when we reach a keyword that does not start with our
-            // supplied (partial) keyword.
-            .take_while(|keyword| keyword.starts_with(&string))
-            // Collect all keyword autocompletions into a `Vec`:
-            .collect()
-
-    } // fn
-
-    // -------------------------------------------------------------------------
-    //
-    /// Return all matching _typeahead_ or _autocomplete_ keywords for the
-    /// provided search string. The search string may contain several keywords.
-    /// The last keyword in the string will be autocompleted.
-
-    pub fn autocomplete(&self, string: &str) -> Vec<String> {
-
-        // Split search `String` into keywords according to the `SearchIndex`
-        // settings:
-        let mut keywords = self.string_keywords(string);
-
-        // Pop the last keyword off the list. It's the keyword that we'll be
-        // autocompleting:
-        if let Some(last_keyword) = keywords.pop() {
-
-            // Autocomplete the last keyword:
-            let autocompletions = self.keyword_autocomplete(last_keyword);
-
-            // Push a blank placeholder onto the end of the keyword list. We
-            // will be putting our autocompletions for the last keyword into
-            // this spot:
-            keywords.push("");
-
-            // Build autocompleted search strings from the autocompletions
-            // derived from the last keyword:
-            autocompletions
-                // Iterate over each autocompleted last keyword:
-                .iter()
-                // Use the prepended `keywords` and autocompleted last keyword
-                // to build an autocompleted search string:
-                .map(|last_keyword| {
-                    // Remove previous autocompleted last keyword from list:
-                    keywords.pop();
-                    // Add current autocompleted last keyword to end of list:
-                    keywords.push(last_keyword);
-                    // Join all keywords together into a single `String` using a
-                    // space delimiter:
-                    keywords.join(" ")
-                })
-                // Collect all string autocompletions into a `Vec`:
-                .collect()
-
-        } else {
-
-            // The search string did not have a last keyword to autocomplete.
-            // Return an empty `Vec`:
-            vec![]
-
-        } // if
-
-    } // fn
-
-    // -------------------------------------------------------------------------
-    //
     /// Returns the keys resulting from the single keyword search.
     ///
     /// The provided string is expected to be only a single keyword. For
@@ -413,6 +323,96 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
             .map(|(key, _value)| key.clone())
             // Collect the keys into a `Vec`:
             .collect()
+
+    } // fn
+
+    // -------------------------------------------------------------------------
+    //
+    /// Return all matching _typeahead_ or _autocomplete_ keywords for the
+    /// provided keyword.
+    ///
+    /// The provided string is expected to be only a single keyword. For
+    /// multi-keyword support see the `autocomplete` method.
+
+    pub fn keyword_autocomplete(&self, string: &str) -> Vec<&String> {
+
+        // If case sensitivity set, leave case intact. Otherwise, convert
+        // keyword to lower case.
+        let string = match self.case_sensitive {
+            true => string.to_string(),
+            false => string.to_lowercase(),
+        }; // match
+
+        // Attempt to get matching keywords from `BTreeMap`:
+        self.b_tree_map
+            // Get matching keywords for starting with (partial) keyword string:
+            .range(string.to_string()..)
+            // `range` returns a key-value pair. We're autocompleting the key,
+            // so discard the value:
+            .map(|(key, _value)| key)
+            // Only return `maximum_autocomplete_results` number of keywords:
+            .take(self.maximum_autocomplete_results)
+            // We did not specify an end bound for our `range` function (see
+            // above.) `range` will return _every_ keyword greater than the
+            // supplied keyword. The below `take_while` will effectively break
+            // iteration when we reach a keyword that does not start with our
+            // supplied (partial) keyword.
+            .take_while(|keyword| keyword.starts_with(&string))
+            // Collect all keyword autocompletions into a `Vec`:
+            .collect()
+
+    } // fn
+
+    // -------------------------------------------------------------------------
+    //
+    /// Return all matching _typeahead_ or _autocomplete_ keywords for the
+    /// provided search string. The search string may contain several keywords.
+    /// The last keyword in the string will be autocompleted.
+
+    pub fn autocomplete(&self, string: &str) -> Vec<String> {
+
+        // Split search `String` into keywords according to the `SearchIndex`
+        // settings:
+        let mut keywords = self.string_keywords(string);
+
+        // Pop the last keyword off the list. It's the keyword that we'll be
+        // autocompleting:
+        if let Some(last_keyword) = keywords.pop() {
+
+            // Autocomplete the last keyword:
+            let autocompletions = self.keyword_autocomplete(last_keyword);
+
+            // Push a blank placeholder onto the end of the keyword list. We
+            // will be putting our autocompletions for the last keyword into
+            // this spot:
+            keywords.push("");
+
+            // Build autocompleted search strings from the autocompletions
+            // derived from the last keyword:
+            autocompletions
+                // Iterate over each autocompleted last keyword:
+                .iter()
+                // Use the prepended `keywords` and autocompleted last keyword
+                // to build an autocompleted search string:
+                .map(|last_keyword| {
+                    // Remove previous autocompleted last keyword from list:
+                    keywords.pop();
+                    // Add current autocompleted last keyword to end of list:
+                    keywords.push(last_keyword);
+                    // Join all keywords together into a single `String` using a
+                    // space delimiter:
+                    keywords.join(" ")
+                })
+                // Collect all string autocompletions into a `Vec`:
+                .collect()
+
+        } else {
+
+            // The search string did not have a last keyword to autocomplete.
+            // Return an empty `Vec`:
+            vec![]
+
+        } // if
 
     } // fn
 

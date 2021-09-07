@@ -1,9 +1,9 @@
 # Indicium
 
 A simple search engine for collections (Vec, HashMap, BTreeMap, etc) and
-key-value stores. Includes capability for autocomplete.
+key-value stores. Features autocompletion.
 
-There are many incredible search engines available for Rust but many seem to
+There are many incredible search engines available for Rust. Many seem to
 require compiling a separate server binary or are too heavy for my use-case. I
 also couldn't find options for searching structs and collections, hence
 `indicium`.
@@ -49,8 +49,16 @@ To index an existing collection, we can iterate over the collection. For each
 record, we will insert it into the search index. This should look something
 like these two examples:
 
+#### Vec
+
 ```rust
 use indicium::simple::SearchIndex;
+
+let my_vec: Vec<MyStruct> = Vec::new();
+
+// In the case of a `Vec` collection, we will be using the index as our key.
+// A `Vec` index is a `usize` type. Therefore we will instantiate
+// `SearchIndex<K>` (K is for Key type) as `SearchIndex<usize>`.
 
 let mut search_index: SearchIndex<usize> =
     SearchIndex::default();
@@ -63,16 +71,27 @@ my_vec
     );
 ```
 
+#### HashMap
+
 ```rust
+use std::collections::HashMap;
 use indicium::simple::SearchIndex;
 
-let mut search_index: SearchIndex<usize> =
+let my_hash_map: HashMap<String, MyStruct> =
+	HashMap::new();
+
+// In the case of a `HashMap` collection, we will be using the hash map's key
+// as the `SearchIndex` key. In our hypothetical example, we will use MyStruct's
+// `title` as a the key, which is a `String` type. Therefore we will instantiate
+// `SearchIndex<K>` (K is for Key type) as `SearchIndex<String>`.
+
+let mut search_index: SearchIndex<String> =
     SearchIndex::default();
 
-my_hashmap
+my_hash_map
     .iter()
     .for_each(|(key, value)|
-        search_index.insert(&key, value)
+        search_index.insert(key, value)
     );
 ```
 
@@ -83,23 +102,7 @@ However, the preferred method for large collections is to `insert` into the
 Once the index has been populated, you can use the `autocomplete` and `search`
 functions.
 
-## 3. Autocompletion
-
-The `autocomplete` function will provide several autocompletion options for the
-last partial keyword in the supplied string. The results are returned in
-lexographic order. Example usage:
-
-```rust
-let autocomplete_options: Vec<String> =
-    search_index.autocomplete(&"big bir".to_string());
-
-assert_eq!(autocomplete_options, vec!["big bird", "big birthday"]);
-```
-
-With a bit of imagination you could create a typeahead microservice for your web
-application using a crate like `actix-web` or `rocket`.
-
-## 4. Searching
+## 3. Searching
 
 The `search` function will return keys as the search results. Each resulting
 key can then be used to retrieve the corresponding record from its collection.
@@ -109,13 +112,27 @@ Example usage:
 
 ```rust
 let resulting_keys: Vec<usize> =
-    search_index.keyword_search(&"Helicopter".to_string());
+    search_index.keyword_search(&"helicopter".to_string());
 
 assert_eq!(resulting_keys, Some(vec![1]));
 ```
 
-Since search only supports exact keyword matches and does not fuzzy matching,
-consider implementing `autocomplete` for your search.
+Search only supports exact keyword matches and does not use fuzzy matching.
+Consider providing the `autocomplete` feature to your users as the ergonomic
+alternative to fuzzy matching.
+
+## 4. Autocompletion
+
+The `autocomplete` function will provide several autocompletion options for the
+last partial keyword in the supplied string. The results are returned in
+lexographic order. Example usage:
+
+```rust
+let autocomplete_options: Vec<String> =
+    search_index.autocomplete(&"a very big bir".to_string());
+
+assert_eq!(autocomplete_options, vec!["very big bird", "very big birthday"]);
+```
 
 # The Keyword Methods
 
@@ -124,10 +141,29 @@ expected to contain only a single keyword (as opposed to strings containing
 multiple keywords.) For small collections, these methods might be a
 lighter-weight alternative to their big brothers.
 
+## Searching
+
+The `keyword_search` function will return keys for records that match the
+keyword provided by the caller. Each resulting key can then be used to retrieve
+the corresponding record from its collection. The search keyword must be an
+exact match. The results are returned in undefined order. Example usage:
+
+```rust
+let resulting_keys: Vec<usize> =
+	search_index.keyword_search(&"helicopter".to_string());
+
+assert_eq!(resulting_keys, Some(vec![&1]));
+```
+
+Search only supports exact keyword matches and does not use fuzzy matching.
+Consider providing the `autocomplete` feature to your users as the ergonomic
+alternative to fuzzy matching.
+
 ## Autocompletion
 
 The `keyword_autocomplete` function will return several keywords that begin with
-the partial keyword provided by the caller. Example usage:
+the partial keyword provided by the caller. The results are returned in
+lexographic order. Example usage:
 
 ```rust
 let autocomplete_options: Vec<String> =
@@ -135,20 +171,3 @@ let autocomplete_options: Vec<String> =
 
 assert_eq!(autocomplete_options, vec!["assassin", "assistance"]);
 ```
-
-## Searching
-
-The `keyword_search` function will return keys for indexed records that match
-the keyword provided by the caller. Each resulting key can then be used to
-retrieve the corresponding record from its collection. The search keyword must
-be an exact match. The results are returned in undefined order. Example usage:
-
-```rust
-let resulting_keys: Vec<usize> =
-	search_index.keyword_search(&"Helicopter".to_string());
-
-assert_eq!(resulting_keys, Some(vec![&1]));
-```
-
-Since search only supports exact keyword matches and does not fuzzy matching,
-consider implementing `autocomplete` for your search.
