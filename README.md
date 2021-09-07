@@ -86,14 +86,14 @@ functions.
 ## 3. Autocompletion
 
 The `autocomplete` function will provide several autocompletion options for the
-last keyword in the supplied string. The results are returned in lexographic
-order. Example usage:
+last partial keyword in the supplied string. The results are returned in
+lexographic order. Example usage:
 
 ```rust
 let autocomplete_options: Vec<String> =
-    search_index.autocomplete(&"huge ass".to_string());
+    search_index.autocomplete(&"big bir".to_string());
 
-assert_eq!(autocomplete_options, vec!["huge assassin", "huge assistance"]);
+assert_eq!(autocomplete_options, vec!["big bird", "big birthday"]);
 ```
 
 With a bit of imagination you could create a typeahead microservice for your web
@@ -109,7 +109,7 @@ Example usage:
 
 ```rust
 let resulting_keys: Vec<usize> =
-    search_index.search_keyword(&"Helicopter".to_string());
+    search_index.keyword_search(&"Helicopter".to_string());
 
 assert_eq!(resulting_keys, Some(vec![1]));
 ```
@@ -119,34 +119,33 @@ consider implementing `autocomplete` for your search.
 
 # The Keyword Methods
 
-The `autocomplete_keyword` and `search_keyword` methods work on strings that are
+The `keyword_autocomplete` and `keyword_search` methods work on strings that are
 expected to contain only a single keyword (as opposed to strings containing
-multiple keywords.) For small collections, these might be a lighter-weight
-alternative to their big brothers.
+multiple keywords.) For small collections, these methods might be a
+lighter-weight alternative to their big brothers.
 
 ## Autocompletion
 
-The `autocomplete_keyword` function will return several keywords that begin with
-the partial keyword string provided by the caller. Example usage:
+The `keyword_autocomplete` function will return several keywords that begin with
+the partial keyword provided by the caller. Example usage:
 
 ```rust
 let autocomplete_options: Vec<String> =
-	search_index.autocomplete_keyword(&"ass".to_string());
+	search_index.keyword_autocomplete(&"ass".to_string());
 
 assert_eq!(autocomplete_options, vec!["assassin", "assistance"]);
 ```
 
 ## Searching
 
-The `search_keyword` function will return several keys for indexed records that
-exactly match the string keyword provided by the caller. Each resulting key can
-then be used to retrieve the corresponding record from its collection. The
-search keyword must be an exact match. The results are returned in undefined
-order. Example usage:
+The `keyword_search` function will return keys for indexed records that match
+the keyword provided by the caller. Each resulting key can then be used to
+retrieve the corresponding record from its collection. The search keyword must
+be an exact match. The results are returned in undefined order. Example usage:
 
 ```rust
 let resulting_keys: Vec<usize> =
-	search_index.search_keyword(&"Helicopter".to_string());
+	search_index.keyword_search(&"Helicopter".to_string());
 
 assert_eq!(resulting_keys, Some(vec![&1]));
 ```

@@ -229,7 +229,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
     /// The provided string is expected to be only a single keyword. For
     /// multi-keyword support see the `autocomplete` method.
 
-    pub fn autocomplete_keyword(&self, string: &str) -> Vec<&String> {
+    pub fn keyword_autocomplete(&self, string: &str) -> Vec<&String> {
 
         // If case sensitivity set, leave case intact. Otherwise, convert
         // keyword to lower case.
@@ -275,7 +275,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
         if let Some(last_keyword) = keywords.pop() {
 
             // Autocomplete the last keyword:
-            let autocompletions = self.autocomplete_keyword(last_keyword);
+            let autocompletions = self.keyword_autocomplete(last_keyword);
 
             // Push a blank placeholder onto the end of the keyword list. We
             // will be putting our autocompletions for the last keyword into
@@ -318,7 +318,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
     /// The provided string is expected to be only a single keyword. For
     /// multi-keyword support see the `search` method.
 
-    pub fn search_keyword(&self, keyword: &str) -> Vec<&K> {
+    pub fn keyword_search(&self, keyword: &str) -> Vec<&K> {
 
         // If case insensitivity set, convert the keyword to lower case:
         let keyword = match self.case_sensitive {
@@ -373,7 +373,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
             // For each keyword in the search string:
             .for_each(|keyword|
                 // Search for keyword in our `BTreeMap`:
-                self.search_keyword(keyword)
+                self.keyword_search(keyword)
                     // Iterate over the resulting keys (if any):
                     .iter()
                     // For each resulting key from the keyword search:

@@ -43,15 +43,15 @@ fn simple() {
         .enumerate()
         .for_each(|(index, element)| search_index.insert(&index, element));
 
-    // Test `autocomplete_keyword` method:
+    // Test `keyword_autocomplete` method:
 
-    println!("Autocomplete keyword: {:#?}", search_index.autocomplete_keyword(&"ass".to_string()));
-    assert_eq!(search_index.autocomplete_keyword(&"ass".to_string()), vec!["assistance"]);
+    println!("Autocomplete keyword: {:#?}", search_index.keyword_autocomplete(&"ass".to_string()));
+    assert_eq!(search_index.keyword_autocomplete(&"ass".to_string()), vec!["assistance"]);
 
-    // Test `autocomplete_keyword` method:
+    // Test `keyword_autocomplete` method:
 
-    println!("Autocomplete keyword: {:#?}", search_index.autocomplete_keyword(&"hel".to_string()));
-    assert_eq!(search_index.autocomplete_keyword(&"hel".to_string()), vec!["helicopter", "hell", "hello", "help"]);
+    println!("Autocomplete keyword: {:#?}", search_index.keyword_autocomplete(&"hel".to_string()));
+    assert_eq!(search_index.keyword_autocomplete(&"hel".to_string()), vec!["helicopter", "hell", "hello", "help"]);
 
     // Test `autocomplete` method:
 
@@ -66,10 +66,10 @@ fn simple() {
         ]
     );
 
-    // Test `search_keyword` method:
+    // Test `keyword_search` method:
 
-    println!("Search keyword: {:#?}", search_index.search_keyword(&"AsSisTanCe".to_string()));
-    assert_eq!(search_index.search_keyword(&"AsSisTanCe".to_string()), vec![&3]);
+    println!("Search keyword: {:#?}", search_index.keyword_search(&"AsSisTanCe".to_string()));
+    assert_eq!(search_index.keyword_search(&"AsSisTanCe".to_string()), vec![&3]);
 
     // Test `search` method:
 
@@ -88,8 +88,8 @@ fn simple() {
         description: "How I would like to get around.".to_string(),
     });
 
-    println!("Search: {:#?}", search_index.search_keyword(&"Helicopter".to_string()));
-    assert_eq!(search_index.search_keyword(&"Helicopter".to_string()), Vec::<&usize>::new());
+    println!("Search: {:#?}", search_index.keyword_search(&"Helicopter".to_string()));
+    assert_eq!(search_index.keyword_search(&"Helicopter".to_string()), Vec::<&usize>::new());
 
     // Test `insert` method:
 
@@ -98,8 +98,8 @@ fn simple() {
         description: "How I would like to get around.".to_string(),
     });
 
-    println!("Search: {:#?}", search_index.search_keyword(&"Helicopter".to_string()));
-    assert_eq!(search_index.search_keyword(&"Helicopter".to_string()), vec![&1]);
+    println!("Search: {:#?}", search_index.keyword_search(&"Helicopter".to_string()));
+    assert_eq!(search_index.keyword_search(&"Helicopter".to_string()), vec![&1]);
 
     // Test `replace` method:
 
@@ -115,7 +115,7 @@ fn simple() {
         },
     );
 
-    println!("Search: {:#?}", search_index.search_keyword(&"Quadricopter".to_string()));
-    assert_eq!(search_index.search_keyword(&"Quadricopter".to_string()), vec![&1]);
+    println!("Search: {:#?}", search_index.keyword_search(&"Quadricopter".to_string()));
+    assert_eq!(search_index.keyword_search(&"Quadricopter".to_string()), vec![&1]);
 
 } // fn
