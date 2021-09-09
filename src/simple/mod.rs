@@ -1,4 +1,5 @@
 mod tests;
+// mod select2;
 
 // -----------------------------------------------------------------------------
 
@@ -32,10 +33,14 @@ pub struct SearchIndex<K: Debug> {
     /// Indicates whether the search index is case sensitive or not. If set to
     /// false (case insensitive), all keywords will be converted to lower case.
     case_sensitive: bool,
-    /// Minimum keyword length (in chars or codepoints) to be utilized.
+    /// Minimum keyword length (in chars or codepoints) to be indexed.
     minimum_keyword_length: usize,
-    /// Maximum keyword length (in chars or codepoints) to be utilized.
+    /// Maximum keyword length (in chars or codepoints) to be indexed.
     maximum_keyword_length: usize,
+    /// Maximum string length (in chars or codepoints) to be indexed. If set,
+    /// Indicium will also index the struct's entire strings for autocompletion
+    /// purposes.
+    maximum_string_length: Option<usize>,
     /// Maximum number of auto-complete options to return.
     maximum_autocomplete_results: usize,
     /// Maximum number of search results to return.
@@ -63,9 +68,9 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
             .split(string)
             // Iterate over each resulting keyword `String`:
             .into_iter()
-            // Only keep the keyword if it's larger than the minimum length:
+            // Only keep the keyword if it's longer than the minimum length:
             .filter(|keyword| keyword.chars().count() >= self.minimum_keyword_length)
-            // Only keep the keyword if it's smaller than the maximum length:
+            // Only keep the keyword if it's shorter than the maximum length:
             .filter(|keyword| keyword.chars().count() <= self.maximum_keyword_length)
             // Collect all keywords into a `Vec`:
             .collect()
@@ -80,12 +85,14 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
         &self,
         value: &dyn Indexable,
     ) -> Vec<String> {
-        // Process the `Indexable` struct:
-        value
-            // The implemented trait method `strings` will return several
-            // strings from the struct that are to be indexed:
-            .strings()
-            // Iterate over each returned `String`:
+
+        // The implemented trait method `strings` will return several strings
+        // from the struct that are to be indexed:
+        let strings = value.strings();
+
+        // Store the `Indexable` struct's individual keywords:
+        let mut keywords: Vec<String> = strings
+            // Iterate over each `String` field from the struct:
             .iter()
             // Split each `String` into keywords according to the `SearchIndex`
             // settings:
@@ -93,13 +100,42 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
             // Flatten the string's keywords:
             .flatten()
             // If case sensitivity set, leave case intact. Otherwise, convert
-            // each keyword to lower case.
+            // each keyword to lower case:
             .map(|string| match self.case_sensitive {
                 true => string.to_string(),
                 false => string.to_lowercase(),
             }) // map
             // Collect all keywords into a `Vec`:
-            .collect()
+            .collect();
+
+        // If set, store the struct's entire string fields as a single keyword
+        // for autocompletion purposes:
+        if let Some(maximum_string_length) = self.maximum_string_length {
+            keywords.extend_from_slice(
+                strings
+                    // Iterate over each `String` field from the struct:
+                    .iter()
+                    // Only keep the strings it's shorter than the maximum:
+                    .filter(|string| string.chars().count() <= maximum_string_length)
+                    // If case sensitivity set, leave case intact. Otherwise,
+                    // convert each string to lower case:
+                    .map(|string| match self.case_sensitive {
+                        true => string.to_string(),
+                        false => string.to_lowercase(),
+                    }) // map
+                    // Collect all strings into a `Vec`:
+                    .collect::<Vec<String>>()
+                    // Return to `extend_from_slice` as a slice:
+                    .as_slice()
+            ) // extend
+        } // if
+
+        // Sort, de-duplicate, and the return keywords (and full strings) to
+        // the caller:
+        keywords.sort_unstable();
+        keywords.dedup();
+        keywords
+
     } // fn
 
     // -------------------------------------------------------------------------
@@ -111,6 +147,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
         case_sensitive: bool,
         minimum_keyword_length: usize,
         maximum_keyword_length: usize,
+        maximum_string_length: Option<usize>,
         maximum_autocomplete_results: usize,
         maximum_search_results: usize,
     ) -> SearchIndex<K> {
@@ -120,6 +157,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
             case_sensitive,
             minimum_keyword_length,
             maximum_keyword_length,
+            maximum_string_length,
             maximum_autocomplete_results,
             maximum_search_results,
         } // SearchIndex
@@ -142,6 +180,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
 
         // Get all keywords for the `Indexable` record:
         let keywords = self.indexable_keywords(value);
+        println!("Keywords: {:#?}", keywords);
 
         // Iterate over the keywords:
         keywords
@@ -337,7 +376,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
     pub fn keyword_autocomplete(&self, string: &str) -> Vec<&String> {
 
         // If case sensitivity set, leave case intact. Otherwise, convert
-        // keyword to lower case.
+        // keyword to lower case:
         let string = match self.case_sensitive {
             true => string.to_string(),
             false => string.to_lowercase(),
@@ -424,11 +463,12 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> Default for SearchIndex<K> {
     fn default() -> Self {
         Self::new(
             Regex::new(r"([ ,.]+)").expect("Invalid regex"),
-            false,  // Case sensitive?
-            3,      // Minimum keyword length (in chars or codepoints.)
-            24,     // Maximum keyword length (in chars or codepoints.)
-            5,      // Maximum number of auto-complete options.
-            100,    // Maximum number of search results.
+            false,      // Case sensitive?
+            3,          // Minimum keyword length (in chars or codepoints.)
+            24,         // Maximum keyword length (in chars or codepoints.)
+            Some(24),   // Maximum text length (in chars or codepoints.)
+            5,          // Maximum number of auto-complete options.
+            100,        // Maximum number of search results.
         ) // SearchIndex
     } // fn
 } // impl

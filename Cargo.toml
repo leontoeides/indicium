@@ -4,7 +4,7 @@ version = "0.1.3"
 authors = ["Dylan Bowker <dylan.bowker@arkiteq.ca>"]
 edition = "2018"
 categories = [ "database-implementations" ]
-description = "A simple search engine for collections and key-value stores."
+description = "Simple search engine for collections and key-value stores."
 documentation = "https://docs.rs/indicium"
 keywords = [ "search", "autocomplete", "struct", "vec", "hashmap" ]
 license = "MIT OR Apache-2.0"
@@ -13,4 +13,4 @@ readme = "README.md"
 repository = "https://github.com/leontoeides/indicium"
 
 [dependencies]
-regex = "1"
+regex = "1.5"

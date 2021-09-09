@@ -4,9 +4,9 @@ A simple search engine for collections (Vec, HashMap, BTreeMap, etc) and
 key-value stores. Features autocompletion.
 
 There are many incredible search engines available for Rust. Many seem to
-require compiling a separate server binary or are too heavy for my use-case. I
-also couldn't find options for searching structs and collections, hence
-`indicium`.
+require compiling a separate server binary. I wanted something simpler, lighter
+weight, and that could conveniently search structs and collections. So I have
+made `indicium`.
 
 # Quick Start Guide
 
@@ -56,12 +56,11 @@ use indicium::simple::SearchIndex;
 
 let my_vec: Vec<MyStruct> = Vec::new();
 
-// In the case of a `Vec` collection, we will be using the index as our key.
-// A `Vec` index is a `usize` type. Therefore we will instantiate
-// `SearchIndex<K>` (K is for Key type) as `SearchIndex<usize>`.
+// In the case of a `Vec` collection, we use the index as our key.  A `Vec`
+// index is a `usize` type. Therefore we will instantiate `SearchIndex<K>` (K is
+// for key type) as `SearchIndex<usize>`.
 
-let mut search_index: SearchIndex<usize> =
-    SearchIndex::default();
+let mut search_index: SearchIndex<usize> = SearchIndex::default();
 
 my_vec
     .iter()
@@ -77,16 +76,15 @@ my_vec
 use std::collections::HashMap;
 use indicium::simple::SearchIndex;
 
-let my_hash_map: HashMap<String, MyStruct> =
-	HashMap::new();
+let my_hash_map: HashMap<String, MyStruct> = HashMap::new();
 
-// In the case of a `HashMap` collection, we will be using the hash map's key
-// as the `SearchIndex` key. In our hypothetical example, we will use MyStruct's
+// In the case of a `HashMap` collection, we use the hash map's key as the
+// `SearchIndex` key. In our hypothetical example, we will use MyStruct's
 // `title` as a the key, which is a `String` type. Therefore we will instantiate
-// `SearchIndex<K>` (K is for Key type) as `SearchIndex<String>`.
+// `HashMap<K, V>` as HashMap<String, MyStruct> and `SearchIndex<K>` (K is for
+// key type) as `SearchIndex<String>`.
 
-let mut search_index: SearchIndex<String> =
-    SearchIndex::default();
+let mut search_index: SearchIndex<String> = SearchIndex::default();
 
 my_hash_map
     .iter()
@@ -95,9 +93,10 @@ my_hash_map
     );
 ```
 
-The above examples will index a previously populated `Vec` or `HashMap`.
-However, the preferred method for large collections is to `insert` into the
-`SearchIndex` as you insert into your collection (Vec, HashMap, etc.)
+As long as the `Indexable` trait was implemented for your value type, the above
+examples will index a previously populated `Vec` or `HashMap`. However, the
+preferred method for large collections is to `insert` into the `SearchIndex` as
+you insert into your collection (Vec, HashMap, etc.)
 
 Once the index has been populated, you can use the `autocomplete` and `search`
 functions.

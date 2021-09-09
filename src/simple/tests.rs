@@ -36,6 +36,10 @@ fn simple() {
             title: "Assistance".to_string(),
             description: "Another word for help.".to_string(),
         }, // TestStruct
+        TestStruct {
+            title: "Surfin' Bird".to_string(),
+            description: "The Bird's the Word".to_string(),
+        }, // TestStruct
     ]; // vec!
 
     test_vec
@@ -47,6 +51,11 @@ fn simple() {
 
     println!("Autocomplete keyword: {:#?}", search_index.keyword_autocomplete(&"ass".to_string()));
     assert_eq!(search_index.keyword_autocomplete(&"ass".to_string()), vec!["assistance"]);
+
+    // Test `keyword_autocomplete` method:
+
+    println!("Autocomplete keyword: {:#?}", search_index.keyword_autocomplete(&"The B".to_string()));
+    assert_eq!(search_index.keyword_autocomplete(&"Th".to_string()), vec!["the", "the bird's the word"]);
 
     // Test `keyword_autocomplete` method:
 
@@ -70,6 +79,11 @@ fn simple() {
 
     println!("Search keyword: {:#?}", search_index.keyword_search(&"AsSisTanCe".to_string()));
     assert_eq!(search_index.keyword_search(&"AsSisTanCe".to_string()), vec![&3]);
+
+    // Test `keyword_search` method:
+
+    println!("Search keyword: {:#?}", search_index.keyword_search(&"The Bird's the Word".to_string()));
+    assert_eq!(search_index.keyword_search(&"The Bird's the Word".to_string()), vec![&4]);
 
     // Test `search` method:
 
