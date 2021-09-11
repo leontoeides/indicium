@@ -1,5 +1,4 @@
 mod tests;
-// mod select2;
 
 // -----------------------------------------------------------------------------
 
@@ -12,9 +11,9 @@ use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 //
-/// To make a struct indexable, the programmer must implement the
-/// `Indexable` trait for it. The trait returns a `Vec<String>` of all content
-/// that is to be indexed.
+/// To make a struct indexable, the programmer must implement the `Indexable`
+/// trait for it. The trait returns a `Vec<String>` of all content that is to be
+/// indexed.
 
 pub trait Indexable {
     fn strings(&self) -> Vec<String>;
@@ -68,10 +67,12 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
             .split(string)
             // Iterate over each resulting keyword `String`:
             .into_iter()
-            // Only keep the keyword if it's longer than the minimum length:
-            .filter(|keyword| keyword.chars().count() >= self.minimum_keyword_length)
-            // Only keep the keyword if it's shorter than the maximum length:
-            .filter(|keyword| keyword.chars().count() <= self.maximum_keyword_length)
+            // Only keep the keyword if it's longer than the minimum length and
+            // shorter than the maximum length:
+            .filter(|keyword| {
+                let chars = keyword.chars().count();
+                chars >= self.minimum_keyword_length && chars <= self.maximum_keyword_length
+            }) // filter
             // Collect all keywords into a `Vec`:
             .collect()
     } // fn
@@ -86,11 +87,11 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
         value: &dyn Indexable,
     ) -> Vec<String> {
 
-        // The implemented trait method `strings` will return several strings
-        // from the struct that are to be indexed:
+        // The implemented trait method `strings` will return the strings from
+        // the struct that are meant to be indexed:
         let strings = value.strings();
 
-        // Store the `Indexable` struct's individual keywords:
+        // Store the individual keywords from these strings:
         let mut keywords: Vec<String> = strings
             // Iterate over each `String` field from the struct:
             .iter()
@@ -108,10 +109,12 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
             // Collect all keywords into a `Vec`:
             .collect();
 
-        // If set, store the struct's entire string fields as a single keyword
-        // for autocompletion purposes:
+        // If the option is enabled, store the entire strings themselves for
+        // autocompletion purposes:
         if let Some(maximum_string_length) = self.maximum_string_length {
+            // Extend the keyword list:
             keywords.extend_from_slice(
+                // With the whole strings:
                 strings
                     // Iterate over each `String` field from the struct:
                     .iter()
@@ -180,7 +183,6 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
 
         // Get all keywords for the `Indexable` record:
         let keywords = self.indexable_keywords(value);
-        println!("Keywords: {:#?}", keywords);
 
         // Iterate over the keywords:
         keywords

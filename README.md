@@ -4,7 +4,7 @@ A simple search engine for collections (Vec, HashMap, BTreeMap, etc) and
 key-value stores. Features autocompletion.
 
 There are many incredible search engines available for Rust. Many seem to
-require compiling a separate server binary. I wanted something simpler, lighter
+require compiling a separate server binary. I wanted something simple, light
 weight, and that could conveniently search structs and collections. So I have
 made `indicium`.
 
@@ -57,8 +57,8 @@ use indicium::simple::SearchIndex;
 let my_vec: Vec<MyStruct> = Vec::new();
 
 // In the case of a `Vec` collection, we use the index as our key.  A `Vec`
-// index is a `usize` type. Therefore we will instantiate `SearchIndex<K>` (K is
-// for key type) as `SearchIndex<usize>`.
+// index is a `usize` type. Therefore we will instantiate `SearchIndex` as
+// `SearchIndex<usize>`.
 
 let mut search_index: SearchIndex<usize> = SearchIndex::default();
 
@@ -80,9 +80,9 @@ let my_hash_map: HashMap<String, MyStruct> = HashMap::new();
 
 // In the case of a `HashMap` collection, we use the hash map's key as the
 // `SearchIndex` key. In our hypothetical example, we will use MyStruct's
-// `title` as a the key, which is a `String` type. Therefore we will instantiate
-// `HashMap<K, V>` as HashMap<String, MyStruct> and `SearchIndex<K>` (K is for
-// key type) as `SearchIndex<String>`.
+// `title` as a the key which is a `String` type. Therefore we will instantiate
+// `HashMap<K, V>` as HashMap<String, MyStruct> and `SearchIndex<K>` as
+// `SearchIndex<String>`.
 
 let mut search_index: SearchIndex<String> = SearchIndex::default();
 
@@ -105,8 +105,14 @@ functions.
 
 The `search` function will return keys as the search results. Each resulting
 key can then be used to retrieve the corresponding record from its collection.
-Search keywords must be an exact match. The logical conjuction for multiple
-keywords is `or`. The results are returned in order of descending relevance.
+Search keywords must be an exact match.
+
+The logical conjuction for multiple keywords is `or`. For example, a search of
+`this that` will return records containing keywords `this` or `that`.
+
+The results are returned in order of descending relevance. For example, records
+containing both keywords `this` and `that` will be the top results.
+
 Example usage:
 
 ```rust
@@ -117,7 +123,7 @@ assert_eq!(resulting_keys, Some(vec![1]));
 ```
 
 Search only supports exact keyword matches and does not use fuzzy matching.
-Consider providing the `autocomplete` feature to your users as the ergonomic
+Consider providing the `autocomplete` feature to your users as an ergonomic
 alternative to fuzzy matching.
 
 ## 4. Autocompletion
@@ -155,7 +161,7 @@ assert_eq!(resulting_keys, Some(vec![&1]));
 ```
 
 Search only supports exact keyword matches and does not use fuzzy matching.
-Consider providing the `autocomplete` feature to your users as the ergonomic
+Consider providing the `autocomplete` feature to your users as an ergonomic
 alternative to fuzzy matching.
 
 ## Autocompletion

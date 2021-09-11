@@ -3,3 +3,5 @@
 ///
 /// There will be more search implementations in future versions.
 pub mod simple;
+// Support for the `select2.org` Javascript plug-in.
+pub mod select2;
