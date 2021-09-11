@@ -37,7 +37,7 @@ pub struct SearchIndex<K: Debug> {
     /// Maximum keyword length (in chars or codepoints) to be indexed.
     maximum_keyword_length: usize,
     /// Maximum string length (in chars or codepoints) to be indexed. If set,
-    /// Indicium will also index the struct's entire strings for autocompletion
+    /// Indicium will also index the record's entire strings for autocompletion
     /// purposes.
     maximum_string_length: Option<usize>,
     /// Maximum number of auto-complete options to return.
@@ -63,9 +63,9 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
         // Use the `Regex` expression to split the `String` into keywords and
         // filter the results:
         self.regex_split
-            // `Regex` will split the `String` into smaller keyword strings:
+            // `Regex` will split the `String` into smaller strings / keywords:
             .split(string)
-            // Iterate over each resulting keyword `String`:
+            // Iterate over each resulting keyword:
             .into_iter()
             // Only keep the keyword if it's longer than the minimum length and
             // shorter than the maximum length:
@@ -80,20 +80,20 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
     // -------------------------------------------------------------------------
     //
     /// An associated helper function that returns all keywords for the given
-    /// `Indexable`.
+    /// `Indexable` record.
 
     fn indexable_keywords(
         &self,
         value: &dyn Indexable,
     ) -> Vec<String> {
 
-        // The implemented trait method `strings` will return the strings from
-        // the struct that are meant to be indexed:
+        // The implemented trait method `strings()` will return the strings from
+        // the record that are meant to be indexed:
         let strings = value.strings();
 
         // Store the individual keywords from these strings:
         let mut keywords: Vec<String> = strings
-            // Iterate over each `String` field from the struct:
+            // Iterate over each `String` field from the record:
             .iter()
             // Split each `String` into keywords according to the `SearchIndex`
             // settings:
@@ -116,7 +116,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
             keywords.extend_from_slice(
                 // With the whole strings:
                 strings
-                    // Iterate over each `String` field from the struct:
+                    // Iterate over each `String` field from the record:
                     .iter()
                     // Only keep the strings it's shorter than the maximum:
                     .filter(|string| string.chars().count() <= maximum_string_length)
@@ -192,11 +192,11 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
                 // Attempt to get mutuable reference to the _keyword entry_ in
                 // the search index:
                 match self.b_tree_map.get_mut(keyword) {
-                    // If keyword found in search index, add _key reference_ for
-                    // this record to _keyword entry_:
+                    // If keyword was found in search index, add _key reference_
+                    // for this record to _keyword entry_:
                     Some(keys) => keys.push(key.clone()),
-                    // If keyword not found in search index, initialize _keyword
-                    // entry_ with the _key reference_ for this record:
+                    // If keyword was not found in search index, initialize
+                    // _keyword entry_ with the _key reference_ for this record:
                     None => {
                         self.b_tree_map.insert(
                             keyword.clone(),
@@ -289,6 +289,9 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
                 .take(self.maximum_search_results)
                 // Collect all resulting keys into a `Vec`:
                 .collect()
+
+            // -> If fuzzy matching were to be implemented for
+            // `indicium::simple` it would be put here. <-
 
         } else {
 
