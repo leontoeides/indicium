@@ -3,5 +3,5 @@
 ///
 /// There will be more search implementations in future versions.
 pub mod simple;
-/// Support for the popular `Select2` jQuery plug-in.
-pub mod select2;
+// Support for the popular `Select2` jQuery plug-in.
+// pub mod select2;
