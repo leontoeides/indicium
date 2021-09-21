@@ -163,6 +163,12 @@ let resulting_keys: Vec<usize> =
 assert_eq!(resulting_keys, Some(vec![&1]));
 ```
 
+Note that currently `maximum_search_results` is only observed by the `search`
+method and not by this `keyword_search` method. This method will potentially
+return thousands of results depending on the size of your collection. This is
+because `search` relies on this function, and it needs a full list of keys to
+properly rank the results by relevance.
+
 Search only supports exact keyword matches and does not use fuzzy matching.
 Consider providing the `autocomplete` feature to your users as an ergonomic
 alternative to fuzzy matching.
