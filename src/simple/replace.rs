@@ -1,5 +1,3 @@
-// -----------------------------------------------------------------------------
-
 use crate::simple::{indexable::Indexable, search_index::SearchIndex};
 use std::clone::Clone;
 use std::cmp::{Eq, PartialEq};
