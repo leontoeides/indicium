@@ -20,7 +20,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
 
         // Split search `String` into keywords according to the `SearchIndex`
         // settings:
-        let keywords = self.string_keywords(string);
+        let keywords = self.string_keywords(string, true);
 
         // This `HashMap` is used to count the number of hits for each resulting
         // key. This is so we can return search results in order of relevance:

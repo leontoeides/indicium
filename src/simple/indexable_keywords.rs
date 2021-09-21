@@ -29,8 +29,9 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
             // Iterate over each `String` field from the record:
             .iter()
             // Split each `String` into keywords according to the `SearchIndex`
+            // settings. Allow "use entire string as a keyword" based on user
             // settings:
-            .map(|string| self.string_keywords(string))
+            .map(|string| self.string_keywords(string, true))
             // Flatten the string's keywords:
             .flatten()
             // If case sensitivity set, leave case intact. Otherwise, convert

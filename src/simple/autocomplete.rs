@@ -19,8 +19,8 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
     pub fn autocomplete(&self, string: &str) -> Vec<String> {
 
         // Split search `String` into keywords according to the `SearchIndex`
-        // settings:
-        let mut keywords = self.string_keywords(string);
+        // settings. Force "use entire string as a keyword" option off:
+        let mut keywords = self.string_keywords(string, false);
 
         // Pop the last keyword off the list. It's the keyword that we'll be
         // autocompleting:

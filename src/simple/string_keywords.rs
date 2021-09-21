@@ -19,6 +19,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
     pub(crate) fn string_keywords<'a>(
         &self,
         string: &'a str,
+        allow_string_as_keyword: bool,
     ) -> Vec<&'a str> {
 
         // Split the the field text / string into keywords:
@@ -49,7 +50,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
         // as a keyword for autocompletion purposes:
         if let Some(maximum_string_length) = self.maximum_string_length {
             // Only keep the string if it's shorter than the maximum:
-            if string.chars().count() <= maximum_string_length {
+            if allow_string_as_keyword && string.chars().count() <= maximum_string_length {
                 // Add field text / entire string to the keyword `Vec`:
                 keywords.push(string);
             } // if
