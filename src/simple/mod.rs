@@ -8,6 +8,7 @@ use std::cmp::{Eq, PartialEq};
 use std::collections::{BTreeMap, HashMap};
 use std::fmt::Debug;
 use std::hash::Hash;
+use std::ops::Deref;
 
 // -----------------------------------------------------------------------------
 //
@@ -28,7 +29,7 @@ pub struct SearchIndex<K: Debug> {
     /// The search index data structure.
     b_tree_map: BTreeMap<String, Vec<K>>,
     /// The `Regex` that splits strings into keywords.
-    regex_split: Regex,
+    regex_split: Option<Regex>,
     /// Indicates whether the search index is case sensitive or not. If set to
     /// false (case insensitive), all keywords will be converted to lower case.
     case_sensitive: bool,
@@ -37,8 +38,8 @@ pub struct SearchIndex<K: Debug> {
     /// Maximum keyword length (in chars or codepoints) to be indexed.
     maximum_keyword_length: usize,
     /// Maximum string length (in chars or codepoints) to be indexed. If set,
-    /// Indicium will also index the record's entire strings for autocompletion
-    /// purposes.
+    /// Indicium will also index the record's full field text / whole strings
+    /// as a single keyword for autocompletion purposes.
     maximum_string_length: Option<usize>,
     /// Maximum number of auto-complete options to return.
     maximum_autocomplete_results: usize,
@@ -60,21 +61,44 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
         &self,
         string: &'a str,
     ) -> Vec<&'a str> {
-        // Use the `Regex` expression to split the `String` into keywords and
-        // filter the results:
-        self.regex_split
-            // `Regex` will split the `String` into smaller strings / keywords:
-            .split(string)
-            // Iterate over each resulting keyword:
-            .into_iter()
-            // Only keep the keyword if it's longer than the minimum length and
-            // shorter than the maximum length:
-            .filter(|keyword| {
-                let chars = keyword.chars().count();
-                chars >= self.minimum_keyword_length && chars <= self.maximum_keyword_length
-            }) // filter
-            // Collect all keywords into a `Vec`:
-            .collect()
+
+        // Split the the field text / string into keywords:
+        let mut keywords = if let Some(regex_split) = &self.regex_split {
+            // Use the `Regex` expression to split the `String` into keywords
+            // and filter the results:
+            regex_split
+                // `Regex` will split the `String` into smaller
+                // strings / keywords:
+                .split(string)
+                // Iterate over each resulting keyword:
+                .into_iter()
+                // Only keep the keyword if it's longer than the minimum length
+                // and shorter than the maximum length:
+                .filter(|keyword| {
+                    let chars = keyword.chars().count();
+                    chars >= self.minimum_keyword_length && chars <= self.maximum_keyword_length
+                }) // filter
+                // Collect all keywords into a `Vec`:
+                .collect()
+        } else {
+            // `Regex` expression was set to `None`, so do not split the
+            // `String` into keywords. Return an empty `Vec` instead:
+            vec![]
+        };
+
+        // If the option is enabled, store the field text / entire string itself
+        // as a keyword for autocompletion purposes:
+        if let Some(maximum_string_length) = self.maximum_string_length {
+            // Only keep the string if it's shorter than the maximum:
+            if string.chars().count() <= maximum_string_length {
+                // Add field text / entire string to the keyword `Vec`:
+                keywords.push(string);
+            } // if
+        } // if
+
+        // Return keywords to caller:
+        keywords
+
     } // fn
 
     // -------------------------------------------------------------------------
@@ -109,30 +133,6 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
             // Collect all keywords into a `Vec`:
             .collect();
 
-        // If the option is enabled, store the entire strings themselves for
-        // autocompletion purposes:
-        if let Some(maximum_string_length) = self.maximum_string_length {
-            // Extend the keyword list:
-            keywords.extend_from_slice(
-                // With the whole strings:
-                strings
-                    // Iterate over each `String` field from the record:
-                    .iter()
-                    // Only keep the strings it's shorter than the maximum:
-                    .filter(|string| string.chars().count() <= maximum_string_length)
-                    // If case sensitivity set, leave case intact. Otherwise,
-                    // convert each string to lower case:
-                    .map(|string| match self.case_sensitive {
-                        true => string.to_string(),
-                        false => string.to_lowercase(),
-                    }) // map
-                    // Collect all strings into a `Vec`:
-                    .collect::<Vec<String>>()
-                    // Return to `extend_from_slice` as a slice:
-                    .as_slice()
-            ) // extend
-        } // if
-
         // Sort, de-duplicate, and the return keywords (and full strings) to
         // the caller:
         keywords.sort_unstable();
@@ -146,7 +146,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
     /// Makes a new, empty `SearchIndex`.
 
     pub fn new(
-        regex_split: Regex,
+        regex_split: Option<Regex>,
         case_sensitive: bool,
         minimum_keyword_length: usize,
         maximum_keyword_length: usize,
@@ -164,15 +164,6 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
             maximum_autocomplete_results,
             maximum_search_results,
         } // SearchIndex
-    } // fn
-
-    // -------------------------------------------------------------------------
-    //
-    /// Clears the search index, removing all elements.
-
-    pub fn clear(&mut self) {
-        // Clear `BTreeMap`:
-        self.b_tree_map.clear()
     } // fn
 
     // -------------------------------------------------------------------------
@@ -464,12 +455,21 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
 
 // -----------------------------------------------------------------------------
 
+impl<K: Clone + Debug + Eq + Hash + PartialEq> Deref for SearchIndex<K> {
+    type Target = BTreeMap<String, Vec<K>>;
+    fn deref(&self) -> &Self::Target {
+        &self.b_tree_map
+    }
+}
+
+// -----------------------------------------------------------------------------
+
 impl<K: Clone + Debug + Eq + Hash + PartialEq> Default for SearchIndex<K> {
     fn default() -> Self {
         Self::new(
-            Regex::new(r"([ ,.]+)").expect("Invalid regex"),
+            Some(Regex::new(r"([ ,.]+)").expect("Invalid regex")),
             false,      // Case sensitive?
-            3,          // Minimum keyword length (in chars or codepoints.)
+            1,          // Minimum keyword length (in chars or codepoints.)
             24,         // Maximum keyword length (in chars or codepoints.)
             Some(24),   // Maximum text length (in chars or codepoints.)
             5,          // Maximum number of auto-complete options.

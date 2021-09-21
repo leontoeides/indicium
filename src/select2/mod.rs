@@ -1,10 +1,13 @@
+mod groupable;
 mod selectable;
-mod tests;
 
 // -----------------------------------------------------------------------------
 
-pub use crate::select2::selectable::Selectable;
+pub use crate::select2::groupable::Groupable;
+pub use crate::select2::groupable::GroupRecord;
+pub use crate::select2::groupable::results as groupable_results;
 pub use crate::select2::selectable::results as selectable_results;
+pub use crate::select2::selectable::Selectable;
 
 // -----------------------------------------------------------------------------
 

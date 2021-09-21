@@ -1,6 +1,8 @@
-use crate::select2::Pagination;
-use crate::select2::Record;
-use crate::select2::Request;
+mod tests;
+
+// -----------------------------------------------------------------------------
+
+use crate::select2::{Pagination, Record, Request};
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 use std::cmp::{Eq, PartialEq};
@@ -35,16 +37,16 @@ pub struct Results {
 //
 /// This function will not perform the `term` or `q` search in the query. Any
 /// requested search much be performed by the caller, and the search results
-/// should be processed into `select2` format using this function.
+/// can be processed into `select2` format using this function.
 ///
 /// If no search is requested, the caller can pass the collection (in the form
 /// of a slice) to this function to be processed into `select2` format.
 
 pub fn results<K: Clone + Debug + Display + Eq + Hash + PartialEq, S: Selectable<K>>(
     request: &Request,
+    items_per_page: &Option<usize>,
     records: &[S],
     selected_record: &Option<String>,
-    items_per_page: &Option<usize>,
 ) -> Results {
 
     // If the caller specifies a maximum number of items per page, then consider
@@ -64,7 +66,7 @@ pub fn results<K: Clone + Debug + Display + Eq + Hash + PartialEq, S: Selectable
 
         // This function works on the resolved output of a search, or the
         // records dumped from a key-value store:
-        let results: Vec<Record> = records
+        let paginated_results: Vec<Record> = records
             // Iterate over each passed record:
             .iter()
             // Skip records so we start at beginning of specified `page`:
@@ -91,12 +93,13 @@ pub fn results<K: Clone + Debug + Display + Eq + Hash + PartialEq, S: Selectable
             .collect();
 
         // Determine if there are more records to be displayed. This operation
-        // is performed here to avoid a move of the `results` `Vec`:
-        let more: bool = items_per_page * page < results.len();
+        // is performed here (rather than in the `Results` instantiation) to
+        // avoid a move of `paginated_results`:
+        let more: bool = items_per_page * page < records.len();
 
         // Return `select2` `Results` to caller:
         Results {
-            results,
+            results: paginated_results,
             pagination: Pagination {
                 more,
             },
@@ -106,7 +109,7 @@ pub fn results<K: Clone + Debug + Display + Eq + Hash + PartialEq, S: Selectable
 
         // This function works on the resolved output of a search, or the
         // records dumped from a key-value store:
-        let results = records
+        let unpaginated_results = records
             // Iterate over each passed record:
             .iter()
             // Use `Selectable` trait method `select2_record` to convert from
@@ -117,7 +120,7 @@ pub fn results<K: Clone + Debug + Display + Eq + Hash + PartialEq, S: Selectable
 
         // Return `select2` `Results` to caller:
         Results {
-            results,
+            results: unpaginated_results,
             pagination: Pagination { more: false }
         } // Results
 

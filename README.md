@@ -104,8 +104,8 @@ functions.
 ## 3. Searching
 
 The `search` function will return keys as the search results. Each resulting
-key can then be used to retrieve the corresponding record from its collection.
-Search keywords must be an exact match.
+key can then be used to retrieve the full record from its collection. Search
+keywords must be an exact match.
 
 The logical conjuction for multiple keywords is `or`. For example, a search of
 `this that` will return records containing keywords `this` or `that`.
@@ -150,8 +150,8 @@ lighter-weight alternative to their big brothers.
 
 The `keyword_search` function will return keys for records that match the
 keyword provided by the caller. Each resulting key can then be used to retrieve
-the corresponding record from its collection. The search keyword must be an
-exact match. The results are returned in undefined order. Example usage:
+the full record from its collection. The search keyword must be an exact match.
+The results are returned in undefined order. Example usage:
 
 ```rust
 let resulting_keys: Vec<usize> =
