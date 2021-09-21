@@ -18,7 +18,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
 
         // Split search `String` into keywords according to the `SearchIndex`
         // settings:
-        let keywords = self.string_keywords(string, true);
+        let keywords: Vec<String> = self.string_keywords(string, true);
 
         // This `HashMap` is used to count the number of hits for each resulting
         // key. This is so we can return search results in order of relevance:
@@ -30,7 +30,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
             // Iterate over the keywords supplied in the search string:
             .iter()
             // For each keyword in the search string:
-            .for_each(|keyword|
+            .for_each(|keyword| {
                 // Search for keyword in our `BTreeMap`:
                 self.keyword_search(keyword)
                     // Iterate over the resulting keys (if any):
@@ -42,14 +42,14 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
                         // No record for this key, initialize to one hit:
                         None => { search_results.insert((*key).clone(), 1); },
                     }) // for_each
-            ); // for_each
+            }); // for_each
 
-        // At this point, we have a list of keys in a `HashMap`. The hash map
-        // value holds the number of times each key has been returned in the
-        // above keywords search.
+        // At this point, we have a list of resulting keys in a `HashMap`. The
+        // hash map value holds the number of times each key has been returned
+        // in the above keywords search.
         //
-        // We want to sort these keys by descending hit-count. We'll convert it
-        // to a `Vec` so this can be done:
+        // We want to sort these keys by descending hit-count. First, we must
+        // convert it to a `Vec` so this can be done:
 
         let mut search_results: Vec<(K, usize)> = search_results
             // Iterate over keys in the hash map:

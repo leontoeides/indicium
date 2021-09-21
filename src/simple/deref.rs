@@ -7,6 +7,8 @@ use std::hash::Hash;
 use std::ops::Deref;
 
 // -----------------------------------------------------------------------------
+//
+/// Dereferencing a `SearchIndex` will give the underlying `BTreeMap`.
 
 impl<K: Clone + Debug + Eq + Hash + PartialEq> Deref for SearchIndex<K> {
     type Target = BTreeMap<String, Vec<K>>;

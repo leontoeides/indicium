@@ -56,9 +56,9 @@ use indicium::simple::SearchIndex;
 
 let my_vec: Vec<MyStruct> = Vec::new();
 
-// In the case of a `Vec` collection, we use the index as our key.  A `Vec`
-// index is a `usize` type. Therefore we will instantiate `SearchIndex` as
-// `SearchIndex<usize>`.
+// In the case of a `Vec` collection, we use the index as our key.  A
+// `Vec` index is a `usize` type. Therefore we will instantiate
+// `SearchIndex` as `SearchIndex<usize>`.
 
 let mut search_index: SearchIndex<usize> = SearchIndex::default();
 
@@ -78,11 +78,11 @@ use indicium::simple::SearchIndex;
 
 let my_hash_map: HashMap<String, MyStruct> = HashMap::new();
 
-// In the case of a `HashMap` collection, we use the hash map's key as the
-// `SearchIndex` key. In our hypothetical example, we will use MyStruct's
-// `title` as a the key which is a `String` type. Therefore we will instantiate
-// `HashMap<K, V>` as HashMap<String, MyStruct> and `SearchIndex<K>` as
-// `SearchIndex<String>`.
+// In the case of a `HashMap` collection, we use the hash map's key as
+// the `SearchIndex` key. In our hypothetical example, we will use
+// MyStruct's `title` as a the key which is a `String` type. Therefore
+// we will instantiate `HashMap<K, V>` as HashMap<String, MyStruct> and
+// `SearchIndex<K>` as `SearchIndex<String>`.
 
 let mut search_index: SearchIndex<String> = SearchIndex::default();
 
@@ -110,8 +110,8 @@ keywords must be an exact match.
 The logical conjuction for multiple keywords is `or`. For example, a search of
 `this that` will return records containing keywords `this` or `that`.
 
-The results are returned in order of descending relevance. For example, records
-containing both keywords `this` and `that` will be the top results.
+The results are returned in order of descending relevance. Records containing
+both keywords `this` and `that` will be the top results.
 
 Example usage:
 
@@ -136,7 +136,10 @@ lexographic order. Example usage:
 let autocomplete_options: Vec<String> =
     search_index.autocomplete(&"a very big bir".to_string());
 
-assert_eq!(autocomplete_options, vec!["very big bird", "very big birthday"]);
+assert_eq!(
+	autocomplete_options,
+	vec!["very big bird", "very big birthday"]
+);
 ```
 
 # The Keyword Methods

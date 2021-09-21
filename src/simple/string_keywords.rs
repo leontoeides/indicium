@@ -14,14 +14,21 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
     /// split pattern (`Vec` of `char`). This function will also filter-out
     /// keywords that don't meet the defined length constraints.
 
-    pub(crate) fn string_keywords<'a>(
+    pub(crate) fn string_keywords(
         &self,
-        string: &'a str,
+        string: &str,
         allow_string_as_keyword: bool,
-    ) -> Vec<&'a str> {
+    ) -> Vec<String> {
+
+        // If case sensitivity set, leave case intact. Otherwise, convert each
+        // keyword to lower case:
+        let string = match self.case_sensitive {
+            true => string.to_string(),
+            false => string.to_lowercase(),
+        };
 
         // Split the the field text / string into keywords:
-        let mut keywords = if let Some(split_pattern) = &self.split_pattern {
+        let mut keywords: Vec<String> = if let Some(split_pattern) = &self.split_pattern {
             // Use the split pattern (`Vec` of `char`) to split the `String` into
             // keywords and filter the results:
             string
@@ -36,6 +43,8 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
                     let chars = keyword.chars().count();
                     chars >= self.minimum_keyword_length && chars <= self.maximum_keyword_length
                 }) // filter
+                // Copy string from reference:
+                .map(|str_ref| str_ref.to_string())
                 // Collect all keywords into a `Vec`:
                 .collect()
         } else {

@@ -32,12 +32,6 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
             .map(|string| self.string_keywords(string, true))
             // Flatten the string's keywords:
             .flatten()
-            // If case sensitivity set, leave case intact. Otherwise, convert
-            // each keyword to lower case:
-            .map(|string| match self.case_sensitive {
-                true => string.to_string(),
-                false => string.to_lowercase(),
-            }) // map
             // Collect all keywords into a `Vec`:
             .collect();
 

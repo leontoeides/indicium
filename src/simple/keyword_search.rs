@@ -31,8 +31,12 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
                 // Iterate over all matching keys and only return
                 // `maximum_search_results` number of keys:
                 .iter()
-                // Only return `maximum_search_results` number of keys:
-                .take(self.maximum_search_results)
+                // Only return `maximum_search_results` number of keys.
+                // Note: `search` requires a complete list of keys from this
+                // function to work correctly, so this `take` has been commented
+                // out for now. Perhaps we could add a `observe_maximum_results`
+                // `bool` parameter for this function?
+                // .take(self.maximum_search_results)
                 // Collect all resulting keys into a `Vec`:
                 .collect()
 
