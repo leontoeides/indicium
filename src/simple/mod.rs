@@ -2,7 +2,6 @@ mod tests;
 
 // -----------------------------------------------------------------------------
 
-use regex::Regex;
 use std::clone::Clone;
 use std::cmp::{Eq, PartialEq};
 use std::collections::{BTreeMap, HashMap};
@@ -28,8 +27,8 @@ pub trait Indexable {
 pub struct SearchIndex<K: Debug> {
     /// The search index data structure.
     b_tree_map: BTreeMap<String, Vec<K>>,
-    /// The `Regex` that splits strings into keywords.
-    regex_split: Option<Regex>,
+    /// The characters that splits strings into keywords.
+    split_pattern: Option<Vec<char>>,
     /// Indicates whether the search index is case sensitive or not. If set to
     /// false (case insensitive), all keywords will be converted to lower case.
     case_sensitive: bool,
@@ -54,8 +53,8 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
     // -------------------------------------------------------------------------
     //
     /// An associated helper function that splits a `&str` into keywords using a
-    /// `Regex` expression. This function will also filter-out keywords that
-    /// don't meet the defined length constraints.
+    /// split pattern (`Vec` of `char`). This function will also filter-out
+    /// keywords that don't meet the defined length constraints.
 
     fn string_keywords<'a>(
         &self,
@@ -63,13 +62,13 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
     ) -> Vec<&'a str> {
 
         // Split the the field text / string into keywords:
-        let mut keywords = if let Some(regex_split) = &self.regex_split {
-            // Use the `Regex` expression to split the `String` into keywords
-            // and filter the results:
-            regex_split
-                // `Regex` will split the `String` into smaller
-                // strings / keywords:
-                .split(string)
+        let mut keywords = if let Some(split_pattern) = &self.split_pattern {
+            // Use the split pattern (`Vec` of `char`) to split the `String` into
+            // keywords and filter the results:
+            string
+                // Split the `String` into smaller strings / keywords on
+                // specified characters:
+                .split(split_pattern.as_slice())
                 // Iterate over each resulting keyword:
                 .into_iter()
                 // Only keep the keyword if it's longer than the minimum length
@@ -81,8 +80,8 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
                 // Collect all keywords into a `Vec`:
                 .collect()
         } else {
-            // `Regex` expression was set to `None`, so do not split the
-            // `String` into keywords. Return an empty `Vec` instead:
+            // Split pattern was set to `None`, so do not split the `String`
+            // into keywords. Return an empty `Vec` instead:
             vec![]
         };
 
@@ -146,7 +145,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
     /// Makes a new, empty `SearchIndex`.
 
     pub fn new(
-        regex_split: Option<Regex>,
+        split_pattern: Option<Vec<char>>,
         case_sensitive: bool,
         minimum_keyword_length: usize,
         maximum_keyword_length: usize,
@@ -156,7 +155,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
     ) -> SearchIndex<K> {
         SearchIndex {
             b_tree_map: BTreeMap::new(),
-            regex_split,
+            split_pattern,
             case_sensitive,
             minimum_keyword_length,
             maximum_keyword_length,
@@ -467,7 +466,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> Deref for SearchIndex<K> {
 impl<K: Clone + Debug + Eq + Hash + PartialEq> Default for SearchIndex<K> {
     fn default() -> Self {
         Self::new(
-            Some(Regex::new(r"([ ,.]+)").expect("Invalid regex")),
+            Some(vec![' ', ',', '.']),
             false,      // Case sensitive?
             1,          // Minimum keyword length (in chars or codepoints.)
             24,         // Maximum keyword length (in chars or codepoints.)
