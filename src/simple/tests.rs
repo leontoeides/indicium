@@ -1,7 +1,7 @@
 #[test]
 fn simple() {
 
-    use crate::simple::{Indexable, SearchIndex};
+    use crate::simple::{Conjunction, Indexable, SearchIndex};
 
     struct TestStruct {
         title: String,
@@ -50,23 +50,29 @@ fn simple() {
     // Test `keyword_autocomplete` method:
 
     println!("Autocomplete keyword: {:#?}", search_index.keyword_autocomplete(&"ass".to_string()));
-    assert_eq!(search_index.keyword_autocomplete(&"ass".to_string()), vec!["assistance"]);
+    assert_eq!(search_index.keyword_autocomplete(&"ass".to_string()).iter().cloned().cloned().collect::<Vec<String>>(), vec!["assistance"]);
 
     // Test `keyword_autocomplete` method:
 
-    println!("Autocomplete keyword: {:#?}", search_index.keyword_autocomplete(&"The B".to_string()));
-    assert_eq!(search_index.keyword_autocomplete(&"Th".to_string()), vec!["the", "the bird's the word"]);
+    println!("Autocomplete keyword: {:#?}", search_index.keyword_autocomplete(&"The".to_string()));
+    let mut autocomplete_options = search_index.keyword_autocomplete(&"The".to_string()).iter().cloned().cloned().collect::<Vec<String>>();
+    autocomplete_options.sort();
+    assert_eq!(autocomplete_options, vec!["the", "the bird's the word"]);
 
     // Test `keyword_autocomplete` method:
 
     println!("Autocomplete keyword: {:#?}", search_index.keyword_autocomplete(&"hel".to_string()));
-    assert_eq!(search_index.keyword_autocomplete(&"hel".to_string()), vec!["helicopter", "hell", "hello", "help"]);
+    let mut autocomplete_options = search_index.keyword_autocomplete(&"hel".to_string()).iter().cloned().cloned().collect::<Vec<String>>();
+    autocomplete_options.sort();
+    assert_eq!(autocomplete_options, vec!["helicopter", "hell", "hello", "help"]);
 
     // Test `autocomplete` method:
 
     println!("Autocomplete string: {:#?}", search_index.autocomplete(&"hel hel hel".to_string()));
+    let mut autocomplete_options = search_index.autocomplete(&"hel hel hel".to_string());
+    autocomplete_options.sort();
     assert_eq!(
-        search_index.autocomplete(&"hel hel hel".to_string()),
+        autocomplete_options,
         vec![
             "hel hel helicopter",
             "hel hel hell",
@@ -78,22 +84,22 @@ fn simple() {
     // Test `keyword_search` method:
 
     println!("Search keyword: {:#?}", search_index.keyword_search(&"AsSisTanCe".to_string()));
-    assert_eq!(search_index.keyword_search(&"AsSisTanCe".to_string()), vec![&3]);
+    assert_eq!(search_index.keyword_search(&"AsSisTanCe".to_string()).iter().cloned().collect::<Vec<&usize>>(), vec![&3]);
 
     // Test `keyword_search` method:
 
     println!("Search keyword: {:#?}", search_index.keyword_search(&"The Bird's the Word".to_string()));
-    assert_eq!(search_index.keyword_search(&"The Bird's the Word".to_string()), vec![&4]);
+    assert_eq!(search_index.keyword_search(&"The Bird's the Word".to_string()).iter().cloned().collect::<Vec<&usize>>(), vec![&4]);
 
     // Test `search` method:
 
-    println!("Search string: {:#?}", search_index.search(&"Helicopter around".to_string()));
-    assert_eq!(search_index.search(&"Helicopter around".to_string()), vec![1]);
+    println!("Search string: {:#?}", search_index.search(&Conjunction::Or, &"Helicopter around".to_string()));
+    assert_eq!(search_index.search(&Conjunction::Or, &"Helicopter around".to_string()).to_vec(), vec![&1]);
 
     // Test `search` method:
 
-    println!("Search string: {:#?}", search_index.search(&"Helicopter around help".to_string()));
-    assert_eq!(search_index.search(&"Helicopter around help".to_string()), vec![1, 3]);
+    println!("Search string: {:#?}", search_index.search(&Conjunction::Or, &"Helicopter around help".to_string()));
+    assert_eq!(search_index.search(&Conjunction::Or, &"Helicopter around help".to_string()).to_vec(), vec![&1, &3]);
 
     // Test `remove` method:
 
@@ -103,7 +109,7 @@ fn simple() {
     });
 
     println!("Search: {:#?}", search_index.keyword_search(&"Helicopter".to_string()));
-    assert_eq!(search_index.keyword_search(&"Helicopter".to_string()), Vec::<&usize>::new());
+    assert_eq!(search_index.keyword_search(&"Helicopter".to_string()).iter().cloned().collect::<Vec<&usize>>(), Vec::<&usize>::new());
 
     // Test `insert` method:
 
@@ -113,7 +119,7 @@ fn simple() {
     });
 
     println!("Search: {:#?}", search_index.keyword_search(&"Helicopter".to_string()));
-    assert_eq!(search_index.keyword_search(&"Helicopter".to_string()), vec![&1]);
+    assert_eq!(search_index.keyword_search(&"Helicopter".to_string()).iter().cloned().collect::<Vec<&usize>>(), vec![&1]);
 
     // Test `replace` method:
 
@@ -130,6 +136,6 @@ fn simple() {
     );
 
     println!("Search: {:#?}", search_index.keyword_search(&"Quadricopter".to_string()));
-    assert_eq!(search_index.keyword_search(&"Quadricopter".to_string()), vec![&1]);
+    assert_eq!(search_index.keyword_search(&"Quadricopter".to_string()).iter().cloned().collect::<Vec<&usize>>(), vec![&1]);
 
 } // fn

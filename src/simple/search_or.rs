@@ -45,7 +45,7 @@ where
                         // Add "hit" to counter for an already existing key:
                         Some(result_entry) => { *result_entry += 1 },
                         // No record for this key, initialize to one hit:
-                        None => { search_results.insert((key).clone(), 1); },
+                        None => { search_results.insert(key, 1); },
                     }) // for_each
             }); // for_each
 
@@ -60,7 +60,7 @@ where
             // Iterate over keys in the hash map:
             .iter()
             // Convert the key-value pair into a tuple element:
-            .map(|(key, value)| (key.clone(), *value))
+            .map(|(key, value)| (*key, *value))
             // Collect the tuple elements into a `Vec`:
             .collect();
 
@@ -77,7 +77,7 @@ where
             // Only return `maximum_search_results` number of keys:
             .take(self.maximum_search_results)
             // Remove the hit-count from the tuple, returning only the key:
-            .map(|(key, _value)| key.clone())
+            .map(|(key, _value)| *key)
             // Collect the keys into a `Vec`:
             .collect()
 
