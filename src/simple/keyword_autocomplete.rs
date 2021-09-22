@@ -1,6 +1,7 @@
 use crate::simple::search_index::SearchIndex;
 use std::clone::Clone;
 use std::cmp::{Eq, PartialEq};
+use std::collections::HashSet;
 use std::fmt::Debug;
 use std::hash::Hash;
 
@@ -16,7 +17,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
     /// The provided string is expected to be only a single keyword. For
     /// multi-keyword support see the `autocomplete` method.
 
-    pub fn keyword_autocomplete(&self, string: &str) -> Vec<&String> {
+    pub fn keyword_autocomplete(&self, string: &str) -> HashSet<&String> {
 
         // If case sensitivity set, leave case intact. Otherwise, convert
         // keyword to lower case:
@@ -40,7 +41,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
             // iteration when we reach a keyword that does not start with our
             // supplied (partial) keyword.
             .take_while(|keyword| keyword.starts_with(&string))
-            // Collect all keyword autocompletions into a `Vec`:
+            // Collect all keyword autocompletions into a `HashSet`:
             .collect()
 
     } // fn

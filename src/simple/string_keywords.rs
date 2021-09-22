@@ -10,18 +10,19 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
-    /// An associated helper function that splits a `&str` into keywords using a
-    /// split pattern (`Vec` of `char`). This function will also filter-out
-    /// keywords that don't meet the defined length constraints.
+    /// An associated helper method that splits a `&str` into keywords using a
+    /// split pattern (`Vec<char>`). This method will also perform case
+    /// conversion if necessary, and filter-out keywords that don't meet the
+    /// defined length constraints.
 
     pub(crate) fn string_keywords(
         &self,
         string: &str,
-        allow_string_as_keyword: bool,
+        use_string_as_keyword: bool,
     ) -> Vec<String> {
 
-        // If case sensitivity set, leave case intact. Otherwise, convert each
-        // keyword to lower case:
+        // If case sensitivity set, leave case intact. Otherwise, convert the
+        // entire string to lower case:
         let string = match self.case_sensitive {
             true => string.to_string(),
             false => string.to_lowercase(),
@@ -29,7 +30,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
 
         // Split the the field text / string into keywords:
         let mut keywords: Vec<String> = if let Some(split_pattern) = &self.split_pattern {
-            // Use the split pattern (`Vec` of `char`) to split the `String` into
+            // Use the split pattern (a `Vec<char>`) to split the `String` into
             // keywords and filter the results:
             string
                 // Split the `String` into smaller strings / keywords on
@@ -57,7 +58,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
         // as a keyword for autocompletion purposes:
         if let Some(maximum_string_length) = self.maximum_string_length {
             // Only keep the string if it's shorter than the maximum:
-            if allow_string_as_keyword && string.chars().count() <= maximum_string_length {
+            if use_string_as_keyword && string.chars().count() <= maximum_string_length {
                 // Add field text / entire string to the keyword `Vec`:
                 keywords.push(string);
             } // if
