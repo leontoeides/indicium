@@ -107,30 +107,71 @@ The `search` function will return keys as the search results. Each resulting
 key can then be used to retrieve the full record from its collection. Search
 keywords must be an exact match.
 
-The logical conjuction for multiple keywords is `or`. For example, a search of
-`this that` will return records containing keywords `this` or `that`.
+Search only supports exact keyword matches and does not use fuzzy matching.
+Consider providing the `autocomplete` feature to your users as an ergonomic
+alternative to fuzzy matching.
 
-The results are returned in order of descending relevance. Records containing
-both keywords `this` and `that` will be the top results.
+#### `Or` Searches
+
+The default logical conjuction for multiple keywords is `or`. For example, a
+search of `this that` will return records containing keywords `this` or `that`.
+This is where _any_ keyword must be present in a record for it to be returned as
+a result.
+
+For this search, the results are returned in order of descending relevance.
+Records containing both keywords `this` and `that` will be the top results.
 
 Example usage:
 
 ```rust
-let resulting_keys: Vec<usize> =
-    search_index.keyword_search(&"helicopter".to_string());
+let mut search_index: SearchIndex<String> = SearchIndex::default();
 
-assert_eq!(resulting_keys, Some(vec![1]));
+let resulting_keys: Vec<usize> =
+    search_index.search(&"helicopter".to_string());
+
+assert_eq!(resulting_keys, Some(vec![&1]));
 ```
 
-Search only supports exact keyword matches and does not use fuzzy matching.
-Consider providing the `autocomplete` feature to your users as an ergonomic
-alternative to fuzzy matching.
+#### `And` Searches
+
+The logical conjuction for multiple keywords can be changed to `and`. For
+example, a search of `this that` will only return records containing keywords
+`this` and `that`. This is where _all_ keywords must be present in a record for
+it to be returned as a result. For this search, the results are returned in
+undefined order.
+
+Example usage:
+
+```rust
+use crate::simple::conjunction::Conjunction;
+use crate::simple::search_index::SearchIndex;
+
+let mut search_index: SearchIndex<String> =
+	SearchIndexBuilder<String>::default().conjuction(Conjunction::And).build();
+
+// ...Search index populated here...
+
+let resulting_keys: Vec<usize> =
+    search_index.search(&"helicopter".to_string());
+
+assert_eq!(resulting_keys, Some(vec![&1]));
+```
+
+### Which Search Should I Choose?
+
+It really depends on your use-case. I would suggested trying both `or` and `and`
+searches to see which one works better for your data.
+
+If your collection contains less than 10,000 records, `or` might be a good place
+to start. To me, `or` effectively feels like "using these keywords, find all
+the records I might want" which works well if there aren't too many. Whereas the
+`and` search feels more like "filter out the records I don't want."
 
 ## 4. Autocompletion
 
 The `autocomplete` function will provide several autocompletion options for the
 last partial keyword in the supplied string. The results are returned in
-lexographic order. Example usage:
+undefined order. Example usage:
 
 ```rust
 let autocomplete_options: Vec<String> =
@@ -154,7 +195,7 @@ lighter-weight alternative to their big brothers.
 The `keyword_search` function will return keys for records that match the
 keyword provided by the caller. Each resulting key can then be used to retrieve
 the full record from its collection. The search keyword must be an exact match.
-The results are returned in pseudo-random order. Example usage:
+The results are returned in undefined order. Example usage:
 
 ```rust
 let resulting_keys: Vec<usize> =
@@ -177,7 +218,7 @@ full list of keys to properly rank the results by relevance.
 
 The `keyword_autocomplete` function will return several keywords that begin with
 the partial keyword provided by the caller. The results are returned in
-lexographic order. Example usage:
+undefined order. Example usage:
 
 ```rust
 let autocomplete_options: Vec<String> =

@@ -56,14 +56,14 @@ fn simple() {
 
     println!("Autocomplete keyword: {:#?}", search_index.keyword_autocomplete(&"The".to_string()));
     let mut autocomplete_options = search_index.keyword_autocomplete(&"The".to_string()).iter().cloned().cloned().collect::<Vec<String>>();
-    autocomplete_options.sort();
+    //autocomplete_options.sort();
     assert_eq!(autocomplete_options, vec!["the", "the bird's the word"]);
 
     // Test `keyword_autocomplete` method:
 
     println!("Autocomplete keyword: {:#?}", search_index.keyword_autocomplete(&"hel".to_string()));
     let mut autocomplete_options = search_index.keyword_autocomplete(&"hel".to_string()).iter().cloned().cloned().collect::<Vec<String>>();
-    autocomplete_options.sort();
+    //autocomplete_options.sort();
     assert_eq!(autocomplete_options, vec!["helicopter", "hell", "hello", "help"]);
 
     // Test `autocomplete` method:
