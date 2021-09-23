@@ -1,3 +1,5 @@
+use crate::simple::Conjunction;
+use derive_builder::Builder;
 use std::collections::BTreeMap;
 use std::fmt::Debug;
 
@@ -5,11 +7,13 @@ use std::fmt::Debug;
 //
 /// Structure that represents a search index.
 
-#[derive(Debug)]
+#[derive(Builder, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct SearchIndex<K: Debug> {
-    /// The search index data structure.
+    /// Search index data structure.
     pub(crate) b_tree_map: BTreeMap<String, Vec<K>>,
-    /// The characters that splits strings into keywords.
+    /// Logical conjuction for connecting search results for each keyword:
+    pub(crate) conjuction: Conjunction,
+    /// Characters that splits strings into keywords.
     pub(crate) split_pattern: Option<Vec<char>>,
     /// Indicates whether the search index is case sensitive or not. If set to
     /// false (case insensitive), all keywords will be converted to lower case.

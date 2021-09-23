@@ -1,3 +1,4 @@
+use crate::simple::Conjunction;
 use crate::simple::search_index::SearchIndex;
 use std::clone::Clone;
 use std::cmp::{Eq, PartialEq};
@@ -14,6 +15,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
     /// Makes a new, empty `SearchIndex`.
 
     pub fn new(
+        conjuction: Conjunction,
         split_pattern: Option<Vec<char>>,
         case_sensitive: bool,
         minimum_keyword_length: usize,
@@ -23,6 +25,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
         maximum_search_results: usize,
     ) -> SearchIndex<K> {
         SearchIndex {
+            conjuction,
             b_tree_map: BTreeMap::new(),
             split_pattern,
             case_sensitive,

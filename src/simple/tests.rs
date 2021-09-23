@@ -1,7 +1,7 @@
 #[test]
 fn simple() {
 
-    use crate::simple::{Conjunction, Indexable, SearchIndex};
+    use crate::simple::{Indexable, SearchIndex};
 
     struct TestStruct {
         title: String,
@@ -93,13 +93,13 @@ fn simple() {
 
     // Test `search` method:
 
-    println!("Search string: {:#?}", search_index.search(&Conjunction::Or, &"Helicopter around".to_string()));
-    assert_eq!(search_index.search(&Conjunction::Or, &"Helicopter around".to_string()).to_vec(), vec![&1]);
+    println!("Search string: {:#?}", search_index.search(&"Helicopter around".to_string()));
+    assert_eq!(search_index.search(&"Helicopter around".to_string()).to_vec(), vec![&1]);
 
     // Test `search` method:
 
-    println!("Search string: {:#?}", search_index.search(&Conjunction::Or, &"Helicopter around help".to_string()));
-    assert_eq!(search_index.search(&Conjunction::Or, &"Helicopter around help".to_string()).to_vec(), vec![&1, &3]);
+    println!("Search string: {:#?}", search_index.search(&"Helicopter around help".to_string()));
+    assert_eq!(search_index.search(&"Helicopter around help".to_string()).to_vec(), vec![&1, &3]);
 
     // Test `remove` method:
 

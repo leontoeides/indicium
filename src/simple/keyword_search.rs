@@ -26,7 +26,8 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
 
     pub fn keyword_search(&self, keyword: &str) -> HashSet<&K> {
 
-        // If case insensitivity set, convert the keyword to lower case:
+        // If case sensitivity set, leave case intact. Otherwise, convert
+        // keyword to lower case:
         let keyword = match self.case_sensitive {
             true => keyword.to_string(),
             false => keyword.to_lowercase(),

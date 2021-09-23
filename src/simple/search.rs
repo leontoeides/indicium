@@ -17,10 +17,10 @@ where
     /// Returns the keys resulting from the search string. The search string may
     /// contain several keywords.
 
-    pub fn search(&'a self, conjuction: &'a Conjunction, string: &'a str) -> Vec<&'a K> {
+    pub fn search(&'a self, string: &'a str) -> Vec<&'a K> {
 
-        match conjuction {
-            Conjunction::And => self.search_and(string).iter().cloned().collect(),
+        match &self.conjuction {
+            Conjunction::And => self.search_and(string),
             Conjunction::Or => self.search_or(string),
         } // match
 
