@@ -19,7 +19,7 @@ where
 
     pub fn search(&'a self, string: &'a str) -> Vec<&'a K> {
 
-        match &self.conjuction {
+        match &self.conjunction {
             Conjunction::And => self.search_and(string),
             Conjunction::Or => self.search_or(string),
         } // match

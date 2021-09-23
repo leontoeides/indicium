@@ -12,10 +12,13 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
-    /// Makes a new, empty `SearchIndex`.
+    /// Makes a new, empty `SearchIndex`. It might be preferrable to use
+    /// `SearchIndex::default()` or `SearchIndexBuilder::default()` to create
+    /// a new search index.
 
+    #[allow(clippy::too_many_arguments)]
     pub fn new(
-        conjuction: Conjunction,
+        conjunction: Conjunction,
         split_pattern: Option<Vec<char>>,
         case_sensitive: bool,
         minimum_keyword_length: usize,
@@ -25,7 +28,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
         maximum_search_results: usize,
     ) -> SearchIndex<K> {
         SearchIndex {
-            conjuction,
+            conjunction,
             b_tree_map: BTreeMap::new(),
             split_pattern,
             case_sensitive,
