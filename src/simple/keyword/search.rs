@@ -16,12 +16,12 @@ impl<K: Clone + Debug + Eq + Hash + Ord + PartialEq> SearchIndex<K> {
     /// The provided string is expected to be only a single keyword. For
     /// multi-keyword support see the `search` method.
     //
-    // Note: This function is a variation of the `keyword_search_internal`
+    // Note: This function is a variation of the `internal_keyword_search`
     // function. If this function is modified, it is likely the
-    // `keyword_search_internal` function should be updated also.
+    // `internal_keyword_search` function should be updated also.
     //
     // The difference between these two functions is that `keyword_search`
-    // observes `maximum_search_results`, while `keyword_search_internal` does
+    // observes `maximum_search_results`, while `internal_keyword_search` does
     // not.
 
     pub fn keyword_search(&self, keyword: &str) -> BTreeSet<&K> {
@@ -33,29 +33,15 @@ impl<K: Clone + Debug + Eq + Hash + Ord + PartialEq> SearchIndex<K> {
             false => keyword.to_lowercase(),
         }; // match
 
-        // Attempt to get matching keys for the search keyword from BTreeMap:
-        if let Some(keys) = self.b_tree_map.get(&keyword) {
-
-            // Attempt to get matching keys for search keyword:
-            keys
-                // Iterate over all matching keys and only return
-                // `maximum_search_results` number of keys:
-                .iter()
-                // Only return `maximum_search_results` number of keys:
-                .take(self.maximum_search_results)
-                // Collect all resulting keys into a `BTreeSet`:
-                .collect()
-
-            // -> If fuzzy matching were to be implemented for
-            // `indicium::simple` it would probably be put here. <-
-
-        } else {
-
-            // The search keyword did not result in any matches. Return an
-            // empty `BTreeSet`:
-            BTreeSet::new()
-
-        } // if
+        self.internal_keyword_search(&keyword)
+            // Iterate the results of the keyword search:
+            .iter()
+            // Only return `maximum_search_results` number of keys:
+            .take(self.maximum_search_results)
+            // Take ownership of reference so we return `&K` and not `&&K`:
+            .cloned()
+            // Collect all resulting keys into a `BTreeSet`:
+            .collect()
 
     } // fn
 

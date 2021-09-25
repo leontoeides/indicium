@@ -10,7 +10,10 @@ use std::hash::Hash;
 impl<K: Clone + Debug + Eq + Hash + PartialEq> Default for SearchIndex<K> {
     fn default() -> Self {
         Self::new(
-            Conjunction::Or,    // Logical conjuction for each keyword's results.
+            // `And` was chosen as the default conjunction because it uses
+            // fewer CPU resources. `Or` may be preferable for smaller search
+            // indicies.
+            Conjunction::And,    // Logical conjuction for each keyword's results.
             Some(vec![' ', '\n', '\r', '\t', ',', '.']), // Split characters.
             false,              // Case sensitive?
             1,                  // Minimum keyword length (in chars or codepoints.)

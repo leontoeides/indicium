@@ -70,7 +70,7 @@ fn simple() {
 
     println!("Autocomplete string: {:#?}", search_index.autocomplete(&"hel hel hel".to_string()));
     let mut autocomplete_options = search_index.autocomplete(&"hel hel hel".to_string());
-    autocomplete_options.sort();
+    // autocomplete_options.sort();
     assert_eq!(
         autocomplete_options,
         vec![

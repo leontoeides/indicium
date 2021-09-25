@@ -1,6 +1,6 @@
 use crate::simple::search_index::SearchIndex;
 use std::clone::Clone;
-use std::cmp::{Eq, PartialEq};
+use std::cmp::{Eq, Ord, PartialEq};
 use std::collections::HashMap;
 use std::fmt::Debug;
 use std::hash::Hash;
@@ -10,7 +10,7 @@ use rayon::slice::ParallelSliceMut;
 
 // -----------------------------------------------------------------------------
 
-impl<'a, K: 'a + Clone + Debug + Eq + Hash + PartialEq + Send> SearchIndex<K>
+impl<'a, K: 'a + Clone + Debug + Eq + Hash + Ord + PartialEq + Send> SearchIndex<K>
 where
     &'a K: Send {
 
@@ -19,7 +19,7 @@ where
     /// Returns the keys resulting from the search string. The search string may
     /// contain several keywords.
 
-    pub fn search_or(&'a self, string: &'a str) -> Vec<&'a K> {
+    pub fn or_search(&'a self, string: &'a str) -> Vec<&'a K> {
 
         // Split search `String` into keywords (according to the `SearchIndex`
         // settings):
@@ -37,7 +37,7 @@ where
             // For each keyword in the search string:
             .for_each(|keyword| {
                 // Search for keyword in our `BTreeMap`:
-                self.keyword_search_internal(keyword)
+                self.internal_keyword_search(keyword)
                     // Iterate over the resulting keys (if any):
                     .iter()
                     // For each resulting key from the keyword search:

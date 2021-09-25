@@ -9,6 +9,10 @@ use std::fmt::Debug;
 #[derive(Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct SearchIndex<K: Debug> {
     /// Search index data structure.
+    // Note: `Vec<K>` was chosen over `HashSet<K>` and `BTreeSet<K>` because it
+    // supports multiple elements of `K`. This way, if a record contains the
+    // same keyword multiple times, the record can be returned as more
+    // relevant.
     pub(crate) b_tree_map: BTreeMap<String, Vec<K>>,
     /// Logical conjuction for connecting search results for each keyword.
     pub(crate) conjunction: Conjunction,
@@ -22,8 +26,8 @@ pub struct SearchIndex<K: Debug> {
     /// Maximum keyword length (in chars or codepoints) to be indexed.
     pub(crate) maximum_keyword_length: usize,
     /// Maximum string length (in chars or codepoints) to be indexed. If set,
-    /// Indicium will also index the record's full field text / whole strings
-    /// as a single keyword for autocompletion purposes.
+    /// Indicium will index the record's full field text / whole strings as a
+    /// single keyword for autocompletion purposes.
     pub(crate) maximum_string_length: Option<usize>,
     /// Maximum number of auto-complete options to return.
     pub(crate) maximum_autocomplete_results: usize,

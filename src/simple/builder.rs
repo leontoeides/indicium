@@ -100,8 +100,8 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndexBuilder<K> {
     } // fn
 
     /// Maximum string length (in chars or codepoints) to be indexed. If set,
-    /// Indicium will also index the record's full field text / whole strings
-    /// as a single keyword for autocompletion purposes.
+    /// Indicium will index the record's full field text / whole strings as a
+    /// single keyword for autocompletion purposes.
     pub fn max_string_len(&mut self, maximum_string_length: Option<usize>) -> &mut SearchIndexBuilder<K> {
         self.maximum_string_length = maximum_string_length;
         self

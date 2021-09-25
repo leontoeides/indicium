@@ -1,12 +1,9 @@
 use crate::simple::search_index::SearchIndex;
-use std::clone::Clone;
-use std::cmp::{Eq, PartialEq};
 use std::fmt::Debug;
-use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
+impl<K: Debug> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
@@ -51,11 +48,11 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
         } else {
             // Split pattern was set to `None`, so do not split the `String`
             // into keywords. Return an empty `Vec` instead:
-            vec![]
+            Vec::new()
         };
 
         // If the option is enabled, store the field text / entire string itself
-        // as a keyword for autocompletion purposes:
+        // as a keyword. This feature is for autocompletion purposes:
         if let Some(maximum_string_length) = self.maximum_string_length {
             // Only keep the string if it's shorter than the maximum:
             if use_string_as_keyword && string.chars().count() <= maximum_string_length {

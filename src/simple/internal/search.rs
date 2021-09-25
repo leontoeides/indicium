@@ -1,13 +1,12 @@
+use crate::simple::internal::MAXIMUM_INTERNAL_SEARCH_RESULTS;
 use crate::simple::search_index::SearchIndex;
-use std::clone::Clone;
-use std::cmp::{Eq, Ord, PartialEq};
+use std::cmp::Ord;
 use std::collections::BTreeSet;
 use std::fmt::Debug;
-use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Clone + Debug + Eq + Hash + Ord + PartialEq> SearchIndex<K> {
+impl<K: Debug + Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
@@ -15,26 +14,15 @@ impl<K: Clone + Debug + Eq + Hash + Ord + PartialEq> SearchIndex<K> {
     ///
     /// The provided string is expected to be only a single keyword. For
     /// multi-keyword support see the `search` method.
-    //
-    // Note: This function is a variation of the `keyword_search_internal`
-    // function. If this function is modified, it is likely the
-    // `keyword_search_internal` function should be updated also.
-    //
-    // The difference between these two functions is that `keyword_search`
-    // observes `maximum_search_results`, while `keyword_search_internal` does
-    // not.
+    ///
+    /// Note: This function is lower-level and for internal use only. It does
+    /// not observe any settings such as _case-sensitivity_ or _maximum
+    /// results_. These constraints should be observed at higher levels.
 
-    pub fn keyword_search(&self, keyword: &str) -> BTreeSet<&K> {
-
-        // If case sensitivity set, leave case intact. Otherwise, convert
-        // keyword to lower case:
-        let keyword = match self.case_sensitive {
-            true => keyword.to_string(),
-            false => keyword.to_lowercase(),
-        }; // match
+    pub(crate) fn internal_keyword_search(&self, keyword: &str) -> BTreeSet<&K> {
 
         // Attempt to get matching keys for the search keyword from BTreeMap:
-        if let Some(keys) = self.b_tree_map.get(&keyword) {
+        if let Some(keys) = self.b_tree_map.get(keyword) {
 
             // Attempt to get matching keys for search keyword:
             keys
@@ -42,8 +30,8 @@ impl<K: Clone + Debug + Eq + Hash + Ord + PartialEq> SearchIndex<K> {
                 // `maximum_search_results` number of keys:
                 .iter()
                 // Only return `maximum_search_results` number of keys:
-                .take(self.maximum_search_results)
-                // Collect all resulting keys into a `BTreeSet`:
+                .take(MAXIMUM_INTERNAL_SEARCH_RESULTS)
+                // Insert each resulting key into the hash set:
                 .collect()
 
             // -> If fuzzy matching were to be implemented for

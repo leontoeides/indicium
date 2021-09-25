@@ -1,7 +1,7 @@
 # Indicium
 
-A simple search engine for collections (Vec, HashMap, BTreeMap, etc) and
-key-value stores. Features autocompletion.
+A simple in-memory search for collections (Vec, HashMap, BTreeMap, etc) and
+key-value stores. Features autocompletion or predictive text.
 
 There are many incredible search engines available for Rust. Many seem to
 require compiling a separate server binary. I wanted something simple, light
@@ -111,15 +111,44 @@ Search only supports exact keyword matches and does not use fuzzy matching.
 Consider providing the `autocomplete` feature to your users as an ergonomic
 alternative to fuzzy matching.
 
-#### `Or` Searches
+#### _And_ Searches
 
-The default logical conjuction for multiple keywords is `or`. For example, a
-search of `this that` will return records containing keywords `this` or `that`.
-This is where _any_ keyword must be present in a record for it to be returned as
-a result.
+The default logical conjuction for multiple keywords is `And`. For example, a
+search of `this that` will only return records containing keywords both `this`
+and `that`. In other words, _all_ keywords must be present in a record for it to
+be returned as a result. For this search, the results are returned in
+lexographic order. This conjuction uses less CPU resources than `Or`.
+
+Example usage:
+
+```rust
+use crate::simple::conjunction::Conjunction;
+use crate::simple::search_index::SearchIndex;
+
+let mut search_index: SearchIndex<String> =
+	SearchIndexBuilder<String>::default()
+		.conjuction(Conjunction::And)
+		.build();
+
+// ...Search index populated here...
+
+let resulting_keys: Vec<usize> =
+    search_index.search(&"helicopter".to_string());
+
+assert_eq!(resulting_keys, Some(vec![&1]));
+```
+
+#### _Or_ Searches
+
+The logical conjuction for multiple keywords can be changed to `Or`. For
+example, a search of `this that` will return records containing keywords `this`
+or `that`. In other words, _any_ keyword can be present in a record for it to be
+returned as a result.
 
 For this search, the results are returned in order of descending relevance.
-Records containing both keywords `this` and `that` will be the top results.
+Records containing both keywords `this` and `that` will be the top results. This
+conjuction uses more CPU resources than `And` because the results must be
+tallied and sorted.
 
 Example usage:
 
@@ -132,46 +161,27 @@ let resulting_keys: Vec<usize> =
 assert_eq!(resulting_keys, Some(vec![&1]));
 ```
 
-#### `And` Searches
-
-The logical conjuction for multiple keywords can be changed to `and`. For
-example, a search of `this that` will only return records containing keywords
-`this` and `that`. This is where _all_ keywords must be present in a record for
-it to be returned as a result. For this search, the results are returned in
-undefined order.
-
-Example usage:
-
-```rust
-use crate::simple::conjunction::Conjunction;
-use crate::simple::search_index::SearchIndex;
-
-let mut search_index: SearchIndex<String> =
-	SearchIndexBuilder<String>::default().conjuction(Conjunction::And).build();
-
-// ...Search index populated here...
-
-let resulting_keys: Vec<usize> =
-    search_index.search(&"helicopter".to_string());
-
-assert_eq!(resulting_keys, Some(vec![&1]));
-```
-
 ### Which Search Should I Choose?
 
-It really depends on your use-case. I would suggested trying both `or` and `and`
-searches to see which one works better for your data.
+It really depends on your use-case: the nature of the data, the intent of the
+user, and the size of your data set. I would suggest trying & testing both `And`
+and `Or` to see which one works better for you.
 
-If your collection contains less than 10,000 records, `or` might be a good place
-to start. To me, `or` effectively feels like "using these keywords, find all
-the records I might want" which works well if there aren't too many. Whereas the
-`and` search feels more like "filter out the records I don't want."
+The `And` search feels more like "use my keywords to filter out the records I
+don't want." It's also a better choice for large collections because it uses
+less CPU resouces than `Or`. `And` is the default conjunction because of this.
+
+If your collection contains less than 10,000 records, `Or` might be a good place
+to start. To me, `Or` effectively feels like "using these keywords, find the
+best the record I might want" which works well if there aren't too records. It's
+also worth noting that this conjuction uses more CPU resources because the
+results must be tallied and sorted in order of relevance.
 
 ## 4. Autocompletion
 
 The `autocomplete` function will provide several autocompletion options for the
 last partial keyword in the supplied string. The results are returned in
-undefined order. Example usage:
+lexographic order. Example usage:
 
 ```rust
 let autocomplete_options: Vec<String> =
@@ -192,10 +202,11 @@ lighter-weight alternative to their big brothers.
 
 ## Searching
 
-The `keyword_search` function will return keys for records that match the
+The `keyword_search` function will return keys for all records that match the
 keyword provided by the caller. Each resulting key can then be used to retrieve
 the full record from its collection. The search keyword must be an exact match.
-The results are returned in undefined order. Example usage:
+This function returns a `BTreeSet` so iterating over the results is in
+lexographic order. Example usage:
 
 ```rust
 let resulting_keys: Vec<usize> =
@@ -208,17 +219,11 @@ Search only supports exact keyword matches and does not use fuzzy matching.
 Consider providing the `autocomplete` feature to your users as an ergonomic
 alternative to fuzzy matching.
 
-Note that, currently, the `maximum_search_results` setting is only observed by
-the `search` method and not by this `keyword_search` method. This method will
-potentially return thousands of key results, depending on the size of your
-collection. This is because `search` relies on this function, and it needs a
-full list of keys to properly rank the results by relevance.
-
 ## Autocompletion
 
 The `keyword_autocomplete` function will return several keywords that begin with
-the partial keyword provided by the caller. The results are returned in
-undefined order. Example usage:
+the partial keyword provided by the caller. This function returns a `BTreeSet`
+so iterating over the results is in lexographic order. Example usage:
 
 ```rust
 let autocomplete_options: Vec<String> =
