@@ -1,7 +1,7 @@
 #[test]
 fn simple() {
 
-    use crate::simple::{Indexable, SearchIndex};
+    use crate::simple::{Conjunction, Indexable, SearchIndex};
 
     struct TestStruct {
         title: String,
@@ -55,21 +55,21 @@ fn simple() {
     // Test `keyword_autocomplete` method:
 
     println!("Autocomplete keyword: {:#?}", search_index.keyword_autocomplete(&"The".to_string()));
-    let mut autocomplete_options = search_index.keyword_autocomplete(&"The".to_string()).iter().cloned().cloned().collect::<Vec<String>>();
+    let autocomplete_options = search_index.keyword_autocomplete(&"The".to_string()).iter().cloned().cloned().collect::<Vec<String>>();
     //autocomplete_options.sort();
     assert_eq!(autocomplete_options, vec!["the", "the bird's the word"]);
 
     // Test `keyword_autocomplete` method:
 
     println!("Autocomplete keyword: {:#?}", search_index.keyword_autocomplete(&"hel".to_string()));
-    let mut autocomplete_options = search_index.keyword_autocomplete(&"hel".to_string()).iter().cloned().cloned().collect::<Vec<String>>();
+    let autocomplete_options = search_index.keyword_autocomplete(&"hel".to_string()).iter().cloned().cloned().collect::<Vec<String>>();
     //autocomplete_options.sort();
     assert_eq!(autocomplete_options, vec!["helicopter", "hell", "hello", "help"]);
 
     // Test `autocomplete` method:
 
     println!("Autocomplete string: {:#?}", search_index.autocomplete(&"hel hel hel".to_string()));
-    let mut autocomplete_options = search_index.autocomplete(&"hel hel hel".to_string());
+    let autocomplete_options = search_index.autocomplete(&"hel hel hel".to_string());
     // autocomplete_options.sort();
     assert_eq!(
         autocomplete_options,
@@ -98,8 +98,13 @@ fn simple() {
 
     // Test `search` method:
 
-    println!("Search string: {:#?}", search_index.search(&"Helicopter around help".to_string()));
-    assert_eq!(search_index.search(&"Helicopter around help".to_string()).to_vec(), vec![&1, &3]);
+    println!("Or search string: {:#?}", search_index.search_type(&Conjunction::Or, &"Helicopter around help".to_string()));
+    assert_eq!(search_index.search_type(&Conjunction::Or, &"Helicopter around help".to_string()).to_vec(), vec![&1, &3]);
+
+    // Test `search` method:
+
+    println!("And search string: {:#?}", search_index.search_type(&Conjunction::And, &"Helicopter around help".to_string()));
+    assert_eq!(search_index.search_type(&Conjunction::And, &"Helicopter around".to_string()).to_vec(), vec![&1]);
 
     // Test `remove` method:
 

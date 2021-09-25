@@ -26,4 +26,18 @@ where
 
     } // fn
 
+    // -------------------------------------------------------------------------
+    //
+    /// Returns the keys resulting from the search string. The search string may
+    /// contain several keywords.
+
+    pub fn search_type(&'a self, conjunction: &Conjunction, string: &'a str) -> Vec<&'a K> {
+
+        match conjunction {
+            Conjunction::And => self.and_search(string),
+            Conjunction::Or => self.or_search(string),
+        } // match
+
+    } // fn
+
 } // impl

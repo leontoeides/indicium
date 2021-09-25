@@ -22,4 +22,20 @@ impl<K: Debug + Ord> SearchIndex<K> {
 
     } // fn
 
+    // -------------------------------------------------------------------------
+    //
+    /// Return all matching _typeahead_ or _autocomplete_ keywords for the
+    /// provided search string. The search string may contain several keywords.
+    /// The last keyword in the string will be autocompleted.
+
+    pub fn autocomplete_type(&self, conjunction: &Conjunction, string: &str) -> Vec<String> {
+
+        match conjunction {
+            Conjunction::And => self.and_autocomplete(string),
+            Conjunction::Or => self.or_autocomplete(string),
+        } // match
+
+    } // fn
+
+
 } // impl
