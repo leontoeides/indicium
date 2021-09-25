@@ -1,7 +1,7 @@
 # Indicium
 
 A simple in-memory search for collections (Vec, HashMap, BTreeMap, etc) and
-key-value stores. Features autocompletion or predictive text.
+key-value stores. Features autocompletion.
 
 There are many incredible search engines available for Rust. Many seem to
 require compiling a separate server binary. I wanted something simple, light
