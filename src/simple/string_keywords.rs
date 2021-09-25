@@ -42,7 +42,7 @@ impl<K: Debug> SearchIndex<K> {
                     chars >= self.minimum_keyword_length && chars <= self.maximum_keyword_length
                 }) // filter
                 // Copy string from reference:
-                .map(|str_ref| str_ref.to_string())
+                .map(|str_ref| String::from(str_ref))
                 // Collect all keywords into a `Vec`:
                 .collect()
         } else {
@@ -57,7 +57,7 @@ impl<K: Debug> SearchIndex<K> {
             // Only keep the string if it's shorter than the maximum:
             if use_string_as_keyword && string.chars().count() <= maximum_string_length {
                 // Add field text / entire string to the keyword `Vec`:
-                keywords.push(string);
+                keywords.push(String::from(string));
             } // if
         } // if
 

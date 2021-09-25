@@ -3,7 +3,6 @@ use std::cmp::Ord;
 use std::collections::BTreeSet;
 use std::fmt::Debug;
 
-
 // -----------------------------------------------------------------------------
 
 impl<K: Debug + Ord> SearchIndex<K> {

@@ -33,7 +33,7 @@ impl<K: Clone + Debug + Eq + Hash + Ord + PartialEq> SearchIndex<K> {
             false => keyword.to_lowercase(),
         }; // match
 
-        self.internal_keyword_search(&keyword)
+        self.internal_keyword_search(&String::from(&keyword))
             // Iterate the results of the keyword search:
             .iter()
             // Only return `maximum_search_results` number of keys:

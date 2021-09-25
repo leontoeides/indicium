@@ -19,7 +19,7 @@ impl<K: Debug + Ord> SearchIndex<K> {
     /// not observe any settings such as _case-sensitivity_ or _maximum
     /// results_. These constraints should be observed at higher levels.
 
-    pub(crate) fn internal_keyword_search(&self, keyword: &str) -> BTreeSet<&K> {
+    pub(crate) fn internal_keyword_search(&self, keyword: &String) -> BTreeSet<&K> {
 
         // Attempt to get matching keys for the search keyword from BTreeMap:
         if let Some(keys) = self.b_tree_map.get(keyword) {

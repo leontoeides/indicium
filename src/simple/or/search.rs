@@ -23,7 +23,7 @@ where
 
         // Split search `String` into keywords (according to the `SearchIndex`
         // settings):
-        let keywords: Vec<String> = self.string_keywords(string, true);
+        let keywords: Vec<String> = self.string_keywords(&String::from(string), true);
 
         // This `HashMap` is used to count the number of hits for each resulting
         // key. This is so we can return search results in order of relevance:

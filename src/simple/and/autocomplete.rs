@@ -25,7 +25,7 @@ impl<K: Debug + Ord> SearchIndex<K> {
 
             // Perform search for entire string without the last keyword:
             let search_results: BTreeSet<&K> =
-                self.internal_and_search(&keywords);
+                self.internal_and_search(keywords.as_slice());
 
             // Get all autocompletions for the last keyword.
             let autocompletions: BTreeSet<(&String, &Vec<K>)> =
@@ -74,7 +74,7 @@ impl<K: Debug + Ord> SearchIndex<K> {
             // Push a blank placeholder onto the end of the keyword list. We
             // will be putting our autocompletions for the last keyword into
             // this spot:
-            keywords.push("".to_string());
+            keywords.push(String::from(""));
 
             // Build autocompleted search strings from the autocompletions
             // derived from the last keyword:
@@ -87,7 +87,7 @@ impl<K: Debug + Ord> SearchIndex<K> {
                     // Remove previous autocompleted last keyword from list:
                     keywords.pop();
                     // Add current autocompleted last keyword to end of list:
-                    keywords.push(last_keyword.to_string());
+                    keywords.push(String::from(*last_keyword));
                     // Join all keywords together into a single `String` using a
                     // space delimiter:
                     keywords.join(" ")

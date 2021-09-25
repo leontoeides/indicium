@@ -25,7 +25,7 @@ impl<K: Debug + Ord> SearchIndex<K> {
         // Attempt to get matching keywords from `BTreeMap`:
         self.b_tree_map
             // Get matching keywords for starting with (partial) keyword string:
-            .range(keyword.to_string()..)
+            .range(String::from(keyword)..)
             // We did not specify an end bound for our `range` function (see
             // above.) `range` will return _every_ keyword greater than the
             // supplied keyword. The below `take_while` will effectively break

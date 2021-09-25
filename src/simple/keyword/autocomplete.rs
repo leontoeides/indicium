@@ -26,7 +26,7 @@ impl<K: Debug> SearchIndex<K> {
         // Attempt to get matching keywords from `BTreeMap`:
         self.b_tree_map
             // Get matching keywords for starting with (partial) keyword string:
-            .range(keyword.to_string()..)
+            .range(String::from(&keyword)..)
             // `range` returns a key-value pair. We're autocompleting the key,
             // so discard the value:
             .map(|(key, _value)| key)

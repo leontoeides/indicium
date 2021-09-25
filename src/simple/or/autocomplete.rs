@@ -27,7 +27,7 @@ impl<K: Debug> SearchIndex<K> {
             // Push a blank placeholder onto the end of the keyword list. We
             // will be putting our autocompletions for the last keyword into
             // this spot:
-            keywords.push("".to_string());
+            keywords.push(String::from(""));
 
             // Build autocompleted search strings from the autocompletions
             // derived from the last keyword:
@@ -40,7 +40,7 @@ impl<K: Debug> SearchIndex<K> {
                     // Remove previous autocompleted last keyword from list:
                     keywords.pop();
                     // Add current autocompleted last keyword to end of list:
-                    keywords.push(last_keyword.to_string());
+                    keywords.push(String::from(*last_keyword));
                     // Join all keywords together into a single `String` using a
                     // space delimiter:
                     keywords.join(" ")
