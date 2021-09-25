@@ -32,6 +32,10 @@ impl<K: Debug + Ord> SearchIndex<K> {
             // iteration when we reach a keyword that does not start with our
             // supplied (partial) keyword.
             .take_while(|(key, _value)| key.starts_with(&keyword))
+            // If the index's keyword matches the user's keyword, don't return
+            // it as a result. For example, if the user's keyword was "new" (as
+            // in New York), do not return "new" as an auto-completed keyword:
+            .filter(|(key, _value)| *key != keyword)
             // Only return `MAXIMUM_INTERNAL_AUTOCOMPLETE_RESULTS` number of
             // keywords:
             .take(MAXIMUM_INTERNAL_AUTOCOMPLETE_RESULTS)
