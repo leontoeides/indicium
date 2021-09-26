@@ -1,18 +1,25 @@
 use crate::simple::search_index::SearchIndex;
+use std::cmp::Ord;
 use std::collections::BTreeSet;
-use std::fmt::Debug;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Debug> SearchIndex<K> {
+impl<K: Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
-    /// Return all matching _typeahead_ or _autocomplete_ keywords for the
-    /// provided keyword.
+    /// The keyword_autocomplete function will return several keywords that
+    /// begin with the partial keyword provided by the caller. The results are
+    /// returned in lexographic order.
     ///
-    /// The provided string is expected to be only a single keyword. For
-    /// multi-keyword support see the `autocomplete` method.
+    /// Example usage:
+    ///
+    /// ```rust
+    /// let autocomplete_options: Vec<String> =
+    ///     search_index.keyword_autocomplete(&"ass".to_string());
+    ///
+    /// assert_eq!(autocomplete_options, vec!["assassin", "assistance"]);
+    /// ```
 
     pub fn keyword_autocomplete(&self, keyword: &str) -> BTreeSet<&String> {
 

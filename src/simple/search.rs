@@ -1,14 +1,11 @@
-use crate::simple::conjunction::Conjunction;
-use crate::simple::search_index::SearchIndex;
-use std::clone::Clone;
-use std::cmp::{Eq, Ord, PartialEq};
-use std::fmt::Debug;
+use crate::simple::{SearchIndex, SearchType};
+use std::cmp::Ord;
 use std::hash::Hash;
-use std::marker::{Send, Sync};
+use std::marker::Send;
 
 // -----------------------------------------------------------------------------
 
-impl<'a, K: 'a + Clone + Debug + Eq + Hash + Ord + PartialEq + Send + Sync> SearchIndex<K>
+impl<'a, K: 'a + Hash + Ord + Send> SearchIndex<K>
 where
     &'a K: Send {
 
@@ -19,9 +16,10 @@ where
 
     pub fn search(&'a self, string: &'a str) -> Vec<&'a K> {
 
-        match &self.conjunction {
-            Conjunction::And => self.and_search(string),
-            Conjunction::Or => self.or_search(string),
+        match &self.search_type {
+            SearchType::Keyword => self.keyword_search(string).iter().cloned().collect(),
+            SearchType::And => self.and_search(string),
+            SearchType::Or => self.or_search(string),
         } // match
 
     } // fn
@@ -31,11 +29,12 @@ where
     /// Returns the keys resulting from the search string. The search string may
     /// contain several keywords.
 
-    pub fn search_type(&'a self, conjunction: &Conjunction, string: &'a str) -> Vec<&'a K> {
+    pub fn search_type(&'a self, search_type: &SearchType, string: &'a str) -> Vec<&'a K> {
 
-        match conjunction {
-            Conjunction::And => self.and_search(string),
-            Conjunction::Or => self.or_search(string),
+        match search_type {
+            SearchType::Keyword => self.keyword_search(string).iter().cloned().collect(),
+            SearchType::And => self.and_search(string),
+            SearchType::Or => self.or_search(string),
         } // match
 
     } // fn

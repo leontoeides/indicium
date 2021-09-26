@@ -1,11 +1,9 @@
-use crate::simple::conjunction::Conjunction;
-use crate::simple::search_index::SearchIndex;
+use crate::simple::{SearchIndex, SearchType};
 use std::cmp::Ord;
-use std::fmt::Debug;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Debug + Ord> SearchIndex<K> {
+impl<K: Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
@@ -15,9 +13,10 @@ impl<K: Debug + Ord> SearchIndex<K> {
 
     pub fn autocomplete(&self, string: &str) -> Vec<String> {
 
-        match &self.conjunction {
-            Conjunction::And => self.and_autocomplete(string),
-            Conjunction::Or => self.or_autocomplete(string),
+        match &self.autocomplete_type {
+            SearchType::Keyword => self.keyword_autocomplete(string).iter().cloned().cloned().collect(),
+            SearchType::And => self.and_autocomplete(string),
+            SearchType::Or => self.or_autocomplete(string),
         } // match
 
     } // fn
@@ -28,14 +27,14 @@ impl<K: Debug + Ord> SearchIndex<K> {
     /// provided search string. The search string may contain several keywords.
     /// The last keyword in the string will be autocompleted.
 
-    pub fn autocomplete_type(&self, conjunction: &Conjunction, string: &str) -> Vec<String> {
+    pub fn autocomplete_type(&self, autocomplete_type: &SearchType, string: &str) -> Vec<String> {
 
-        match conjunction {
-            Conjunction::And => self.and_autocomplete(string),
-            Conjunction::Or => self.or_autocomplete(string),
+        match autocomplete_type {
+            SearchType::Keyword => self.keyword_autocomplete(string).iter().cloned().cloned().collect(),
+            SearchType::And => self.and_autocomplete(string),
+            SearchType::Or => self.or_autocomplete(string),
         } // match
 
     } // fn
-
 
 } // impl

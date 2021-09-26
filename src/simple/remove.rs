@@ -1,12 +1,10 @@
 use crate::simple::{indexable::Indexable, search_index::SearchIndex};
 use std::clone::Clone;
-use std::cmp::{Eq, PartialEq};
-use std::fmt::Debug;
-use std::hash::Hash;
+use std::cmp::Ord;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
+impl<K: Clone + Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //

@@ -1,9 +1,9 @@
 use crate::simple::search_index::SearchIndex;
-use std::fmt::Debug;
+use std::cmp::Ord;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Debug> SearchIndex<K> {
+impl<K: Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
@@ -42,7 +42,7 @@ impl<K: Debug> SearchIndex<K> {
                     chars >= self.minimum_keyword_length && chars <= self.maximum_keyword_length
                 }) // filter
                 // Copy string from reference:
-                .map(|str_ref| String::from(str_ref))
+                .map(String::from)
                 // Collect all keywords into a `Vec`:
                 .collect()
         } else {
@@ -57,7 +57,7 @@ impl<K: Debug> SearchIndex<K> {
             // Only keep the string if it's shorter than the maximum:
             if use_string_as_keyword && string.chars().count() <= maximum_string_length {
                 // Add field text / entire string to the keyword `Vec`:
-                keywords.push(String::from(string));
+                keywords.push(string);
             } // if
         } // if
 

@@ -1,19 +1,16 @@
-use crate::simple::conjunction::Conjunction;
-use crate::simple::search_index::SearchIndex;
-use std::clone::Clone;
-use std::cmp::{Eq, PartialEq};
-use std::collections::BTreeMap;
+use crate::simple::{SearchIndex, SearchType};
+use std::cmp::Ord;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::Debug;
-use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 //
 /// Structure used to build a search index.
 
-#[derive(Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-pub struct SearchIndexBuilder<K: Debug> {
-    b_tree_map: BTreeMap<String, Vec<K>>,
-    conjunction: Conjunction,
+pub struct SearchIndexBuilder<K> {
+    b_tree_map: BTreeMap<String, BTreeSet<K>>,
+    search_type: SearchType,
+    autocomplete_type: SearchType,
     split_pattern: Option<Vec<char>>,
     case_sensitive: bool,
     minimum_keyword_length: usize,
@@ -25,11 +22,12 @@ pub struct SearchIndexBuilder<K: Debug> {
 
 // -----------------------------------------------------------------------------
 
-impl<K: Clone + Debug + Eq + Hash + PartialEq> From<SearchIndex<K>> for SearchIndexBuilder<K> {
+impl<K: Debug + Ord> From<SearchIndex<K>> for SearchIndexBuilder<K> {
     fn from(search_index: SearchIndex<K>) -> Self {
         SearchIndexBuilder {
             b_tree_map: search_index.b_tree_map,
-            conjunction: search_index.conjunction,
+            search_type: search_index.search_type,
+            autocomplete_type: search_index.autocomplete_type,
             split_pattern: search_index.split_pattern,
             case_sensitive: search_index.case_sensitive,
             minimum_keyword_length: search_index.minimum_keyword_length,
@@ -43,11 +41,12 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> From<SearchIndex<K>> for SearchIn
 
 // -----------------------------------------------------------------------------
 
-impl<K: Clone + Debug + Eq + Hash + PartialEq> From<SearchIndexBuilder<K>> for SearchIndex<K> {
+impl<K: Debug + Ord> From<SearchIndexBuilder<K>> for SearchIndex<K> {
     fn from(search_index: SearchIndexBuilder<K>) -> Self {
         SearchIndex {
             b_tree_map: search_index.b_tree_map,
-            conjunction: search_index.conjunction,
+            search_type: search_index.search_type,
+            autocomplete_type: search_index.autocomplete_type,
             split_pattern: search_index.split_pattern,
             case_sensitive: search_index.case_sensitive,
             minimum_keyword_length: search_index.minimum_keyword_length,
@@ -61,7 +60,7 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> From<SearchIndexBuilder<K>> for S
 
 // -----------------------------------------------------------------------------
 
-impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndexBuilder<K> {
+impl<K: Debug + Ord> SearchIndexBuilder<K> {
 
     /// Initialize `SearchIndexBuilder` with default settings.
     pub fn default() -> SearchIndexBuilder<K> {
@@ -69,8 +68,15 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndexBuilder<K> {
     } // fn
 
     /// Logical conjuction for connecting search results for each keyword.
-    pub fn conjuction(&mut self, conjunction: Conjunction) -> &mut SearchIndexBuilder<K> {
-        self.conjunction = conjunction;
+    pub fn search_type(&mut self, search_type: SearchType) -> &mut SearchIndexBuilder<K> {
+        self.search_type = search_type;
+        self
+    } // fn
+
+    /// Logical conjuction for connecting autcompletion results for each
+    /// keyword.
+    pub fn autocomplete_type(&mut self, autocomplete_type: SearchType) -> &mut SearchIndexBuilder<K> {
+        self.autocomplete_type = autocomplete_type;
         self
     } // fn
 

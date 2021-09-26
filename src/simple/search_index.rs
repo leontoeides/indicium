@@ -1,21 +1,22 @@
-use crate::simple::Conjunction;
-use std::collections::BTreeMap;
-use std::fmt::Debug;
+use crate::simple::SearchType;
+use serde::{Deserialize, Serialize};
+use std::cmp::Ord;
+use std::collections::{BTreeMap, BTreeSet};
 
 // -----------------------------------------------------------------------------
 //
 /// Structure that represents a search index.
 
-#[derive(Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-pub struct SearchIndex<K: Debug> {
+#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Deserialize, Serialize)]
+pub struct SearchIndex<K: Ord> {
     /// Search index data structure.
-    // Note: `Vec<K>` was chosen over `HashSet<K>` and `BTreeSet<K>` because it
-    // supports multiple elements of `K`. This way, if a record contains the
-    // same keyword multiple times, the record can be returned as more
-    // relevant.
-    pub(crate) b_tree_map: BTreeMap<String, Vec<K>>,
-    /// Logical conjuction for connecting search results for each keyword.
-    pub(crate) conjunction: Conjunction,
+    pub(crate) b_tree_map: BTreeMap<String, BTreeSet<K>>,
+    /// The `SearchType` for searches. This setting may be manually overridden
+    /// by using the `search_type` method.
+    pub(crate) search_type: SearchType,
+    /// The `SearchType` for autocompletions. This setting may be manually
+    /// overridden by using the `autocompletion_type` method.
+    pub(crate) autocomplete_type: SearchType,
     /// Characters used to split strings into keywords.
     pub(crate) split_pattern: Option<Vec<char>>,
     /// Indicates whether the search index is case sensitive or not. If set to

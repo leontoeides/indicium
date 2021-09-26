@@ -1,9 +1,9 @@
-use crate::simple::{indexable::Indexable, search_index::SearchIndex};
-use std::fmt::Debug;
+use crate::simple::{Indexable, SearchIndex};
+use std::cmp::Ord;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Debug> SearchIndex<K> {
+impl<K: Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //

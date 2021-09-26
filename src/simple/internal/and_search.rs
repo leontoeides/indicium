@@ -1,18 +1,17 @@
 use crate::simple::search_index::SearchIndex;
 use std::cmp::Ord;
 use std::collections::BTreeSet;
-use std::fmt::Debug;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Debug + Ord> SearchIndex<K> {
+impl<K: Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
     /// Returns the keys resulting from the search string. The search string may
     /// contain several keywords.
 
-    pub fn internal_and_search(&self, keywords: &[String]) -> BTreeSet<&K> {
+    pub(crate) fn internal_and_search(&self, keywords: &[String]) -> BTreeSet<&K> {
 
         // This `BTreeSet` is used to contain the search results:
         let mut search_results: Option<BTreeSet<&K>> = None;

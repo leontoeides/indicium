@@ -1,14 +1,10 @@
-use crate::simple::Conjunction;
-use crate::simple::search_index::SearchIndex;
-use std::clone::Clone;
-use std::cmp::{Eq, PartialEq};
+use crate::simple::{SearchIndex, SearchType};
+use std::cmp::Ord;
 use std::collections::BTreeMap;
-use std::fmt::Debug;
-use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
+impl<K: Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
@@ -18,7 +14,8 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
 
     #[allow(clippy::too_many_arguments)]
     pub fn new(
-        conjunction: Conjunction,
+        search_type: SearchType,
+        autocomplete_type: SearchType,
         split_pattern: Option<Vec<char>>,
         case_sensitive: bool,
         minimum_keyword_length: usize,
@@ -28,7 +25,8 @@ impl<K: Clone + Debug + Eq + Hash + PartialEq> SearchIndex<K> {
         maximum_search_results: usize,
     ) -> SearchIndex<K> {
         SearchIndex {
-            conjunction,
+            search_type,
+            autocomplete_type,
             b_tree_map: BTreeMap::new(),
             split_pattern,
             case_sensitive,

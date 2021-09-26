@@ -1,19 +1,16 @@
-use crate::simple::conjunction::Conjunction;
-use crate::simple::search_index::SearchIndex;
-use std::clone::Clone;
-use std::cmp::{Eq, PartialEq};
-use std::fmt::Debug;
-use std::hash::Hash;
+use crate::simple::{SearchIndex, SearchType};
+use std::cmp::Ord;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Clone + Debug + Eq + Hash + PartialEq> Default for SearchIndex<K> {
+impl<K: Ord> Default for SearchIndex<K> {
     fn default() -> Self {
         Self::new(
             // `And` was chosen as the default conjunction because it uses
             // fewer CPU resources. `Or` may be preferable for smaller search
             // indicies.
-            Conjunction::And,    // Logical conjuction for each keyword's results.
+            SearchType::And,    // Search type.
+            SearchType::And,    // Autocompletion type.
             Some(vec![' ', '\n', '\r', '\t', ',', '.']), // Split characters.
             false,              // Case sensitive?
             1,                  // Minimum keyword length (in chars or codepoints.)

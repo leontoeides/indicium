@@ -1,5 +1,5 @@
 mod autocomplete;
-mod internal_and_search;
+mod and_search;
 mod search;
 
 // -----------------------------------------------------------------------------

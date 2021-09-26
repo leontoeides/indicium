@@ -1,17 +1,22 @@
-use crate::simple::search_index::SearchIndex;
+use crate::simple::SearchIndex;
 use std::cmp::Ord;
 use std::collections::BTreeSet;
-use std::fmt::Debug;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Debug + Ord> SearchIndex<K> {
+impl<K: Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
     /// Return all matching _typeahead_ or _autocomplete_ keywords for the
     /// provided search string. The search string may contain several keywords.
     /// The last keyword in the string will be autocompleted.
+    ///
+    /// For `And` autocompletion, the autocompletions are contextual. A search
+    /// of `this that` will only return autocompletions that are related to
+    /// records containing keywords both `this` and `that`. This conjuction uses
+    /// more CPU resources than `Or` because the results must be filtered
+    /// according to the previous keywords in the string.
 
     pub fn and_autocomplete(&self, string: &str) -> Vec<String> {
 
@@ -28,8 +33,8 @@ impl<K: Debug + Ord> SearchIndex<K> {
                 self.internal_and_search(keywords.as_slice());
 
             // Get all autocompletions for the last keyword.
-            let autocompletions: BTreeSet<(&String, &Vec<K>)> =
-                self.internal_keyword_autocomplete(&last_keyword);
+            let autocompletions: BTreeSet<(&String, &BTreeSet<K>)> =
+                self.internal_autocomplete_keyword(&last_keyword);
 
             // Intersect the autocompletions for the last keyword with the
             // search results. This way, only relevant autocompletions are
@@ -40,7 +45,7 @@ impl<K: Debug + Ord> SearchIndex<K> {
                 autocompletions
                     .iter()
                     .take(self.maximum_autocomplete_results)
-                    // `internal_keyword_autocomplete` returns a key-value pair.
+                    // `internal_autocomplete_keyword` returns a key-value pair.
                     // We're autocompleting the key, so discard the value:
                     .map(|(keyword, _keys)| keyword)
                     // Copy each keyword from the iterator or we'll get a
@@ -60,7 +65,7 @@ impl<K: Debug + Ord> SearchIndex<K> {
                     ) // filter
                     // Only return `maximum_autocomplete_results` number of keywords:
                     .take(self.maximum_autocomplete_results)
-                    // `internal_keyword_autocomplete` returns a key-value pair.
+                    // `internal_autocomplete_keyword` returns a key-value pair.
                     // We're autocompleting the key, so discard the value:
                     .map(|(keyword, _keys)| keyword)
                     // Copy each keyword from the iterator or we'll get a

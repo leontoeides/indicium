@@ -1,8 +1,6 @@
 use crate::simple::search_index::SearchIndex;
-use std::clone::Clone;
-use std::cmp::{Eq, Ord, PartialEq};
+use std::cmp::Ord;
 use std::collections::HashMap;
-use std::fmt::Debug;
 use std::hash::Hash;
 use std::marker::Send;
 #[cfg(feature = "rayon")]
@@ -10,14 +8,42 @@ use rayon::slice::ParallelSliceMut;
 
 // -----------------------------------------------------------------------------
 
-impl<'a, K: 'a + Clone + Debug + Eq + Hash + Ord + PartialEq + Send> SearchIndex<K>
+impl<'a, K: 'a + Ord + Hash + Send> SearchIndex<K>
 where
     &'a K: Send {
 
     // -------------------------------------------------------------------------
     //
-    /// Returns the keys resulting from the search string. The search string may
-    /// contain several keywords.
+    /// The `search` function will return keys as the search results. Each
+    /// resulting key can then be used to retrieve the full record from its
+    /// collection. Search keywords must be an exact match.
+    ///
+    /// Search only supports exact keyword matches and does not use fuzzy
+    /// matching. Consider providing the `autocomplete` feature to your users as
+    /// an ergonomic alternative to fuzzy matching.
+    ///
+    /// ### _Or_ Searches
+    ///
+    /// The logical conjuction for multiple keywords can be changed to `Or`. For
+    /// example, a search of `this that` will return records containing keywords
+    /// `this` or `that`. In other words, _any_ keyword can be present in a
+    /// record for it to be returned as a result. This search is permissive.
+    ///
+    /// For this search, the results are returned in order of descending
+    /// relevance. Records containing both keywords `this` and `that` will be
+    /// the top results. This conjuction uses more CPU resources than `And`
+    /// because the results must be tallied and sorted.
+    ///
+    /// Example usage:
+    ///
+    /// ```rust
+    /// let mut search_index: SearchIndex<String> = SearchIndex::default();
+    ///
+    /// let resulting_keys: Vec<usize> =
+    ///     search_index.search(&"helicopter".to_string());
+    ///
+    /// assert_eq!(resulting_keys, Some(vec![&1]));
+    /// ```
 
     pub fn or_search(&'a self, string: &'a str) -> Vec<&'a K> {
 

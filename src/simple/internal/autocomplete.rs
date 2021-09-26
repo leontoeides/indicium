@@ -2,11 +2,10 @@ use crate::simple::internal::MAXIMUM_INTERNAL_AUTOCOMPLETE_RESULTS;
 use crate::simple::search_index::SearchIndex;
 use std::cmp::Ord;
 use std::collections::BTreeSet;
-use std::fmt::Debug;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Debug + Ord> SearchIndex<K> {
+impl<K: Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
@@ -20,7 +19,7 @@ impl<K: Debug + Ord> SearchIndex<K> {
     /// not observe any settings such as _case-sensitivity_ or _maximum
     /// results_. These constraints should be observed at higher levels.
 
-    pub(crate) fn internal_keyword_autocomplete(&self, keyword: &str) -> BTreeSet<(&String, &Vec<K>)> {
+    pub(crate) fn internal_autocomplete_keyword(&self, keyword: &str) -> BTreeSet<(&String, &BTreeSet<K>)> {
 
         // Attempt to get matching keywords from `BTreeMap`:
         self.b_tree_map
@@ -35,7 +34,7 @@ impl<K: Debug + Ord> SearchIndex<K> {
             // If the index's keyword matches the user's keyword, don't return
             // it as a result. For example, if the user's keyword was "new" (as
             // in New York), do not return "new" as an auto-completed keyword:
-            .filter(|(key, _value)| *key != keyword)
+            // .filter(|(key, _value)| *key != keyword)
             // Only return `MAXIMUM_INTERNAL_AUTOCOMPLETE_RESULTS` number of
             // keywords:
             .take(MAXIMUM_INTERNAL_AUTOCOMPLETE_RESULTS)

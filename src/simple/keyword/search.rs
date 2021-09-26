@@ -1,20 +1,31 @@
 use crate::simple::search_index::SearchIndex;
-use std::clone::Clone;
-use std::cmp::{Eq, Ord, PartialEq};
+use std::cmp::Ord;
 use std::collections::BTreeSet;
-use std::fmt::Debug;
-use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Clone + Debug + Eq + Hash + Ord + PartialEq> SearchIndex<K> {
+impl<K: Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
-    /// Returns the keys resulting from the single keyword search.
+    /// The keyword_search function will return keys for records that match the
+    /// keyword provided by the caller. Each resulting key can then be used to
+    /// retrieve the full record from its collection. The search keyword must be
+    /// an exact match. The results are returned in undefined order.
     ///
-    /// The provided string is expected to be only a single keyword. For
-    /// multi-keyword support see the `search` method.
+    /// Example usage:
+    ///
+    /// ```rust
+    ///
+    /// let resulting_keys: Vec<usize> =
+    ///     search_index.keyword_search(&"helicopter".to_string());
+    ///
+    /// assert_eq!(resulting_keys, Some(vec![&1]));
+    /// ```
+    ///
+    /// Search only supports exact keyword matches and does not use fuzzy
+    /// matching. Consider providing the autocomplete feature to your users as
+    /// an ergonomic alternative to fuzzy matching.
     //
     // Note: This function is a variation of the `internal_keyword_search`
     // function. If this function is modified, it is likely the

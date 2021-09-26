@@ -1,15 +1,19 @@
 use crate::simple::search_index::SearchIndex;
-use std::fmt::Debug;
+use std::cmp::Ord;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Debug> SearchIndex<K> {
+impl<K: Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
     /// Return all matching _typeahead_ or _autocomplete_ keywords for the
     /// provided search string. The search string may contain several keywords.
     /// The last keyword in the string will be autocompleted.
+    ///
+    /// For `Or` autocompletion, the autocompletions are not contextual and
+    /// unrestricted. This conjuction uses less CPU resources than `Or` because
+    /// no keyword filtering is required.
 
     pub fn or_autocomplete(&self, string: &str) -> Vec<String> {
 

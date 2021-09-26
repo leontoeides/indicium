@@ -1,18 +1,48 @@
 use crate::simple::search_index::SearchIndex;
-use std::clone::Clone;
-use std::cmp::{Eq, Ord, PartialEq};
+use std::cmp::Ord;
 use std::collections::BTreeSet;
-use std::fmt::Debug;
-use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Clone + Debug + Eq + Hash + Ord + PartialEq> SearchIndex<K> {
+impl<K: Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
-    /// Returns the keys resulting from the search string. The search string may
-    /// contain several keywords.
+    /// The `search` function will return keys as the search results. Each
+    /// resulting key can then be used to retrieve the full record from its
+    /// collection. Search keywords must be an exact match.
+    ///
+    /// Search only supports exact keyword matches and does not use fuzzy
+    /// matching. Consider providing the `autocomplete` feature to your users as
+    /// an ergonomic alternative to fuzzy matching.
+    ///
+    /// ### _And_ Searches
+    ///
+    /// The default logical conjuction for multiple keywords is `And`. For
+    /// example, a search of `this that` will only return records containing
+    /// keywords both `this` and `that`. In other words, _all_ keywords must be
+    /// present in a record for it to be returned as a result. This search is
+    /// restrictive. For this search, the results are returned in lexographic
+    /// order. This conjuction uses less CPU resources than `Or`.
+    ///
+    /// Example usage:
+    ///
+    /// ```rust
+    /// use crate::simple::conjunction::Conjunction;
+    /// use crate::simple::search_index::SearchIndex;
+    ///
+    /// let mut search_index: SearchIndex<String> =
+    ///     SearchIndexBuilder<String>::default()
+    ///         .conjuction(Conjunction::And)
+    ///         .build();
+    ///
+    /// // ...Search index populated here...
+    ///
+    /// let resulting_keys: Vec<usize> =
+    ///     search_index.search(&"helicopter".to_string());
+    ///
+    /// assert_eq!(resulting_keys, Some(vec![&1]));
+    /// ```
 
     pub fn and_search(&self, string: &str) -> Vec<&K> {
 
