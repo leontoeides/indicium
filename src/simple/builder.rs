@@ -1,4 +1,4 @@
-use crate::simple::{SearchIndex, SearchType};
+use crate::simple::{AutocompleteType, SearchIndex, SearchType};
 use std::cmp::Ord;
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::Debug;
@@ -10,7 +10,7 @@ use std::fmt::Debug;
 pub struct SearchIndexBuilder<K> {
     b_tree_map: BTreeMap<String, BTreeSet<K>>,
     search_type: SearchType,
-    autocomplete_type: SearchType,
+    autocomplete_type: AutocompleteType,
     split_pattern: Option<Vec<char>>,
     case_sensitive: bool,
     minimum_keyword_length: usize,
@@ -75,7 +75,7 @@ impl<K: Debug + Ord> SearchIndexBuilder<K> {
 
     /// Logical conjuction for connecting autcompletion results for each
     /// keyword.
-    pub fn autocomplete_type(&mut self, autocomplete_type: SearchType) -> &mut SearchIndexBuilder<K> {
+    pub fn autocomplete_type(&mut self, autocomplete_type: AutocompleteType) -> &mut SearchIndexBuilder<K> {
         self.autocomplete_type = autocomplete_type;
         self
     } // fn

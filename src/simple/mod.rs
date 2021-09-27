@@ -4,6 +4,7 @@ mod keyword;
 mod or;
 
 mod autocomplete;
+mod autocomplete_type;
 mod builder;
 mod default;
 mod deref;
@@ -21,6 +22,7 @@ mod tests;
 
 // -----------------------------------------------------------------------------
 
+pub use crate::simple::autocomplete_type::AutocompleteType;
 pub use crate::simple::builder::SearchIndexBuilder;
 pub use crate::simple::indexable::Indexable;
 pub use crate::simple::search_index::SearchIndex;

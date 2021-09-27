@@ -1,4 +1,4 @@
-use crate::simple::{SearchIndex, SearchType};
+use crate::simple::{AutocompleteType, SearchIndex, SearchType};
 use std::cmp::Ord;
 use std::collections::BTreeMap;
 
@@ -15,7 +15,7 @@ impl<K: Ord> SearchIndex<K> {
     #[allow(clippy::too_many_arguments)]
     pub fn new(
         search_type: SearchType,
-        autocomplete_type: SearchType,
+        autocomplete_type: AutocompleteType,
         split_pattern: Option<Vec<char>>,
         case_sensitive: bool,
         minimum_keyword_length: usize,

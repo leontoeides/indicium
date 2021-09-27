@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 //
 /// Indicium `simple` search provides three types of searches.
 ///
-/// ### Which Search Should I Choose?
+/// ### Which `SearchType` Should I Choose?
 ///
 /// It really depends on your use-case: the nature of the data, the intent of
 /// the user, and the size of your data set. I would suggest trying & testing

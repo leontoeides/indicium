@@ -1,4 +1,4 @@
-use crate::simple::SearchType;
+use crate::simple::{AutocompleteType, SearchType};
 use serde::{Deserialize, Serialize};
 use std::cmp::Ord;
 use std::collections::{BTreeMap, BTreeSet};
@@ -16,7 +16,7 @@ pub struct SearchIndex<K: Ord> {
     pub(crate) search_type: SearchType,
     /// The `SearchType` for autocompletions. This setting may be manually
     /// overridden by using the `autocompletion_type` method.
-    pub(crate) autocomplete_type: SearchType,
+    pub(crate) autocomplete_type: AutocompleteType,
     /// Characters used to split strings into keywords.
     pub(crate) split_pattern: Option<Vec<char>>,
     /// Indicates whether the search index is case sensitive or not. If set to

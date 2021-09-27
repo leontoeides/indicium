@@ -1,12 +1,12 @@
-# Indicium
+# Indicium Search
 
 A simple in-memory search for collections (Vec, HashMap, BTreeMap, etc) and
 key-value stores. Features autocompletion.
 
 There are many incredible search engines available for Rust. Many seem to
 require compiling a separate server binary. I wanted something simple, light
-weight, and that could conveniently search structs and collections. So I have
-made `indicium`.
+weight, easy to use, and that could conveniently search structs and collections.
+So I have made `indicium`.
 
 # Quick Start Guide
 
@@ -16,7 +16,8 @@ following `struct`:
 ```rust
 struct MyStruct {
     title: String,
-    description: String,
+    year: u16,
+    body: String,
 }
 ```
 
@@ -33,7 +34,8 @@ impl Indexable for MyStruct {
     fn strings(&self) -> Vec<String> {
         vec![
             self.title.clone(),
-            self.description.clone(),
+            self.year.to_string(),
+            self.body.clone(),
         ]
     }
 }
@@ -104,8 +106,7 @@ functions.
 ## 3. Searching
 
 The `search` function will return keys as the search results. Each resulting
-key can then be used to retrieve the full record from its collection. Search
-keywords must be an exact match.
+key can then be used to retrieve the full record from its collection.
 
 Search only supports exact keyword matches and does not use fuzzy matching.
 Consider providing the `autocomplete` feature to your users as an ergonomic
@@ -114,7 +115,7 @@ alternative to fuzzy matching.
 Example usage:
 
 ```rust
-let mut search_index: SearchIndex<String> = SearchIndex::default();
+let mut search_index: SearchIndex<usize> = SearchIndex::default();
 
 let resulting_keys: Vec<usize> =
     search_index.search(&"helicopter".to_string());
@@ -122,11 +123,10 @@ let resulting_keys: Vec<usize> =
 assert_eq!(resulting_keys, Some(vec![&1]));
 ```
 
-## 4. Autocompletion
+## 5. Autocompletion
 
 The `autocomplete` function will provide several autocompletion options for the
-last partial keyword in the supplied string. The results are returned in
-lexographic order.
+last keyword in the supplied string.
 
 Example usage:
 
@@ -139,13 +139,3 @@ assert_eq!(
 	vec!["very big bird", "very big birthday"]
 );
 ```
-
-# Limitations
-
-The priority of this crate is to be light-weight and easy to use.
-
-* Unfortunately, multi-keyword searches on huge data-sets are not fast. More
-keywords means a slower the response time. There are certainly ways to speed
-this up but my current solution would require significantly more memory. This
-crate is intended to be light-weight for in-memory data-sets. My current view
-is that rectifying this arguably goes against the crate's goals.
