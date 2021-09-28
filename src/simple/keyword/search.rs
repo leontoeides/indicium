@@ -16,11 +16,19 @@ impl<K: Ord> SearchIndex<K> {
     /// Example usage:
     ///
     /// ```rust
+    /// # use indicium::simple::SearchIndex;
+    /// # use std::collections::BTreeSet;
     ///
-    /// let resulting_keys: Vec<usize> =
+    /// # let mut search_index: SearchIndex<usize> = SearchIndex::default();
+    ///
+    /// let resulting_keys: BTreeSet<&usize> =
     ///     search_index.keyword_search(&"helicopter".to_string());
     ///
-    /// assert_eq!(resulting_keys, Some(vec![&1]));
+    /// assert_eq!(
+    ///     // Convert `BTreeSet<&usize>` to `Vec<&usize>`:
+    ///     resulting_keys.iter().cloned().collect::<Vec<&usize>>(),
+    ///     vec![&1]
+    /// );
     /// ```
     ///
     /// Search only supports exact keyword matches and does not use fuzzy

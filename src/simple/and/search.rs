@@ -28,20 +28,19 @@ impl<K: Ord> SearchIndex<K> {
     /// Example usage:
     ///
     /// ```rust
-    /// use crate::simple::conjunction::Conjunction;
-    /// use crate::simple::search_index::SearchIndex;
+    /// use indicium::simple::{SearchIndex, SearchIndexBuilder, SearchType};
     ///
-    /// let mut search_index: SearchIndex<String> =
-    ///     SearchIndexBuilder<String>::default()
-    ///         .conjuction(Conjunction::And)
+    /// let mut search_index: SearchIndex<usize> =
+    ///     SearchIndexBuilder::default()
+    ///         .search_type(SearchType::And)
     ///         .build();
     ///
     /// // ...Search index populated here...
     ///
-    /// let resulting_keys: Vec<usize> =
+    /// let resulting_keys: Vec<&usize> =
     ///     search_index.search(&"helicopter".to_string());
     ///
-    /// assert_eq!(resulting_keys, Some(vec![&1]));
+    /// assert_eq!(resulting_keys, vec![&1]);
     /// ```
 
     pub fn and_search(&self, string: &str) -> Vec<&K> {

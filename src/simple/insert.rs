@@ -20,7 +20,23 @@ impl<K: Clone + Ord> SearchIndex<K> {
     /// #### Vec
     ///
     /// ```rust
-    /// use indicium::simple::SearchIndex;
+    /// # use indicium::simple::{Indexable, SearchIndex};
+    ///
+    /// # struct MyStruct {
+    /// #    title: String,
+    /// #    year: u16,
+    /// #    body: String,
+    /// # }
+    ///
+    /// # impl Indexable for MyStruct {
+    /// #     fn strings(&self) -> Vec<String> {
+    /// #         vec![
+    /// #             self.title.clone(),
+    /// #             self.year.to_string(),
+    /// #             self.body.clone(),
+    /// #         ]
+    /// #     }
+    /// # }
     ///
     /// let my_vec: Vec<MyStruct> = Vec::new();
     ///
@@ -41,8 +57,24 @@ impl<K: Clone + Ord> SearchIndex<K> {
     /// #### HashMap
     ///
     /// ```rust
-    /// use std::collections::HashMap;
-    /// use indicium::simple::SearchIndex;
+    /// # use indicium::simple::{Indexable, SearchIndex};
+    /// # use std::collections::HashMap;
+    ///
+    /// # struct MyStruct {
+    /// #    title: String,
+    /// #    year: u16,
+    /// #    body: String,
+    /// # }
+    ///
+    /// # impl Indexable for MyStruct {
+    /// #     fn strings(&self) -> Vec<String> {
+    /// #         vec![
+    /// #             self.title.clone(),
+    /// #             self.year.to_string(),
+    /// #             self.body.clone(),
+    /// #         ]
+    /// #     }
+    /// # }
     ///
     /// let my_hash_map: HashMap<String, MyStruct> = HashMap::new();
     ///

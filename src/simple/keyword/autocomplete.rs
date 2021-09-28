@@ -15,10 +15,20 @@ impl<K: Ord> SearchIndex<K> {
     /// Example usage:
     ///
     /// ```rust
-    /// let autocomplete_options: Vec<String> =
+    /// # use indicium::simple::SearchIndex;
+    /// # use std::collections::BTreeSet;
+    /// # use std::collections::HashMap;
+    ///
+    /// let mut search_index: SearchIndex<usize> = SearchIndex::default();
+    ///
+    /// let autocomplete_options: BTreeSet<&String> =
     ///     search_index.keyword_autocomplete(&"ass".to_string());
     ///
-    /// assert_eq!(autocomplete_options, vec!["assassin", "assistance"]);
+    /// assert_eq!(
+    ///     // Convert `BTreeSet<&String>` to `Vec<&String>`:
+    ///     autocomplete_options.iter().cloned().collect::<Vec<&String>>(),
+    ///     vec!["assassin", "assistance"]
+    /// );
     /// ```
 
     pub fn keyword_autocomplete(&self, keyword: &str) -> BTreeSet<&String> {
