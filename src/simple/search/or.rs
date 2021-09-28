@@ -50,7 +50,7 @@ where
     /// assert_eq!(resulting_keys, Some(vec![&1]));
     /// ```
 
-    pub fn or_search(&'a self, string: &'a str) -> Vec<&'a K> {
+    pub fn search_or(&'a self, string: &'a str) -> Vec<&'a K> {
 
         // Split search `String` into keywords (according to the `SearchIndex`
         // settings):

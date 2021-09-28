@@ -7,15 +7,18 @@ impl<K: Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
-    /// Return all matching _typeahead_ or _autocomplete_ keywords for the
-    /// provided search string. The search string may contain several keywords.
-    /// The last keyword in the string will be autocompleted.
+    /// Returns matching autocompleted keywords for the provided search string.
+    /// This function will use the `AutocompleteType` setting stored in the
+    /// `SearchIndex`. Partial keywords must be an exact match.
     ///
-    /// For `Or` autocompletion, the autocompletions are not contextual and
-    /// unrestricted. This conjuction uses less CPU resources than `Or` because
-    /// no keyword filtering is required.
+    /// The search string may contain multiple keywords and the last (partial)
+    /// keyword will be autocompleted. The last keyword in the search string
+    /// will be autocompleted from all available keywords in the search index.
+    /// If your data-set is very large or has repetitive keywords, this is the
+    /// recommended autocomplete type. Results are returned in lexographic
+    /// order.
 
-    pub fn or_autocomplete(&self, string: &str) -> Vec<String> {
+    pub fn autocomplete_global(&self, string: &str) -> Vec<String> {
 
         // Split search `String` into keywords according to the `SearchIndex`
         // settings. Force "use entire string as a keyword" option off:
@@ -26,7 +29,7 @@ impl<K: Ord> SearchIndex<K> {
         if let Some(last_keyword) = keywords.pop() {
 
             // Autocomplete the last keyword:
-            let autocompletions = self.keyword_autocomplete(&last_keyword);
+            let autocompletions = self.autocomplete_keyword(&last_keyword);
 
             // Push a blank placeholder onto the end of the keyword list. We
             // will be putting our autocompletions for the last keyword into

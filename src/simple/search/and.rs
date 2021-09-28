@@ -47,7 +47,7 @@ impl<K: Ord> SearchIndex<K> {
     /// assert_eq!(resulting_keys, vec![&1]);
     /// ```
 
-    pub fn and_search(&self, string: &str) -> Vec<&K> {
+    pub fn search_and(&self, string: &str) -> Vec<&K> {
 
         // Split search `String` into keywords (according to the `SearchIndex`
         // settings):

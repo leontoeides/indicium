@@ -112,7 +112,7 @@ Search only supports exact keyword matches and does not use fuzzy matching.
 Consider providing the `autocomplete` feature to your users as an ergonomic
 alternative to fuzzy matching.
 
-Example usage:
+Basic usage:
 
 ```rust
 let mut search_index: SearchIndex<usize> = SearchIndex::default();
@@ -128,7 +128,7 @@ assert_eq!(resulting_keys, Some(vec![&1]));
 The `autocomplete` function will provide several autocompletion options for the
 last keyword in the supplied string.
 
-Example usage:
+Basic usage:
 
 ```rust
 let autocomplete_options: Vec<String> =

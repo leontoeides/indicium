@@ -8,17 +8,18 @@ impl<K: Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
-    /// Return all matching _typeahead_ or _autocomplete_ keywords for the
-    /// provided search string. The search string may contain several keywords.
-    /// The last keyword in the string will be autocompleted.
+    /// Returns matching autocompleted keywords for the provided search string.
+    /// This function will use the `AutocompleteType` setting stored in the
+    /// `SearchIndex`. Partial keywords must be an exact match.
     ///
-    /// For `And` autocompletion, the autocompletions are contextual. A search
-    /// of `this that` will only return autocompletions that are related to
-    /// records containing keywords both `this` and `that`. This conjuction uses
-    /// more CPU resources than `Or` because the results must be filtered
-    /// according to the previous keywords in the string.
+    /// The search string may contain multiple keywords and the last (partial)
+    /// keyword will be autocompleted. The last keyword in the search string
+    /// will be autocompleted by using the preceding keywords as a filter. This
+    /// effectively provides contextual autocompletion. It is the heaviest and
+    /// slowest autocompletion type but likely provides the best user
+    /// experience. Results are returned in lexographic order.
 
-    pub fn and_autocomplete(&self, string: &str) -> Vec<String> {
+    pub fn autocomplete_context(&self, string: &str) -> Vec<String> {
 
         // Split search `String` into keywords according to the `SearchIndex`
         // settings. Force "use entire string as a keyword" option off:
@@ -30,7 +31,7 @@ impl<K: Ord> SearchIndex<K> {
 
             // Perform search for entire string without the last keyword:
             let search_results: BTreeSet<&K> =
-                self.internal_and_search(keywords.as_slice());
+                self.internal_search_and(keywords.as_slice());
 
             // Get all autocompletions for the last keyword.
             let autocompletions: BTreeSet<(&String, &BTreeSet<K>)> =

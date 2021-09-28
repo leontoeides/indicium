@@ -16,14 +16,21 @@ use serde::{Deserialize, Serialize};
 pub enum AutocompleteType {
     /// The search string is expected to only contain a single keyword. This is
     /// the lightest and fastest autocompletion type. It is good for compact
-    /// interfaces or where records are very simple.
+    /// interfaces or where records are very simple. Results are returned in
+    /// lexographic order.
     Keyword,
-    /// The final keyword in the search string will be autocompleted from all
-    /// keywords in the search index. If your data-set is very large or has
-    /// repetitive keywords, this is the recommended autocompletion type.
+    /// The search string may contain multiple keywords and the last (partial)
+    /// keyword will be autocompleted. The last keyword in the search string
+    /// will be autocompleted from all available keywords in the search index.
+    /// If your data-set is very large or has repetitive keywords, this is the
+    /// recommended autocomplete type. Results are returned in lexographic
+    /// order.
     Global,
-    /// The final keyword in the search string will be autocompleted by using
-    /// the preceding keywords as a filter. This is the heaviest and slowest
-    /// autocompletion type but likely provides the best user experience.
+    /// The search string may contain multiple keywords and the last (partial)
+    /// keyword will be autocompleted. The last keyword in the search string
+    /// will be autocompleted by using the preceding keywords as a filter. This
+    /// effectively provides contextual autocompletion. It is the heaviest and
+    /// slowest autocompletion type but likely provides the best user
+    /// experience. Results are returned in lexographic order.
     Context,
 } // AutocompleteType

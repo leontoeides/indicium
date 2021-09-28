@@ -22,7 +22,8 @@ use serde::{Deserialize, Serialize};
 pub enum SearchType {
     /// The search string is expected to only contain a single keyword. This is
     /// the lightest and fastest type. It is good for compact interfaces, where
-    /// records are very simple, or data-sets are quite small.
+    /// records are very simple, or data-sets are quite small. Results are
+    /// returned in lexographic order.
     Keyword,
     /// With this search type, the logical conjuction for multiple keywords is
     /// `And`. For example, a search of `this that` will only return records

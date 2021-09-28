@@ -17,7 +17,7 @@ impl<K: Ord> SearchIndex<K> {
     /// matching. Consider providing the `autocomplete` feature to your users as
     /// an ergonomic alternative to fuzzy matching.
 
-    pub(crate) fn internal_and_search(&self, keywords: &[String]) -> BTreeSet<&K> {
+    pub(crate) fn internal_search_and(&self, keywords: &[String]) -> BTreeSet<&K> {
 
         // This `BTreeSet` is used to contain the search results:
         let mut search_results: Option<BTreeSet<&K>> = None;

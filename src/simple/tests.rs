@@ -49,27 +49,27 @@ fn simple() {
 
     // Test `keyword_autocomplete` method:
 
-    println!("Autocomplete keyword: {:#?}", search_index.keyword_autocomplete(&"ass".to_string()));
-    assert_eq!(search_index.keyword_autocomplete(&"ass".to_string()).iter().cloned().cloned().collect::<Vec<String>>(), vec!["assistance"]);
+    println!("Autocomplete keyword: {:#?}", search_index.autocomplete_keyword(&"ass".to_string()));
+    assert_eq!(search_index.autocomplete_keyword(&"ass".to_string()).iter().cloned().cloned().collect::<Vec<String>>(), vec!["assistance"]);
 
     // Test `keyword_autocomplete` method:
 
-    println!("Autocomplete keyword: {:#?}", search_index.keyword_autocomplete(&"Th".to_string()));
-    let autocomplete_options = search_index.keyword_autocomplete(&"Th".to_string()).iter().cloned().cloned().collect::<Vec<String>>();
+    println!("Autocomplete keyword: {:#?}", search_index.autocomplete_keyword(&"Th".to_string()));
+    let autocomplete_options = search_index.autocomplete_keyword(&"Th".to_string()).iter().cloned().cloned().collect::<Vec<String>>();
     //autocomplete_options.sort();
     assert_eq!(autocomplete_options, vec!["the", "the bird's the word"]);
 
     // Test `keyword_autocomplete` method:
 
-    println!("Autocomplete keyword: {:#?}", search_index.keyword_autocomplete(&"A".to_string()));
-    let autocomplete_options = search_index.keyword_autocomplete(&"A".to_string()).iter().cloned().cloned().collect::<Vec<String>>();
+    println!("Autocomplete keyword: {:#?}", search_index.autocomplete_keyword(&"A".to_string()));
+    let autocomplete_options = search_index.autocomplete_keyword(&"A".to_string()).iter().cloned().cloned().collect::<Vec<String>>();
     //autocomplete_options.sort();
     assert_eq!(autocomplete_options, vec!["another", "another word for help.", "around", "assistance"]);
 
     // Test `keyword_autocomplete` method:
 
-    println!("Autocomplete keyword: {:#?}", search_index.keyword_autocomplete(&"hel".to_string()));
-    let autocomplete_options = search_index.keyword_autocomplete(&"hel".to_string()).iter().cloned().cloned().collect::<Vec<String>>();
+    println!("Autocomplete keyword: {:#?}", search_index.autocomplete_keyword(&"hel".to_string()));
+    let autocomplete_options = search_index.autocomplete_keyword(&"hel".to_string()).iter().cloned().cloned().collect::<Vec<String>>();
     //autocomplete_options.sort();
     assert_eq!(autocomplete_options, vec!["helicopter", "hell", "hello", "help"]);
 

@@ -14,8 +14,9 @@ impl<K: Ord> SearchIndex<K> {
     /// search string._ Search keywords must be an exact match.
     ///
     /// The search string is expected to only contain a single keyword. This is
-    /// the lightest and fastest search type. It is good for compact interfaces,
-    /// where records are very simple, or data-sets are quite small.
+    /// the lightest and fastest type. It is good for compact interfaces, where
+    /// records are very simple, or data-sets are quite small. Results are
+    /// returned in lexographic order.
     ///
     /// Search only supports exact keyword matches and does not use fuzzy
     /// matching. Consider providing the `autocomplete` feature to your users as
@@ -47,7 +48,7 @@ impl<K: Ord> SearchIndex<K> {
     // observes `maximum_search_results`, while `internal_keyword_search` does
     // not.
 
-    pub fn keyword_search(&self, keyword: &str) -> BTreeSet<&K> {
+    pub fn search_keyword(&self, keyword: &str) -> BTreeSet<&K> {
 
         // If case sensitivity set, leave case intact. Otherwise, convert
         // keyword to lower case:

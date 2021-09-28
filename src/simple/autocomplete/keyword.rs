@@ -8,11 +8,16 @@ impl<K: Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
-    /// The keyword_autocomplete function will return several keywords that
-    /// begin with the partial keyword provided by the caller. The results are
-    /// returned in lexographic order.
+    /// Returns matching autocompleted keywords for the provided search string.
+    /// This function will use the `AutocompleteType` setting stored in the
+    /// `SearchIndex`. Partial keywords must be an exact match.
     ///
-    /// Example usage:
+    /// The search string is expected to only contain a single keyword. This is
+    /// the lightest and fastest autocompletion type. It is good for compact
+    /// interfaces or where records are very simple. Results are returned in
+    /// lexographic order.
+    ///
+    /// Basic usage:
     ///
     /// ```rust
     /// # use indicium::simple::SearchIndex;
@@ -22,7 +27,7 @@ impl<K: Ord> SearchIndex<K> {
     /// let mut search_index: SearchIndex<usize> = SearchIndex::default();
     ///
     /// let autocomplete_options: BTreeSet<&String> =
-    ///     search_index.keyword_autocomplete(&"ass".to_string());
+    ///     search_index.autocomplete_keyword(&"ass".to_string());
     ///
     /// assert_eq!(
     ///     // Convert `BTreeSet<&String>` to `Vec<&String>`:
@@ -31,7 +36,7 @@ impl<K: Ord> SearchIndex<K> {
     /// );
     /// ```
 
-    pub fn keyword_autocomplete(&self, keyword: &str) -> BTreeSet<&String> {
+    pub fn autocomplete_keyword(&self, keyword: &str) -> BTreeSet<&String> {
 
         // If case sensitivity set, leave case intact. Otherwise, convert
         // keyword to lower case:

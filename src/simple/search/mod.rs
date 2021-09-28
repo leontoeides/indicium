@@ -26,7 +26,7 @@ where
     /// an ergonomic alternative to fuzzy matching.
     ///
     /// Search behaviour can be changed by setting the [`SearchType`] in the
-    /// `SearchIndex`. See also: [`SearchIndexBuilder`] or
+    /// `SearchIndex`. See also: [`SearchIndexBuilder`] and
     /// [`SearchIndex::new()`].
     ///
     /// [`SearchType`]: enum.SearchType.html
@@ -36,9 +36,9 @@ where
     pub fn search(&'a self, string: &'a str) -> Vec<&'a K> {
 
         match &self.search_type {
-            SearchType::And => self.and_search(string),
-            SearchType::Keyword => self.keyword_search(string).iter().cloned().collect(),
-            SearchType::Or => self.or_search(string),
+            SearchType::And => self.search_and(string),
+            SearchType::Keyword => self.search_keyword(string).iter().cloned().collect(),
+            SearchType::Or => self.search_or(string),
         } // match
 
     } // fn
@@ -53,7 +53,7 @@ where
     /// matching. Consider providing the `autocomplete` feature to your users as
     /// an ergonomic alternative to fuzzy matching.
     ///
-    /// Search behaviour can be changed by using various `SearchType` variants
+    /// Search behaviour can be changed by using different `SearchType` variants
     /// as the first parameter for the method call. See [`SearchType`] for more
     /// information on the different search types.
     ///
@@ -62,9 +62,9 @@ where
     pub fn search_type(&'a self, search_type: &SearchType, string: &'a str) -> Vec<&'a K> {
 
         match search_type {
-            SearchType::And => self.and_search(string),
-            SearchType::Keyword => self.keyword_search(string).iter().cloned().collect(),
-            SearchType::Or => self.or_search(string),
+            SearchType::And => self.search_and(string),
+            SearchType::Keyword => self.search_keyword(string).iter().cloned().collect(),
+            SearchType::Or => self.search_or(string),
         } // match
 
     } // fn
