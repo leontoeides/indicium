@@ -13,7 +13,7 @@ where
 
     // -------------------------------------------------------------------------
     //
-    /// The `search` function will return keys as the search results. Each
+    /// This search function will return keys as the search results. Each
     /// resulting key can then be used to retrieve the full record from its
     /// collection. _This search method accepts multiple keywords in the search
     /// string._ Search keywords must be an exact match.

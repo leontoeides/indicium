@@ -1,3 +1,9 @@
+mod and;
+mod keyword;
+mod or;
+
+// -----------------------------------------------------------------------------
+
 use crate::simple::{SearchIndex, SearchType};
 use std::cmp::Ord;
 use std::hash::Hash;
@@ -21,11 +27,11 @@ where
     ///
     /// Search behaviour can be changed by setting the [`SearchType`] in the
     /// `SearchIndex`. See also: [`SearchIndexBuilder`] or
-    /// [`SearchIndex.new()`].
+    /// [`SearchIndex::new()`].
     ///
     /// [`SearchType`]: enum.SearchType.html
     /// [`SearchIndexBuilder`]: struct.SearchIndexBuilder.html
-    /// [`SearchIndex.new()`]: struct.SearchIndex.html#method.new
+    /// [`SearchIndex::new()`]: struct.SearchIndex.html#method.new
 
     pub fn search(&'a self, string: &'a str) -> Vec<&'a K> {
 

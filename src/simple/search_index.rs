@@ -7,8 +7,7 @@ use std::collections::{BTreeMap, BTreeSet};
 //
 /// **The search index**. This is the most important structure in Indicium
 /// `simple` search. You may instantiate your search index with
-/// `SearchIndex::default()` or use the builder pattern with
-/// `SearchIndexBuilder`.
+/// `SearchIndex::default()` or use the `SearchIndexBuilder` builder pattern.
 
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct SearchIndex<K: Ord> {
@@ -17,7 +16,7 @@ pub struct SearchIndex<K: Ord> {
     /// The `SearchType` for searches. This setting may be manually overridden
     /// by using the `search_type` method.
     pub(crate) search_type: SearchType,
-    /// The `SearchType` for autocompletions. This setting may be manually
+    /// The `AutocompleteType` for autocompletions. This setting may be manually
     /// overridden by using the `autocompletion_type` method.
     pub(crate) autocomplete_type: AutocompleteType,
     /// Characters used to split strings into keywords.

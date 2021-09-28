@@ -1,9 +1,7 @@
-mod and;
-mod internal;
-mod keyword;
-mod or;
-
 mod autocomplete;
+mod internal;
+mod search;
+
 mod autocomplete_type;
 mod builder;
 mod default;
@@ -14,7 +12,6 @@ mod insert;
 mod new;
 mod remove;
 mod replace;
-mod search;
 mod search_index;
 mod search_type;
 mod string_keywords;

@@ -1,3 +1,9 @@
+mod and;
+mod keyword;
+mod or;
+
+// -----------------------------------------------------------------------------
+
 use crate::simple::{AutocompleteType, SearchIndex};
 use std::cmp::Ord;
 

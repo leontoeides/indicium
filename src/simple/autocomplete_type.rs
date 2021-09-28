@@ -7,10 +7,10 @@ use serde::{Deserialize, Serialize};
 /// the data-set. See variant descriptions for more information.
 ///
 /// For more information on the setting the autocompletion type in a
-/// `SearchIndex` type see: [`SearchIndexBuilder`] or [`SearchIndex.new()`].
+/// `SearchIndex` type see: [`SearchIndexBuilder`] or [`SearchIndex::new()`].
 ///
 /// [`SearchIndexBuilder`]: struct.SearchIndexBuilder.html
-/// [`SearchIndex.new()`]: struct.SearchIndex.html#method.new
+/// [`SearchIndex::new()`]: struct.SearchIndex.html#method.new
 
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub enum AutocompleteType {

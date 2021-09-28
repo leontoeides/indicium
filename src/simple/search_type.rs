@@ -13,10 +13,10 @@ use serde::{Deserialize, Serialize};
 /// relatively simple search engine.
 ///
 /// For more information on the setting the search type in a `SearchIndex` type
-/// see: [`SearchIndexBuilder`] or [`SearchIndex.new()`].
+/// see: [`SearchIndexBuilder`] or [`SearchIndex::new()`].
 ///
 /// [`SearchIndexBuilder`]: struct.SearchIndexBuilder.html
-/// [`SearchIndex.new()`]: struct.SearchIndex.html#method.new
+/// [`SearchIndex::new()`]: struct.SearchIndex.html#method.new
 
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub enum SearchType {
