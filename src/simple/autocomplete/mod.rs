@@ -1,6 +1,6 @@
-mod and;
+mod context;
+mod global;
 mod keyword;
-mod or;
 
 // -----------------------------------------------------------------------------
 
@@ -30,9 +30,9 @@ impl<K: Ord> SearchIndex<K> {
     pub fn autocomplete(&self, string: &str) -> Vec<String> {
 
         match &self.autocomplete_type {
-            AutocompleteType::Keyword => self.keyword_autocomplete(string).iter().cloned().cloned().collect(),
             AutocompleteType::Context => self.and_autocomplete(string),
             AutocompleteType::Global => self.or_autocomplete(string),
+            AutocompleteType::Keyword => self.keyword_autocomplete(string).iter().cloned().cloned().collect(),
         } // match
 
     } // fn
@@ -56,9 +56,9 @@ impl<K: Ord> SearchIndex<K> {
     pub fn autocomplete_type(&self, autocomplete_type: &AutocompleteType, string: &str) -> Vec<String> {
 
         match autocomplete_type {
-            AutocompleteType::Keyword => self.keyword_autocomplete(string).iter().cloned().cloned().collect(),
             AutocompleteType::Context => self.and_autocomplete(string),
             AutocompleteType::Global => self.or_autocomplete(string),
+            AutocompleteType::Keyword => self.keyword_autocomplete(string).iter().cloned().cloned().collect(),
         } // match
 
     } // fn

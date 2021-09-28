@@ -36,8 +36,8 @@ where
     pub fn search(&'a self, string: &'a str) -> Vec<&'a K> {
 
         match &self.search_type {
-            SearchType::Keyword => self.keyword_search(string).iter().cloned().collect(),
             SearchType::And => self.and_search(string),
+            SearchType::Keyword => self.keyword_search(string).iter().cloned().collect(),
             SearchType::Or => self.or_search(string),
         } // match
 
@@ -62,8 +62,8 @@ where
     pub fn search_type(&'a self, search_type: &SearchType, string: &'a str) -> Vec<&'a K> {
 
         match search_type {
-            SearchType::Keyword => self.keyword_search(string).iter().cloned().collect(),
             SearchType::And => self.and_search(string),
+            SearchType::Keyword => self.keyword_search(string).iter().cloned().collect(),
             SearchType::Or => self.or_search(string),
         } // match
 
