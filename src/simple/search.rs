@@ -11,8 +11,21 @@ where
 
     // -------------------------------------------------------------------------
     //
-    /// Returns the keys resulting from the search string. The search string may
-    /// contain several keywords.
+    /// The `search` function will return keys as the search results. Each
+    /// resulting key can then be used to retrieve the full record from its
+    /// collection. Search keywords must be an exact match.
+    ///
+    /// Search only supports exact keyword matches and does not use fuzzy
+    /// matching. Consider providing the `autocomplete` feature to your users as
+    /// an ergonomic alternative to fuzzy matching.
+    ///
+    /// Search behaviour can be changed by setting the [`SearchType`] in the
+    /// `SearchIndex`. See also: [`SearchIndexBuilder`] or
+    /// [`SearchIndex.new()`].
+    ///
+    /// [`SearchType`]: enum.SearchType.html
+    /// [`SearchIndexBuilder`]: struct.SearchIndexBuilder.html
+    /// [`SearchIndex.new()`]: struct.SearchIndex.html#method.new
 
     pub fn search(&'a self, string: &'a str) -> Vec<&'a K> {
 
@@ -26,8 +39,19 @@ where
 
     // -------------------------------------------------------------------------
     //
-    /// Returns the keys resulting from the search string. The search string may
-    /// contain several keywords.
+    /// The `search` function will return keys as the search results. Each
+    /// resulting key can then be used to retrieve the full record from its
+    /// collection. Search keywords must be an exact match.
+    ///
+    /// Search only supports exact keyword matches and does not use fuzzy
+    /// matching. Consider providing the `autocomplete` feature to your users as
+    /// an ergonomic alternative to fuzzy matching.
+    ///
+    /// Search behaviour can be changed by using various `SearchType` variants
+    /// as the first parameter for the method call. See [`SearchType`] for more
+    /// information on the different search types.
+    ///
+    /// [`SearchType`]: enum.SearchType.html
 
     pub fn search_type(&'a self, search_type: &SearchType, string: &'a str) -> Vec<&'a K> {
 

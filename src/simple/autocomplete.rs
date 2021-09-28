@@ -7,15 +7,15 @@ impl<K: Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
-    /// Returns all matching _autocomplete_ keywords for the provided search
-    /// string. The search string may contain several keywords. The last keyword
-    /// in the string will be autocompleted. This function will use the
+    /// Returns matching _autocomplete_ keywords for the provided search string.
+    /// The search string may contain multiple keywords. The last keyword in the
+    /// string will be autocompleted. This function will use the
     /// `AutocompleteType` setting stored in the `SearchIndex`.
     ///
-    /// For more information about the different types of autocompletion see:
+    /// For more information on the different types of autocompletion see:
     /// [`AutocompleteType`].
     ///
-    /// For more information about the setting the autocompletion type in the
+    /// For more information on the setting the autocompletion type in a
     /// `SearchIndex` type see: [`SearchIndexBuilder`].
     ///
     /// [`AutocompleteType`]: enum.AutocompleteType.html
@@ -33,15 +33,15 @@ impl<K: Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
-    /// Returns all matching _autocomplete_ keywords for the provided search
-    /// string. The search string may contain several keywords. The last keyword
-    /// in the string will be autocompleted. This function allows the caller to
+    /// Returns matching _autocomplete_ keywords for the provided search string.
+    /// The search string may contain multiple keywords. The last keyword in the
+    /// string will be autocompleted.  This function allows the caller to
     /// override the `AutocompleteType` setting stored in the `SearchIndex`.
     ///
-    /// For more information about the different types of autocompletion see:
+    /// For more information on the different types of autocompletion see:
     /// [`AutocompleteType`].
     ///
-    /// For more information about the setting the autocompletion type in the
+    /// For more information on the setting the autocompletion type in a
     /// `SearchIndex` type see: [`SearchIndexBuilder`].
     ///
     /// [`AutocompleteType`]: enum.AutocompleteType.html
