@@ -1,14 +1,13 @@
 use crate::simple::search_index::SearchIndex;
 use std::cmp::Ord;
-use std::collections::HashMap;
-use std::hash::Hash;
+use std::collections::BTreeMap;
 use std::marker::Send;
 #[cfg(feature = "rayon")]
 use rayon::slice::ParallelSliceMut;
 
 // -----------------------------------------------------------------------------
 
-impl<'a, K: 'a + Ord + Hash + Send> SearchIndex<K>
+impl<'a, K: 'a + Ord + Send> SearchIndex<K>
 where
     &'a K: Send {
 
@@ -16,25 +15,31 @@ where
     //
     /// The `search` function will return keys as the search results. Each
     /// resulting key can then be used to retrieve the full record from its
-    /// collection. Search keywords must be an exact match.
+    /// collection. _This search method accepts multiple keywords in the search
+    /// string._ Search keywords must be an exact match.
+    ///
+    /// With this search type, the logical conjuction for multiple keywords is
+    /// `Or`. For example, a search of `this that` will return records
+    /// containing keywords `this` or `that`. In other words, _any_ keyword can
+    /// be present in a record for it to be returned as a result.
+    ///
+    /// For this search, the results are returned in order of descending
+    /// relevance. Records containing both keywords `this` and `that` will be
+    /// the top results. This conjuction uses more CPU resources than `And`
+    /// because the keyword hits must be tallied and sorted.
+    ///
+    /// If your collection contains less than 10,000 records, `Or` might be a
+    /// good place to start. To me, `Or` effectively feels like "using these
+    /// keywords, find a record I might want" which works well if there aren't
+    /// too many records. It's also worth noting that this conjuction uses more
+    /// CPU resources because the results must be tallied and sorted in order of
+    /// relevance.
     ///
     /// Search only supports exact keyword matches and does not use fuzzy
     /// matching. Consider providing the `autocomplete` feature to your users as
     /// an ergonomic alternative to fuzzy matching.
     ///
-    /// ### _Or_ Searches
-    ///
-    /// The logical conjuction for multiple keywords can be changed to `Or`. For
-    /// example, a search of `this that` will return records containing keywords
-    /// `this` or `that`. In other words, _any_ keyword can be present in a
-    /// record for it to be returned as a result. This search is permissive.
-    ///
-    /// For this search, the results are returned in order of descending
-    /// relevance. Records containing both keywords `this` and `that` will be
-    /// the top results. This conjuction uses more CPU resources than `And`
-    /// because the results must be tallied and sorted.
-    ///
-    /// Example usage:
+    /// Basic usage:
     ///
     /// ```rust
     /// let mut search_index: SearchIndex<String> = SearchIndex::default();
@@ -51,12 +56,13 @@ where
         // settings):
         let keywords: Vec<String> = self.string_keywords(&String::from(string), true);
 
-        // This `HashMap` is used to count the number of hits for each resulting
-        // key. This is so we can return search results in order of relevance:
-        let mut search_results: HashMap<&K, usize> = HashMap::new();
+        // This `BTreeMap` is used to count the number of hits for each
+        // resulting key. This is so we can return search results in order of
+        // relevance:
+        let mut search_results: BTreeMap<&K, usize> = BTreeMap::new();
 
-        // Get each keyword from our `BTreeMap`, record the resulting keys in
-        // a our `HashMap`, and track the hit-count for each key:
+        // Get each keyword from our search index, record the resulting keys in
+        // a our `BTreeMap`, and track the hit-count for each key:
         keywords
             // Iterate over the keywords supplied in the search string:
             .iter()
@@ -75,7 +81,7 @@ where
                     }) // for_each
             }); // for_each
 
-        // At this point, we have a list of resulting keys in a `HashMap`. The
+        // At this point, we have a list of resulting keys in a `BTreeMap`. The
         // hash map value holds the number of times each key has been returned
         // in the above keywords search.
         //

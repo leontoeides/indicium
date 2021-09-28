@@ -9,10 +9,18 @@ impl<K: Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
-    /// Returns the keys resulting from the single keyword search.
+    /// The `search` function will return keys as the search results. Each
+    /// resulting key can then be used to retrieve the full record from its
+    /// collection. _This search method only accepts a single keyword as the
+    /// search string._ Search keywords must be an exact match.
     ///
-    /// The provided string is expected to be only a single keyword. For
-    /// multi-keyword support see the `search` method.
+    /// The search string is expected to only contain a single keyword. This is
+    /// the lightest and fastest search type. It is good for compact interfaces,
+    /// where records are very simple, or data-sets are quite small.
+    ///
+    /// Search only supports exact keyword matches and does not use fuzzy
+    /// matching. Consider providing the `autocomplete` feature to your users as
+    /// an ergonomic alternative to fuzzy matching.
     ///
     /// Note: This function is lower-level and for internal use only. It does
     /// not observe any settings such as _case-sensitivity_ or _maximum

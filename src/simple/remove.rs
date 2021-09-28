@@ -9,6 +9,11 @@ impl<K: Clone + Ord> SearchIndex<K> {
     // -------------------------------------------------------------------------
     //
     /// Removes a key-value pair from the search index.
+    ///
+    /// Note that for the search results to be accurate, it is important to
+    /// update the search index as the collection is updated. If an element is
+    /// removed from your collection, it should also be removed from the search
+    /// index.
 
     pub fn remove(&mut self, key: &K, value: &dyn Indexable) {
 

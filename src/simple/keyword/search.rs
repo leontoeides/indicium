@@ -8,19 +8,27 @@ impl<K: Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
-    /// The keyword_search function will return keys for records that match the
-    /// keyword provided by the caller. Each resulting key can then be used to
-    /// retrieve the full record from its collection. The search keyword must be
-    /// an exact match. The results are returned in undefined order.
+    /// The `search` function will return keys as the search results. Each
+    /// resulting key can then be used to retrieve the full record from its
+    /// collection. _This search method only accepts a single keyword as the
+    /// search string._ Search keywords must be an exact match.
     ///
-    /// Example usage:
+    /// The search string is expected to only contain a single keyword. This is
+    /// the lightest and fastest search type. It is good for compact interfaces,
+    /// where records are very simple, or data-sets are quite small.
+    ///
+    /// Search only supports exact keyword matches and does not use fuzzy
+    /// matching. Consider providing the `autocomplete` feature to your users as
+    /// an ergonomic alternative to fuzzy matching.
+    ///
+    /// Basic usage:
     ///
     /// ```rust
     /// # use indicium::simple::SearchIndex;
     /// # use std::collections::BTreeSet;
-    ///
+    /// #
     /// # let mut search_index: SearchIndex<usize> = SearchIndex::default();
-    ///
+    /// #
     /// let resulting_keys: BTreeSet<&usize> =
     ///     search_index.keyword_search(&"helicopter".to_string());
     ///
@@ -30,10 +38,6 @@ impl<K: Ord> SearchIndex<K> {
     ///     vec![&1]
     /// );
     /// ```
-    ///
-    /// Search only supports exact keyword matches and does not use fuzzy
-    /// matching. Consider providing the autocomplete feature to your users as
-    /// an ergonomic alternative to fuzzy matching.
     //
     // Note: This function is a variation of the `internal_keyword_search`
     // function. If this function is modified, it is likely the

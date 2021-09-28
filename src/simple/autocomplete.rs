@@ -25,7 +25,7 @@ impl<K: Ord> SearchIndex<K> {
 
         match &self.autocomplete_type {
             AutocompleteType::Keyword => self.keyword_autocomplete(string).iter().cloned().cloned().collect(),
-            AutocompleteType::Contextual => self.and_autocomplete(string),
+            AutocompleteType::Context => self.and_autocomplete(string),
             AutocompleteType::Global => self.or_autocomplete(string),
         } // match
 
@@ -51,7 +51,7 @@ impl<K: Ord> SearchIndex<K> {
 
         match autocomplete_type {
             AutocompleteType::Keyword => self.keyword_autocomplete(string).iter().cloned().cloned().collect(),
-            AutocompleteType::Contextual => self.and_autocomplete(string),
+            AutocompleteType::Context => self.and_autocomplete(string),
             AutocompleteType::Global => self.or_autocomplete(string),
         } // match
 

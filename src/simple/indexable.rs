@@ -1,8 +1,8 @@
 // -----------------------------------------------------------------------------
 //
-/// To make a record indexable for Indicium, the programmer must implement the
-/// `Indexable` trait for it. The trait returns a `Vec<String>` of all content
-/// that is to be indexed.
+/// To make a record indexable for Indicium, the `Indexable` trait must be
+/// implemented for it. The trait returns a `Vec<String>` of all content that is
+/// to be indexed.
 ///
 /// ### Implementing Indexable
 ///
@@ -17,6 +17,7 @@
 ///
 /// struct MyStruct {
 ///     title: String,
+///     year: u16,
 ///     body: String,
 /// }
 ///
@@ -24,6 +25,7 @@
 ///     fn strings(&self) -> Vec<String> {
 ///         vec![
 ///             self.title.clone(),
+///             self.year.to_string(),
 ///             self.body.clone(),
 ///         ]
 ///     }

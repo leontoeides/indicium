@@ -8,8 +8,8 @@ impl<K: Ord> SearchIndex<K> {
     // -------------------------------------------------------------------------
     //
     /// An associated helper method that returns all keywords for the given
-    /// `Indexable` record. This function relies on the `string_keywords`
-    /// method.
+    /// `Indexable` record. This function also relies on the `string_keywords`
+    /// helper method.
 
     pub(crate) fn indexable_keywords(
         &self,

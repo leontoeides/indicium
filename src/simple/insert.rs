@@ -9,6 +9,13 @@ impl<K: Clone + Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
+    /// Inserts a key-value pair into the search index.
+    ///
+    /// Note that for the search results to be accurate, it is important to
+    /// update the search index as the collection is updated. If an element is
+    /// inserted into your collection, it should also be inserted into the
+    /// search index.
+    ///
     /// ### Indexing a Collection
     ///
     /// To index an existing collection, we can iterate over the collection. For

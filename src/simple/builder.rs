@@ -5,7 +5,9 @@ use std::fmt::Debug;
 
 // -----------------------------------------------------------------------------
 //
-/// Structure used to build a search index.
+/// The [builder pattern](https://doc.rust-lang.org/1.0.0/style/ownership/builders.html)
+/// can be used to customize your search index. If you're in a hurry, you can
+/// instantiate your search index with `SearchIndex::default()` instead.
 
 pub struct SearchIndexBuilder<K> {
     b_tree_map: BTreeMap<String, BTreeSet<K>>,
@@ -23,6 +25,7 @@ pub struct SearchIndexBuilder<K> {
 // -----------------------------------------------------------------------------
 
 impl<K: Debug + Ord> From<SearchIndex<K>> for SearchIndexBuilder<K> {
+    /// Convert to `SearchIndexBuilder<K>` struct from `SearchIndex<K>` struct.
     fn from(search_index: SearchIndex<K>) -> Self {
         SearchIndexBuilder {
             b_tree_map: search_index.b_tree_map,
@@ -42,6 +45,7 @@ impl<K: Debug + Ord> From<SearchIndex<K>> for SearchIndexBuilder<K> {
 // -----------------------------------------------------------------------------
 
 impl<K: Debug + Ord> From<SearchIndexBuilder<K>> for SearchIndex<K> {
+    /// Convert to `SearchIndex<K>` struct from `SearchIndexBuilder<K>` struct.
     fn from(search_index: SearchIndexBuilder<K>) -> Self {
         SearchIndex {
             b_tree_map: search_index.b_tree_map,

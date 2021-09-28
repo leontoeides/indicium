@@ -28,7 +28,6 @@ pub enum SearchType {
     /// `And`. For example, a search of `this that` will only return records
     /// containing keywords both `this` and `that`. In other words, _all_
     /// keywords must be present in a record for it to be returned as a result.
-    /// This search is restrictive.
     ///
     /// For this search, the results are returned in lexographic order. This
     /// conjuction uses less CPU resources than `Or`.
@@ -40,8 +39,7 @@ pub enum SearchType {
     /// With this search type, the logical conjuction for multiple keywords is
     /// `Or`. For example, a search of `this that` will return records
     /// containing keywords `this` or `that`. In other words, _any_ keyword can
-    /// be present in a record for it to be returned as a result. This search is
-    /// permissive.
+    /// be present in a record for it to be returned as a result.
     ///
     /// For this search, the results are returned in order of descending
     /// relevance. Records containing both keywords `this` and `that` will be

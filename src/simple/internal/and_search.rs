@@ -8,8 +8,14 @@ impl<K: Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
-    /// Returns the keys resulting from the search string. The search string may
-    /// contain several keywords.
+    /// The `search` function will return keys as the search results. Each
+    /// resulting key can then be used to retrieve the full record from its
+    /// collection. _This search method accepts multiple keywords in the search
+    /// string._ Search keywords must be an exact match.
+    ///
+    /// Search only supports exact keyword matches and does not use fuzzy
+    /// matching. Consider providing the `autocomplete` feature to your users as
+    /// an ergonomic alternative to fuzzy matching.
 
     pub(crate) fn internal_and_search(&self, keywords: &[String]) -> BTreeSet<&K> {
 

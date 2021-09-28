@@ -5,7 +5,10 @@ use std::collections::{BTreeMap, BTreeSet};
 
 // -----------------------------------------------------------------------------
 //
-/// Structure that represents a search index.
+/// **The search index**. This is the most important structure in Indicium
+/// `simple` search. You may instantiate your search index with
+/// `SearchIndex::default()` or use the builder pattern with
+/// `SearchIndexBuilder`.
 
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct SearchIndex<K: Ord> {

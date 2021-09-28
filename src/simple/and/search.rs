@@ -10,22 +10,26 @@ impl<K: Ord> SearchIndex<K> {
     //
     /// The `search` function will return keys as the search results. Each
     /// resulting key can then be used to retrieve the full record from its
-    /// collection. Search keywords must be an exact match.
+    /// collection. _This search method accepts multiple keywords in the search
+    /// string._ Search keywords must be an exact match.
+    ///
+    /// With this search type, the logical conjuction for multiple keywords is
+    /// `And`. For example, a search of `this that` will only return records
+    /// containing keywords both `this` and `that`. In other words, _all_
+    /// keywords must be present in a record for it to be returned as a result.
+    ///
+    /// For this search, the results are returned in lexographic order. This
+    /// conjuction uses less CPU resources than `Or`.
+    ///
+    /// The `And` search feels more like "use my keywords to filter out the
+    /// records I don't want." It's also a better choice for large collections
+    /// because it uses less CPU resouces than `Or`.
     ///
     /// Search only supports exact keyword matches and does not use fuzzy
     /// matching. Consider providing the `autocomplete` feature to your users as
     /// an ergonomic alternative to fuzzy matching.
     ///
-    /// ### _And_ Searches
-    ///
-    /// The default logical conjuction for multiple keywords is `And`. For
-    /// example, a search of `this that` will only return records containing
-    /// keywords both `this` and `that`. In other words, _all_ keywords must be
-    /// present in a record for it to be returned as a result. This search is
-    /// restrictive. For this search, the results are returned in lexographic
-    /// order. This conjuction uses less CPU resources than `Or`.
-    ///
-    /// Example usage:
+    /// Basic usage:
     ///
     /// ```rust
     /// use indicium::simple::{SearchIndex, SearchIndexBuilder, SearchType};
