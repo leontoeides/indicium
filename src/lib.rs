@@ -1,12 +1,12 @@
 //! # Indicium Search
 //!
-//! A simple in-memory search for collections (Vec, HashMap, BTreeMap, etc) and
-//! key-value stores. Features autocompletion.
+//! 🔎 A simple in-memory search for collections (Vec, HashMap, BTreeMap, etc)
+//! and key-value stores. Features autocompletion.
 //!
 //! There are many incredible search engines available for Rust. Many seem to
 //! require compiling a separate server binary. I wanted something simple, light
-//! weight, and that could conveniently search structs and collections. So I
-//! have made `indicium`.
+//! weight, easy to use, and that could conveniently search structs and
+//! collections in memory. So, I made `indicium`.
 //!
 //! # Quick Start Guide
 //!
