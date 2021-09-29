@@ -103,54 +103,26 @@ impl<K: Ord> SearchIndex<K> {
             let autocompletions: BTreeSet<(&String, &BTreeSet<K>)> =
                 self.internal_autocomplete_keyword(&last_keyword);
 
-            // Whether there are any search results changes how we process the
-            // autocompletion results. If the search results are empty, the
-            // autocompletions will be intersected into an empty set also:
-
-            let autocompletions: Vec<&String> = if search_results.is_empty() {
-
-                // If there are no search results for the keywords preceding
-                // the last keyword (if any), do not perform any intersections
-                // to constrain the results. Just return the autocompletions for
-                // the last keyword:
-
-                autocompletions
-                    .iter()
-                    .take(self.maximum_autocomplete_results)
-                    // `internal_autocomplete_keyword` returns a key-value pair.
-                    // We're autocompleting the key, so discard the value:
-                    .map(|(keyword, _keys)| keyword)
-                    // Copy each keyword from the iterator or we'll get a
-                    // doubly-referenced `&&String` keyword:
-                    .cloned()
-                    // Collect all keyword autocompletions into a `Vec`:
-                    .collect()
-
-            } else {
-
-                // Intersect the autocompletions for the last keyword with the
-                // search results for the preceding keywords. This way, only
-                // relevant autocompletions are returned:
-
-                autocompletions
-                    .iter()
-                    // Only keep this autocompletion if it contains a key that the
-                    // search results contain:
-                    .filter(|(_keyword, keys)|
-                       keys.iter().any(|key| search_results.contains(key))
-                    ) // filter
-                    // Only return `maximum_autocomplete_results` number of keywords:
-                    .take(self.maximum_autocomplete_results)
-                    // `internal_autocomplete_keyword` returns a key-value pair.
-                    // We're autocompleting the key, so discard the value:
-                    .map(|(keyword, _keys)| keyword)
-                    // Copy each keyword from the iterator or we'll get a
-                    // doubly-referenced `&&String` keyword:
-                    .cloned()
-                    // Collect all keyword autocompletions into a `Vec`:
-                    .collect()
-
-            }; // if
+            // Intersect the autocompletions for the last keyword with the
+            // search results for the preceding keywords. This way, only
+            // relevant autocompletions are returned:
+            let autocompletions: Vec<&String> = autocompletions
+                .iter()
+                // Only keep this autocompletion if it contains a key that the
+                // search results contain:
+                .filter(|(_keyword, keys)|
+                   keys.iter().any(|key| search_results.contains(key))
+                ) // filter
+                // Only return `maximum_autocomplete_results` number of keywords:
+                .take(self.maximum_autocomplete_results)
+                // `internal_autocomplete_keyword` returns a key-value pair.
+                // We're autocompleting the key, so discard the value:
+                .map(|(keyword, _keys)| keyword)
+                // Copy each keyword from the iterator or we'll get a
+                // doubly-referenced `&&String` keyword:
+                .cloned()
+                // Collect all keyword autocompletions into a `Vec`:
+                .collect();
 
             // Push a blank placeholder onto the end of the keyword list. We
             // will be putting our autocompletions for the last keyword into

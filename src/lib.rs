@@ -194,7 +194,7 @@
 //! Basic usage:
 //!
 //! ```rust
-//! # use indicium::simple::{Indexable, SearchIndex};
+//! # use indicium::simple::{AutocompleteType, Indexable, SearchIndex, SearchIndexBuilder};
 //! #
 //! # struct MyType { text: String }
 //! #
@@ -210,7 +210,10 @@
 //! #   }
 //! # }
 //! #
-//! let mut search_index: SearchIndex<usize> = SearchIndex::default();
+//! let mut search_index: SearchIndex<usize> =
+//!     SearchIndexBuilder::default()
+//!         .autocomplete_type(&AutocompleteType::Global)
+//!         .build();
 //!
 //! search_index.insert(&0, &MyType::from("apple"));
 //! search_index.insert(&1, &MyType::from("birthday"));

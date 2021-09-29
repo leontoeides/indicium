@@ -147,8 +147,10 @@ search_index.insert(&4, &MyType::from("truck"));
 search_index.insert(&5, &MyType::from("ball"));
 search_index.insert(&6, &MyType::from("red"));
 
-let autocomplete_options: Vec<String> =
-    search_index.autocomplete("a very big bi");
+let mut search_index: SearchIndex<usize> =
+    SearchIndexBuilder::default()
+        .autocomplete_type(&AutocompleteType::Global)
+        .build();
 
 assert_eq!(
     autocomplete_options,
