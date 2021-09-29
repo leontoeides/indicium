@@ -213,12 +213,12 @@
 //! let mut search_index: SearchIndex<usize> = SearchIndex::default();
 //!
 //! search_index.insert(&0, &MyType::from("apple"));
-//! search_index.insert(&0, &MyType::from("birthday"));
-//! search_index.insert(&1, &MyType::from("bird"));
-//! search_index.insert(&2, &MyType::from("bath"));
-//! search_index.insert(&3, &MyType::from("truck"));
-//! search_index.insert(&4, &MyType::from("ball"));
-//! search_index.insert(&4, &MyType::from("red"));
+//! search_index.insert(&1, &MyType::from("birthday"));
+//! search_index.insert(&2, &MyType::from("bird"));
+//! search_index.insert(&3, &MyType::from("bath"));
+//! search_index.insert(&4, &MyType::from("truck"));
+//! search_index.insert(&5, &MyType::from("ball"));
+//! search_index.insert(&6, &MyType::from("red"));
 //!
 //! let autocomplete_options: Vec<String> =
 //!     search_index.autocomplete("a very big bir");
