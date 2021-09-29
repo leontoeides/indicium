@@ -103,11 +103,16 @@ impl<K: Ord> SearchIndex<K> {
             let autocompletions: BTreeSet<(&String, &BTreeSet<K>)> =
                 self.internal_autocomplete_keyword(&last_keyword);
 
-            // Intersect the autocompletions for the last keyword with the
-            // search results for the preceding keywords. This way, only
-            // relevant autocompletions are returned:
+            // Whether there are any search results changes how we process the
+            // autocompletion results. If the search results are empty, the
+            // autocompletions will be intersected into an empty set also:
 
             let autocompletions: Vec<&String> = if search_results.is_empty() {
+
+                // If there are no search results for the keywords preceding
+                // the last keyword (if any), do not perform any intersections
+                // to constrain the results. Just return the autocompletions for
+                // the last keyword:
 
                 autocompletions
                     .iter()
@@ -122,6 +127,10 @@ impl<K: Ord> SearchIndex<K> {
                     .collect()
 
             } else {
+
+                // Intersect the autocompletions for the last keyword with the
+                // search results for the preceding keywords. This way, only
+                // relevant autocompletions are returned:
 
                 autocompletions
                     .iter()

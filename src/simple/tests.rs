@@ -60,6 +60,9 @@ fn simple() {
     let search_results = search_index.search("third fourth");
     assert_eq!(search_results, vec![&3, &4]);
 
+    // Search for `last` or `wessex`. `Edgar Ætheling` contains both keywords,
+    // so he should be returned first. `Harold Godwinson` only contains `last`
+    // so he should be returned last:
     let search_results = search_index.search("last Wessex");
     assert_eq!(search_results, vec![&1, &0]);
 
@@ -81,6 +84,9 @@ fn simple() {
     let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Global, "1100 e");
     assert_eq!(autocomplete_options, vec!["1100 edgar".to_string(), "1100 edgar ætheling".to_string(), "1100 england".to_string()]);
 
+    // The only `w` keywords that `1087` should contain are `William` and
+    // `William Rufus`. `Wessex` exists in the index but it is not related to
+    // `1087`:
     let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Context, "1087 w");
     assert_eq!(autocomplete_options, vec!["1087 william".to_string(), "1087 william rufus".to_string()]);
 
