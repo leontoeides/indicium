@@ -8,6 +8,8 @@ require compiling a separate server binary. I wanted something simple, light
 weight, easy to use, and that could conveniently search structs and collections.
 So I have made `indicium`.
 
+![alt text](https://www.arkiteq.ca/crates/indicium/banner.jpg "Indicium: A Simple In-Memory Search for Rust")
+
 # Quick Start Guide
 
 For our **Quick Start Guide** example, we will be searching inside of the
