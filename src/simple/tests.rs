@@ -60,6 +60,9 @@ fn simple() {
     let search_results = search_index.search("third fourth");
     assert_eq!(search_results, vec![&3, &4]);
 
+    let search_results = search_index.search("last Wessex");
+    assert_eq!(search_results, vec![&1, &0]);
+
     let search_results = search_index.search_type(&SearchType::Keyword, "Wessex");
     assert_eq!(search_results, vec![&1]);
 

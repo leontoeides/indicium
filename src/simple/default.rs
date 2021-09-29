@@ -11,7 +11,7 @@ impl<K: Ord> Default for SearchIndex<K> {
         Self::new(
             SearchType::Or,                 // Search type.
             AutocompleteType::Context,      // Autocompletion type.
-            Some(vec![' ', '\n', '\r', '\t', ',', '.']), // Split characters.
+            Some(vec![' ', '\n', '\r', '\t', ',', '.', '(', ')', '<', '>']),
             false,                          // Case sensitive?
             1,                              // Minimum keyword length (in chars or codepoints.)
             24,                             // Maximum keyword length (in chars or codepoints.)

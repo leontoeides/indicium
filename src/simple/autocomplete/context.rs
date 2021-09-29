@@ -91,11 +91,11 @@ impl<K: Ord> SearchIndex<K> {
         // settings. Force "use entire string as a keyword" option off:
         let mut keywords: Vec<String> = self.string_keywords(string, false);
 
-        // Pop the last keyword off the list. It's the keyword that we'll be
+        // Pop the last keyword off the list - the keyword that we'll be
         // autocompleting:
         if let Some(last_keyword) = keywords.pop() {
 
-            // Perform search for entire string without the last keyword:
+            // Perform `And` search for entire string without the last keyword:
             let search_results: BTreeSet<&K> =
                 self.internal_search_and(keywords.as_slice());
 
@@ -104,8 +104,8 @@ impl<K: Ord> SearchIndex<K> {
                 self.internal_autocomplete_keyword(&last_keyword);
 
             // Intersect the autocompletions for the last keyword with the
-            // search results. This way, only relevant autocompletions are
-            // returned:
+            // search results for the preceding keywords. This way, only
+            // relevant autocompletions are returned:
 
             let autocompletions: Vec<&String> = if search_results.is_empty() {
 

@@ -109,7 +109,7 @@ impl<K: Ord> SearchIndex<K> {
             // If the index's keyword matches the user's keyword, don't return
             // it as a result. For example, if the user's keyword was "new" (as
             // in New York), do not return "new" as an auto-completed keyword:
-            .filter(|key| *key != &keyword)
+            // .filter(|key| *key != &keyword)
             // Only return `maximum_autocomplete_results` number of keywords:
             .take(self.maximum_autocomplete_results)
             // Collect all keyword autocompletions into a `BTreeSet`:

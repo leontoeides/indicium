@@ -221,7 +221,7 @@
 //! search_index.insert(&6, &MyType::from("red"));
 //!
 //! let autocomplete_options: Vec<String> =
-//!     search_index.autocomplete("a very big bir");
+//!     search_index.autocomplete("a very big bi");
 //!
 //! assert_eq!(
 //!     autocomplete_options,

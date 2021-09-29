@@ -9,11 +9,9 @@ impl<K: Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
-    /// Return all matching _typeahead_ or _autocomplete_ keywords for the
-    /// provided keyword.
-    ///
-    /// The provided string is expected to be only a single keyword. For
-    /// multi-keyword support see the `autocomplete` method.
+    /// Returns matching autocompleted keywords for the provided search string.
+    /// _This search method only accepts a single keyword as the search string._
+    /// The partial search keyword must be an exact match.
     ///
     /// Note: This function is lower-level and for internal use only. It does
     /// not observe any settings such as _case-sensitivity_ or _maximum

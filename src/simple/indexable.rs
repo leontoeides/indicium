@@ -1,14 +1,11 @@
 // -----------------------------------------------------------------------------
 //
-/// To make a record indexable for Indicium, the `Indexable` trait must be
-/// implemented for it. The trait returns a `Vec<String>` of all content that is
-/// to be indexed.
+/// To make a record indexable for Indicium Search, the `Indexable` trait must
+/// be implemented for it. The trait returns a `Vec<String>` of all content that
+/// is to be indexed.
 ///
-/// ### Implementing Indexable
-///
-/// Before we can begin using Indicium, we must make our record indexable. We'll
-/// do this by implementing the `Indexable` trait for our `struct`. The idea is
-/// to return a `String` for every field that we would like to be indexed.
+/// To begin, we'll implement the `Indexable` trait for our `struct`. The idea
+/// is to return a `String` for every field that we would like to be indexed.
 ///
 /// Basic usage:
 ///
@@ -37,5 +34,7 @@
 /// the returned `Vec<String>`.
 
 pub trait Indexable {
+    /// Returns a string for every field for a record that is to be indexed by
+    /// Indicium Search.
     fn strings(&self) -> Vec<String>;
 } // Indexable

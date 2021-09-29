@@ -91,8 +91,8 @@ where
     /// #       search_index.insert(&index, element)
     /// #   );
     /// #
-    /// let search_results = search_index.search("third fourth");
-    /// assert_eq!(search_results, vec![&3, &4]);
+    /// let search_results = search_index.search("last Wessex");
+    /// assert_eq!(search_results, vec![&1, &0]);
     /// ```
 
     pub fn search(&'a self, string: &'a str) -> Vec<&'a K> {
