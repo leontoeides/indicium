@@ -28,23 +28,23 @@ impl<K: Clone + Ord> SearchIndex<K> {
     ///
     /// ```rust
     /// # use indicium::simple::{Indexable, SearchIndex};
-    ///
+    /// #
     /// # struct MyStruct {
-    /// #    title: String,
-    /// #    year: u16,
-    /// #    body: String,
+    /// #   title: String,
+    /// #   year: u16,
+    /// #   body: String,
     /// # }
-    ///
+    /// #
     /// # impl Indexable for MyStruct {
-    /// #     fn strings(&self) -> Vec<String> {
-    /// #         vec![
-    /// #             self.title.clone(),
-    /// #             self.year.to_string(),
-    /// #             self.body.clone(),
-    /// #         ]
-    /// #     }
+    /// #   fn strings(&self) -> Vec<String> {
+    /// #       vec![
+    /// #           self.title.clone(),
+    /// #           self.year.to_string(),
+    /// #           self.body.clone(),
+    /// #       ]
+    /// #   }
     /// # }
-    ///
+    /// #
     /// let my_vec: Vec<MyStruct> = Vec::new();
     ///
     /// // In the case of a `Vec` collection, we use the index as our key.  A
@@ -66,23 +66,23 @@ impl<K: Clone + Ord> SearchIndex<K> {
     /// ```rust
     /// # use indicium::simple::{Indexable, SearchIndex};
     /// # use std::collections::HashMap;
-    ///
+    /// #
     /// # struct MyStruct {
-    /// #    title: String,
-    /// #    year: u16,
-    /// #    body: String,
+    /// #   title: String,
+    /// #   year: u16,
+    /// #   body: String,
     /// # }
-    ///
+    /// #
     /// # impl Indexable for MyStruct {
-    /// #     fn strings(&self) -> Vec<String> {
-    /// #         vec![
-    /// #             self.title.clone(),
-    /// #             self.year.to_string(),
-    /// #             self.body.clone(),
-    /// #         ]
-    /// #     }
+    /// #   fn strings(&self) -> Vec<String> {
+    /// #       vec![
+    /// #           self.title.clone(),
+    /// #           self.year.to_string(),
+    /// #           self.body.clone(),
+    /// #       ]
+    /// #   }
     /// # }
-    ///
+    /// #
     /// let my_hash_map: HashMap<String, MyStruct> = HashMap::new();
     ///
     /// // In the case of a `HashMap` collection, we use the hash map's key as

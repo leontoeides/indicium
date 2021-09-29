@@ -25,17 +25,66 @@ impl<K: Ord> SearchIndex<K> {
     /// Basic usage:
     ///
     /// ```rust
-    /// # use indicium::simple::SearchIndex;
-    /// # use std::collections::BTreeSet;
+    /// # use indicium::simple::{AutocompleteType, Indexable, SearchIndex, SearchType};
+    /// #
+    /// # struct MyStruct {
+    /// #   title: String,
+    /// #   year: u16,
+    /// #   body: String,
+    /// # }
+    /// #
+    /// # impl Indexable for MyStruct {
+    /// #   fn strings(&self) -> Vec<String> {
+    /// #       vec![
+    /// #           self.title.clone(),
+    /// #           self.year.to_string(),
+    /// #           self.body.clone(),
+    /// #       ]
+    /// #   }
+    /// # }
+    /// #
+    /// # let my_vec = vec![
+    /// #   MyStruct {
+    /// #       title: "Harold Godwinson".to_string(),
+    /// #       year: 1066,
+    /// #       body: "Last crowned Anglo-Saxon king of England.".to_string(),
+    /// #   },
+    /// #   MyStruct {
+    /// #       title: "Edgar Ætheling".to_string(),
+    /// #       year: 1066,
+    /// #       body: "Last male member of the royal house of Cerdic of Wessex.".to_string(),
+    /// #   },
+    /// #   MyStruct {
+    /// #       title: "William the Conqueror".to_string(),
+    /// #       year: 1066,
+    /// #       body: "First Norman monarch of England.".to_string(),
+    /// #   },
+    /// #   MyStruct {
+    /// #       title: "William Rufus".to_string(),
+    /// #       year: 1087,
+    /// #       body: "Third son of William the Conqueror.".to_string(),
+    /// #   },
+    /// #   MyStruct {
+    /// #       title: "Henry Beauclerc".to_string(),
+    /// #       year: 1100,
+    /// #       body: "Fourth son of William the Conqueror.".to_string(),
+    /// #   },
+    /// # ];
     /// #
     /// # let mut search_index: SearchIndex<usize> = SearchIndex::default();
     /// #
-    /// let resulting_keys: BTreeSet<&usize> =
-    ///     search_index.keyword_search(&"helicopter".to_string());
+    /// # my_vec
+    /// #   .iter()
+    /// #   .enumerate()
+    /// #   .for_each(|(index, element)|
+    /// #       search_index.insert(&index, element)
+    /// #   );
+    /// #
+    /// let search_results = search_index.search_keyword("Wessex");
     ///
     /// assert_eq!(
-    ///     // Convert `BTreeSet<&usize>` to `Vec<&usize>`:
-    ///     resulting_keys.iter().cloned().collect::<Vec<&usize>>(),
+    ///     // Convert `BTreeMap<&K>` to `Vec<&K>` for comparison:
+    ///     search_results.iter().cloned().collect::<Vec<&usize>>(),
     ///     vec![&1]
     /// );
     /// ```

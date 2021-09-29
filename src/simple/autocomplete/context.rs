@@ -18,6 +18,72 @@ impl<K: Ord> SearchIndex<K> {
     /// effectively provides contextual autocompletion. It is the heaviest and
     /// slowest autocompletion type but likely provides the best user
     /// experience. Results are returned in lexographic order.
+    ///
+    /// Basic usage:
+    ///
+    /// ```rust
+    /// # use indicium::simple::{AutocompleteType, Indexable, SearchIndex, SearchType};
+    /// #
+    /// # struct MyStruct {
+    /// #   title: String,
+    /// #   year: u16,
+    /// #   body: String,
+    /// # }
+    /// #
+    /// # impl Indexable for MyStruct {
+    /// #   fn strings(&self) -> Vec<String> {
+    /// #       vec![
+    /// #           self.title.clone(),
+    /// #           self.year.to_string(),
+    /// #           self.body.clone(),
+    /// #       ]
+    /// #   }
+    /// # }
+    /// #
+    /// # let my_vec = vec![
+    /// #   MyStruct {
+    /// #       title: "Harold Godwinson".to_string(),
+    /// #       year: 1066,
+    /// #       body: "Last crowned Anglo-Saxon king of England.".to_string(),
+    /// #   },
+    /// #   MyStruct {
+    /// #       title: "Edgar Ætheling".to_string(),
+    /// #       year: 1066,
+    /// #       body: "Last male member of the royal house of Cerdic of Wessex.".to_string(),
+    /// #   },
+    /// #   MyStruct {
+    /// #       title: "William the Conqueror".to_string(),
+    /// #       year: 1066,
+    /// #       body: "First Norman monarch of England.".to_string(),
+    /// #   },
+    /// #   MyStruct {
+    /// #       title: "William Rufus".to_string(),
+    /// #       year: 1087,
+    /// #       body: "Third son of William the Conqueror.".to_string(),
+    /// #   },
+    /// #   MyStruct {
+    /// #       title: "Henry Beauclerc".to_string(),
+    /// #       year: 1100,
+    /// #       body: "Fourth son of William the Conqueror.".to_string(),
+    /// #   },
+    /// # ];
+    /// #
+    /// # let mut search_index: SearchIndex<usize> = SearchIndex::default();
+    /// #
+    /// # my_vec
+    /// #   .iter()
+    /// #   .enumerate()
+    /// #   .for_each(|(index, element)|
+    /// #       search_index.insert(&index, element)
+    /// #   );
+    /// #
+    /// let autocomplete_options = search_index.autocomplete_context("E");
+    ///
+    /// assert_eq!(
+    ///     autocomplete_options,
+    ///     vec!["edgar".to_string(), "edgar ætheling".to_string(), "england".to_string()]
+    /// );
+    /// ```
 
     pub fn autocomplete_context(&self, string: &str) -> Vec<String> {
 

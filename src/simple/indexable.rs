@@ -10,11 +10,11 @@
 /// do this by implementing the `Indexable` trait for our `struct`. The idea is
 /// to return a `String` for every field that we would like to be indexed.
 ///
-/// For example:
+/// Basic usage:
 ///
 /// ```rust
-/// use indicium::simple::Indexable;
-///
+/// # use indicium::simple::Indexable;
+/// #
 /// struct MyStruct {
 ///     title: String,
 ///     year: u16,
