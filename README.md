@@ -117,10 +117,16 @@ Basic usage:
 ```rust
 let mut search_index: SearchIndex<usize> = SearchIndex::default();
 
-let resulting_keys: Vec<usize> =
-    search_index.search(&"helicopter".to_string());
+search_index.insert(&0, &MyType::from("Harold Godwinson"));
+search_index.insert(&1, &MyType::from("Edgar Ætheling"));
+search_index.insert(&2, &MyType::from("William the Conqueror"));
+search_index.insert(&3, &MyType::from("William Rufus"));
+search_index.insert(&4, &MyType::from("Henry Beauclerc"));
 
-assert_eq!(resulting_keys, Some(vec![&1]));
+let resulting_keys: Vec<&usize> =
+    search_index.search("William");
+
+assert_eq!(resulting_keys, vec![&2, &3]);
 ```
 
 ## 5. Autocompletion
@@ -131,11 +137,21 @@ last keyword in the supplied string.
 Basic usage:
 
 ```rust
+let mut search_index: SearchIndex<usize> = SearchIndex::default();
+
+search_index.insert(&0, &MyType::from("apple"));
+search_index.insert(&0, &MyType::from("birthday"));
+search_index.insert(&1, &MyType::from("bird"));
+search_index.insert(&2, &MyType::from("bath"));
+search_index.insert(&3, &MyType::from("truck"));
+search_index.insert(&4, &MyType::from("ball"));
+search_index.insert(&4, &MyType::from("red"));
+
 let autocomplete_options: Vec<String> =
-    search_index.autocomplete(&"a very big bir".to_string());
+    search_index.autocomplete("a very big bir");
 
 assert_eq!(
-	autocomplete_options,
-	vec!["very big bird", "very big birthday"]
+    autocomplete_options,
+    vec!["a very big bird", "a very big birthday"]
 );
 ```

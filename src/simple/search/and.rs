@@ -31,7 +31,7 @@ impl<K: Ord> SearchIndex<K> {
     ///
     /// Basic usage:
     ///
-    /// ```rust
+    /// ```ignore
     /// # use indicium::simple::{AutocompleteType, Indexable, SearchIndex, SearchType};
     /// #
     /// # struct MyStruct {
@@ -91,7 +91,7 @@ impl<K: Ord> SearchIndex<K> {
     /// assert_eq!(search_results, vec![&3]);
     /// ```
 
-    pub fn search_and(&self, string: &str) -> Vec<&K> {
+    pub(crate) fn search_and(&self, string: &str) -> Vec<&K> {
 
         // Split search `String` into keywords (according to the `SearchIndex`
         // settings):

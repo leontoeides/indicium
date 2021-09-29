@@ -41,7 +41,7 @@ where
     ///
     /// Basic usage:
     ///
-    /// ```rust
+    /// ```ignore
     /// # use indicium::simple::{AutocompleteType, Indexable, SearchIndex, SearchType};
     /// #
     /// # struct MyStruct {
@@ -101,7 +101,7 @@ where
     /// assert_eq!(search_results, vec![&0, &1, &2]);
     /// ```
 
-    pub fn search_or(&'a self, string: &'a str) -> Vec<&'a K> {
+    pub(crate) fn search_or(&'a self, string: &'a str) -> Vec<&'a K> {
 
         // Split search `String` into keywords (according to the `SearchIndex`
         // settings):
@@ -148,9 +148,9 @@ where
             .collect();
 
         // Sort the tuple elements by hit-count descending:
-        #[cfg(feature = "rayon")]
-        search_results.par_sort_unstable_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
-        #[cfg(not(feature = "rayon"))]
+        //#[cfg(feature = "rayon")]
+        //search_results.par_sort_unstable_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
+        //#[cfg(not(feature = "rayon"))]
         search_results.sort_unstable_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
 
         // Return the search results to the user:

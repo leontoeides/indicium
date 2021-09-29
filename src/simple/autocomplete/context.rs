@@ -21,7 +21,7 @@ impl<K: Ord> SearchIndex<K> {
     ///
     /// Basic usage:
     ///
-    /// ```rust
+    /// ```ignore
     /// # use indicium::simple::{AutocompleteType, Indexable, SearchIndex, SearchType};
     /// #
     /// # struct MyStruct {
@@ -85,7 +85,7 @@ impl<K: Ord> SearchIndex<K> {
     /// );
     /// ```
 
-    pub fn autocomplete_context(&self, string: &str) -> Vec<String> {
+    pub(crate) fn autocomplete_context(&self, string: &str) -> Vec<String> {
 
         // Split search `String` into keywords according to the `SearchIndex`
         // settings. Force "use entire string as a keyword" option off:

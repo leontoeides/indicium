@@ -19,7 +19,7 @@ impl<K: Ord> SearchIndex<K> {
     ///
     /// Basic usage:
     ///
-    /// ```rust
+    /// ```ignore
     /// # use indicium::simple::{AutocompleteType, Indexable, SearchIndex, SearchType};
     /// #
     /// # struct MyStruct {
@@ -84,7 +84,7 @@ impl<K: Ord> SearchIndex<K> {
     /// );
     /// ```
 
-    pub fn autocomplete_keyword(&self, keyword: &str) -> BTreeSet<&String> {
+    pub(crate) fn autocomplete_keyword(&self, keyword: &str) -> BTreeSet<&String> {
 
         // If case sensitivity set, leave case intact. Otherwise, convert
         // keyword to lower case:

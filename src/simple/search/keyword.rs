@@ -24,7 +24,7 @@ impl<K: Ord> SearchIndex<K> {
     ///
     /// Basic usage:
     ///
-    /// ```rust
+    /// ```ignore
     /// # use indicium::simple::{AutocompleteType, Indexable, SearchIndex, SearchType};
     /// #
     /// # struct MyStruct {
@@ -97,7 +97,7 @@ impl<K: Ord> SearchIndex<K> {
     // observes `maximum_search_results`, while `internal_keyword_search` does
     // not.
 
-    pub fn search_keyword(&self, keyword: &str) -> BTreeSet<&K> {
+    pub(crate) fn search_keyword(&self, keyword: &str) -> BTreeSet<&K> {
 
         // If case sensitivity set, leave case intact. Otherwise, convert
         // keyword to lower case:
