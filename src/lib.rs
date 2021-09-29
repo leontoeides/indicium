@@ -171,6 +171,7 @@
 //! #       vec![self.text.clone()]
 //! #   }
 //! # }
+//! #
 //! let mut search_index: SearchIndex<usize> = SearchIndex::default();
 //!
 //! search_index.insert(&0, &MyType::from("Harold Godwinson"));
@@ -208,6 +209,7 @@
 //! #       vec![self.text.clone()]
 //! #   }
 //! # }
+//! #
 //! let mut search_index: SearchIndex<usize> = SearchIndex::default();
 //!
 //! search_index.insert(&0, &MyType::from("apple"));
