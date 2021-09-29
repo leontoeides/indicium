@@ -15,7 +15,8 @@ impl<K: Ord> SearchIndex<K> {
     //
     /// Returns matching autocompleted keywords for the provided search string.
     /// This function will use the `AutocompleteType` setting stored in the
-    /// `SearchIndex`. Partial keywords must be an exact match.
+    /// `SearchIndex`. Partial keywords must be an exact match. Results are
+    /// returned in lexographic order.
     ///
     /// Autocompletion behaviour can be changed by setting the
     /// [`AutocompleteType`] in the `SearchIndex`. See also:
@@ -38,7 +39,8 @@ impl<K: Ord> SearchIndex<K> {
     // -------------------------------------------------------------------------
     //
     /// Returns matching autocompleted keywords for the provided search string.
-    /// Partial keywords must be an exact match.
+    /// Partial keywords must be an exact match. Results are returned in
+    /// lexographic order.
     ///
     /// Autocomplete behaviour can be changed by using different
     /// `AutocompleteType` variants as the first parameter for the method call.

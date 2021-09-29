@@ -9,8 +9,8 @@ impl<K: Ord> SearchIndex<K> {
     // -------------------------------------------------------------------------
     //
     /// Returns matching autocompleted keywords for the provided search string.
-    /// This function will use the `AutocompleteType` setting stored in the
-    /// `SearchIndex`. Partial keywords must be an exact match.
+    /// _This search method only accepts a single keyword as the search string._
+    /// The partial search keyword must be an exact match.
     ///
     /// The search string is expected to only contain a single keyword. This is
     /// the lightest and fastest autocompletion type. It is good for compact

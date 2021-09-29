@@ -1,8 +1,8 @@
-use serde::{Deserialize, Serialize};
+// use serde::{Deserialize, Serialize};
 
 // -----------------------------------------------------------------------------
 //
-/// Indicium `simple` search provides three types of searches. The search type
+/// Indicium `simple` search provides three types of search. The search type
 /// that should be used really depends on your use-case: the nature of the data,
 /// the intent of the user, and the size of your data set. I would suggest
 /// trying & testing both `And` and `Or` searches to see which one works better
@@ -18,7 +18,8 @@ use serde::{Deserialize, Serialize};
 /// [`SearchIndexBuilder`]: struct.SearchIndexBuilder.html
 /// [`SearchIndex::new()`]: struct.SearchIndex.html#method.new
 
-#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Deserialize, Serialize)]
+// #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Deserialize, Serialize)]
+#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub enum SearchType {
     /// The search string is expected to only contain a single keyword. This is
     /// the lightest and fastest type. It is good for compact interfaces, where
@@ -30,8 +31,9 @@ pub enum SearchType {
     /// containing keywords both `this` and `that`. In other words, _all_
     /// keywords must be present in a record for it to be returned as a result.
     ///
-    /// For this search, the results are returned in lexographic order. This
-    /// conjuction uses less CPU resources than `Or`.
+    /// This search method accepts multiple keywords in the search string. The
+    /// results are returned in lexographic order. This conjuction uses less CPU
+    /// resources than `Or`.
     ///
     /// The `And` search feels more like "use my keywords to filter out the
     /// records I don't want." It's also a better choice for large collections
@@ -46,6 +48,9 @@ pub enum SearchType {
     /// relevance. Records containing both keywords `this` and `that` will be
     /// the top results. This conjuction uses more CPU resources than `And`
     /// because the keyword hits must be tallied and sorted.
+    ///
+    /// This search method accepts multiple keywords in the search string. The
+    /// results are returned in lexographic order.
     ///
     /// If your collection contains less than 10,000 records, `Or` might be a
     /// good place to start. To me, `Or` effectively feels like "using these

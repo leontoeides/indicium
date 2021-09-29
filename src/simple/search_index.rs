@@ -1,5 +1,5 @@
 use crate::simple::{AutocompleteType, SearchType};
-use serde::{Deserialize, Serialize};
+// use serde::{Deserialize, Serialize};
 use std::cmp::Ord;
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -9,7 +9,8 @@ use std::collections::{BTreeMap, BTreeSet};
 /// `simple` search. You may instantiate your search index with
 /// `SearchIndex::default()` or use the `SearchIndexBuilder` builder pattern.
 
-#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Deserialize, Serialize)]
+// #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Deserialize, Serialize)]
+#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct SearchIndex<K: Ord> {
     /// Search index data structure.
     pub(crate) b_tree_map: BTreeMap<String, BTreeSet<K>>,
