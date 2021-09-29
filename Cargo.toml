@@ -12,6 +12,9 @@ publish = true
 readme = "README.md"
 repository = "https://github.com/leontoeides/indicium"
 
+[badges]
+maintenance = { status = "actively-developed" }
+
 # [features]
 # default = ["rayon", "simple", "select2"]
 # simple = []
