@@ -6,7 +6,7 @@
 //! There are many incredible search engines available for Rust. Many seem to
 //! require compiling a separate server binary. I wanted something simple, light
 //! weight, easy to use, and that could conveniently search structs and
-//! collections in memory. So, I made `indicium`.
+//! collections in my binary. So, I made `indicium`.
 //!
 //! # Quick Start Guide
 //!

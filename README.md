@@ -6,7 +6,7 @@ key-value stores. Features autocompletion.
 There are many incredible search engines available for Rust. Many seem to
 require compiling a separate server binary. I wanted something simple, light
 weight, easy to use, and that could conveniently search structs and collections
-in memory. So, I made `indicium`.
+in my binary. So, I made `indicium`.
 
 ![alt text](https://www.arkiteq.ca/crates/indicium/banner.jpg "Indicium: A Simple In-Memory Search for Rust")
 
