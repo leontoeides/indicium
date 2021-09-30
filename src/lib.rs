@@ -149,7 +149,7 @@
 //! both the collection and the key. For example:
 //!
 //! ```rust
-//! #[derive(Clone, Debug, Ord)]
+//! #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
 //! enum MyKeys {
 //!     MyVecKey(usize),
 //!     MyHashMapKey(String),
