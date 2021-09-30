@@ -4,9 +4,9 @@
 key-value stores. Features autocompletion.
 
 There are many incredible search engines available for Rust. Many seem to
-require compiling a separate server binary. I wanted something simple, light
-weight, easy to use, and that could conveniently search structs and collections
-in my binary. So, I made `indicium`.
+require compiling a separate server binary. I wanted something simple and
+light-weight. An easy-to-use crate that could conveniently search structs and
+collections within my own binary. So, I made `indicium`.
 
 ![alt text](https://www.arkiteq.ca/crates/indicium/banner.jpg "Indicium: A Simple In-Memory Search for Rust")
 
@@ -14,8 +14,8 @@ While `indicium` was made with web apps in mind, it is an in-memory search and
 it does not scale indefinitely or to Facebook or Google size. Even in such an
 environment, it would still be a convenient way of searching enumerations &
 static lists (such as currencies, languages, countries, etc.) It's also great
-for applications where there is an anticipated scale limit, i.e. list of company
-assets, list of users in a corporate intranet, etc.
+for applications where there is an anticipated scale limit, i.e. searching a
+list of company assets, list of users in a corporate intranet, etc.
 
 # Quick Start Guide
 
