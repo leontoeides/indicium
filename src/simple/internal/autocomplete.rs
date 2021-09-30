@@ -21,7 +21,7 @@ impl<K: Ord> SearchIndex<K> {
 
         // Attempt to get matching keywords from `BTreeMap`:
         let autocomplete_options: BTreeSet<(&String, &BTreeSet<K>)> = self.b_tree_map
-            // Get matching keywords for starting with (partial) keyword string:
+            // Get matching keywords starting with (partial) keyword string:
             .range(String::from(keyword)..)
             // We did not specify an end bound for our `range` function (see
             // above.) `range` will return _every_ keyword greater than the
@@ -45,7 +45,7 @@ impl<K: Ord> SearchIndex<K> {
             tracing::warn!(
                 "Internal table limit of {} keywords has been exceeded. \
                 Data has been dropped. This will impact accuracy of results. \
-                For this data set, consider using a more comprehensive database solution like MeiliSearch.",
+                For this data set, consider using a more comprehensive search solution like MeiliSearch.",
                 MAXIMUM_INTERNAL_AUTOCOMPLETE_RESULTS
             ); // warn!
         } // if

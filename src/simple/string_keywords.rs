@@ -18,7 +18,7 @@ impl<K: Ord> SearchIndex<K> {
         use_string_as_keyword: bool,
     ) -> Vec<String> {
 
-        // If case sensitivity set, leave case intact. Otherwise, convert the
+        // If case sensitivity set, leave case intact. Otherwise, normalize the
         // entire string to lower case:
         let string = match self.case_sensitive {
             true => string.to_string(),

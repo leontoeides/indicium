@@ -54,7 +54,7 @@ impl<K: Ord> SearchIndex<K> {
             tracing::warn!(
                 "Internal table limit of {} results has been exceeded. \
                 Data has been dropped. This will impact accuracy of results. \
-                For this data set, consider using a more comprehensive database solution like MeiliSearch.",
+                For this data set, consider using a more comprehensive search solution like MeiliSearch.",
                 MAXIMUM_INTERNAL_SEARCH_RESULTS
             ); // warn!
         } // if

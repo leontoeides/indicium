@@ -87,7 +87,7 @@ impl<K: Ord> SearchIndex<K> {
     #[tracing::instrument(level = "trace", name = "Keyword Autocomplete", skip(self))]
     pub(crate) fn autocomplete_keyword(&self, keyword: &str) -> BTreeSet<&String> {
 
-        // If case sensitivity set, leave case intact. Otherwise, convert
+        // If case sensitivity set, leave case intact. Otherwise, normalize
         // keyword to lower case:
         let keyword = match self.case_sensitive {
             true => keyword.to_string(),
@@ -96,7 +96,7 @@ impl<K: Ord> SearchIndex<K> {
 
         // Attempt to get matching keywords from `BTreeMap`:
         self.b_tree_map
-            // Get matching keywords for starting with (partial) keyword string:
+            // Get matching keywords starting with (partial) keyword string:
             .range(String::from(&keyword)..)
             // `range` returns a key-value pair. We're autocompleting the key,
             // so discard the value:
