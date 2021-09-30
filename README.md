@@ -10,11 +10,12 @@ in memory. So, I made `indicium`.
 
 ![alt text](https://www.arkiteq.ca/crates/indicium/banner.jpg "Indicium: A Simple In-Memory Search for Rust")
 
-Because `indicium` is an in-memory search, it does not scale infinitely or to
-Facebook or Google size. Even in such an environment, it could still be a useful
-way of searching enumerations & lists (such as currencies, countries, etc.) It's
-also great for applications where there is an anticipated scale limit, i.e. list
-of notes on a user's computer, list of users in a corporate intranet, etc.
+While `indicium` was made with web apps in mind, as an in-memory search it does
+not scale infinitely or to Facebook or Google size. Even in such an environment,
+it could still be a useful way of searching enumerations & lists (such as
+currencies, countries, etc.) It's also great for applications where there is an
+anticipated scale limit, i.e. list of company assets, list of users in a
+corporate intranet, etc.
 
 # Quick Start Guide
 
@@ -110,21 +111,6 @@ you insert into your collection (Vec, HashMap, etc.)
 
 Once the index has been populated, you can use the `search` and `autocomplete`
 methods.
-
-**Pro-tip**: You can make a single, universal search index for all of your
-collections. This can be done by making a special `enum` key that represents
-both the collection and the key. For example:
-
-```rust
-#[derive(Clone + Debug + Ord)]
-enum MyKeys {
-    MyVecKey(usize),
-    MyHashMapKey(String),
-}
-```
-
-You can use the enum's variants to represent your different collections.
-Each variant's associated data can hold the `key` for your record.
 
 ## 3. Searching
 
