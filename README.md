@@ -14,8 +14,8 @@ While `indicium` was made with web apps in mind, it is an in-memory search and
 it does not scale indefinitely or to Facebook or Google size. Even in such an
 environment, it would still be a convenient way of searching enumerations &
 static lists (such as currencies, languages, countries, etc.) It's also great
-for applications where there is an anticipated scale limit, i.e. searching a
-list of company assets, list of users in a corporate intranet, etc.
+for applications where there is an anticipated scale limit (i.e. searching a
+list of company assets, list of users in a corporate intranet, etc.)
 
 # Quick Start Guide
 
