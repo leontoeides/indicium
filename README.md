@@ -10,11 +10,11 @@ in my binary. So, I made `indicium`.
 
 ![alt text](https://www.arkiteq.ca/crates/indicium/banner.jpg "Indicium: A Simple In-Memory Search for Rust")
 
-While `indicium` was made with web apps in mind, it is an in-memory search it
-does not scale infinitely or to Facebook or Google size. Even in such an
-environment, it could still be a convenient way of searching enumerations &
-lists (such as currencies, languages, countries, etc.) It's also great for
-applications where there is an anticipated scale limit, i.e. list of company
+While `indicium` was made with web apps in mind, it is an in-memory search and
+it does not scale infinitely or to Facebook or Google size. Even in such an
+environment, it would still be a convenient way of searching enumerations &
+static lists (such as currencies, languages, countries, etc.) It's also great
+for applications where there is an anticipated scale limit, i.e. list of company
 assets, list of users in a corporate intranet, etc.
 
 # Quick Start Guide
