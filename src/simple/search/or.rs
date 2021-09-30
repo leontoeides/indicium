@@ -2,8 +2,6 @@ use crate::simple::search_index::SearchIndex;
 use std::cmp::Ord;
 use std::collections::BTreeMap;
 use std::marker::Send;
-#[cfg(feature = "rayon")]
-use rayon::slice::ParallelSliceMut;
 
 // -----------------------------------------------------------------------------
 
@@ -148,9 +146,6 @@ where
             .collect();
 
         // Sort the tuple elements by hit-count descending:
-        //#[cfg(feature = "rayon")]
-        //search_results.par_sort_unstable_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
-        //#[cfg(not(feature = "rayon"))]
         search_results.sort_unstable_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
 
         // Return the search results to the user:

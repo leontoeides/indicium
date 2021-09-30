@@ -1,5 +1,4 @@
 use crate::simple::{AutocompleteType, SearchType};
-// use serde::{Deserialize, Serialize};
 use std::cmp::Ord;
 use std::collections::{BTreeMap, BTreeSet};
 

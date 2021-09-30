@@ -1,5 +1,3 @@
-// use serde::{Deserialize, Serialize};
-
 // -----------------------------------------------------------------------------
 //
 /// Indicium `simple` search provides three types of autocomplete. The
