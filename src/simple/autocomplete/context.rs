@@ -111,7 +111,7 @@ impl<K: Ord> SearchIndex<K> {
                 // Only keep this autocompletion if it contains a key that the
                 // search results contain:
                 .filter(|(_keyword, keys)|
-                   keys.iter().any(|key| search_results.contains(key))
+                    search_results.is_empty() || keys.iter().any(|key| search_results.contains(key))
                 ) // filter
                 // Only return `maximum_autocomplete_results` number of keywords:
                 .take(self.maximum_autocomplete_results)

@@ -12,7 +12,7 @@ in my binary. So, I made `indicium`.
 
 While `indicium` was made with web apps in mind, as an in-memory search it does
 not scale infinitely or to Facebook or Google size. Even in such an environment,
-it could still be a useful way of searching enumerations & lists (such as
+it could still be a convenient way of searching enumerations & lists (such as
 currencies, countries, etc.) It's also great for applications where there is an
 anticipated scale limit, i.e. list of company assets, list of users in a
 corporate intranet, etc.
