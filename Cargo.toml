@@ -20,7 +20,7 @@ maintenance = { status = "actively-developed" }
 # simple = []
 # select2 = ["serde"]
 
-# [dependencies]
+[dependencies]
 # rayon = { version = "1.5", optional = true }
 # serde = { version = "1.0", features = ["derive"], optional = true }
 tracing = "0.1"
