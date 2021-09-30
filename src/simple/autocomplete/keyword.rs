@@ -84,6 +84,7 @@ impl<K: Ord> SearchIndex<K> {
     /// );
     /// ```
 
+    #[tracing::instrument(level = "trace", name = "Keyword Autocomplete", skip(self))]
     pub(crate) fn autocomplete_keyword(&self, keyword: &str) -> BTreeSet<&String> {
 
         // If case sensitivity set, leave case intact. Otherwise, convert

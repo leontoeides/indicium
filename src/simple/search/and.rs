@@ -91,6 +91,7 @@ impl<K: Ord> SearchIndex<K> {
     /// assert_eq!(search_results, vec![&3]);
     /// ```
 
+    #[tracing::instrument(level = "trace", name = "And Search", skip(self))]
     pub(crate) fn search_and(&self, string: &str) -> Vec<&K> {
 
         // Split search `String` into keywords (according to the `SearchIndex`

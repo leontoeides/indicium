@@ -99,6 +99,7 @@ where
     /// assert_eq!(search_results, vec![&0, &1, &2]);
     /// ```
 
+    #[tracing::instrument(level = "trace", name = "Or Search", skip(self))]
     pub(crate) fn search_or(&'a self, string: &'a str) -> Vec<&'a K> {
 
         // Split search `String` into keywords (according to the `SearchIndex`

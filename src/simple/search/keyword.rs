@@ -97,6 +97,7 @@ impl<K: Ord> SearchIndex<K> {
     // observes `maximum_search_results`, while `internal_keyword_search` does
     // not.
 
+    #[tracing::instrument(level = "trace", name = "Keyword Search", skip(self))]
     pub(crate) fn search_keyword(&self, keyword: &str) -> BTreeSet<&K> {
 
         // If case sensitivity set, leave case intact. Otherwise, convert

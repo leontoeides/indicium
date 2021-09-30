@@ -85,6 +85,7 @@ impl<K: Ord> SearchIndex<K> {
     /// );
     /// ```
 
+    #[tracing::instrument(level = "trace", name = "Context Autocomplete", skip(self))]
     pub(crate) fn autocomplete_context(&self, string: &str) -> Vec<String> {
 
         // Split search `String` into keywords according to the `SearchIndex`
