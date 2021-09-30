@@ -121,6 +121,7 @@ impl<K: Clone + Ord> SearchIndex<K> {
     /// You can use the enum's variants to represent your different collections.
     /// Each variant's associated data can hold the `key` for your record.
 
+    #[tracing::instrument(level = "trace", name = "Search Index Insert", skip(self, key, value))]
     pub fn insert(&mut self, key: &K, value: &dyn Indexable) {
 
         // Get all keywords for the `Indexable` record:

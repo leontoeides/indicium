@@ -93,6 +93,7 @@ impl<K: Clone + Ord> SearchIndex<K> {
     /// assert_eq!(search_results, vec![&0]);
     /// ```
 
+    #[tracing::instrument(level = "trace", name = "Search Index Replace", skip(self, key, before, after))]
     pub fn replace(
         &mut self,
         key: &K,

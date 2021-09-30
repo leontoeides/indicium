@@ -88,6 +88,7 @@ impl<K: Ord> SearchIndex<K> {
     /// assert_eq!(autocomplete_options, vec!["edgar last cerdic".to_string()]);
     /// ```
 
+    #[tracing::instrument(level = "trace", name = "Autocomplete", skip(self))]
     pub fn autocomplete(&self, string: &str) -> Vec<String> {
 
         match &self.autocomplete_type {
@@ -182,6 +183,7 @@ impl<K: Ord> SearchIndex<K> {
     /// );
     /// ```
 
+    #[tracing::instrument(level = "trace", name = "Autocomplete", skip(self))]
     pub fn autocomplete_type(&self, autocomplete_type: &AutocompleteType, string: &str) -> Vec<String> {
 
         match autocomplete_type {

@@ -95,6 +95,7 @@ where
     /// assert_eq!(search_results, vec![&1, &0]);
     /// ```
 
+    #[tracing::instrument(level = "trace", name = "Search", skip(self))]
     pub fn search(&'a self, string: &'a str) -> Vec<&'a K> {
 
         match &self.search_type {
@@ -183,6 +184,7 @@ where
     /// assert_eq!(search_results, vec![&3]);
     /// ```
 
+    #[tracing::instrument(level = "trace", name = "Search", skip(self))]
     pub fn search_type(&'a self, search_type: &SearchType, string: &'a str) -> Vec<&'a K> {
 
         match search_type {

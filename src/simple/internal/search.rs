@@ -25,7 +25,7 @@ impl<K: Ord> SearchIndex<K> {
     pub(crate) fn internal_keyword_search(&self, keyword: &str) -> BTreeSet<&K> {
 
         // Attempt to get matching keys for the search keyword from BTreeMap:
-        if let Some(keys) = self.b_tree_map.get(keyword) {
+        let search_results: BTreeSet<&K> = if let Some(keys) = self.b_tree_map.get(keyword) {
 
             // Attempt to get matching keys for search keyword:
             keys
@@ -46,7 +46,20 @@ impl<K: Ord> SearchIndex<K> {
             // empty `BTreeSet`:
             BTreeSet::new()
 
+        }; // if
+
+        // For debug builds:
+        #[cfg(debug_assertions)]
+        if search_results.len() >= MAXIMUM_INTERNAL_SEARCH_RESULTS {
+            tracing::warn!(
+                "Internal table limit of {} results has been exceeded. \
+                Data has been dropped. This will impact accuracy of results. \
+                For this data set, consider using a more comprehensive database solution like MeiliSearch.",
+                MAXIMUM_INTERNAL_SEARCH_RESULTS
+            ); // error!
         } // if
+
+        search_results
 
     } // fn
 

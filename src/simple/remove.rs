@@ -89,6 +89,7 @@ impl<K: Clone + Ord> SearchIndex<K> {
     /// assert_eq!(search_results, vec![&1]);
     /// ```
 
+    #[tracing::instrument(level = "trace", name = "Search Index Remove", skip(self, key, value))]
     pub fn remove(&mut self, key: &K, value: &dyn Indexable) {
 
         // Get all keywords for the `Indexable` record:

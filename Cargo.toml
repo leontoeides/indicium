@@ -15,12 +15,11 @@ repository = "https://github.com/leontoeides/indicium"
 [badges]
 maintenance = { status = "actively-developed" }
 
-# [features]
-# default = ["rayon", "simple", "select2"]
-# simple = []
-# select2 = ["serde"]
+[features]
+default = ["simple"]
+select2 = ["serde"]
+simple = []
 
 [dependencies]
-# rayon = { version = "1.5", optional = true }
-# serde = { version = "1.0", features = ["derive"], optional = true }
+serde = { version = "1.0", features = ["derive"], optional = true }
 tracing = "0.1"

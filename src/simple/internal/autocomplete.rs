@@ -20,7 +20,7 @@ impl<K: Ord> SearchIndex<K> {
     pub(crate) fn internal_autocomplete_keyword(&self, keyword: &str) -> BTreeSet<(&String, &BTreeSet<K>)> {
 
         // Attempt to get matching keywords from `BTreeMap`:
-        self.b_tree_map
+        let autocomplete_options: BTreeSet<(&String, &BTreeSet<K>)> = self.b_tree_map
             // Get matching keywords for starting with (partial) keyword string:
             .range(String::from(keyword)..)
             // We did not specify an end bound for our `range` function (see
@@ -37,7 +37,20 @@ impl<K: Ord> SearchIndex<K> {
             // keywords:
             .take(MAXIMUM_INTERNAL_AUTOCOMPLETE_RESULTS)
             // Collect all keyword autocompletions into a `BTreeSet`:
-            .collect()
+            .collect();
+
+        // For debug builds:
+        #[cfg(debug_assertions)]
+        if autocomplete_options.len() >= MAXIMUM_INTERNAL_AUTOCOMPLETE_RESULTS {
+            tracing::warn!(
+                "Internal table limit of {} keywords has been exceeded. \
+                Data has been dropped. This will impact accuracy of results. \
+                For this data set, consider using a more comprehensive database solution like MeiliSearch.",
+                MAXIMUM_INTERNAL_AUTOCOMPLETE_RESULTS
+            ); // error!
+        } // if
+
+        autocomplete_options
 
     } // fn
 
