@@ -91,11 +91,21 @@ impl<K: Ord> SearchIndex<K> {
     #[tracing::instrument(level = "trace", name = "Autocomplete", skip(self))]
     pub fn autocomplete(&self, string: &str) -> Vec<String> {
 
-        match &self.autocomplete_type {
+        let autocomplete_options: Vec<String> = match &self.autocomplete_type {
             AutocompleteType::Context => self.autocomplete_context(string),
             AutocompleteType::Global => self.autocomplete_global(string),
             AutocompleteType::Keyword => self.autocomplete_keyword(string).iter().cloned().cloned().collect(),
-        } // match
+        }; // match
+
+        // For debug builds:
+        #[cfg(debug_assertions)]
+        tracing::trace!(
+            "{} autocomplete options for \"{}\".",
+            autocomplete_options.len(),
+            string,
+        ); // trace!
+
+        autocomplete_options
 
     } // fn
 
@@ -186,11 +196,21 @@ impl<K: Ord> SearchIndex<K> {
     #[tracing::instrument(level = "trace", name = "Autocomplete", skip(self))]
     pub fn autocomplete_type(&self, autocomplete_type: &AutocompleteType, string: &str) -> Vec<String> {
 
-        match autocomplete_type {
+        let autocomplete_options: Vec<String> = match autocomplete_type {
             AutocompleteType::Context => self.autocomplete_context(string),
             AutocompleteType::Global => self.autocomplete_global(string),
             AutocompleteType::Keyword => self.autocomplete_keyword(string).iter().cloned().cloned().collect(),
-        } // match
+        }; // match
+
+        // For debug builds:
+        #[cfg(debug_assertions)]
+        tracing::trace!(
+            "{} autocomplete options for \"{}\".",
+            autocomplete_options.len(),
+            string,
+        ); // trace!
+
+        autocomplete_options
 
     } // fn
 

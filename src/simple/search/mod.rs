@@ -98,11 +98,21 @@ where
     #[tracing::instrument(level = "trace", name = "Search", skip(self))]
     pub fn search(&'a self, string: &'a str) -> Vec<&'a K> {
 
-        match &self.search_type {
+        let search_results: Vec<&'a K> = match self.search_type {
             SearchType::And => self.search_and(string),
             SearchType::Keyword => self.search_keyword(string).iter().cloned().collect(),
             SearchType::Or => self.search_or(string),
-        } // match
+        }; // match
+
+        // For debug builds:
+        #[cfg(debug_assertions)]
+        tracing::trace!(
+            "{} search results for \"{}\".",
+            search_results.len(),
+            string,
+        ); // trace!
+
+        search_results
 
     } // fn
 
@@ -187,11 +197,21 @@ where
     #[tracing::instrument(level = "trace", name = "Search", skip(self))]
     pub fn search_type(&'a self, search_type: &SearchType, string: &'a str) -> Vec<&'a K> {
 
-        match search_type {
+        let search_results: Vec<&'a K> = match search_type {
             SearchType::And => self.search_and(string),
             SearchType::Keyword => self.search_keyword(string).iter().cloned().collect(),
             SearchType::Or => self.search_or(string),
-        } // match
+        }; // match
+
+        // For debug builds:
+        #[cfg(debug_assertions)]
+        tracing::trace!(
+            "{} search results for \"{}\".",
+            search_results.len(),
+            string,
+        ); // trace!
+
+        search_results
 
     } // fn
 

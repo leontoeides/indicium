@@ -47,7 +47,7 @@ impl<K: Ord> SearchIndex<K> {
                 Data has been dropped. This will impact accuracy of results. \
                 For this data set, consider using a more comprehensive database solution like MeiliSearch.",
                 MAXIMUM_INTERNAL_AUTOCOMPLETE_RESULTS
-            ); // error!
+            ); // warn!
         } // if
 
         autocomplete_options
