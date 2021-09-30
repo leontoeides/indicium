@@ -23,6 +23,8 @@ pub enum SearchType {
     /// are returned in lexographic order. This is the lightest and fastest
     /// search type. It is good for compact interfaces, where records are very
     /// simple, and data-sets are quite small.
+    ///
+    /// Probably best suited as a form widget.
     Keyword,
     /// This search method accepts multiple keywords in the search string. The
     /// logical conjuction for multiple keywords is `And`. For example, a search
@@ -36,6 +38,8 @@ pub enum SearchType {
     /// The `And` search feels more like "use my keywords to filter out the
     /// records I don't want." It's likely a better choice for large collections
     /// because it uses less CPU resouces than `Or`.
+    ///
+    /// Probably best suited as a filter widget.
     And,
     /// This search method accepts multiple keywords in the search string. The
     /// logical conjuction for multiple keywords is `Or`. For example, a search
@@ -52,5 +56,7 @@ pub enum SearchType {
     /// good place to start. To me, `Or` effectively feels like "using these
     /// keywords, find a record I might want" which works well if there aren't
     /// too many records.
+    ///
+    /// Probably best suited as a search screen.
     Or,
 } // SearchType
