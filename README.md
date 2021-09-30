@@ -10,6 +10,12 @@ in memory. So, I made `indicium`.
 
 ![alt text](https://www.arkiteq.ca/crates/indicium/banner.jpg "Indicium: A Simple In-Memory Search for Rust")
 
+Because `indicium` is an in-memory search, it does not scale infinitely or to
+Facebook or Google size. Even in such an environment, it could still be a useful
+way of searching enumerations & lists (such as currencies, countries, etc.) It's
+also great for applications where there is an anticipated scale limit, i.e. list
+of notes on a user's computer, list of users in a corporate intranet, etc.
+
 # Quick Start Guide
 
 For our **Quick Start Guide** example, we will be searching inside of the
@@ -102,12 +108,12 @@ examples will index a previously populated `Vec` or `HashMap`. However, the
 preferred method for large collections is to `insert` into the `SearchIndex` as
 you insert into your collection (Vec, HashMap, etc.)
 
-Once the index has been populated, you can use the `autocomplete` and `search`
-functions.
+Once the index has been populated, you can use the `search` and `autocomplete`
+methods.
 
 ## 3. Searching
 
-The `search` function will return keys as the search results. Each resulting
+The `search` method will return keys as the search results. Each resulting
 key can then be used to retrieve the full record from its collection.
 
 Search only supports exact keyword matches and does not use fuzzy matching.
@@ -125,15 +131,14 @@ search_index.insert(&2, &MyType::from("William the Conqueror"));
 search_index.insert(&3, &MyType::from("William Rufus"));
 search_index.insert(&4, &MyType::from("Henry Beauclerc"));
 
-let resulting_keys: Vec<&usize> =
-    search_index.search("William");
+let resulting_keys: Vec<&usize> = search_index.search("William");
 
 assert_eq!(resulting_keys, vec![&2, &3]);
 ```
 
 ## 5. Autocompletion
 
-The `autocomplete` function will provide several autocompletion options for the
+The `autocomplete` method will provide several autocompletion options for the
 last keyword in the supplied string.
 
 Basic usage:
@@ -145,12 +150,12 @@ let mut search_index: SearchIndex<usize> =
         .build();
 
 search_index.insert(&0, &MyType::from("apple"));
-search_index.insert(&1, &MyType::from("birthday"));
-search_index.insert(&2, &MyType::from("bird"));
-search_index.insert(&3, &MyType::from("bath"));
-search_index.insert(&4, &MyType::from("truck"));
-search_index.insert(&5, &MyType::from("ball"));
-search_index.insert(&6, &MyType::from("red"));
+search_index.insert(&1, &MyType::from("ball"));
+search_index.insert(&2, &MyType::from("bath"));
+search_index.insert(&3, &MyType::from("bird"));
+search_index.insert(&4, &MyType::from("birthday"));
+search_index.insert(&5, &MyType::from("red"));
+search_index.insert(&6, &MyType::from("truck"));
 
 let autocomplete_options: Vec<String> =
     search_index.autocomplete("a very big bi");

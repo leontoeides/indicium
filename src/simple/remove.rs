@@ -105,7 +105,7 @@ impl<K: Clone + Ord> SearchIndex<K> {
                 let is_empty = if let Some(keys) = self.b_tree_map.get_mut(keyword) {
                     // If keyword found in search index, remove the _key
                     // reference_ for this record from _keyword entry_:
-                    keys.retain(|value| value != key);
+                    keys.remove(key);
                     // Return whether the _keyword entry_ is now empty or not:
                     keys.is_empty()
                 } else {
