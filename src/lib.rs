@@ -144,6 +144,21 @@
 //! Once the index has been populated, you can use the `search` and
 //! `autocomplete` methods.
 //!
+//! **Pro-tip**: You can make a single, universal search index for all of your
+//! collections. This can be done by making a special `enum` key that represents
+//! both the collection and the key. For example:
+//!
+//! ```rust
+//! #[derive(Clone + Debug + Ord)]
+//! enum MyKeys {
+//!     MyVecKey(usize),
+//!     MyHashMapKey(String),
+//! }
+//! ```
+//!
+//! You can use the enum's variants to represent your different collections.
+//! Each variant's associated data can hold the `key`.
+//!
 //! ## 3. Searching
 //!
 //! The `search` method will return keys as the search results. Each resulting
