@@ -90,4 +90,10 @@ fn simple() {
     let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Context, "1087 w");
     assert_eq!(autocomplete_options, vec!["1087 william".to_string(), "1087 william rufus".to_string()]);
 
+    // Ensure that `Context` autocomplete works with an empty search string /
+    // single keyword. Context autocomplete works in two parts - an `And` search
+    // for the preceding keywords, and an autocomplete for the last keyword:
+    let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Context, "108");
+    assert_eq!(autocomplete_options, vec!["1087".to_string()]);
+
 } // fn

@@ -111,7 +111,7 @@ impl<K: Clone + Ord> SearchIndex<K> {
     /// represents both the collection and the key. For example:
     ///
     /// ```rust
-    /// #[derive(Clone + Debug + Ord)]
+    /// #[derive(Clone, Debug, Ord)]
     /// enum MyKeys {
     ///     MyVecKey(usize),
     ///     MyHashMapKey(String),
