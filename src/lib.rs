@@ -157,7 +157,7 @@
 //! ```
 //!
 //! You can use the enum's variants to represent your different collections.
-//! Each variant's associated data can hold the `key`.
+//! Each variant's associated data can hold the `key` for your record.
 //!
 //! ## 3. Searching
 //!

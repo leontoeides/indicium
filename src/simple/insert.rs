@@ -105,6 +105,21 @@ impl<K: Clone + Ord> SearchIndex<K> {
     /// However, the preferred method for large collections is to `insert` into
     /// the `SearchIndex` as you insert into your collection (Vec, HashMap,
     /// etc.)
+    ///
+    /// **Pro-tip**: You can make a single, universal search index for all of
+    /// your collections. This can be done by making a special `enum` key that
+    /// represents both the collection and the key. For example:
+    ///
+    /// ```rust
+    /// #[derive(Clone + Debug + Ord)]
+    /// enum MyKeys {
+    ///     MyVecKey(usize),
+    ///     MyHashMapKey(String),
+    /// }
+    /// ```
+    ///
+    /// You can use the enum's variants to represent your different collections.
+    /// Each variant's associated data can hold the `key` for your record.
 
     pub fn insert(&mut self, key: &K, value: &dyn Indexable) {
 
