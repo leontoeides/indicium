@@ -57,6 +57,6 @@ pub enum SearchType {
     /// keywords, find a record I might want" which works well if there aren't
     /// too many records.
     ///
-    /// Probably best suited as a search screen.
+    /// Probably best suited for a search screen.
     Or,
 } // SearchType
