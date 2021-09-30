@@ -164,10 +164,6 @@
 //! The `search` method will return keys as the search results. Each resulting
 //! key can then be used to retrieve the full record from its collection.
 //!
-//! Search only supports exact keyword matches and does not use fuzzy matching.
-//! Consider providing the `autocomplete` feature to your users as an ergonomic
-//! alternative to fuzzy matching.
-//!
 //! Basic usage:
 //!
 //! ```rust
@@ -199,6 +195,10 @@
 //!
 //! assert_eq!(resulting_keys, vec![&2, &3]);
 //! ```
+//!
+//! Search only supports exact keyword matches and does not use fuzzy matching.
+//! Consider providing the `autocomplete` feature to your users as an ergonomic
+//! alternative to fuzzy matching.
 //!
 //! ## 5. Autocompletion
 //!
