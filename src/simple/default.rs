@@ -19,6 +19,7 @@ impl<K: Ord> Default for SearchIndex<K> {
             24,                             // Maximum keyword length (in chars or codepoints.)
             Some(24),                       // Maximum text length (in chars or codepoints.)
             Some(vec![                      // Exclude keywords.
+                // Some English:
                 "a".to_string(), "an".to_string(), "and".to_string(),
                 "as".to_string(), "as".to_string(), "at".to_string(),
                 "but".to_string(), "by".to_string(), "for".to_string(),
@@ -27,6 +28,11 @@ impl<K: Ord> Default for SearchIndex<K> {
                 "or".to_string(), "per".to_string(), "so".to_string(),
                 "the".to_string(), "to".to_string(), "up".to_string(),
                 "via".to_string(), "yet".to_string(),
+                // Some Spanish:
+                "del".to_string(), "las".to_string(), "los".to_string(),
+                // Some French:
+                "du".to_string(), "de".to_string(), "la".to_string(),
+                "le".to_string(), "les".to_string(),
             ]),
             5,                              // Maximum number of auto-complete options.
             100,                            // Maximum number of search results.

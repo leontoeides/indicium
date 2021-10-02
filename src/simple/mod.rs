@@ -9,14 +9,12 @@ mod builder;
 mod default;
 mod deref;
 mod indexable;
-mod indexable_keywords;
 mod insert;
 mod new;
 mod remove;
 mod replace;
 mod search_index;
 mod search_type;
-mod string_keywords;
 mod tests;
 
 // For debug builds only:

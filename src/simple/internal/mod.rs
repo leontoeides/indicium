@@ -1,6 +1,8 @@
-mod autocomplete;
 mod and_search;
+mod autocomplete;
+mod indexable_keywords;
 mod search;
+mod string_keywords;
 
 // -----------------------------------------------------------------------------
 
