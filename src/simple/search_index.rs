@@ -8,7 +8,6 @@ use std::collections::{BTreeMap, BTreeSet};
 /// `simple` search. You may instantiate your search index with
 /// `SearchIndex::default()` or use the `SearchIndexBuilder` builder pattern.
 
-// #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Deserialize, Serialize)]
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct SearchIndex<K: Ord> {
     /// Search index data structure.

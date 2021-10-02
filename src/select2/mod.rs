@@ -1,4 +1,4 @@
-mod groupable;
+// mod groupable;
 mod selectable;
 
 // -----------------------------------------------------------------------------
@@ -79,7 +79,7 @@ pub struct Record {
     pub text: String,
     /// You can also supply the `selected` properties for the options in this
     /// data structure.
-    pub selected: bool,
+    // pub selected: bool,
     /// You can also supply the `disabled` properties for the options in this
     /// data structure.
     pub disabled: bool,

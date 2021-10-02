@@ -1,5 +1,3 @@
-// -----------------------------------------------------------------------------
-
 use crate::select2::{Pagination, Record, Request};
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
@@ -7,6 +5,17 @@ use std::cmp::{Eq, PartialEq};
 use std::fmt::{Debug, Display};
 use std::hash::Hash;
 use std::string::ToString;
+
+// -----------------------------------------------------------------------------
+//
+/// **The Select2 `Selectable` index**. This is the most important structure for
+/// `Selectable` collections. See also `Groupable` collections.
+
+#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct SelectableIndex<K: Ord> {
+    /// Search index data structure.
+    pub(crate) b_tree_set: BTreeSet<String>,
+} // SelectableIndex
 
 // -----------------------------------------------------------------------------
 //

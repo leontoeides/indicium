@@ -10,7 +10,6 @@
 /// [`SearchIndexBuilder`]: struct.SearchIndexBuilder.html
 /// [`SearchIndex::new()`]: struct.SearchIndex.html#method.new
 
-// #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Deserialize, Serialize)]
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub enum AutocompleteType {
     /// The search string is expected to only contain a single keyword. This is
