@@ -127,8 +127,9 @@ where
     /// an ergonomic alternative to fuzzy matching.
     ///
     /// Search behaviour can be changed by using different `SearchType` variants
-    /// as the first parameter for the method call. See [`SearchType`] for more
-    /// information on the different search types.
+    /// as the first parameter for the method call, effectively overriding the
+    /// index settings. See [`SearchType`] for more information on the different
+    /// search types.
     ///
     /// [`SearchType`]: enum.SearchType.html
     ///

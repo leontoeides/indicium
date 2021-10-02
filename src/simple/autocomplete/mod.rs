@@ -116,9 +116,9 @@ impl<K: Ord> SearchIndex<K> {
     /// lexographic order.
     ///
     /// Autocomplete behaviour can be changed by using different
-    /// `AutocompleteType` variants as the first parameter for the method call.
-    /// See [`AutocompleteType`] for more information on the different
-    /// autocomplete types.
+    /// `AutocompleteType` variants as the first parameter for the method call,
+    /// effectively overriding the index settings. See [`AutocompleteType`] for
+    /// more information on the different autocomplete types.
     ///
     /// [`AutocompleteType`]: enum.AutocompleteType.html
     ///

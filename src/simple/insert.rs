@@ -107,15 +107,19 @@ impl<K: Clone + Ord> SearchIndex<K> {
     /// etc.)
     ///
     /// **Pro-tip**: You can make a single, universal search index for all of
-    /// your collections. This can be done by making a special `enum` key that
+    /// your collections. This can be done by making an `enum` key that
     /// represents both the collection and the key. For example:
     ///
     /// ```rust
+    /// # use indicium::simple::SearchIndex;
+    /// #
     /// #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
-    /// enum MyKeys {
-    ///     MyVecKey(usize),
-    ///     MyHashMapKey(String),
+    /// enum CollectionKey {
+    ///     MyVec(usize),
+    ///     MyHashMap(String),
     /// }
+    ///
+    /// let search_index: SearchIndex<MyKeys> = SearchIndex::default();
     /// ```
     ///
     /// You can use the enum's variants to represent your different collections.
