@@ -3,11 +3,10 @@ mod selectable;
 
 // -----------------------------------------------------------------------------
 
-pub use crate::select2::groupable::Groupable;
-pub use crate::select2::groupable::GroupRecord;
-pub use crate::select2::groupable::results as groupable_results;
-pub use crate::select2::selectable::results as selectable_results;
-pub use crate::select2::selectable::Selectable;
+// pub use crate::select2::groupable::Groupable;
+// pub use crate::select2::groupable::GroupRecord;
+// pub use crate::select2::groupable::results as groupable_results;
+pub use crate::select2::selectable::{Results as SelectableResults, Selectable, SelectableIndex, SelectableRecord};
 
 // -----------------------------------------------------------------------------
 
@@ -79,7 +78,7 @@ pub struct Record {
     pub text: String,
     /// You can also supply the `selected` properties for the options in this
     /// data structure.
-    // pub selected: bool,
+    pub selected: bool,
     /// You can also supply the `disabled` properties for the options in this
     /// data structure.
     pub disabled: bool,

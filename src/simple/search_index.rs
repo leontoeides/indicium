@@ -31,6 +31,8 @@ pub struct SearchIndex<K: Ord> {
     /// Indicium will index the record's full field text / whole strings as a
     /// single keyword for autocompletion purposes.
     pub(crate) maximum_string_length: Option<usize>,
+    /// Keywords that should not be indexed.
+    pub(crate) exclude_keywords: Option<Vec<String>>,
     /// Maximum number of auto-complete options to return.
     pub(crate) maximum_autocomplete_results: usize,
     /// Maximum number of search results to return.

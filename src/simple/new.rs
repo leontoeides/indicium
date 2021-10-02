@@ -39,6 +39,7 @@ impl<K: Ord> SearchIndex<K> {
         minimum_keyword_length: usize,
         maximum_keyword_length: usize,
         maximum_string_length: Option<usize>,
+        exclude_keywords: Option<Vec<String>>,
         maximum_autocomplete_results: usize,
         maximum_search_results: usize,
     ) -> SearchIndex<K> {
@@ -51,6 +52,7 @@ impl<K: Ord> SearchIndex<K> {
             minimum_keyword_length,
             maximum_keyword_length,
             maximum_string_length,
+            exclude_keywords,
             maximum_autocomplete_results,
             maximum_search_results,
         } // SearchIndex

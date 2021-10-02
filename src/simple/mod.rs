@@ -1,7 +1,9 @@
+// Directories:
 mod autocomplete;
 mod internal;
 mod search;
 
+// Methods:
 mod autocomplete_type;
 mod builder;
 mod default;
@@ -16,6 +18,10 @@ mod search_index;
 mod search_type;
 mod string_keywords;
 mod tests;
+
+// For debug builds only:
+#[cfg(debug_assertions)]
+mod profile;
 
 // -----------------------------------------------------------------------------
 

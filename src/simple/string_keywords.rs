@@ -41,6 +41,21 @@ impl<K: Ord> SearchIndex<K> {
                     let chars = keyword.chars().count();
                     chars >= self.minimum_keyword_length && chars <= self.maximum_keyword_length
                 }) // filter
+                // Only keep the keyword if it's not in the exclusion list:
+                .filter(|keyword|
+                    // Check to see if there's any keywords in the exclusion
+                    // list:
+                    if let Some(exclude_keywords) = &self.exclude_keywords {
+                        // If there are keywords to be excluded, scan the list
+                        // to see if this keyword is in it. If so, filter it
+                        // out:
+                        !exclude_keywords.iter().any(|excluded| excluded.as_str() == *keyword)
+                    } else {
+                        // If there are no keywords to be excluded, always allow
+                        // the keyword:
+                        true
+                    } // if
+                ) // filter
                 // Copy string from reference:
                 .map(String::from)
                 // Collect all keywords into a `Vec`:

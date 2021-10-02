@@ -17,8 +17,8 @@ maintenance = { status = "actively-developed" }
 
 [features]
 default = ["simple"]
-select2 = ["serde"]
 simple = []
+select2 = ["serde"]
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"], optional = true }

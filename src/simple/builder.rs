@@ -19,6 +19,7 @@ pub struct SearchIndexBuilder<K> {
     minimum_keyword_length: usize,
     maximum_keyword_length: usize,
     maximum_string_length: Option<usize>,
+    exclude_keywords: Option<Vec<String>>,
     maximum_autocomplete_results: usize,
     maximum_search_results: usize,
 } // SearchIndexBuilder
@@ -37,6 +38,7 @@ impl<K: Clone + Debug + Ord> From<SearchIndex<K>> for SearchIndexBuilder<K> {
             minimum_keyword_length: search_index.minimum_keyword_length,
             maximum_keyword_length: search_index.maximum_keyword_length,
             maximum_string_length: search_index.maximum_string_length,
+            exclude_keywords: search_index.exclude_keywords,
             maximum_autocomplete_results: search_index.maximum_autocomplete_results,
             maximum_search_results: search_index.maximum_search_results,
         } // SearchIndexBuilder
@@ -57,6 +59,7 @@ impl<K: Clone + Debug + Ord> From<&SearchIndexBuilder<K>> for SearchIndex<K> {
             minimum_keyword_length: search_index.minimum_keyword_length,
             maximum_keyword_length: search_index.maximum_keyword_length,
             maximum_string_length: search_index.maximum_string_length,
+            exclude_keywords: search_index.exclude_keywords.clone(),
             maximum_autocomplete_results: search_index.maximum_autocomplete_results,
             maximum_search_results: search_index.maximum_search_results,
         } // SearchIndexBuilder
@@ -122,6 +125,17 @@ impl<K: Clone + Debug + Ord> SearchIndexBuilder<K> {
     /// a single keyword for autocompletion purposes.
     pub fn max_string_len(&mut self, maximum_string_length: &Option<usize>) -> &mut Self {
         self.maximum_string_length = *maximum_string_length;
+        self
+    } // fn
+
+    /// Set keywords that should not be indexed. It might be a good idea to
+    /// exclude minor words - conjunctions and short prepositions from your
+    /// search index. For example, words such as `the`, `of`, `as`, `at`, etc.
+    /// See also: the [`profile`] utility method.
+    ///
+    /// [`profile`]: struct.SearchIndex.html#method.profile
+    pub fn exclude_keywords(&mut self, exclude_keywords: &Option<Vec<String>>) -> &mut Self {
+        self.exclude_keywords = exclude_keywords.to_owned();
         self
     } // fn
 
