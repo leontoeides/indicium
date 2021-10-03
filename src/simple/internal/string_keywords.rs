@@ -3,6 +3,28 @@ use std::cmp::Ord;
 
 // -----------------------------------------------------------------------------
 
+fn exclude_keyword(
+    keyword: &str,
+    exclude_keywords: &Option<Vec<String>>
+) -> bool {
+
+    // Check to see if there's any keywords in the exclusion list:
+    if let Some(exclude_keywords) = exclude_keywords {
+        // If there are keywords to be excluded, scan the list to see if this
+        // keyword is in it. If so, filter it out (true = filter, false = keep):
+        exclude_keywords
+            .iter()
+            .any(|excluded| excluded.as_str() == keyword)
+    } else {
+        // If there are no keywords to be excluded, always allow the keyword
+        // (true = filter, false = keep):
+        false
+    } // if
+
+} // fn
+
+// -----------------------------------------------------------------------------
+
 impl<K: Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
@@ -44,21 +66,7 @@ impl<K: Ord> SearchIndex<K> {
                 }) // filter
                 // Only keep the keyword if it's not in the exclusion list:
                 .filter(|keyword|
-                    // Check to see if there's any keywords in the exclusion
-                    // list:
-                    if let Some(exclude_keywords) = &self.exclude_keywords {
-                        // If there are keywords to be excluded, scan the list
-                        // to see if this keyword is in it. If so, filter it
-                        // out:
-                        //println!("{} = {}", keyword, !exclude_keywords.iter().any(|excluded| excluded.as_str() == *keyword));
-                        !exclude_keywords
-                            .iter()
-                            .any(|excluded| excluded.as_str() == *keyword)
-                    } else {
-                        // If there are no keywords to be excluded, always allow
-                        // the keyword:
-                        true
-                    } // if
+                    !exclude_keyword(keyword, &self.exclude_keywords)
                 ) // filter
                 // Copy string from reference:
                 .map(String::from)
@@ -73,12 +81,20 @@ impl<K: Ord> SearchIndex<K> {
         // If the option is enabled, store the field text / entire string itself
         // as a keyword. This feature is for autocompletion purposes:
         if let Some(maximum_string_length) = self.maximum_string_length {
-            // Only keep the string if it's shorter than the maximum:
-            if use_string_as_keyword && string.chars().count() <= maximum_string_length {
+            // Only keep the string if 1) we're using whole strings as keywords,
+            // 2) it's shorter than the maximum, and 3) the keyword is not in
+            // the exclusion list:
+            if  use_string_as_keyword &&
+                string.chars().count() <= maximum_string_length &&
+                !exclude_keyword(&string, &self.exclude_keywords) {
                 // Add field text / entire string to the keyword `Vec`:
                 keywords.push(string);
             } // if
         } // if
+
+        // Sort keywords by full record title & remove duplicates:
+        keywords.sort_unstable();
+        keywords.dedup();
 
         // Return keywords to caller:
         keywords

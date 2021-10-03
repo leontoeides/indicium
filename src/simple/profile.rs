@@ -8,12 +8,14 @@ impl<K: Clone + Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
-    /// Very repetitive keywords can reduce the performance of the search index.
-    /// This method allows you to see the most used keywords in your search
-    /// index instance. You can then manually scan for keywords that don't add
-    /// value and add them into the keyword exclusion list.
-    ///
     /// **This method is only available in debug builds.**
+    ///
+    /// Extremely high repetitions of single keywords can reduce the performance
+    /// of the search index. `profile` allows you to see the most repeated
+    /// keywords in your search index. Using the output from this method, you
+    /// can manually check for keywords that have high repetitions and that add
+    /// little value (such as conjuctions, articles, and prepositions) and put
+    /// them into your keyword exclusion list.
     ///
     /// See also: the [`exclude_keywords`] method for the builder pattern.
     ///

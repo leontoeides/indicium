@@ -129,9 +129,9 @@ impl<K: Clone + Debug + Ord> SearchIndexBuilder<K> {
     } // fn
 
     /// Set keywords that should not be indexed. It might be a good idea to
-    /// exclude minor words - conjunctions and short prepositions from your
-    /// search index. For example, words such as `the`, `of`, `as`, `at`, etc.
-    /// See also: the [`profile`] utility method.
+    /// exclude minor words - short conjunctions, articles, and short
+    /// prepositions from your search index. For example, words such as `and`,
+    /// `as`, `a`, `as`, `at`, etc. See also: the [`profile`] utility method.
     ///
     /// [`profile`]: struct.SearchIndex.html#method.profile
     pub fn exclude_keywords(&mut self, exclude_keywords: &Option<Vec<String>>) -> &mut Self {
