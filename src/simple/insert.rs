@@ -119,7 +119,7 @@ impl<K: Clone + Ord> SearchIndex<K> {
     ///     MyHashMap(String),
     /// }
     ///
-    /// let search_index: SearchIndex<MyKeys> = SearchIndex::default();
+    /// let search_index: SearchIndex<CollectionKey> = SearchIndex::default();
     /// ```
     ///
     /// You can use the enum's variants to represent your different collections.

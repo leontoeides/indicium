@@ -92,10 +92,6 @@ impl<K: Ord> SearchIndex<K> {
             } // if
         } // if
 
-        // Sort keywords & remove duplicates:
-        keywords.sort_unstable();
-        keywords.dedup();
-
         // Return keywords to caller:
         keywords
 

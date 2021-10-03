@@ -25,6 +25,7 @@ impl<K: Ord> SearchIndex<K> {
     ///     1,                              // Minimum keyword length (in chars or codepoints.)
     ///     24,                             // Maximum keyword length (in chars or codepoints.)
     ///     Some(24),                       // Maximum text length (in chars or codepoints.)
+    ///     Some(vec!["a".to_string(), "the".to_string()]), // Keyword exclusions.
     ///     5,                              // Maximum number of auto-complete options.
     ///     100,                            // Maximum number of search results.
     /// );

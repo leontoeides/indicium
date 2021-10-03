@@ -212,6 +212,7 @@
 //! let mut search_index: SearchIndex<usize> =
 //!     SearchIndexBuilder::default()
 //!         .autocomplete_type(&AutocompleteType::Global)
+//!         .exclude_keywords(&None)
 //!         .build();
 //!
 //! search_index.insert(&0, &MyType::from("apple"));
