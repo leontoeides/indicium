@@ -3,7 +3,6 @@ use crate::simple::SearchIndex;
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 use std::cmp::{Eq, PartialEq};
-use std::collections::BTreeMap;
 use std::fmt::Debug;
 use std::hash::Hash;
 use std::str::FromStr;
@@ -97,20 +96,36 @@ impl<'a, K: Clone + Ord> SelectableIndex<'_, K> {
         } // SelectableIndex
     } // fn
 
-    pub fn insert<K: FromStr + ToString, V: Selectable>(
-        &mut self,
-        key: &K,
-        value: &V,
-    ) {
-        self.b_tree_map.insert(key.to_string(), value.select2_record());
-    } // fn
+} // impl
 
-    pub fn selectables(
+impl<'a, K: Clone + Ord> SelectableIndex<'_, K> {
+
+    pub fn request(
         &self,
         request: &Request,
         items_per_page: &Option<usize>,
         selected_record: &Option<String>,
     ) -> Results {
+
+        // Get query (search term) if any:
+        let query: &Option<String> = match &request.q {
+            Some(q) => &request.q,
+            None => match request.term {
+                Some(term) => &request.term,
+                None => &None,
+            }, // None
+        }; // match
+
+        // Search index for query/term:
+        let results: Vec<&K> = match query {
+            Some(query) => self.search_index.search(query),
+            None => *self.search_index.iter().collect(),
+        }; // match
+
+
+
+
+
 
         // If the caller specifies a maximum number of items per page, then consider
         // pagination turned on:
@@ -129,7 +144,7 @@ impl<'a, K: Clone + Ord> SelectableIndex<'_, K> {
 
             // This function works on the resolved output of a search, or the
             // records dumped from a key-value store:
-            let paginated_results: Vec<Record> = self.b_tree_map
+            let paginated_results: Vec<Record> = self.search_index
                 // Iterate over each passed record:
                 .iter()
                 // Skip records so we start at beginning of specified `page`:

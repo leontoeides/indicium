@@ -6,14 +6,10 @@ mod or;
 
 use crate::simple::{SearchIndex, SearchType};
 use std::cmp::Ord;
-use std::hash::Hash;
-use std::marker::Send;
 
 // -----------------------------------------------------------------------------
 
-impl<'a, K: 'a + Hash + Ord + Send> SearchIndex<K>
-where
-    &'a K: Send {
+impl<'a, K: 'a + Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //

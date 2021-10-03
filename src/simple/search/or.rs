@@ -1,13 +1,10 @@
 use crate::simple::search_index::SearchIndex;
 use std::cmp::Ord;
 use std::collections::BTreeMap;
-use std::marker::Send;
 
 // -----------------------------------------------------------------------------
 
-impl<'a, K: 'a + Ord + Send> SearchIndex<K>
-where
-    &'a K: Send {
+impl<'a, K: 'a + Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
