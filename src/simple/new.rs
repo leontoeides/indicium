@@ -8,7 +8,7 @@ impl<K: Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
-    /// Makes a new, empty `SearchIndex`. It might be preferrable to use
+    /// Makes a new, empty `SearchIndex`. It might be more convenient to use
     /// `SearchIndex::default()` or `SearchIndexBuilder::default()` to create
     /// a new search index.
     ///

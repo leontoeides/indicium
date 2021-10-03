@@ -1,4 +1,5 @@
 use crate::select2::{Pagination, Record, Request};
+use crate::simple::SearchIndex;
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 use std::cmp::{Eq, PartialEq};
@@ -37,9 +38,9 @@ pub struct SelectableRecord {
 /// `Selectable` collections. See also `Groupable` collections.
 
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-pub struct SelectableIndex {
+pub struct SelectableIndex<'a, K: Ord> {
     /// Search index data structure.
-    pub(crate) b_tree_map: BTreeMap<String, SelectableRecord>,
+    pub(crate) search_index: &'a SearchIndex<K>,
 } // SelectableIndex
 
 // -----------------------------------------------------------------------------
@@ -88,17 +89,11 @@ pub struct Results {
 /// If no search is requested, the caller can pass the collection (in the form
 /// of a slice) to this function to be processed into `Select2` format.
 
-impl Default for SelectableIndex {
-    fn default() -> Self {
-        Self::new()
-    }
-}
+impl<'a, K: Clone + Ord> SelectableIndex<'_, K> {
 
-impl SelectableIndex {
-
-    pub fn new() -> SelectableIndex {
+    pub fn new(search_index: &'a SearchIndex<K>) -> SelectableIndex<K> {
         SelectableIndex {
-            b_tree_map: BTreeMap::new()
+            search_index,
         } // SelectableIndex
     } // fn
 
