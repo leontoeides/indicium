@@ -103,7 +103,8 @@ where
     pub(crate) fn search_or(&'a self, string: &'a str) -> Vec<&'a K> {
 
         // Split search `String` into keywords (according to the `SearchIndex`
-        // settings):
+        // settings). `string_keywords` will allow "use entire string as a
+        // keyword" if enabled in user settings:
         let keywords: Vec<String> = self.string_keywords(&String::from(string), true);
 
         // This `BTreeMap` is used to count the number of hits for each

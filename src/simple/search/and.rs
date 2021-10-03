@@ -95,7 +95,8 @@ impl<K: Ord> SearchIndex<K> {
     pub(crate) fn search_and(&self, string: &str) -> Vec<&K> {
 
         // Split search `String` into keywords (according to the `SearchIndex`
-        // settings):
+        // settings). `string_keywords` will **not** allow "use entire string as
+        // a keyword," even if enabled in user settings:
         let keywords: Vec<String> = self.string_keywords(string, false);
 
         // This `BTreeSet` is used to contain the search results:
