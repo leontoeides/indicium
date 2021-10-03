@@ -92,7 +92,7 @@ impl<K: Ord> SearchIndex<K> {
             } // if
         } // if
 
-        // Sort keywords by full record title & remove duplicates:
+        // Sort keywords & remove duplicates:
         keywords.sort_unstable();
         keywords.dedup();
 

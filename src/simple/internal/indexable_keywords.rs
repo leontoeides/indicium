@@ -21,7 +21,7 @@ impl<K: Ord> SearchIndex<K> {
         let strings = value.strings();
 
         // Store the individual keywords from these strings:
-        strings
+        let mut keywords: Vec<String> = strings
             // Iterate over each `String` field from the record:
             .iter()
             // Split each `String` into keywords according to the `SearchIndex`
@@ -31,7 +31,14 @@ impl<K: Ord> SearchIndex<K> {
             // Flatten the string's keywords:
             .flatten()
             // Collect all keywords into a `Vec`:
-            .collect()
+            .collect();
+
+        // Sort keywords & remove duplicates:
+        keywords.sort_unstable();
+        keywords.dedup();
+
+        // Return keywords to caller:
+        keywords
 
     } // fn
 
