@@ -1,6 +1,6 @@
 [package]
 name = "indicium"
-version = "0.2.3"
+version = "0.2.4"
 authors = ["Dylan Bowker <dylan.bowker@arkiteq.ca>"]
 edition = "2018"
 categories = [ "database-implementations" ]
@@ -18,7 +18,7 @@ maintenance = { status = "actively-developed" }
 [features]
 default = ["simple"]
 simple = []
-select2 = ["serde"]
+// select2 = ["serde"]
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"], optional = true }

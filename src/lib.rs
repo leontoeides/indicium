@@ -245,5 +245,5 @@ pub mod simple;
 
 // Support for the popular `Select2` jQuery plug-in.
 
-#[cfg(feature = "select2")]
-pub mod select2;
+// #[cfg(feature = "select2")]
+// pub mod select2;
