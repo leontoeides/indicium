@@ -1,27 +1,21 @@
 use crate::simple::search_index::SearchIndex;
 use std::cmp::Ord;
 use std::collections::BTreeSet;
-use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Ord + Hash> SearchIndex<K> {
+impl<K: Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
-    /// This search function will return keys as the search results. Each
-    /// resulting key can then be used to retrieve the full record from its
-    /// collection. _This search method only accepts a single keyword as the
-    /// search string._ Search keywords must be an exact match.
+    /// Returns matching autocompleted keywords for the provided search string.
+    /// _This search method only accepts a single keyword as the search string._
+    /// The partial search keyword must be an exact match.
     ///
     /// The search string is expected to only contain a single keyword. This is
-    /// the lightest and fastest type. It is good for compact interfaces, where
-    /// records are very simple, or data-sets are quite small. Results are
-    /// returned in lexographic order.
-    ///
-    /// Search only supports exact keyword matches and does not use fuzzy
-    /// matching. Consider providing the `autocomplete` feature to your users as
-    /// an ergonomic alternative to fuzzy matching.
+    /// the lightest and fastest autocompletion type. It is good for compact
+    /// interfaces or where records are very simple. Results are returned in
+    /// lexographic order.
     ///
     /// Basic usage:
     ///
@@ -81,25 +75,17 @@ impl<K: Ord + Hash> SearchIndex<K> {
     /// #       search_index.insert(&index, element)
     /// #   );
     /// #
-    /// let search_results = search_index.search_keyword("Wessex");
+    /// let autocomplete_options = search_index.autocomplete_keyword("E");
     ///
     /// assert_eq!(
-    ///     // Convert `BTreeMap<&K>` to `Vec<&K>` for comparison:
-    ///     search_results.iter().cloned().collect::<Vec<&usize>>(),
-    ///     vec![&1]
+    ///     // Convert `BTreeMap<&String>` to `Vec<&String>` for comparison:
+    ///     autocomplete_options.iter().cloned().collect::<Vec<&String>>(),
+    ///     vec![&"edgar".to_string(), &"edgar ætheling".to_string(), &"england".to_string()]
     /// );
     /// ```
-    //
-    // Note: This function is a variation of the `internal_keyword_search`
-    // function. If this function is modified, it is likely the
-    // `internal_keyword_search` function should be updated also.
-    //
-    // The difference between these two functions is that `keyword_search`
-    // observes `maximum_search_results`, while `internal_keyword_search` does
-    // not.
 
-    #[tracing::instrument(level = "trace", name = "Keyword Search", skip(self))]
-    pub(crate) fn search_keyword(&self, keyword: &str) -> BTreeSet<&K> {
+    #[tracing::instrument(level = "trace", name = "Keyword Live Search", skip(self))]
+    pub fn live_keyword(&self, keyword: &str) -> BTreeSet<&K> {
 
         // If case sensitivity set, leave case intact. Otherwise, normalize
         // keyword to lower case:
@@ -108,14 +94,28 @@ impl<K: Ord + Hash> SearchIndex<K> {
             false => keyword.to_lowercase(),
         }; // match
 
-        self.internal_keyword_search(&String::from(&keyword))
-            // Iterate the results of the keyword search:
-            .iter()
-            // Only return `maximum_search_results` number of keys:
-            .take(self.maximum_search_results)
-            // Take ownership of reference so we return `&K` and not `&&K`:
-            .cloned()
-            // Collect all resulting keys into a `BTreeSet`:
+        // Attempt to get matching keywords from `BTreeMap`:
+        self.b_tree_map
+            // Get matching keywords starting with (partial) keyword string:
+            .range(String::from(&keyword)..)
+            // We did not specify an end bound for our `range` function (see
+            // above.) `range` will return _every_ keyword greater than the
+            // supplied keyword. The below `take_while` will effectively break
+            // iteration when we reach a keyword that does not start with our
+            // supplied (partial) keyword.
+            .take_while(|(key, _value)| key.starts_with(&keyword))
+            // If the index's keyword matches the user's keyword, don't return
+            // it as a result. For example, if the user's keyword was "new" (as
+            // in New York), do not return "new" as an auto-completed keyword:
+            // .filter(|key| *key != &keyword)
+            // Only return `maximum_autocomplete_results` number of keywords:
+            .take(self.maximum_autocomplete_results)
+            // `range` returns a key-value pair. We're autocompleting the key,
+            // so discard the value:
+            .map(|(_key, value)| value)
+            // Flatten the `BTreeSet` of keys for the keyword into our list:
+            .flatten()
+            // Collect all keyword autocompletions into a `BTreeSet`:
             .collect()
 
     } // fn

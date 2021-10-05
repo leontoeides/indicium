@@ -1,10 +1,11 @@
 use crate::simple::search_index::SearchIndex;
 use std::cmp::Ord;
-use std::collections::BTreeSet;
+use std::collections::HashSet;
+use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Ord> SearchIndex<K> {
+impl<K: Hash + Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
@@ -17,10 +18,10 @@ impl<K: Ord> SearchIndex<K> {
     /// matching. Consider providing the `autocomplete` feature to your users as
     /// an ergonomic alternative to fuzzy matching.
 
-    pub(crate) fn internal_search_and(&self, keywords: &[String]) -> BTreeSet<&K> {
+    pub(crate) fn internal_search_and(&self, keywords: &[String]) -> HashSet<&K> {
 
-        // This `BTreeSet` is used to contain the search results:
-        let mut search_results: Option<BTreeSet<&K>> = None;
+        // This `HashSet` is used to contain the search results:
+        let mut search_results: Option<HashSet<&K>> = None;
 
         // Get each keyword from our `BTreeMap`, and intersect the resulting
         // keys with our current keys:
@@ -53,7 +54,7 @@ impl<K: Ord> SearchIndex<K> {
                                 // iterator or we'll get a doubly-referenced
                                 // `&&K` key:
                                 .cloned()
-                                // And collect each key into a `BTreeSet` that
+                                // And collect each key into a `HashSet` that
                                 // will become the new `search_results`.
                                 .collect()
                         }, // Some
@@ -69,8 +70,8 @@ impl<K: Ord> SearchIndex<K> {
         match search_results {
             // If `search_results` is is not empty, return them:
             Some(search_results) => search_results,
-            // If `search_results` is empty, return an empty `BTreeSet`:
-            None => BTreeSet::new(),
+            // If `search_results` is empty, return an empty `HashSet`:
+            None => HashSet::new(),
         } // match
 
     } // fn

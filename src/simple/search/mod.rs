@@ -1,15 +1,17 @@
 mod and;
 mod keyword;
+mod live;
 mod or;
 
 // -----------------------------------------------------------------------------
 
 use crate::simple::{SearchIndex, SearchType};
 use std::cmp::Ord;
+use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<'a, K: 'a + Ord> SearchIndex<K> {
+impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
@@ -97,6 +99,7 @@ impl<'a, K: 'a + Ord> SearchIndex<K> {
         let search_results: Vec<&'a K> = match self.search_type {
             SearchType::And => self.search_and(string),
             SearchType::Keyword => self.search_keyword(string).iter().cloned().collect(),
+            SearchType::Live => self.search_live(string).iter().cloned().collect(),
             SearchType::Or => self.search_or(string),
         }; // match
 
@@ -197,6 +200,7 @@ impl<'a, K: 'a + Ord> SearchIndex<K> {
         let search_results: Vec<&'a K> = match search_type {
             SearchType::And => self.search_and(string),
             SearchType::Keyword => self.search_keyword(string).iter().cloned().collect(),
+            SearchType::Live => self.search_live(string).iter().cloned().collect(),
             SearchType::Or => self.search_or(string),
         }; // match
 

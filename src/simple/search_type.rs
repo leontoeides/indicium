@@ -56,6 +56,20 @@ pub enum SearchType {
     /// keywords, find a record I might want" which works well if there aren't
     /// too many records.
     ///
-    /// Probably best suited for a search screen.
+    /// Probably best suited for a search results screen.
     Or,
+    /// `Live` search allows for "search as you type." It is a hybridization
+    /// between `search` and `autocomplete`. This method will effectively search
+    /// all of the autocompletion options and return them to the user.
+    ///
+    /// This search method accepts multiple keywords in the search string. The
+    /// logical conjuction for multiple keywords is `And`. For example, a search
+    /// of `this that` will only return records containing keywords both `this`
+    /// **and** `that`. In other words, _all_ keywords must be present in a
+    /// record for it to be returned as a result.
+    ///
+    /// Modern Internet browsers often have a similar "type as you search"
+    /// functionality in the address bar. Spotify is also has a cool
+    /// implementation of a similar feature.
+    Live,
 } // SearchType

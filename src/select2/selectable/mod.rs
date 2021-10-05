@@ -1,11 +1,10 @@
 use crate::select2::{Pagination, Record, Request};
-use crate::simple::SearchIndex;
+use crate::simple::{SearchIndex, SearchType};
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 use std::cmp::{Eq, PartialEq};
 use std::fmt::Debug;
 use std::hash::Hash;
-use std::str::FromStr;
 
 // -----------------------------------------------------------------------------
 //
@@ -30,17 +29,6 @@ pub struct SelectableRecord {
     /// data structure.
     pub disabled: bool,
 } // SelectableRecord
-
-// -----------------------------------------------------------------------------
-//
-/// **The Select2 `Selectable` index**. This is the most important structure for
-/// `Selectable` collections. See also `Groupable` collections.
-
-#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-pub struct SelectableIndex<'a, K: Ord> {
-    /// Search index data structure.
-    pub(crate) search_index: &'a SearchIndex<K>,
-} // SelectableIndex
 
 // -----------------------------------------------------------------------------
 //
@@ -79,144 +67,143 @@ pub struct Results {
     pub pagination: Pagination,
 } // Results
 
-// -----------------------------------------------------------------------------
-//
-/// This function will not perform the `term` or `q` search in the query. Any
-/// requested search much be performed by the caller, and the search results
-/// can be processed into `Select2` format using this function.
-///
-/// If no search is requested, the caller can pass the collection (in the form
-/// of a slice) to this function to be processed into `Select2` format.
 
-impl<'a, K: Clone + Ord> SelectableIndex<'_, K> {
 
-    pub fn new(search_index: &'a SearchIndex<K>) -> SelectableIndex<K> {
-        SelectableIndex {
-            search_index,
-        } // SelectableIndex
-    } // fn
 
-} // impl
 
-impl<'a, K: Clone + Ord> SelectableIndex<'_, K> {
 
-    pub fn request(
-        &self,
-        request: &Request,
-        items_per_page: &Option<usize>,
-        selected_record: &Option<String>,
-    ) -> Results {
 
-        // Get query (search term) if any:
-        let query: &Option<String> = match &request.q {
-            Some(q) => &request.q,
-            None => match request.term {
-                Some(term) => &request.term,
-                None => &None,
-            }, // None
+
+
+pub fn search<'a, K: Ord + Hash>(
+    search_index: &'a SearchIndex<K>,
+    request: &'a Request,
+) -> Option<Vec<&'a K>> {
+
+    // Get query (search term) if any:
+    let query_term: Option<&String> = request.query_term();
+
+    // Search index for query/term:
+    query_term.as_ref().map(|query| search_index.search_type(&SearchType::Live, query))
+
+} // fn
+
+
+
+
+pub fn transform<K: Clone + Ord + ToString, S: Selectable>(
+    request: &Request,
+    items_per_page: &Option<usize>,
+    selected_record: &Option<String>,
+    search_results_keys: &[K],
+    search_results_values: &[S]
+) -> Results {
+
+    //let search_results: Vec<SelectableRecord> = collection.iter().map(|record| record.select2_record()).collect();
+    //search_results.sort_unstable_by(|a, b| a.text.partial_cmp(&b.text).unwrap());
+
+    let search_results: Vec<(&K, &S)> = search_results_keys
+        .iter()
+        .zip(search_results_values.iter())
+        .collect();
+
+    // If the caller specifies a maximum number of items per page, then consider
+    // pagination turned on:
+    // request.request_type == Some("query_append".to_string())
+    if let Some(items_per_page) = items_per_page {
+
+        // Ensure that the `page` number is set correctly before processing:
+        let page = match request.page {
+            // If no page number specified, assume page 1:
+            None => 1,
+            // There is no page 0. Assume caller meant page 1:
+            Some(0) => 1,
+            // Otherwise continue with caller's page number:
+            _ => request.page.unwrap(),
         }; // match
 
-        // Search index for query/term:
-        let results: Vec<&K> = match query {
-            Some(query) => self.search_index.search(query),
-            None => *self.search_index.iter().collect(),
-        }; // match
+        // This function works on the resolved output of a search, or the
+        // records dumped from a key-value store:
+        let paginated_results: Vec<Record> = search_results
+            // Iterate over each passed record:
+            .iter()
+            // Skip records so we start at beginning of specified `page`:
+            .skip(items_per_page * (page - 1))
+            // Only take a page's worth of records:
+            .take(*items_per_page)
+            // Convert internal `SelectableRecord` format to output `Record`
+            // format:
+            .map(|(key, value)| selectable_record_to_select2_record(
+                &key.to_string(),
+                &value.select2_record()
+            )) // map
+            // Check if this record was specified as being selected:
+            .map(|mut record| {
+                // Check if the `selected_record` was set...
+                if let Some(selected_record) = selected_record {
+                    // ...was set. Update record with comparison result and
+                    // return record:
+                    record.selected = record.id == *selected_record;
+                    record
+                } else {
+                    // ...wasn't set, return record as-is:
+                    record
+                } // if
+            }) // map
+            // Collect all Select2 records into a `Vec<Record>`:
+            .collect();
+
+        // Determine if there are more records to be displayed. This operation
+        // is performed here (rather than in the `Results` instantiation) to
+        // avoid a move of `paginated_results`:
+        let more: bool = items_per_page * page < search_results.len();
+
+        // Return Select2 `Results` to caller:
+        Results {
+            results: paginated_results,
+            pagination: Pagination {
+                more,
+            },
+        } // Results
+
+    } else {
+
+        // This function works on the resolved output of a search, or the
+        // records dumped from a key-value store:
+        let unpaginated_results = search_results
+            // Iterate over each passed record:
+            .iter()
+            // Convert internal `SelectableRecord` format to output `Record`
+            // format:
+            .map(|(key, value)| selectable_record_to_select2_record(
+                &key.to_string(),
+                &value.select2_record()
+            )) // map
+            // Check if this record was specified as being selected:
+            .map(|mut record| {
+                // Check if the `selected_record` was set...
+                if let Some(selected_record) = selected_record {
+                    // ...was set. Update record with comparison result and
+                    // return record:
+                    record.selected = record.id == *selected_record;
+                    record
+                } else {
+                    // ...wasn't set, return record as-is:
+                    record
+                } // if
+            }) // map
+            // Collect all select2 records into a `Vec<Record>`:
+            .collect();
+
+        // Return Select2 `Results` to caller:
+        Results {
+            results: unpaginated_results,
+            pagination: Pagination { more: false }
+        } // Results
+
+    } // if
+
+} // fn
 
 
 
-
-
-
-        // If the caller specifies a maximum number of items per page, then consider
-        // pagination turned on:
-        // request.request_type == Some("query_append".to_string())
-        if let Some(items_per_page) = items_per_page {
-
-            // Ensure that the `page` number is set correctly before processing:
-            let page = match request.page {
-                // If no page number specified, assume page 1:
-                None => 1,
-                // There is no page 0. Assume caller meant page 1:
-                Some(0) => 1,
-                // Otherwise continue with caller's page number:
-                _ => request.page.unwrap(),
-            }; // match
-
-            // This function works on the resolved output of a search, or the
-            // records dumped from a key-value store:
-            let paginated_results: Vec<Record> = self.search_index
-                // Iterate over each passed record:
-                .iter()
-                // Skip records so we start at beginning of specified `page`:
-                .skip(items_per_page * (page - 1))
-                // Only take a page's worth of records:
-                .take(*items_per_page)
-                // Convert internal `SelectableRecord` format to output `Record`
-                // format:
-                .map(|(key, value)| selectable_record_to_select2_record(key, value))
-                // Check if this record was specified as being selected:
-                .map(|mut record| {
-                    // Check if the `selected_record` was set...
-                    if let Some(selected_record) = selected_record {
-                        // ...was set. Update record with comparison result and
-                        // return record:
-                        record.selected = record.id == *selected_record;
-                        record
-                    } else {
-                        // ...wasn't set, return record as-is:
-                        record
-                    } // if
-                }) // map
-                // Collect all Select2 records into a `Vec<Record>`:
-                .collect();
-
-            // Determine if there are more records to be displayed. This operation
-            // is performed here (rather than in the `Results` instantiation) to
-            // avoid a move of `paginated_results`:
-            let more: bool = items_per_page * page < self.b_tree_map.len();
-
-            // Return Select2 `Results` to caller:
-            Results {
-                results: paginated_results,
-                pagination: Pagination {
-                    more,
-                },
-            } // Results
-
-        } else {
-
-            // This function works on the resolved output of a search, or the
-            // records dumped from a key-value store:
-            let unpaginated_results = self.b_tree_map
-                // Iterate over each passed record:
-                .iter()
-                // Convert internal `SelectableRecord` format to output `Record`
-                // format:
-                .map(|(key, value)| selectable_record_to_select2_record(key, value))
-                // Check if this record was specified as being selected:
-                .map(|mut record| {
-                    // Check if the `selected_record` was set...
-                    if let Some(selected_record) = selected_record {
-                        // ...was set. Update record with comparison result and
-                        // return record:
-                        record.selected = record.id == *selected_record;
-                        record
-                    } else {
-                        // ...wasn't set, return record as-is:
-                        record
-                    } // if
-                }) // map
-                // Collect all select2 records into a `Vec<Record>`:
-                .collect();
-
-            // Return Select2 `Results` to caller:
-            Results {
-                results: unpaginated_results,
-                pagination: Pagination { more: false }
-            } // Results
-
-        } // if
-
-    } // fn
-
-} // impl

@@ -12,7 +12,21 @@ impl<K: Ord> Default for SearchIndex<K> {
             SearchType::Or,                 // Search type.
             AutocompleteType::Context,      // Autocompletion type.
             Some(vec![                      // Default split pattern.
-                ' ', '\n', '\r', '\t', ',', '.', '(', ')', '<', '>', '[', ']'
+                ' ',
+                '\n',
+                '\r',
+                '\t',
+                '(',
+                ')',
+                ',',
+                '-',
+                '.',
+                '/',
+                '<',
+                '>',
+                '[',
+                '\\',
+                ']',
             ]),
             false,                          // Case sensitive?
             1,                              // Minimum keyword length (in chars or codepoints.)

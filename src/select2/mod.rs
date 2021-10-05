@@ -1,12 +1,12 @@
 // mod groupable;
-mod selectable;
+pub mod selectable;
 
 // -----------------------------------------------------------------------------
 
 // pub use crate::select2::groupable::Groupable;
 // pub use crate::select2::groupable::GroupRecord;
 // pub use crate::select2::groupable::results as groupable_results;
-pub use crate::select2::selectable::{Results as SelectableResults, Selectable, SelectableIndex, SelectableRecord};
+pub use crate::select2::selectable::{Results as SelectableResults, Selectable, SelectableRecord};
 
 // -----------------------------------------------------------------------------
 
@@ -36,6 +36,24 @@ pub struct Request {
     /// scrolling) searches.
     pub page: Option<usize>,
 } // Record
+
+// -----------------------------------------------------------------------------
+
+impl Request {
+    // For some reason, `Select2` can send the user's search term in either
+    // the `term` field or in the `q` field. This convenience method checks both
+    // fields and returns the user's query term, if available:
+    pub fn query_term(&self) -> Option<&String> {
+        // Get query (search term) if any:
+        match &self.q {
+            Some(_q) => self.q.as_ref(),
+            None => match &self.term {
+                Some(_term) => self.term.as_ref(),
+                None => None,
+            }, // None
+        } // match
+    } // fn
+} // impl
 
 // -----------------------------------------------------------------------------
 //

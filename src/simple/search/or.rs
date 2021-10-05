@@ -1,10 +1,11 @@
 use crate::simple::search_index::SearchIndex;
 use std::cmp::Ord;
 use std::collections::BTreeMap;
+use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<'a, K: 'a + Ord> SearchIndex<K> {
+impl<'a, K: 'a + Ord + Hash> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //

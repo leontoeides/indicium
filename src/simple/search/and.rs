@@ -1,10 +1,11 @@
 use crate::simple::search_index::SearchIndex;
 use std::cmp::Ord;
-use std::collections::BTreeSet;
+use std::collections::HashSet;
+use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Ord> SearchIndex<K> {
+impl<K: Hash + Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
@@ -100,7 +101,7 @@ impl<K: Ord> SearchIndex<K> {
         let keywords: Vec<String> = self.string_keywords(string, false);
 
         // This `BTreeSet` is used to contain the search results:
-        let mut search_results: Option<BTreeSet<&K>> = None;
+        let mut search_results: Option<HashSet<&K>> = None;
 
         // Get each keyword from our `BTreeMap`, and intersect the resulting
         // keys with our current keys:
@@ -133,7 +134,7 @@ impl<K: Ord> SearchIndex<K> {
                                 // iterator or we'll get a doubly-referenced
                                 // `&&K` key:
                                 .cloned()
-                                // And collect each key into a `BTreeSet` that
+                                // And collect each key into a `HashSet` that
                                 // will become the new `search_results`.
                                 .collect()
                         }, // Some
@@ -147,7 +148,7 @@ impl<K: Ord> SearchIndex<K> {
 
         // Return search results:
         match search_results {
-            // If `search_results` is is not empty, convert the `BTreeSet` to a
+            // If `search_results` is is not empty, convert the `HashSet` to a
             // `Vec` for caller while observing `maximum_search_results`:
             Some(search_results) => search_results
                 .iter()

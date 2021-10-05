@@ -1,11 +1,12 @@
 use crate::simple::internal::MAXIMUM_INTERNAL_SEARCH_RESULTS;
 use crate::simple::search_index::SearchIndex;
 use std::cmp::Ord;
-use std::collections::BTreeSet;
+use std::collections::HashSet;
+use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Ord> SearchIndex<K> {
+impl<K: Hash + Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
@@ -22,10 +23,10 @@ impl<K: Ord> SearchIndex<K> {
     /// not observe any settings such as _case-sensitivity_ or _maximum
     /// results_. These constraints should be observed at higher levels.
 
-    pub(crate) fn internal_keyword_search(&self, keyword: &str) -> BTreeSet<&K> {
+    pub(crate) fn internal_keyword_search(&self, keyword: &str) -> HashSet<&K> {
 
         // Attempt to get matching keys for the search keyword from BTreeMap:
-        let search_results: BTreeSet<&K> = if let Some(keys) = self.b_tree_map.get(keyword) {
+        let search_results: HashSet<&K> = if let Some(keys) = self.b_tree_map.get(keyword) {
 
             // Attempt to get matching keys for search keyword:
             keys
@@ -43,8 +44,8 @@ impl<K: Ord> SearchIndex<K> {
         } else {
 
             // The search keyword did not result in any matches. Return an
-            // empty `BTreeSet`:
-            BTreeSet::new()
+            // empty `HashSet`:
+            HashSet::new()
 
         }; // if
 

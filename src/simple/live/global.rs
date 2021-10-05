@@ -1,11 +1,11 @@
-use crate::simple::SearchIndex;
+use crate::simple::search_index::SearchIndex;
 use std::cmp::Ord;
 use std::collections::{BTreeSet, HashSet};
 use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Hash + Ord> SearchIndex<K> {
+impl<K: Ord + Hash> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
@@ -15,10 +15,10 @@ impl<K: Hash + Ord> SearchIndex<K> {
     ///
     /// The search string may contain multiple keywords and the last (partial)
     /// keyword will be autocompleted. The last keyword in the search string
-    /// will be autocompleted by using the preceding keywords as a filter. This
-    /// effectively provides contextual autocompletion. It is the heaviest and
-    /// slowest autocompletion type but likely provides the best user
-    /// experience. Results are returned in lexographic order.
+    /// will be autocompleted from all available keywords in the search index.
+    /// If your data-set is very large or has repetitive keywords, this is the
+    /// recommended autocomplete type. Results are returned in lexographic
+    /// order.
     ///
     /// Basic usage:
     ///
@@ -78,16 +78,20 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// #       search_index.insert(&index, element)
     /// #   );
     /// #
-    /// let autocomplete_options = search_index.autocomplete_context("E");
+    /// let autocomplete_options = search_index.autocomplete_global("1100 e");
     ///
     /// assert_eq!(
     ///     autocomplete_options,
-    ///     vec!["edgar".to_string(), "edgar ætheling".to_string(), "england".to_string()]
+    ///     vec![
+    ///         "1100 edgar".to_string(),
+    ///         "1100 edgar ætheling".to_string(),
+    ///         "1100 england".to_string()
+    ///     ]
     /// );
     /// ```
 
-    #[tracing::instrument(level = "trace", name = "Context Autocomplete", skip(self))]
-    pub(crate) fn autocomplete_context(&self, string: &str) -> Vec<String> {
+    #[tracing::instrument(level = "trace", name = "Global Autocomplete", skip(self))]
+    pub fn live_global(&self, string: &str) -> BTreeSet<&K> {
 
         // Split search `String` into keywords according to the `SearchIndex`
         // settings. Force "use entire string as a keyword" option off:
@@ -108,53 +112,31 @@ impl<K: Hash + Ord> SearchIndex<K> {
             // Intersect the autocompletions for the last keyword with the
             // search results for the preceding keywords. This way, only
             // relevant autocompletions are returned:
-            let autocompletions: Vec<&String> = autocompletions
+            autocompletions
                 .iter()
                 // Only keep this autocompletion if it contains a key that the
                 // search results contain:
                 .filter(|(_keyword, keys)|
                     search_results.is_empty() || keys.iter().any(|key| search_results.contains(key))
                 ) // filter
-                // Only return `maximum_autocomplete_results` number of keywords:
-                .take(self.maximum_autocomplete_results)
                 // `internal_autocomplete_keyword` returns a key-value pair.
                 // We're autocompleting the key, so discard the value:
-                .map(|(keyword, _keys)| keyword)
+                .map(|(_keyword, keys)| keys)
                 // Copy each keyword from the iterator or we'll get a
                 // doubly-referenced `&&String` keyword:
                 .cloned()
-                // Collect all keyword autocompletions into a `Vec`:
-                .collect();
-
-            // Push a blank placeholder onto the end of the keyword list. We
-            // will be putting our autocompletions for the last keyword into
-            // this spot:
-            keywords.push(String::from(""));
-
-            // Build autocompleted search strings from the autocompletions
-            // derived from the last keyword:
-            autocompletions
-                // Iterate over each autocompleted last keyword:
-                .iter()
-                // Use the prepended `keywords` and autocompleted last keyword
-                // to build an autocompleted search string:
-                .map(|last_keyword| {
-                    // Remove previous autocompleted last keyword from list:
-                    keywords.pop();
-                    // Add current autocompleted last keyword to end of list:
-                    keywords.push(String::from(*last_keyword));
-                    // Join all keywords together into a single `String` using a
-                    // space delimiter:
-                    keywords.join(" ")
-                })
-                // Collect all string autocompletions into a `Vec`:
+                // Flatten the `BTreeSet` of keys for the keyword into our list:
+                .flatten()
+                // Only return `maximum_autocomplete_results` number of keywords:
+                .take(self.maximum_autocomplete_results)
+                // Collect all keyword autocompletions into a `BTreeSet`:
                 .collect()
 
         } else {
 
             // The search string did not have a last keyword to autocomplete.
-            // Return an empty `Vec`:
-            Vec::new()
+            // Return an empty `BTreeSet`:
+            BTreeSet::new()
 
         } // if
 

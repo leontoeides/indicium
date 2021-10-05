@@ -6,11 +6,12 @@ mod keyword;
 
 use crate::simple::{AutocompleteType, SearchIndex};
 use std::cmp::Ord;
+use std::collections::BTreeSet;
 use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Hash + Ord> SearchIndex<K> {
+impl<K: Ord + Hash> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
@@ -90,23 +91,23 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// ```
 
     #[tracing::instrument(level = "trace", name = "Autocomplete", skip(self))]
-    pub fn autocomplete(&self, string: &str) -> Vec<String> {
+    pub fn live(&self, string: &str) -> BTreeSet<&K> {
 
-        let autocomplete_options: Vec<String> = match &self.autocomplete_type {
-            AutocompleteType::Context => self.autocomplete_context(string),
-            AutocompleteType::Global => self.autocomplete_global(string),
-            AutocompleteType::Keyword => self.autocomplete_keyword(string).iter().cloned().cloned().collect(),
+        let live_options: BTreeSet<&K> = match &self.autocomplete_type {
+            AutocompleteType::Context => self.live_context(string),
+            AutocompleteType::Global => self.live_global(string),
+            AutocompleteType::Keyword => self.live_keyword(string),
         }; // match
 
         // For debug builds:
         #[cfg(debug_assertions)]
         tracing::trace!(
-            "{} autocomplete options for \"{}\".",
-            autocomplete_options.len(),
+            "{} live options for \"{}\".",
+            live_options.len(),
             string,
         ); // trace!
 
-        autocomplete_options
+        live_options
 
     } // fn
 
@@ -195,23 +196,23 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// ```
 
     #[tracing::instrument(level = "trace", name = "Autocomplete", skip(self))]
-    pub fn autocomplete_type(&self, autocomplete_type: &AutocompleteType, string: &str) -> Vec<String> {
+    pub fn live_type(&self, autocomplete_type: &AutocompleteType, string: &str) -> BTreeSet<&K> {
 
-        let autocomplete_options: Vec<String> = match autocomplete_type {
-            AutocompleteType::Context => self.autocomplete_context(string),
-            AutocompleteType::Global => self.autocomplete_global(string),
-            AutocompleteType::Keyword => self.autocomplete_keyword(string).iter().cloned().cloned().collect(),
+        let live_options: BTreeSet<&K> = match autocomplete_type {
+            AutocompleteType::Context => self.live_context(string),
+            AutocompleteType::Global => self.live_global(string),
+            AutocompleteType::Keyword => self.live_keyword(string),
         }; // match
 
         // For debug builds:
         #[cfg(debug_assertions)]
         tracing::trace!(
-            "{} autocomplete options for \"{}\".",
-            autocomplete_options.len(),
+            "{} live options for \"{}\".",
+            live_options.len(),
             string,
         ); // trace!
 
-        autocomplete_options
+        live_options
 
     } // fn
 
