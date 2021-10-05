@@ -2,6 +2,10 @@ use crate::simple::search_index::SearchIndex;
 use std::cmp::Ord;
 
 // -----------------------------------------------------------------------------
+//
+/// Function will check if the provided keyword is in the list of excluded
+/// keywords. If it is, function will return `true`. If there are no excluded
+/// keywords, function will always return `false`.
 
 fn exclude_keyword(
     keyword: &str,
@@ -47,7 +51,7 @@ impl<K: Ord> SearchIndex<K> {
             false => string.to_lowercase(),
         };
 
-        // Split the the field text / string into keywords:
+        // Split the the string into keywords:
         let mut keywords: Vec<String> = if let Some(split_pattern) = &self.split_pattern {
             // Use the split pattern (a `Vec<char>`) to split the `String` into
             // keywords and filter the results:

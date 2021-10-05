@@ -75,7 +75,7 @@ pub struct Results {
 
 
 
-pub fn search<'a, K: Ord + Hash>(
+pub fn search<'a, K: Hash + Ord>(
     search_index: &'a SearchIndex<K>,
     request: &'a Request,
 ) -> Option<Vec<&'a K>> {

@@ -1,12 +1,11 @@
 use crate::simple::internal::MAXIMUM_INTERNAL_AUTOCOMPLETE_RESULTS;
 use crate::simple::search_index::SearchIndex;
 use std::cmp::Ord;
-use std::collections::{BTreeSet, HashSet};
-use std::hash::Hash;
+use std::collections::BTreeSet;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Hash + Ord> SearchIndex<K> {
+impl<K: Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
@@ -18,10 +17,10 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// not observe any settings such as _case-sensitivity_ or _maximum
     /// results_. These constraints should be observed at higher levels.
 
-    pub(crate) fn internal_autocomplete_keyword(&self, keyword: &str) -> HashSet<(&String, &BTreeSet<K>)> {
+    pub(crate) fn internal_autocomplete_keyword(&self, keyword: &str) -> Vec<(&String, &BTreeSet<K>)> {
 
         // Attempt to get matching keywords from `BTreeMap`:
-        let autocomplete_options: HashSet<(&String, &BTreeSet<K>)> = self.b_tree_map
+        let autocomplete_options: Vec<(&String, &BTreeSet<K>)> = self.b_tree_map
             // Get matching keywords starting with (partial) keyword string:
             .range(String::from(keyword)..)
             // We did not specify an end bound for our `range` function (see
@@ -37,7 +36,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
             // Only return `MAXIMUM_INTERNAL_AUTOCOMPLETE_RESULTS` number of
             // keywords:
             .take(MAXIMUM_INTERNAL_AUTOCOMPLETE_RESULTS)
-            // Collect all keyword autocompletions into a `HashSet`:
+            // Collect all keyword autocompletions into a `Vec`:
             .collect();
 
         // For debug builds:

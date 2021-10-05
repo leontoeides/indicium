@@ -102,7 +102,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 self.internal_search_and(keywords.as_slice());
 
             // Get all autocompletions for the last keyword.
-            let autocompletions: HashSet<(&String, &BTreeSet<K>)> =
+            let autocompletions: Vec<(&String, &BTreeSet<K>)> =
                 self.internal_autocomplete_keyword(&last_keyword);
 
             // Intersect the autocompletions for the last keyword with the

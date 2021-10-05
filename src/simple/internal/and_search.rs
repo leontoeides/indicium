@@ -31,14 +31,14 @@ impl<K: Hash + Ord> SearchIndex<K> {
             // For each keyword in the search string:
             .for_each(|keyword| {
 
-                // Search for keyword in our `BTreeMap`:
+                // Search for the keyword in our search index `BTreeMap`:
                 let keyword_results = self.internal_keyword_search(keyword);
 
                 // Update `search_results` with product of `intersection`:
                 search_results = Some(
                     // Check if `search_results` is already populated:
                     match &search_results {
-                        // If `search_results` is is not empty...
+                        // If master `search_results` is not empty...
                         Some(search_results) => {
                             // ...intersect the current keyword's search results
                             // with the master search results:
@@ -47,19 +47,20 @@ impl<K: Hash + Ord> SearchIndex<K> {
                                 // are both in `search_results` and
                                 // `keyword_results`.
                                 .intersection(search_results)
-                                // The `intersection` function will return an
-                                // `Intersection` type that we can iterate over:
+                                // The `intersection` method will return an
+                                // `Intersection` lazy iterator that we must
+                                // iterate over:
                                 .into_iter()
-                                // Copy each key from the `Intersection`
-                                // iterator or we'll get a doubly-referenced
-                                // `&&K` key:
+                                // Copy each `&K` key from the `Intersection`
+                                // iterator or we'll get produce a
+                                // doubly-referenced `&&K` key:
                                 .cloned()
                                 // And collect each key into a `HashSet` that
                                 // will become the new `search_results`.
                                 .collect()
                         }, // Some
-                        // If `search_results` is empty, initialize it with the
-                        // first keyword's full search results:
+                        // If master `search_results` is empty, initialize it
+                        // with the first keyword's full search results:
                         None => keyword_results,
                     } // match
                 ); // Some
@@ -68,9 +69,9 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
         // Return search results:
         match search_results {
-            // If `search_results` is is not empty, return them:
+            // If master `search_results` is not empty, return it:
             Some(search_results) => search_results,
-            // If `search_results` is empty, return an empty `HashSet`:
+            // If master `search_results` is empty, return an empty `HashSet`:
             None => HashSet::new(),
         } // match
 

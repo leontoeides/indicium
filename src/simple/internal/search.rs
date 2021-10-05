@@ -35,7 +35,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 .iter()
                 // Only return `maximum_search_results` number of keys:
                 .take(MAXIMUM_INTERNAL_SEARCH_RESULTS)
-                // Insert each resulting key into the hash set:
+                // Insert a reference to each resulting key into the hash set:
                 .collect()
 
             // -> If fuzzy matching were to be implemented for

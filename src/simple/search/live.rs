@@ -5,7 +5,7 @@ use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Ord + Hash> SearchIndex<K> {
+impl<K: Hash + Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
@@ -86,7 +86,7 @@ impl<K: Ord + Hash> SearchIndex<K> {
     /// );
     /// ```
 
-    #[tracing::instrument(level = "trace", name = "Context Autocomplete", skip(self))]
+    #[tracing::instrument(level = "trace", name = "Live Search", skip(self))]
     pub fn search_live(&self, string: &str) -> BTreeSet<&K> {
 
         // Split search `String` into keywords according to the `SearchIndex`
@@ -97,9 +97,6 @@ impl<K: Ord + Hash> SearchIndex<K> {
         // autocompleting:
         if let Some(last_keyword) = keywords.pop() {
 
-
-            //println!("Search AND: {:?}", keywords);
-
             // Perform `And` search for entire string without the last keyword:
             let search_results: BTreeSet<&K> =
                 self.internal_search_and(keywords.as_slice())
@@ -107,28 +104,24 @@ impl<K: Ord + Hash> SearchIndex<K> {
                     .cloned()
                     .collect();
 
-            //println!("Autocompletion: {:?}", last_keyword);
-
-
-            // Get all autocompletions for the last keyword.
+            // Get all autocompletions for the last keyword and their keys:
             let autocompletions: BTreeSet<&BTreeSet<K>> =
                 self.internal_autocomplete_keyword(&last_keyword)
                     .iter()
                     .map(|(_keyword, keys)| *keys)
                     .collect();
 
-            //println!("Search results {}, autocompletions {}", search_results.len(), autocompletions.len());
+            // How we combine `search_results` and `autocompletions` together
+            // depends on how many keywords there are in the search string:
+            match keywords.len() {
 
-
-            match search_results.is_empty() {
-
-                true => autocompletions
+                0 => autocompletions
                     .iter()
                     .cloned()
                     .flatten()
                     .collect(),
 
-                false => autocompletions
+                _ => autocompletions
                     .iter()
                     .map(|autocompletion_keys|
                         autocompletion_keys
@@ -142,8 +135,8 @@ impl<K: Ord + Hash> SearchIndex<K> {
 
         } else {
 
-            // The search string did not have a last keyword to autocomplete.
-            // Return an empty `BTreeSet`:
+            // The search string did not have a last keyword to autocomplete (or
+            // any keywords to search for.) Return an empty `BTreeSet`:
             BTreeSet::new()
 
         } // if
