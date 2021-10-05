@@ -127,8 +127,10 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // `tribble` may be given.
                 //
                 // There are no previous keywords to intersect with, just the
-                // letter `t`. We will return the keys for these autocomplete
-                // options without further processing:
+                // letter `t`. If we attempt to intersect with an empty
+                // `search_results`, no keys will ever be returned. So we must
+                // handle this scenario differently. We will return the keys for
+                // these autocomplete options without further processing:
 
                 0 => autocomplete_options
                     // Iterate over each autocomplete option:
