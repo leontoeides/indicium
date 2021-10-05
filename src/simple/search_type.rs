@@ -23,8 +23,22 @@ pub enum SearchType {
     /// search type. It is good for compact interfaces, where records are very
     /// simple, and data-sets are quite small.
     ///
-    /// Probably best suited as a form widget.
+    /// Probably best suited in a form widget.
     Keyword,
+    /// `Live` search allows for "search as you type." It is a hybridization
+    /// between `search` and `autocomplete`. This method will effectively search
+    /// all of the autocompletion options and the search results to the caller.
+    ///
+    /// This search method accepts multiple keywords in the search string. The
+    /// logical conjuction for multiple keywords is `And`. For example, a search
+    /// of `this that` will only return records containing keywords both `this`
+    /// **and** `that`. In other words, _all_ keywords must be present in a
+    /// record for it to be returned as a result.
+    ///
+    /// Modern Internet browsers often have a similar "type as you search"
+    /// functionality in the address bar. _Spotify_ also has a cool
+    /// implementation of a similar feature.
+    Live,
     /// This search method accepts multiple keywords in the search string. The
     /// logical conjuction for multiple keywords is `And`. For example, a search
     /// of `this that` will only return records containing keywords both `this`
@@ -38,7 +52,7 @@ pub enum SearchType {
     /// records I don't want." It's likely a better choice for large collections
     /// because it uses less CPU resouces than `Or`.
     ///
-    /// Probably best suited as a filter widget.
+    /// Probably best suited in a filter widget.
     And,
     /// This search method accepts multiple keywords in the search string. The
     /// logical conjuction for multiple keywords is `Or`. For example, a search
@@ -58,18 +72,4 @@ pub enum SearchType {
     ///
     /// Probably best suited for a search results screen.
     Or,
-    /// `Live` search allows for "search as you type." It is a hybridization
-    /// between `search` and `autocomplete`. This method will effectively search
-    /// all of the autocompletion options and return them to the user.
-    ///
-    /// This search method accepts multiple keywords in the search string. The
-    /// logical conjuction for multiple keywords is `And`. For example, a search
-    /// of `this that` will only return records containing keywords both `this`
-    /// **and** `that`. In other words, _all_ keywords must be present in a
-    /// record for it to be returned as a result.
-    ///
-    /// Modern Internet browsers often have a similar "type as you search"
-    /// functionality in the address bar. Spotify is also has a cool
-    /// implementation of a similar feature.
-    Live,
 } // SearchType

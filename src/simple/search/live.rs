@@ -9,16 +9,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
-    /// Returns matching autocompleted keywords for the provided search string.
-    /// _This search method accepts multiple keywords in the search string._
-    /// The last partial search keyword must be an exact match.
-    ///
-    /// The search string may contain multiple keywords and the last (partial)
-    /// keyword will be autocompleted. The last keyword in the search string
-    /// will be autocompleted by using the preceding keywords as a filter. This
-    /// effectively provides contextual autocompletion. It is the heaviest and
-    /// slowest autocompletion type but likely provides the best user
-    /// experience. Results are returned in lexographic order.
+
     ///
     /// Basic usage:
     ///
@@ -78,16 +69,17 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// #       search_index.insert(&index, element)
     /// #   );
     /// #
-    /// let autocomplete_options = search_index.autocomplete_context("E");
+    /// let search_results = search_index
+    ///     .search_live("Norman C")
+    ///     .iter()
+    ///     .cloned()
+    ///     .collect::<Vec<&usize>>();
     ///
-    /// assert_eq!(
-    ///     autocomplete_options,
-    ///     vec!["edgar".to_string(), "edgar ætheling".to_string(), "england".to_string()]
-    /// );
+    /// assert_eq!(search_results, vec![&2]);
     /// ```
 
     #[tracing::instrument(level = "trace", name = "Live Search", skip(self))]
-    pub fn search_live(&self, string: &str) -> BTreeSet<&K> {
+    pub(crate) fn search_live(&self, string: &str) -> BTreeSet<&K> {
 
         // Split search `String` into keywords according to the `SearchIndex`
         // settings. Force "use entire string as a keyword" option off:
@@ -117,6 +109,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
                 0 => autocompletions
                     .iter()
+                    // Only return `maximum_search_results` number of keys:
+                    .take(self.maximum_search_results)
                     .cloned()
                     .flatten()
                     .collect(),
@@ -130,6 +124,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
                             .collect::<BTreeSet<&K>>()
                     )
                     .flatten()
+                    // Only return `maximum_search_results` number of keys:
+                    .take(self.maximum_search_results)
                     .collect(),
             }
 
