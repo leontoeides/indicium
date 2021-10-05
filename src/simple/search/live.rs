@@ -9,7 +9,24 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
-
+    /// This search function will return keys as the search results. Each
+    /// resulting key can then be used to retrieve the full record from its
+    /// collection. _This search method accepts multiple keywords in the search
+    /// string._ Search keywords must be an exact match.
+    ///
+    /// `Live` search allows for "search as you type." It is a hybridization
+    /// of `autocomplete` and `search`. This method will effectively search
+    /// all of the autocompletion options and return the search results to the
+    /// caller.
+    ///
+    /// With this search type, the logical conjuction for multiple keywords is
+    /// `And`. For example, a search of `this that` will only return records
+    /// containing keywords both `this` and `that`. In other words, _all_
+    /// keywords must be present in a record for it to be returned as a result.
+    ///
+    /// Search only supports exact keyword matches and does not use fuzzy
+    /// matching. Consider providing the `autocomplete` feature to your users as
+    /// an ergonomic alternative to fuzzy matching.
     ///
     /// Basic usage:
     ///
