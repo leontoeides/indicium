@@ -1,14 +1,12 @@
 // -----------------------------------------------------------------------------
 //
-/// Indicium `simple` search provides three types of search. The search type
+/// Indicium `simple` search provides four types of search. The search type
 /// that should be used really depends on your use-case: the nature of the data,
-/// the intent of the user, and the size of your data set. I would suggest
-/// trying & testing both `And` and `Or` searches to see which one works better
-/// for you. See variant descriptions for more information.
+/// the intent of the user, and the size of your data set.
 ///
 /// Support for `and` and `or` keywords inside the search string is not
-/// currently planned for the `simple` search engine. The intent is to have a
-/// relatively simple search engine.
+/// currently planned for the `simple` search engine since the intent is to have
+/// a relatively simple implementation.
 ///
 /// For more information on the setting the search type in a `SearchIndex` type
 /// see: [`SearchIndexBuilder`] or [`SearchIndex::new()`].
@@ -26,7 +24,7 @@ pub enum SearchType {
     /// Probably best suited in a form widget.
     Keyword,
     /// `Live` search allows for "search as you type." It is a hybridization
-    /// between `search` and `autocomplete`. This method will effectively search
+    /// of `autocomplete` and `search`. This method will effectively search
     /// all of the autocompletion options and return the search results to the
     /// caller.
     ///

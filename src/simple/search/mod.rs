@@ -98,7 +98,7 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
 
         let search_results: Vec<&'a K> = match self.search_type {
             SearchType::And => self.search_and(string),
-            SearchType::Keyword => self.search_keyword(string).iter().cloned().collect(),
+            SearchType::Keyword => self.search_keyword(string),
             SearchType::Live => self.search_live(string).iter().cloned().collect(),
             SearchType::Or => self.search_or(string),
         }; // match
@@ -199,7 +199,7 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
 
         let search_results: Vec<&'a K> = match search_type {
             SearchType::And => self.search_and(string),
-            SearchType::Keyword => self.search_keyword(string).iter().cloned().collect(),
+            SearchType::Keyword => self.search_keyword(string),
             SearchType::Live => self.search_live(string).iter().cloned().collect(),
             SearchType::Or => self.search_or(string),
         }; // match

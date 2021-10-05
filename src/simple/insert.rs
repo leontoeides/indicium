@@ -106,9 +106,11 @@ impl<K: Clone + Ord> SearchIndex<K> {
     /// the `SearchIndex` as you insert into your collection (Vec, HashMap,
     /// etc.)
     ///
-    /// **Pro-tip**: You can make a single, universal search index for all of
-    /// your collections. This can be done by making an `enum` key that
-    /// represents both the collection and the key. For example:
+    /// #### Pro-Tip
+    ///
+    /// You can make a single, universal search index for all of your
+    /// collections. This can be done by making an `enum` key that represents
+    /// both the collection and the key. For example:
     ///
     /// ```rust
     /// # use indicium::simple::SearchIndex;

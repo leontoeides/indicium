@@ -128,7 +128,7 @@ impl<K: Clone + Debug + Ord> SearchIndexBuilder<K> {
         self
     } // fn
 
-    /// Set keywords that should not be indexed. It might be a good idea to
+    /// List of keywords that should not be indexed. It might be a good idea to
     /// exclude minor words - short conjunctions, articles, and short
     /// prepositions from your search index. For example, words such as `and`,
     /// `as`, `a`, `as`, `at`, etc. See also: the [`profile`] utility method.

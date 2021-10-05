@@ -175,8 +175,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
                         .filter(|autocompletion_key|
                             search_results.contains(autocompletion_key)
                         ) // filter
-                        // Collect all resulting keys into a `Vec`:
-                        .collect::<Vec<&K>>()
+                        // Collect all resulting keys into a `BTreeSet`:
+                        .collect::<BTreeSet<&K>>()
                     ) // map
                     // Flatten the `key` results for each autocomplete option
                     // into our collection:

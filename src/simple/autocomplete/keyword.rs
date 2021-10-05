@@ -1,6 +1,5 @@
 use crate::simple::search_index::SearchIndex;
 use std::cmp::Ord;
-use std::collections::BTreeSet;
 
 // -----------------------------------------------------------------------------
 
@@ -85,7 +84,7 @@ impl<K: Ord> SearchIndex<K> {
     /// ```
 
     #[tracing::instrument(level = "trace", name = "Keyword Autocomplete", skip(self))]
-    pub(crate) fn autocomplete_keyword(&self, keyword: &str) -> BTreeSet<&String> {
+    pub(crate) fn autocomplete_keyword(&self, keyword: &str) -> Vec<&String> {
 
         // If case sensitivity set, leave case intact. Otherwise, normalize
         // keyword to lower case:
@@ -113,7 +112,7 @@ impl<K: Ord> SearchIndex<K> {
             // .filter(|key| *key != &keyword)
             // Only return `maximum_autocomplete_results` number of keywords:
             .take(self.maximum_autocomplete_results)
-            // Collect all keyword autocompletions into a `BTreeSet`:
+            // Collect all keyword autocompletions into a `Vec`:
             .collect()
 
     } // fn

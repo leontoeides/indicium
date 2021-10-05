@@ -1,6 +1,5 @@
 use crate::simple::search_index::SearchIndex;
 use std::cmp::Ord;
-use std::collections::BTreeSet;
 use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
@@ -99,7 +98,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     // not.
 
     #[tracing::instrument(level = "trace", name = "Keyword Search", skip(self))]
-    pub(crate) fn search_keyword(&self, keyword: &str) -> BTreeSet<&K> {
+    pub(crate) fn search_keyword(&self, keyword: &str) -> Vec<&K> {
 
         // If case sensitivity set, leave case intact. Otherwise, normalize
         // keyword to lower case:
@@ -115,7 +114,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
             .take(self.maximum_search_results)
             // Take ownership of reference so we return `&K` and not `&&K`:
             .cloned()
-            // Collect all resulting keys into a `BTreeSet`:
+            // Collect all resulting keys into a `Vec`:
             .collect()
 
     } // fn
