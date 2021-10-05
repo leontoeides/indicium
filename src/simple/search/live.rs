@@ -89,45 +89,103 @@ impl<K: Hash + Ord> SearchIndex<K> {
         // autocompleting:
         if let Some(last_keyword) = keywords.pop() {
 
-            // Perform `And` search for entire string without the last keyword:
+            // Perform `And` search for entire string without the last keyword.
+            // We also must convert the return `HashSet` into a `BTreeSet`. It
+            // should be investigated if `internal_search_and` should returning
+            // a `BTreeSet` instead.
             let search_results: BTreeSet<&K> =
                 self.internal_search_and(keywords.as_slice())
+                    // Iterate over each key:
                     .iter()
+                    // Copy each `&K` key reference from the iterator or we'll
+                    // get a doubly-referenced `&&K` key:
                     .cloned()
+                    // Collect serach results into our `BTreeSet`:
                     .collect();
 
-            // Get all autocompletions for the last keyword and their keys:
-            let autocompletions: BTreeSet<&BTreeSet<K>> =
+            // Get all autocomplete options for the last keyword and its keys:
+            let autocomplete_options: BTreeSet<&BTreeSet<K>> =
                 self.internal_autocomplete_keyword(&last_keyword)
+                    // Iterate over each search result:
                     .iter()
+                    // We're not interested in the `keyword` since we're
+                    // returning `&K` keys. Return only `&K` from the tuple:
                     .map(|(_keyword, keys)| *keys)
+                    // Collect search results from each autocomplete option:
                     .collect();
 
-            // How we combine `search_results` and `autocompletions` together
-            // depends on how many keywords there are in the search string:
+            // How we combine `search_results` and `autocomplete_options`
+            // together depends on how many keywords there are in the search
+            // string. Strings that have only a single keyword, and a strings
+            // that have multiple keywords must be handled differently:
+
             match keywords.len() {
 
-                0 => autocompletions
+                // Consider this example search string: `t`.
+                //
+                // Depending on the data-set, autocomplete options `trouble` and
+                // `tribble` may be given.
+                //
+                // There are no previous keywords to intersect with, just the
+                // letter `t`. We will return the keys for these autocomplete
+                // options without further processing:
+
+                0 => autocomplete_options
+                    // Iterate over each autocomplete option:
                     .iter()
+                    // Copy the `&BTreeSet` reference from the iterator or we'll
+                    // be working with a doubly-referenced `&&BTreeSet`:
+                    .cloned()
+                    // Flatten the `key` results from each autocomplete option
+                    // into our collection:
+                    .flatten()
                     // Only return `maximum_search_results` number of keys:
                     .take(self.maximum_search_results)
-                    .cloned()
-                    .flatten()
+                    // And collect each key into a `BTreeSet` that will be the
+                    // search results.
                     .collect(),
 
-                _ => autocompletions
+                // Consider this example search string: `Shatner t`.
+                //
+                // Depending on the data-set, autocomplete options for `t` might
+                // be `trouble` and `tribble`. However, in this example there is
+                // a previous keyword: `Shatner`.
+                //
+                // This match arm will intersect the results from each
+                // autocomplete option with `Shatner`. For both `trouble` and
+                // `tribble` autocomplete options, only keys that also exist for
+                // `Shatner` will be returned. All resulting keys for both
+                // autocomplete options will be flattened together:
+
+                _ => autocomplete_options
+                    // Iterate over each autocomplete option:
                     .iter()
-                    .map(|autocompletion_keys|
-                        autocompletion_keys
-                            .iter()
-                            .filter(|autocompletion_key| search_results.contains(autocompletion_key))
-                            .collect::<BTreeSet<&K>>()
-                    )
+                    // For each autocomplete option, we will intersect its
+                    // search results with the search results of the preceding
+                    // keywords:
+                    .map(|autocompletion_keys| autocompletion_keys
+                        // Iterate over each key returned for this autocomplete
+                        // option:
+                        .iter()
+                        // Only keep the `&K` key for this autocomplete option
+                        // if it is contained in the search results for the
+                        // preceding keywords:
+                        .filter(|autocompletion_key|
+                            search_results.contains(autocompletion_key)
+                        ) // filter
+                        // Collect all resulting keys into a `Vec`:
+                        .collect::<Vec<&K>>()
+                    ) // map
+                    // Flatten the `key` results for each autocomplete option
+                    // into our collection:
                     .flatten()
                     // Only return `maximum_search_results` number of keys:
                     .take(self.maximum_search_results)
+                    // And collect each key into a `BTreeSet` that will be the
+                    // search results.
                     .collect(),
-            }
+
+            } // match
 
         } else {
 
