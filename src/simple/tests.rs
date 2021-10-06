@@ -75,6 +75,9 @@ fn simple() {
     let search_results = search_index.search_type(&SearchType::And, "Conqueror third");
     assert_eq!(search_results, vec![&3]);
 
+    let search_results = search_index.search_type(&SearchType::Live, "Last m");
+    assert_eq!(search_results, vec![&1]);
+
     let autocomplete_options = search_index.autocomplete("Edgar last c");
     assert_eq!(autocomplete_options, vec!["edgar last cerdic".to_string()]);
 
