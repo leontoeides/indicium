@@ -22,6 +22,7 @@ pub struct SearchIndexBuilder<K> {
     exclude_keywords: Option<Vec<String>>,
     maximum_autocomplete_results: usize,
     maximum_search_results: usize,
+    maximum_keys_per_keyword: usize,
 } // SearchIndexBuilder
 
 // -----------------------------------------------------------------------------
@@ -41,6 +42,7 @@ impl<K: Clone + Debug + Ord> From<SearchIndex<K>> for SearchIndexBuilder<K> {
             exclude_keywords: search_index.exclude_keywords,
             maximum_autocomplete_results: search_index.maximum_autocomplete_results,
             maximum_search_results: search_index.maximum_search_results,
+            maximum_keys_per_keyword: search_index.maximum_keys_per_keyword,
         } // SearchIndexBuilder
     } // fn
 } // impl
@@ -62,6 +64,7 @@ impl<K: Clone + Debug + Ord> From<&SearchIndexBuilder<K>> for SearchIndex<K> {
             exclude_keywords: search_index.exclude_keywords.clone(),
             maximum_autocomplete_results: search_index.maximum_autocomplete_results,
             maximum_search_results: search_index.maximum_search_results,
+            maximum_keys_per_keyword: search_index.maximum_keys_per_keyword,
         } // SearchIndexBuilder
     } // fn
 } // impl

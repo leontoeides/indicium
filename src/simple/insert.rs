@@ -143,7 +143,27 @@ impl<K: Clone + Ord> SearchIndex<K> {
                 match self.b_tree_map.get_mut(keyword) {
                     // If keyword was found in search index, add _key reference_
                     // for this record to _keyword entry_:
-                    Some(keys) => { keys.insert(key.clone()); },
+                    Some(keys) => {
+                        // Check if the maximum number of keys per keyword
+                        // (records per keyword) limit has been reached:
+                        if keys.len() < self.maximum_keys_per_keyword {
+                            // If it hasn't, insert the key (record) into the
+                            // list:
+                            keys.insert(key.clone());
+                        } else {
+                            // If the limit has been reached, do not insert.
+                            // Display warning for debug builds:
+                            #[cfg(debug_assertions)]
+                            tracing::warn!(
+                                "Internal table limit of {} keys per keyword has been reached. \
+                                Record was not attached to `{}` keyword. \
+                                This will impact accuracy of results. \
+                                For this data set, consider using a more comprehensive search solution like MeiliSearch.",
+                                self.maximum_keys_per_keyword,
+                                keyword,
+                            ); // warn!
+                        } // if
+                    }, // Some
                     // If keyword was not found in search index, initialize
                     // _keyword entry_ with the _key reference_ for this record:
                     None => {

@@ -1,4 +1,3 @@
-use crate::simple::internal::MAXIMUM_INTERNAL_AUTOCOMPLETE_RESULTS;
 use crate::simple::search_index::SearchIndex;
 use std::cmp::Ord;
 use std::collections::BTreeSet;
@@ -33,20 +32,20 @@ impl<K: Ord> SearchIndex<K> {
             // it as a result. For example, if the user's keyword was "new" (as
             // in New York), do not return "new" as an auto-completed keyword:
             // .filter(|(key, _value)| *key != keyword)
-            // Only return `MAXIMUM_INTERNAL_AUTOCOMPLETE_RESULTS` number of
-            // keywords:
-            .take(MAXIMUM_INTERNAL_AUTOCOMPLETE_RESULTS)
+            // Only return `maximum_keys_per_keyword` number of keywords:
+            .take(self.maximum_keys_per_keyword)
             // Collect all keyword autocompletions into a `Vec`:
             .collect();
 
         // For debug builds:
         #[cfg(debug_assertions)]
-        if autocomplete_options.len() >= MAXIMUM_INTERNAL_AUTOCOMPLETE_RESULTS {
+        if autocomplete_options.len() >= self.maximum_keys_per_keyword {
             tracing::warn!(
                 "Internal table limit of {} keywords has been exceeded. \
-                Data has been dropped. This will impact accuracy of results. \
+                Data has been dropped. \
+                This will impact accuracy of results. \
                 For this data set, consider using a more comprehensive search solution like MeiliSearch.",
-                MAXIMUM_INTERNAL_AUTOCOMPLETE_RESULTS
+                self.maximum_keys_per_keyword
             ); // warn!
         } // if
 

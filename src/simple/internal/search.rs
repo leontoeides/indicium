@@ -1,4 +1,3 @@
-use crate::simple::internal::MAXIMUM_INTERNAL_SEARCH_RESULTS;
 use crate::simple::search_index::SearchIndex;
 use std::cmp::Ord;
 use std::collections::HashSet;
@@ -34,7 +33,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // `maximum_search_results` number of keys:
                 .iter()
                 // Only return `maximum_search_results` number of keys:
-                .take(MAXIMUM_INTERNAL_SEARCH_RESULTS)
+                .take(self.maximum_keys_per_keyword)
                 // Insert a reference to each resulting key into the hash set:
                 .collect()
 
@@ -51,12 +50,13 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
         // For debug builds:
         #[cfg(debug_assertions)]
-        if search_results.len() >= MAXIMUM_INTERNAL_SEARCH_RESULTS {
+        if search_results.len() >= self.maximum_keys_per_keyword {
             tracing::warn!(
                 "Internal table limit of {} results has been exceeded. \
-                Data has been dropped. This will impact accuracy of results. \
+                Data has been dropped. \
+                This will impact accuracy of results. \
                 For this data set, consider using a more comprehensive search solution like MeiliSearch.",
-                MAXIMUM_INTERNAL_SEARCH_RESULTS
+                self.maximum_keys_per_keyword
             ); // warn!
         } // if
 

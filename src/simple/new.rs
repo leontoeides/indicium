@@ -56,6 +56,7 @@ impl<K: Ord> SearchIndex<K> {
             exclude_keywords,
             maximum_autocomplete_results,
             maximum_search_results,
+            maximum_keys_per_keyword: 40_960,
         } // SearchIndex
     } // fn
 
