@@ -24,6 +24,11 @@ begin to degrade at a point.
 
 # What's New?
 
+* `0.3.1`: Added `maximum_keys_per_keyword` method.
+
+* `0.3.1`: Added `autocomplete_with` and `search_with` which allows ad-hoc
+overrides of the `AutocompleteType`/`SearchType` and maximum results parameters.
+
 * `0.3.0`: Added new search type `SearchType::Live` which is for "search as you
 type" interfaces. It is sort of a hybrid between `autocomplete` and
 `SearchType::And`. It will search using an (incomplete) string and return keys
