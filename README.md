@@ -24,7 +24,7 @@ begin to degrade at a point.
 
 # What's New?
 
-* `0.3.1`: Added `maximum_keys_per_keyword` method.
+* `0.3.1`: Added `maximum_keys_per_keyword` getter method.
 
 * `0.3.1`: Added `autocomplete_with` and `search_with` which allows ad-hoc
 overrides of the `AutocompleteType`/`SearchType` and maximum results parameters.
