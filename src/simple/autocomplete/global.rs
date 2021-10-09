@@ -94,7 +94,7 @@ impl<K: Ord> SearchIndex<K> {
     #[tracing::instrument(level = "trace", name = "Global Autocomplete", skip(self))]
     pub(crate) fn autocomplete_global(
         &self,
-        maximum_autocomplete_results: &usize,
+        maximum_autocomplete_options: &usize,
         string: &str,
     ) -> Vec<String> {
 
@@ -108,7 +108,7 @@ impl<K: Ord> SearchIndex<K> {
 
             // Autocomplete the last keyword:
             let autocompletions = self.autocomplete_keyword(
-                maximum_autocomplete_results,
+                maximum_autocomplete_options,
                 &last_keyword
             ); // autocomplete_keyword
 

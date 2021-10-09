@@ -93,7 +93,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     #[tracing::instrument(level = "trace", name = "Context Autocomplete", skip(self))]
     pub(crate) fn autocomplete_context(
         &self,
-        maximum_autocomplete_results: &usize,
+        maximum_autocomplete_options: &usize,
         string: &str,
     ) -> Vec<String> {
 
@@ -123,8 +123,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 .filter(|(_keyword, keys)|
                     search_results.is_empty() || keys.iter().any(|key| search_results.contains(key))
                 ) // filter
-                // Only return `maximum_autocomplete_results` number of keywords:
-                .take(*maximum_autocomplete_results)
+                // Only return `maximum_autocomplete_options` number of keywords:
+                .take(*maximum_autocomplete_options)
                 // `internal_autocomplete_keyword` returns a key-value pair.
                 // We're autocompleting the key, so discard the value:
                 .map(|(keyword, _keys)| keyword)

@@ -34,7 +34,7 @@ pub struct SearchIndex<K: Ord> {
     /// Keywords that should not be indexed.
     pub(crate) exclude_keywords: Option<Vec<String>>,
     /// Maximum number of auto-complete options to return.
-    pub(crate) maximum_autocomplete_results: usize,
+    pub(crate) maximum_autocomplete_options: usize,
     /// Maximum number of search results to return.
     pub(crate) maximum_search_results: usize,
     /// Maximum number of keys per keyword. If there are too many records

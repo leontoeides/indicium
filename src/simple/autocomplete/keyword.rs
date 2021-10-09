@@ -86,7 +86,7 @@ impl<K: Ord> SearchIndex<K> {
     #[tracing::instrument(level = "trace", name = "Keyword Autocomplete", skip(self))]
     pub(crate) fn autocomplete_keyword(
         &self,
-        maximum_autocomplete_results: &usize,
+        maximum_autocomplete_options: &usize,
         keyword: &str,
     ) -> Vec<&String> {
 
@@ -114,8 +114,8 @@ impl<K: Ord> SearchIndex<K> {
             // it as a result. For example, if the user's keyword was "new" (as
             // in New York), do not return "new" as an auto-completed keyword:
             // .filter(|key| *key != &keyword)
-            // Only return `maximum_autocomplete_results` number of keywords:
-            .take(*maximum_autocomplete_results)
+            // Only return `maximum_autocomplete_options` number of keywords:
+            .take(*maximum_autocomplete_options)
             // Collect all keyword autocompletions into a `Vec`:
             .collect()
 

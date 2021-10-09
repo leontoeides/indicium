@@ -20,7 +20,7 @@ pub struct SearchIndexBuilder<K> {
     maximum_keyword_length: usize,
     maximum_string_length: Option<usize>,
     exclude_keywords: Option<Vec<String>>,
-    maximum_autocomplete_results: usize,
+    maximum_autocomplete_options: usize,
     maximum_search_results: usize,
     maximum_keys_per_keyword: usize,
 } // SearchIndexBuilder
@@ -40,7 +40,7 @@ impl<K: Clone + Debug + Ord> From<SearchIndex<K>> for SearchIndexBuilder<K> {
             maximum_keyword_length: search_index.maximum_keyword_length,
             maximum_string_length: search_index.maximum_string_length,
             exclude_keywords: search_index.exclude_keywords,
-            maximum_autocomplete_results: search_index.maximum_autocomplete_results,
+            maximum_autocomplete_options: search_index.maximum_autocomplete_options,
             maximum_search_results: search_index.maximum_search_results,
             maximum_keys_per_keyword: search_index.maximum_keys_per_keyword,
         } // SearchIndexBuilder
@@ -62,7 +62,7 @@ impl<K: Clone + Debug + Ord> From<&SearchIndexBuilder<K>> for SearchIndex<K> {
             maximum_keyword_length: search_index.maximum_keyword_length,
             maximum_string_length: search_index.maximum_string_length,
             exclude_keywords: search_index.exclude_keywords.clone(),
-            maximum_autocomplete_results: search_index.maximum_autocomplete_results,
+            maximum_autocomplete_options: search_index.maximum_autocomplete_options,
             maximum_search_results: search_index.maximum_search_results,
             maximum_keys_per_keyword: search_index.maximum_keys_per_keyword,
         } // SearchIndexBuilder
@@ -143,8 +143,8 @@ impl<K: Clone + Debug + Ord> SearchIndexBuilder<K> {
     } // fn
 
     /// Maximum number of auto-complete options to return.
-    pub fn max_autocomplete_results(&mut self, maximum_autocomplete_results: &usize) -> &mut Self {
-        self.maximum_autocomplete_results = *maximum_autocomplete_results;
+    pub fn max_autocomplete_options(&mut self, maximum_autocomplete_options: &usize) -> &mut Self {
+        self.maximum_autocomplete_options = *maximum_autocomplete_options;
         self
     } // fn
 

@@ -94,11 +94,11 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
         let autocomplete_options: Vec<String> = match &self.autocomplete_type {
             AutocompleteType::Context =>
-                self.autocomplete_context(&self.maximum_autocomplete_results, string),
+                self.autocomplete_context(&self.maximum_autocomplete_options, string),
             AutocompleteType::Global =>
-                self.autocomplete_global(&self.maximum_autocomplete_results, string),
+                self.autocomplete_global(&self.maximum_autocomplete_options, string),
             AutocompleteType::Keyword =>
-                self.autocomplete_keyword(&self.maximum_autocomplete_results, string)
+                self.autocomplete_keyword(&self.maximum_autocomplete_options, string)
                     .iter()
                     .cloned()
                     .cloned()
@@ -210,11 +210,11 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
         let autocomplete_options: Vec<String> = match autocomplete_type {
             AutocompleteType::Context =>
-                self.autocomplete_context(&self.maximum_autocomplete_results, string),
+                self.autocomplete_context(&self.maximum_autocomplete_options, string),
             AutocompleteType::Global =>
-                self.autocomplete_global(&self.maximum_autocomplete_results, string),
+                self.autocomplete_global(&self.maximum_autocomplete_options, string),
             AutocompleteType::Keyword =>
-                self.autocomplete_keyword(&self.maximum_autocomplete_results, string)
+                self.autocomplete_keyword(&self.maximum_autocomplete_options, string)
                     .iter()
                     .cloned()
                     .cloned()
@@ -325,17 +325,17 @@ impl<K: Hash + Ord> SearchIndex<K> {
     pub fn autocomplete_with(
         &self,
         autocomplete_type: &AutocompleteType,
-        maximum_autocomplete_results: &usize,
+        maximum_autocomplete_options: &usize,
         string: &str,
     ) -> Vec<String> {
 
         let autocomplete_options: Vec<String> = match autocomplete_type {
             AutocompleteType::Context =>
-                self.autocomplete_context(maximum_autocomplete_results, string),
+                self.autocomplete_context(maximum_autocomplete_options, string),
             AutocompleteType::Global =>
-                self.autocomplete_global(maximum_autocomplete_results, string),
+                self.autocomplete_global(maximum_autocomplete_options, string),
             AutocompleteType::Keyword =>
-                self.autocomplete_keyword(maximum_autocomplete_results, string)
+                self.autocomplete_keyword(maximum_autocomplete_options, string)
                     .iter()
                     .cloned()
                     .cloned()
