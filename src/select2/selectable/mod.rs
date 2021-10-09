@@ -153,17 +153,12 @@ pub fn transform<K: Clone + Ord + ToString, S: Selectable>(
             // Collect all Select2 records into a `Vec<Record>`:
             .collect();
 
-        // Determine if there are more records to be displayed. This operation
-        // is performed here (rather than in the `Results` instantiation) to
-        // avoid a move of `paginated_results`:
-        let more: bool = items_per_page * page < search_results.len();
-
         // Return Select2 `Results` to caller:
         Results {
             results: paginated_results,
             pagination: Pagination {
-                more,
-            },
+                more: items_per_page * page < search_results.len(),
+            }, // Pagination
         } // Results
 
     } else {

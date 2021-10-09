@@ -12,7 +12,9 @@ impl<K: Clone + Ord> SearchIndex<K> {
     /// index.
     ///
     /// Note that for the search results to be accurate, it is important to
-    /// update the search index as the collection is updated.
+    /// update the search index as the collection is updated. If an element is
+    /// changed into your collection, it should also be changed in the search
+    /// index.
     ///
     /// Basic usage:
     ///
