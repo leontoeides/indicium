@@ -38,7 +38,8 @@ pub struct SearchIndex<K: Ord> {
     /// Maximum number of search results to return.
     pub(crate) maximum_search_results: usize,
     /// Maximum number of keys per keyword. If there are too many records
-    /// attached to a single keyword, performance can begin to degrade. See
+    /// attached to a single keyword, performance can begin to degrade. This
+    /// setting limits the number of keys that may be attached to a keyword. See
     /// also: the `exclude_keywords` list and the `profile` method.
     pub(crate) maximum_keys_per_keyword: usize,
 } // SearchIndex

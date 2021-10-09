@@ -10,6 +10,7 @@ mod default;
 mod deref;
 mod indexable;
 mod insert;
+mod maximum_keys_per_keyword;
 mod new;
 mod remove;
 mod replace;
