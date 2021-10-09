@@ -93,12 +93,16 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
     /// #       search_index.insert(&index, element)
     /// #   );
     /// #
-    /// let search_results = search_index.search_or("last England");
+    /// let search_results = search_index.search_or(&20, "last England");
     /// assert_eq!(search_results, vec![&0, &1, &2]);
     /// ```
 
     #[tracing::instrument(level = "trace", name = "Or Search", skip(self))]
-    pub(crate) fn search_or(&'a self, string: &'a str) -> Vec<&'a K> {
+    pub(crate) fn search_or(
+        &'a self,
+        maximum_search_results: &usize,
+        string: &'a str,
+    ) -> Vec<&'a K> {
 
         // Split search `String` into keywords (according to the `SearchIndex`
         // settings). `string_keywords` will allow "use entire string as a
@@ -153,7 +157,7 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
             // Iterate over the tuple elements:
             .iter()
             // Only return `maximum_search_results` number of keys:
-            .take(self.maximum_search_results)
+            .take(*maximum_search_results)
             // Remove the hit-count from the tuple, returning only the key:
             .map(|(key, _value)| *key)
             // Collect the keys into a `Vec`:

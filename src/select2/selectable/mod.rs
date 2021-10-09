@@ -33,7 +33,7 @@ pub struct SelectableRecord {
 // -----------------------------------------------------------------------------
 //
 /// To make a struct Select2-ready, the programmer must implement the
-/// `Selectable` trait for it. The trait returns a `Record` with all content
+/// `Selectable` trait for it. The trait returns a `Record` with the content
 /// needed to make it usable with the Select2 Javascript plugin.
 
 pub trait Selectable {

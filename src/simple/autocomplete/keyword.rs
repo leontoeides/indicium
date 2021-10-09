@@ -74,7 +74,7 @@ impl<K: Ord> SearchIndex<K> {
     /// #       search_index.insert(&index, element)
     /// #   );
     /// #
-    /// let autocomplete_options = search_index.autocomplete_keyword("E");
+    /// let autocomplete_options = search_index.autocomplete_keyword(&5, "E");
     ///
     /// assert_eq!(
     ///     // Convert `BTreeMap<&String>` to `Vec<&String>` for comparison:
@@ -84,7 +84,11 @@ impl<K: Ord> SearchIndex<K> {
     /// ```
 
     #[tracing::instrument(level = "trace", name = "Keyword Autocomplete", skip(self))]
-    pub(crate) fn autocomplete_keyword(&self, keyword: &str) -> Vec<&String> {
+    pub(crate) fn autocomplete_keyword(
+        &self,
+        maximum_autocomplete_results: &usize,
+        keyword: &str,
+    ) -> Vec<&String> {
 
         // If case sensitivity set, leave case intact. Otherwise, normalize
         // keyword to lower case:
@@ -111,7 +115,7 @@ impl<K: Ord> SearchIndex<K> {
             // in New York), do not return "new" as an auto-completed keyword:
             // .filter(|key| *key != &keyword)
             // Only return `maximum_autocomplete_results` number of keywords:
-            .take(self.maximum_autocomplete_results)
+            .take(*maximum_autocomplete_results)
             // Collect all keyword autocompletions into a `Vec`:
             .collect()
 

@@ -88,12 +88,16 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// #       search_index.insert(&index, element)
     /// #   );
     /// #
-    /// let search_results = search_index.search_and("Conqueror third");
+    /// let search_results = search_index.search_and(&20, "Conqueror third");
     /// assert_eq!(search_results, vec![&3]);
     /// ```
 
     #[tracing::instrument(level = "trace", name = "And Search", skip(self))]
-    pub(crate) fn search_and(&self, string: &str) -> Vec<&K> {
+    pub(crate) fn search_and(
+        &self,
+        maximum_search_results: &usize,
+        string: &str,
+    ) -> Vec<&K> {
 
         // Split search `String` into keywords (according to the `SearchIndex`
         // settings). `string_keywords` will **not** allow "use entire string as
@@ -152,7 +156,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
             // `Vec` for caller while observing `maximum_search_results`:
             Some(search_results) => search_results
                 .iter()
-                .take(self.maximum_search_results)
+                .take(*maximum_search_results)
                 .cloned()
                 .collect(),
             // If `search_results` is empty, return an empty `Vec`:

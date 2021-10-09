@@ -80,7 +80,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// #       search_index.insert(&index, element)
     /// #   );
     /// #
-    /// let search_results = search_index.search_keyword("Wessex");
+    /// let search_results = search_index.search_keyword(&20, "Wessex");
     ///
     /// assert_eq!(
     ///     // Convert `BTreeMap<&K>` to `Vec<&K>` for comparison:
@@ -98,7 +98,11 @@ impl<K: Hash + Ord> SearchIndex<K> {
     // not.
 
     #[tracing::instrument(level = "trace", name = "Keyword Search", skip(self))]
-    pub(crate) fn search_keyword(&self, keyword: &str) -> Vec<&K> {
+    pub(crate) fn search_keyword(
+        &self,
+        maximum_search_results: &usize,
+        keyword: &str,
+    ) -> Vec<&K> {
 
         // If case sensitivity set, leave case intact. Otherwise, normalize
         // keyword to lower case:
@@ -111,7 +115,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
             // Iterate the results of the keyword search:
             .iter()
             // Only return `maximum_search_results` number of keys:
-            .take(self.maximum_search_results)
+            .take(*maximum_search_results)
             // Take ownership of reference so we return `&K` and not `&&K`:
             .cloned()
             // Collect all resulting keys into a `Vec`:

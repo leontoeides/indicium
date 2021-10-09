@@ -87,7 +87,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// #   );
     /// #
     /// let search_results = search_index
-    ///     .search_live("Norman C")
+    ///     .search_live(&20, "Norman C")
     ///     .iter()
     ///     .cloned()
     ///     .collect::<Vec<&usize>>();
@@ -96,7 +96,11 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// ```
 
     #[tracing::instrument(level = "trace", name = "Live Search", skip(self))]
-    pub(crate) fn search_live(&self, string: &str) -> BTreeSet<&K> {
+    pub(crate) fn search_live(
+        &self,
+        maximum_search_results: &usize,
+        string: &str,
+    ) -> BTreeSet<&K> {
 
         // Split search `String` into keywords according to the `SearchIndex`
         // settings. Force "use entire string as a keyword" option off:
@@ -159,7 +163,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                     // into our collection:
                     .flatten()
                     // Only return `maximum_search_results` number of keys:
-                    .take(self.maximum_search_results)
+                    .take(*maximum_search_results)
                     // And collect each key into a `BTreeSet` that will be the
                     // search results.
                     .collect(),
@@ -199,7 +203,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                     // into our collection:
                     .flatten()
                     // Only return `maximum_search_results` number of keys:
-                    .take(self.maximum_search_results)
+                    .take(*maximum_search_results)
                     // And collect each key into a `BTreeSet` that will be the
                     // search results.
                     .collect(),

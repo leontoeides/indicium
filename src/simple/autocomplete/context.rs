@@ -78,16 +78,24 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// #       search_index.insert(&index, element)
     /// #   );
     /// #
-    /// let autocomplete_options = search_index.autocomplete_context("E");
+    /// let autocomplete_options = search_index.autocomplete_context(&5, "E");
     ///
     /// assert_eq!(
     ///     autocomplete_options,
-    ///     vec!["edgar".to_string(), "edgar ætheling".to_string(), "england".to_string()]
+    ///     vec![
+    ///         "edgar".to_string(),
+    ///         "edgar ætheling".to_string(),
+    ///         "england".to_string()
+    ///     ]
     /// );
     /// ```
 
     #[tracing::instrument(level = "trace", name = "Context Autocomplete", skip(self))]
-    pub(crate) fn autocomplete_context(&self, string: &str) -> Vec<String> {
+    pub(crate) fn autocomplete_context(
+        &self,
+        maximum_autocomplete_results: &usize,
+        string: &str,
+    ) -> Vec<String> {
 
         // Split search `String` into keywords according to the `SearchIndex`
         // settings. Force "use entire string as a keyword" option off:
@@ -116,7 +124,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                     search_results.is_empty() || keys.iter().any(|key| search_results.contains(key))
                 ) // filter
                 // Only return `maximum_autocomplete_results` number of keywords:
-                .take(self.maximum_autocomplete_results)
+                .take(*maximum_autocomplete_results)
                 // `internal_autocomplete_keyword` returns a key-value pair.
                 // We're autocompleting the key, so discard the value:
                 .map(|(keyword, _keys)| keyword)

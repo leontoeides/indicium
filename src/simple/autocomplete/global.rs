@@ -76,7 +76,10 @@ impl<K: Ord> SearchIndex<K> {
     /// #       search_index.insert(&index, element)
     /// #   );
     /// #
-    /// let autocomplete_options = search_index.autocomplete_global("1100 e");
+    /// let autocomplete_options = search_index.autocomplete_global(
+    ///     &5,
+    ///     "1100 e"
+    /// );
     ///
     /// assert_eq!(
     ///     autocomplete_options,
@@ -89,7 +92,11 @@ impl<K: Ord> SearchIndex<K> {
     /// ```
 
     #[tracing::instrument(level = "trace", name = "Global Autocomplete", skip(self))]
-    pub(crate) fn autocomplete_global(&self, string: &str) -> Vec<String> {
+    pub(crate) fn autocomplete_global(
+        &self,
+        maximum_autocomplete_results: &usize,
+        string: &str,
+    ) -> Vec<String> {
 
         // Split search `String` into keywords according to the `SearchIndex`
         // settings. Force "use entire string as a keyword" option off:
@@ -100,7 +107,10 @@ impl<K: Ord> SearchIndex<K> {
         if let Some(last_keyword) = keywords.pop() {
 
             // Autocomplete the last keyword:
-            let autocompletions = self.autocomplete_keyword(&last_keyword);
+            let autocompletions = self.autocomplete_keyword(
+                maximum_autocomplete_results,
+                &last_keyword
+            ); // autocomplete_keyword
 
             // Push a blank placeholder onto the end of the keyword list. We
             // will be putting our autocompletions for the last keyword into
