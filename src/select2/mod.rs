@@ -1,12 +1,10 @@
-// mod groupable;
+pub mod groupable;
 pub mod selectable;
 
 // -----------------------------------------------------------------------------
 
-// pub use crate::select2::groupable::Groupable;
-// pub use crate::select2::groupable::GroupRecord;
-// pub use crate::select2::groupable::results as groupable_results;
-pub use crate::select2::selectable::{Results as SelectableResults, Selectable, SelectableRecord};
+pub use crate::select2::selectable::{Results as SelectableResults, Selectable};
+pub use crate::select2::groupable::{Groupable, GroupedResults};
 
 // -----------------------------------------------------------------------------
 
@@ -14,6 +12,48 @@ use serde::{Deserialize, Serialize};
 use std::cmp::{Eq, PartialEq};
 use std::fmt::Debug;
 use std::hash::Hash;
+
+// -----------------------------------------------------------------------------
+//
+/// Select2 can render programmatically supplied data from an array or remote
+/// data source (AJAX) as dropdown options. In order to accomplish this, Select2
+/// expects a very specific data format. This format consists of a JSON object
+/// containing an array of objects keyed by the `results` key.
+///
+/// Select2 requires that each object contain an `id` and a `text` property.
+/// Additional parameters passed in with data objects will be included on the
+/// data objects that Select2 exposes.
+
+#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Deserialize, Serialize)]
+pub struct SelectableRecord {
+    /// Just like with the `id` property, Select2 requires that the text that
+    /// should be displayed for an option is stored in the `text` property.
+    pub text: String,
+    /// You can also supply the `selected` properties for the options in this
+    /// data structure.
+    pub selected: bool,
+    /// You can also supply the `disabled` properties for the options in this
+    /// data structure.
+    pub disabled: bool,
+} // SelectableRecord
+
+// -----------------------------------------------------------------------------
+
+impl SelectableRecord {
+
+    pub fn to_record(
+        &self,
+        key: &str,
+    ) -> Record {
+        Record {
+            id: key.to_string(),
+            text: self.text.clone(),
+            selected: self.selected,
+            disabled: self.disabled,
+        } // Record
+    } // fn
+
+} // impl
 
 // -----------------------------------------------------------------------------
 //

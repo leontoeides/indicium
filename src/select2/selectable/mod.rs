@@ -1,4 +1,4 @@
-use crate::select2::{Pagination, Record, Request};
+use crate::select2::{Pagination, Record, Request, SelectableRecord};
 use crate::simple::{SearchIndex, SearchType};
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
@@ -8,51 +8,13 @@ use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 //
-/// Select2 can render programmatically supplied data from an array or remote
-/// data source (AJAX) as dropdown options. In order to accomplish this, Select2
-/// expects a very specific data format. This format consists of a JSON object
-/// containing an array of objects keyed by the `results` key.
-///
-/// Select2 requires that each object contain an `id` and a `text` property.
-/// Additional parameters passed in with data objects will be included on the
-/// data objects that Select2 exposes.
-
-#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Deserialize, Serialize)]
-pub struct SelectableRecord {
-    /// Just like with the `id` property, Select2 requires that the text that
-    /// should be displayed for an option is stored in the `text` property.
-    pub text: String,
-    /// You can also supply the `selected` properties for the options in this
-    /// data structure.
-    pub selected: bool,
-    /// You can also supply the `disabled` properties for the options in this
-    /// data structure.
-    pub disabled: bool,
-} // SelectableRecord
-
-// -----------------------------------------------------------------------------
-//
 /// To make a struct Select2-ready, the programmer must implement the
 /// `Selectable` trait for it. The trait returns a `Record` with the content
 /// needed to make it usable with the Select2 Javascript plugin.
 
 pub trait Selectable {
-    fn select2_record(&self) -> SelectableRecord;
+    fn record(&self) -> SelectableRecord;
 } // Selectable
-
-// -----------------------------------------------------------------------------
-
-fn selectable_record_to_select2_record(
-    key: &str,
-    value: &SelectableRecord,
-) -> Record {
-    Record {
-        id: key.to_string(),
-        text: value.text.clone(),
-        selected: value.selected,
-        disabled: value.disabled,
-    } // Record
-} // fn
 
 // -----------------------------------------------------------------------------
 
@@ -67,13 +29,7 @@ pub struct Results {
     pub pagination: Pagination,
 } // Results
 
-
-
-
-
-
-
-
+// -----------------------------------------------------------------------------
 
 pub fn search<'a, K: Hash + Ord>(
     search_index: &'a SearchIndex<K>,
@@ -84,23 +40,25 @@ pub fn search<'a, K: Hash + Ord>(
     let query_term: Option<&String> = request.query_term();
 
     // Search index for query/term:
-    query_term.as_ref().map(|query| search_index.search_type(&SearchType::Live, query))
+    query_term.as_ref().map(|query|
+        search_index.search_with(
+            &SearchType::Live,
+            &search_index.maximum_keys_per_keyword(),
+            query,
+        ) // search_with
+    ) // query_term
 
 } // fn
 
+// -----------------------------------------------------------------------------
 
-
-
-pub fn transform<K: Clone + Ord + ToString, S: Selectable>(
+pub fn results<K: Clone + Ord + ToString, S: Selectable>(
     request: &Request,
     items_per_page: &Option<usize>,
     selected_record: &Option<String>,
     search_results_keys: &[K],
     search_results_values: &[S]
 ) -> Results {
-
-    //let search_results: Vec<SelectableRecord> = collection.iter().map(|record| record.select2_record()).collect();
-    //search_results.sort_unstable_by(|a, b| a.text.partial_cmp(&b.text).unwrap());
 
     let search_results: Vec<(&K, &S)> = search_results_keys
         .iter()
@@ -133,10 +91,9 @@ pub fn transform<K: Clone + Ord + ToString, S: Selectable>(
             .take(*items_per_page)
             // Convert internal `SelectableRecord` format to output `Record`
             // format:
-            .map(|(key, value)| selectable_record_to_select2_record(
-                &key.to_string(),
-                &value.select2_record()
-            )) // map
+            .map(|(key, value)|
+                value.record().to_record(&key.to_string())
+            ) // map
             // Check if this record was specified as being selected:
             .map(|mut record| {
                 // Check if the `selected_record` was set...
@@ -170,10 +127,9 @@ pub fn transform<K: Clone + Ord + ToString, S: Selectable>(
             .iter()
             // Convert internal `SelectableRecord` format to output `Record`
             // format:
-            .map(|(key, value)| selectable_record_to_select2_record(
-                &key.to_string(),
-                &value.select2_record()
-            )) // map
+            .map(|(key, value)|
+                value.record().to_record(&key.to_string())
+            ) // map
             // Check if this record was specified as being selected:
             .map(|mut record| {
                 // Check if the `selected_record` was set...
@@ -199,6 +155,3 @@ pub fn transform<K: Clone + Ord + ToString, S: Selectable>(
     } // if
 
 } // fn
-
-
-
