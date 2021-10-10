@@ -1,9 +1,14 @@
+//! The simple Indicium search implementation. Fewer bells-and-whistles but
+//! easier to use than the other options.
+//!
+//! There will be more search implementations in future versions.
+
 // Directories:
 mod autocomplete;
 mod internal;
 mod search;
 
-// Methods:
+// Methods & structs:
 mod autocomplete_type;
 mod builder;
 mod default;
