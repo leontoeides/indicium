@@ -104,6 +104,10 @@ impl<K: Hash + Ord> SearchIndex<K> {
         // a keyword," even if enabled in user settings:
         let keywords: Vec<String> = self.string_keywords(string, false);
 
+        // For debug builds:
+        #[cfg(debug_assertions)]
+        tracing::trace!("Searching for keywords: {:?}", keywords);
+
         // This `BTreeSet` is used to contain the search results:
         let mut search_results: Option<HashSet<&K>> = None;
 

@@ -102,6 +102,10 @@ impl<K: Ord> SearchIndex<K> {
         // settings. Force "use entire string as a keyword" option off:
         let mut keywords: Vec<String> = self.string_keywords(string, false);
 
+        // For debug builds:
+        #[cfg(debug_assertions)]
+        tracing::trace!("Autocompleting keywords: {:?}", keywords);
+
         // Pop the last keyword off the list. It's the keyword that we'll be
         // autocompleting:
         if let Some(last_keyword) = keywords.pop() {

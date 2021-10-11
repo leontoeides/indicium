@@ -106,7 +106,7 @@ impl<K: Clone + Ord> SearchIndex<K> {
     /// the `SearchIndex` as you insert into your collection (Vec, HashMap,
     /// etc.)
     ///
-    /// #### Pro-Tip
+    /// #### Pro-Tip: Enum Keys
     ///
     /// You can make a single, universal search index for all of your
     /// collections. This can be done by making an `enum` key that represents

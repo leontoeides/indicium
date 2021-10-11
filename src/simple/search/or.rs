@@ -109,6 +109,10 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
         // keyword" if enabled in user settings:
         let keywords: Vec<String> = self.string_keywords(&String::from(string), true);
 
+        // For debug builds:
+        #[cfg(debug_assertions)]
+        tracing::trace!("Searching for keywords: {:?}", keywords);
+
         // This `BTreeMap` is used to count the number of hits for each
         // resulting key. This is so we can return search results in order of
         // relevance:

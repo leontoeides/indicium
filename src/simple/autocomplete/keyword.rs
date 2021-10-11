@@ -97,6 +97,10 @@ impl<K: Ord> SearchIndex<K> {
             false => keyword.to_lowercase(),
         }; // match
 
+        // For debug builds:
+        #[cfg(debug_assertions)]
+        tracing::trace!("Autocompleting keyword: {:?}", keyword);
+
         // Attempt to get matching keywords from `BTreeMap`:
         self.b_tree_map
             // Get matching keywords starting with (partial) keyword string:

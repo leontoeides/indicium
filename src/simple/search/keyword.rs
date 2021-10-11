@@ -111,6 +111,10 @@ impl<K: Hash + Ord> SearchIndex<K> {
             false => keyword.to_lowercase(),
         }; // match
 
+        // For debug builds:
+        #[cfg(debug_assertions)]
+        tracing::trace!("Searching for keyword: {}", keyword);
+
         self.internal_keyword_search(&String::from(&keyword))
             // Iterate the results of the keyword search:
             .iter()

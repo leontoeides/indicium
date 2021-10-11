@@ -99,7 +99,7 @@ impl GroupableRecord {
 /// converted to `JSON` using your web framework (or something like
 /// `serde_json`), and then returned to the `Select2` jQuery plug-in.
 
-#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct GroupedResponse {
     /// This format consists of a JSON object containing an array of objects
     /// keyed by the `results` key.

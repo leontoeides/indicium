@@ -25,7 +25,7 @@ use std::hash::Hash;
 /// parameters to the request by overriding the `ajax.data` setting. The current
 /// page to be retrieved is stored in the `params.page` property.
 
-#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct Pagination {
     /// Select2 will expect a `pagination.more` value in the response. The value
     /// of `more` should be `true` or `false`, which tells Select2 whether or
@@ -98,9 +98,9 @@ pub struct Request {
 // -----------------------------------------------------------------------------
 
 impl Request {
-    // For some reason, `Select2` can send the user's search term in either
-    // the `term` field or in the `q` field. This convenience method checks both
-    // fields and returns the user's query term, if available:
+    /// For some reason, `Select2` can send the user's search term in either
+    /// the `term` field or in the `q` field. This convenience method checks
+    /// both fields and returns the user's query term, if available.
     pub fn query_term(&self) -> Option<&String> {
         // Get query (search term) if any:
         match &self.q {
@@ -109,6 +109,19 @@ impl Request {
                 Some(_term) => self.term.as_ref(),
                 None => None,
             }, // None
+        } // match
+    } // fn
+    /// This convenience method will return the appropriate page number for
+    /// pagination.
+    pub fn page_number(&self) -> usize {
+        // Ensure that the `page` number is set correctly before processing:
+        match self.page {
+            // If no page number specified, assume page 1:
+            None => 1,
+            // There is no page 0. Assume caller meant page 1:
+            Some(0) => 1,
+            // Otherwise continue with caller's page number:
+            _ => self.page.unwrap(),
         } // match
     } // fn
 } // impl

@@ -32,6 +32,31 @@ impl Request {
         search_results_values: &[S]
     ) -> FlatResponse {
 
+
+
+        if search_results_keys.len() != search_results_values.len() {
+            tracing::error!(
+                "Caller supplied {} keys and {} values. \
+                The number of keys and values should be the same. \
+                Returning empty response.",
+                search_results_keys.len(),
+                search_results_values.len(),
+            ); // error!
+            return FlatResponse::default()
+        } else if search_results_keys.is_empty() {
+            tracing::debug!(
+                "List of keys and values is empty. \
+                Returning empty response.",
+            ); // debug!
+            return FlatResponse::default()
+        } // if
+
+
+
+
+
+
+
         let search_results: Vec<(&K, &S)> = search_results_keys
             .iter()
             .zip(search_results_values.iter())
@@ -42,15 +67,8 @@ impl Request {
         // self.request_type == Some("query_append".to_string())
         if let Some(items_per_page) = items_per_page {
 
-            // Ensure that the `page` number is set correctly before processing:
-            let page = match self.page {
-                // If no page number specified, assume page 1:
-                None => 1,
-                // There is no page 0. Assume caller meant page 1:
-                Some(0) => 1,
-                // Otherwise continue with caller's page number:
-                _ => self.page.unwrap(),
-            }; // match
+            // Get the `page` number from the request:
+            let page: usize = self.page_number();
 
             // This function works on the resolved output of a search, or the
             // records dumped from a key-value store:

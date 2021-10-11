@@ -32,6 +32,20 @@
 /// Don't forget that you may make numbers, numeric identifiers, enums, and
 /// other types indexable by converting them to a `String` and including them in
 /// the returned `Vec<String>`.
+///
+/// #### Pro-Tip: Hash Tags
+///
+/// If you would like to categorize or classify your records, you could employ
+/// [hash tags](https://en.wikipedia.org/wiki/Hashtag). The purpose of the
+/// _hash tag_ is to prevent category name collisions with user-space keywords.
+/// Of course, consider using another symbol if the hash symbol (`#`) is
+/// anticipated to be in the user-space.
+///
+/// You could preprend the user's search query with hash tag(s). For example:
+/// you could categorize cities as American by returning the `#US` keyword for
+/// them from your `Indexable` trait. Then, if a user intends to search for
+/// cities in United States, your application could quietly prepend the user's
+/// query with `#US` to restrict the search to American cities.
 
 pub trait Indexable {
     /// Returns a string for every field for a record that is to be indexed by
