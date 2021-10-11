@@ -236,9 +236,9 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
     // -------------------------------------------------------------------------
     //
     /// This search method allows the caller to define a `SearchType` and the
-    /// maximum search results. These parameters will override the
-    /// index settings. See [`SearchType`] for more information on the different
-    /// search types.
+    /// maximum number of search results to return. These parameters override
+    /// the index settings. See [`SearchType`] for more information on the
+    /// different search types.
     ///
     /// The `search` function will return keys as the search results. Each
     /// resulting key can then be used to retrieve the full record from its

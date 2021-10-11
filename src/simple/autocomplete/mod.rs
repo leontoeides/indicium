@@ -236,9 +236,9 @@ impl<K: Hash + Ord> SearchIndex<K> {
     // -------------------------------------------------------------------------
     //
     /// This autocomplete method allows the caller to define a
-    /// `AutocompleteType` and the maximum autocomplete options. These
-    /// parameters will override the index settings. See [`AutocompleteType`]
-    /// for more information on the different search types.
+    /// `AutocompleteType` and the maximum number of autocomplete options to be
+    /// returned. These parameters override the index settings. See
+    /// [`AutocompleteType`] for more information on the different search types.
     ///
     /// Returns matching autocompleted keywords for the provided search string.
     /// Partial keywords must be an exact match. Results are returned in
