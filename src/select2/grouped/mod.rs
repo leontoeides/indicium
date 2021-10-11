@@ -3,7 +3,7 @@
 //! [\<optgroup\>](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/optgroup)
 //! sections.
 
-mod results;
+mod response;
 
 // -----------------------------------------------------------------------------
 

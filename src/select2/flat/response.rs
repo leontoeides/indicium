@@ -24,7 +24,7 @@ impl Request {
     /// 6. Convert the `Response` struct into `JSON` and return it to the client.
 
     #[tracing::instrument(level = "trace", name = "Build Flat Response", skip(self, search_results_keys, search_results_values))]
-    pub fn flat_results<K: Clone + Ord + ToString, S: Selectable>(
+    pub fn flat_response<K: Clone + Ord + ToString, S: Selectable>(
         &self,
         items_per_page: &Option<usize>,
         selected_record: &Option<String>,
@@ -32,7 +32,7 @@ impl Request {
         search_results_values: &[S]
     ) -> FlatResponse {
 
-
+        // Ensure that there are the same number of keys and values:
 
         if search_results_keys.len() != search_results_values.len() {
             tracing::error!(
@@ -51,21 +51,24 @@ impl Request {
             return FlatResponse::default()
         } // if
 
-
-
-
-
-
+        // The `search_select2` method will return references to the keys. The
+        // caller needs to look up the full records and return their references
+        // to this method (the `*_results` methods) because we don't necessarily
+        // know how to do this. Here, we zip the keys and records together into
+        // a tuple:
 
         let search_results: Vec<(&K, &S)> = search_results_keys
             .iter()
             .zip(search_results_values.iter())
             .collect();
 
-        // If the caller specifies a maximum number of items per page, then
-        // consider pagination turned on:
+        // Observe pagination. If the caller specifies a maximum number of items
+        // per page, then consider pagination turned on:
+
         // self.request_type == Some("query_append".to_string())
         if let Some(items_per_page) = items_per_page {
+
+            // Paginated response:
 
             // Get the `page` number from the request:
             let page: usize = self.page_number();
@@ -109,6 +112,8 @@ impl Request {
             } // FlatResponse
 
         } else {
+
+            // Unpaginated response:
 
             // This function works on the resolved output of a search, or the
             // records dumped from a key-value store:

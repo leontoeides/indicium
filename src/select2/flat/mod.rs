@@ -1,6 +1,10 @@
 //! Support for the **flat**, ungrouped `Select2` output format.
+//!
+//! What is the difference between `flat` and `grouped`? A `grouped` response
+//! means that there is support for [\<optgroup\>](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/optgroup)
+//! and `flat` means there are no support.
 
-mod results;
+mod response;
 
 // -----------------------------------------------------------------------------
 

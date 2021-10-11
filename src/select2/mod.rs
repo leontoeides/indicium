@@ -1,13 +1,61 @@
 //! Server-side support for the popular `Select2` jQuery plug-in. Select2 gives
 //! you a customizable HTML select box with support for searching, tagging,
 //! remote data sets, infinite scrolling, and many other highly used options.
+//!
+//! **The documentation for `Select2` server-side support is a bit wanting at the
+//! moment. I will continue working on improving this.**
+//!
+//! Before you begin: implement the [`Selectable`] and/or [`GroupableRecord`]
+//! traits for your `struct`.
+//!
+//! [`Selectable`]: flat/trait.Selectable.html
+//! [`GroupableRecord`]: grouped/struct.GroupableRecord.html
+//!
+//! What is the difference between `flat` and `grouped`? A `grouped` response
+//! means that there is support for
+//! [\<optgroup\>](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/optgroup)
+//! in the response, while `flat` provides no `<optgroup>` support.
+//!
+//! Steps for processing a `Select2` request:
+//!
+//! 1. Convert the query-string received from the Select2 plug-in into a
+//! [`Request`] struct. Your chosen web framework should provide some
+//! facilities for processing a query-string into a `struct`.
+//!
+//! 2. Your search index must already be initialized. Search the index using the
+//! [`search_select2`] method, supplying it with the [`Request`] struct you've
+//! built from the query-string. The `search` function will return keys as the
+//! search results.
+//!
+//! 3. If desired, filter (and further process) the search results.
+//!
+//! 4. Using the keys returned from the [`search_select2`] search, get the
+//! references to the values from your collection. This crate does not
+//! (necessarily) know how to look up values from your collection using your
+//! keys, so you must do it.
+//!
+//! 5. Use either the [`flat_response`] or [`grouped_response`] to method to
+//! produce a response for the `Select2` plug-in, providing:
+//!     * the [`Request`] struct,
+//!     * the keys from [`search_select2`],
+//!     * and the values you looked-up from your collection.
+//!
+//! [`flat_response`]: struct.Request.html#method.flat_response
+//! [`grouped_response`]: struct.Request.html#method.grouped_response
+//!
+//! 6. Depending on whether flat or grouped output was selected, convert the
+//! [`FlatResponse`] or [`GroupedResponse`] struct into `JSON` and return it to
+//! the client.
+//!
+//! [`FlatResponse`]: flat/struct.FlatResponse.html
+//! [`GroupedResponse`]: grouped/struct.GroupedResponse.html
 
 // Directories:
 pub mod flat;
 pub mod grouped;
 
 // Methods & structs:
-mod search_select2;
+pub mod search_select2;
 
 // -----------------------------------------------------------------------------
 

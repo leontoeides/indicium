@@ -2,7 +2,7 @@ use crate::select2::grouped::{Group, Groupable, GroupableRecord, GroupedResponse
 use crate::select2::{Pagination, Record, Request};
 use std::clone::Clone;
 use std::cmp::{Eq, PartialEq};
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use std::fmt::{Debug, Display};
 use std::hash::Hash;
 use std::string::ToString;
@@ -37,9 +37,7 @@ impl Request {
         search_results_values: &[G]
     ) -> GroupedResponse {
 
-
-
-
+        // Ensure that there are the same number of keys and values:
 
         if search_results_keys.len() != search_results_values.len() {
             tracing::error!(
@@ -58,24 +56,24 @@ impl Request {
             return GroupedResponse::default()
         } // if
 
-
-
-
-        // Zip keys and values together:
+        // The `search_select2` method will return references to the keys. The
+        // caller needs to look up the full records and return their references
+        // to this method (the `*_results` methods) because we don't necessarily
+        // know how to do this. Here, we zip the keys and records together into
+        // a tuple:
 
         let search_results: Vec<(&K, &G)> = search_results_keys
             .iter()
             .zip(search_results_values.iter())
             .collect();
 
+        // Observe pagination. If the caller specifies a maximum number of items
+        // per page, then consider pagination turned on:
 
-
-        // Observe pagination:
-
-        // If the caller specifies a maximum number of items per page, then
-        // consider pagination turned on:
         // self.request_type == Some("query_append".to_string())
         let groupable_results: (bool, Vec<&(&K, &G)>) = if let Some(items_per_page) = items_per_page {
+
+            // Paginated response:
 
             // Get the `page` number from the request:
             let page: usize = self.page_number();
@@ -97,6 +95,8 @@ impl Request {
 
         } else {
 
+            // Unpaginated response:
+
             // This function works on the resolved output of a search, or the
             // records dumped from a key-value store:
             let unpaginated_results: Vec<&(&K, &G)> = search_results
@@ -110,18 +110,11 @@ impl Request {
 
         }; // if
 
+        // This `BTreeMap` is used to organize the records into their groups.
+        // The `key` represents the group, and the `value` represents the
+        // records in the group:
 
-
-
-
-
-
-
-
-        // This `HashMap` is used to organize the records into their groups. The
-        // `key` represents the group, and the `value` represents the
-        // `GroupableRecord`:
-        let mut grouped_results: HashMap<String, Vec<Record>> = HashMap::new();
+        let mut grouped_results: BTreeMap<String, Vec<Record>> = BTreeMap::new();
 
         // Iterate over the results and insert them into their respective
         // groups:
@@ -130,63 +123,41 @@ impl Request {
             .iter()
             // For each record in the results:
             .for_each(|(key, value)| {
-
+                // Convert the record from a `&G` into a `GroupableRecord`:
                 let groupable_record: GroupableRecord = value.record();
-
+                // Convert the `GroupableRecord` to a `Select2` `Record`:
+                let mut record = groupable_record.to_record(key);
+                // Check if the `selected_record` was set...
+                if let Some(selected_record) = selected_record {
+                    // ...was set. Update record with comparison result and
+                    // return record:
+                    record.selected = record.id == *selected_record;
+                } // if
+                // Attempt to get mutuable reference to the group entry in
+                // the B-tree map:
                 match grouped_results.get_mut(&groupable_record.group) {
-                    // If its group exists in hash map, add record to the group:
-                    Some(group) => { group.push(groupable_record.to_record(key)) },
-                    // If group does not exist, initialize with group with this record:
-                    None => { grouped_results.insert(groupable_record.group.to_owned(), vec![groupable_record.to_record(key)]); },
+                    // If group exists in hash map, add record to the group:
+                    Some(group) => group.push(record),
+                    // If group does not exist, initialize with this record:
+                    None => { grouped_results.insert(
+                        groupable_record.group.to_owned(),
+                        vec![record]
+                    ); } // None
                 } // match
-
             }); // for_each
 
+        // Convert `BTreeMap<String, Vec<Record>>` structure used to organize
+        // records into `Vec<Group>` which will be returned as the response:
 
-
-
-
-
-
-
-
-        let mut grouped_results: Vec<Group> = grouped_results
+        let grouped_results: Vec<Group> = grouped_results
             .iter()
             .map(|(group, records)| Group {
                 text: group.to_string(),
-                children:
-                    records
-                    .iter()
-                    .cloned()
-                    // Check if this record was specified as being selected:
-                    .map(|mut record| {
-                        // Check if the `selected_record` was set...
-                        if let Some(selected_record) = selected_record {
-                            // ...was set. Update record with comparison result and
-                            // return record:
-                            record.selected = record.id == *selected_record;
-                            record
-                        } else {
-                            // ...wasn't set, return record as-is:
-                            record
-                        } // if
-                    }) // map
-                    .collect::<Vec<Record>>(),
+                children: records.to_owned(),
             }) // map
             .collect();
 
-
-
-
-
-        // The hash map would have removed any ordering of groups. Sort groups (but
-        // not the children of the groups):
-        grouped_results.sort_by(|a, b| a.text.partial_cmp(&b.text).unwrap());
-
-
-
-
-
+        // Return Select2 `GroupedResponse` to caller:
 
         GroupedResponse {
             results: grouped_results,
@@ -194,9 +165,6 @@ impl Request {
                 more: groupable_results.0,
             }, // Pagination
         } // GroupedResponse
-
-
-
 
     } // fn
 

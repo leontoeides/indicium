@@ -16,7 +16,7 @@ repository = "https://github.com/leontoeides/indicium"
 maintenance = { status = "actively-developed" }
 
 [features]
-default = [ "simple", "select2" ]
+default = [ "simple" ]
 simple = []
 select2 = [ "simple", "serde" ]
 

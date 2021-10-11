@@ -1,3 +1,5 @@
+//! `Select2` interfaces to the `simple::SearchIndex`.
+
 use crate::select2::Request;
 use crate::simple::{SearchIndex, SearchType};
 use std::hash::Hash;
