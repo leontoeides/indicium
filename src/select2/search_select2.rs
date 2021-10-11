@@ -7,8 +7,8 @@ use std::hash::Hash;
 impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
 
     /// Once the client's `Select2` query-string has been parsed into a
-    /// `Request` struct, the struct may be passed to this search interface.
-    /// This method will return all search results for the client's query.
+    /// `Request` struct, the struct may be passed to this search method. This
+    /// method will return all search results for the client's query.
     ///
     /// Steps for processing a `Select2` request:
     /// 1. Convert the query-string received from the Select2 plug-in into a `Request` struct.

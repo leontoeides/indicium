@@ -108,7 +108,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
         // For debug builds:
         #[cfg(debug_assertions)]
-        tracing::trace!("Searching for keywords: {:?}", keywords);
+        tracing::trace!("Searching: {:?}", keywords);
 
         // Pop the last keyword off the list - the keyword that we'll be
         // autocompleting:

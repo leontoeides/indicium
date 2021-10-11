@@ -111,7 +111,7 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
 
         // For debug builds:
         #[cfg(debug_assertions)]
-        tracing::trace!("Searching for keywords: {:?}", keywords);
+        tracing::trace!("Searching: {:?}", keywords);
 
         // This `BTreeMap` is used to count the number of hits for each
         // resulting key. This is so we can return search results in order of

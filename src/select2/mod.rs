@@ -98,6 +98,7 @@ pub struct Request {
 // -----------------------------------------------------------------------------
 
 impl Request {
+
     /// For some reason, `Select2` can send the user's search term in either
     /// the `term` field or in the `q` field. This convenience method checks
     /// both fields and returns the user's query term, if available.
@@ -111,6 +112,7 @@ impl Request {
             }, // None
         } // match
     } // fn
+
     /// This convenience method will return the appropriate page number for
     /// pagination.
     pub fn page_number(&self) -> usize {
@@ -124,4 +126,5 @@ impl Request {
             _ => self.page.unwrap(),
         } // match
     } // fn
+
 } // impl
