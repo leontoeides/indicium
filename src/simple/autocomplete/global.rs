@@ -107,10 +107,16 @@ impl<K: Ord> SearchIndex<K> {
         if let Some(last_keyword) = keywords.pop() {
 
             // Autocomplete the last keyword:
-            let autocompletions = self.autocomplete_keyword(
+            let autocompletions: Vec<&String> = self.autocomplete_keyword(
                 maximum_autocomplete_options,
                 &last_keyword
-            ); // autocomplete_keyword
+            ) // autocomplete_keyword
+                .iter()
+                .cloned()
+                // Only keep this autocompletion if hasn't already been used as
+                // a keyword:
+                .filter(|last_keyword| !keywords.contains(last_keyword))
+                .collect();
 
             // Push a blank placeholder onto the end of the keyword list. We
             // will be putting our autocompletions for the last keyword into

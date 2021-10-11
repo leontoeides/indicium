@@ -118,6 +118,9 @@ impl<K: Hash + Ord> SearchIndex<K> {
             // relevant autocompletions are returned:
             let autocompletions: Vec<&String> = autocompletions
                 .iter()
+                // Only keep this autocompletion if hasn't already been used as
+                // a keyword:
+                .filter(|(keyword, _keys)| !keywords.contains(keyword))
                 // Only keep this autocompletion if it contains a key that the
                 // search results contain:
                 .filter(|(_keyword, keys)|

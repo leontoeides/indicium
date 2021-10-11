@@ -1,4 +1,4 @@
-use crate::select2::groupable::{Group, Groupable, GroupableRecord, GroupedResults};
+use crate::select2::grouped::{Group, Groupable, GroupableRecord, GroupedResponse};
 use crate::select2::{Pagination, Record, Request};
 use std::clone::Clone;
 use std::cmp::{Eq, PartialEq};
@@ -11,27 +11,31 @@ use std::string::ToString;
 
 impl Request {
 
-    /// This function will not perform the `term` or `q` search in the query. Any
-    /// requested search much be performed by the caller, and the search results
-    /// can be processed into `select2` format using this function.
+    /// This function does not perform the `term` or `q` search for the client
+    /// request. The search much be performed by the caller using the
+    /// `search_select2` method. The search results are passed to this function
+    /// to build the response.
     ///
-    /// If no search is requested, the caller can pass the collection (in the form
-    /// of a slice) to this function to be processed into `select2` format.
+    /// If no search is requested, the caller can pass the entire collection (in
+    /// the form of a slice) to this function to be processed into the `Select2`
+    /// format.
     ///
-    /// 1. Convert the query-string received from Select2 into a `Request` struct.
-    /// 2. Search the index using the `search_select2` method and the `Request` struct.
-    /// 3. If desired, filter the search results.
-    /// 4. Look-up references to full records in collections from the keys returned from `search_select2` in step #2.
-    /// 5. **You are here.** Use the `results` method to produce the `Results` struct.
-    /// 6. Convert the `Results` struct into `JSON` and return it to the client.
+    /// Steps for processing a `Select2` request:
+    /// 1. Convert the query-string received from the Select2 plug-in into a `Request` struct.
+    /// 2. Search the index using the `search_select2` method, supplying it with the `Request` struct.
+    /// 3. If desired, filter (and further process) the search results.
+    /// 4. Look-up references to full records in collections using the keys returned from `search_select2` method in step #2.
+    /// 5. **You are here.** Use the `Request::results` method to produce the `Response` struct.
+    /// 6. Convert the `Response` struct into `JSON` and return it to the client.
 
-    pub fn grouped_results<K: Clone + Debug + Display + Eq + Hash + PartialEq + ToString, G: Groupable>(
+    #[tracing::instrument(level = "trace", name = "Build Grouped Response", skip(self, search_results_keys, search_results_values))]
+    pub fn grouped_response<K: Clone + Debug + Display + Eq + Hash + PartialEq + ToString, G: Groupable>(
         &self,
         items_per_page: &Option<usize>,
         selected_record: &Option<String>,
         search_results_keys: &[K],
         search_results_values: &[G]
-    ) -> GroupedResults {
+    ) -> GroupedResponse {
 
 
         // Zip keys and values together:
@@ -45,9 +49,9 @@ impl Request {
 
         // Observe pagination:
 
-        // If the caller specifies a maximum number of items per page, then consider
-        // pagination turned on:
-        // request.request_type == Some("query_append".to_string())
+        // If the caller specifies a maximum number of items per page, then
+        // consider pagination turned on:
+        // self.request_type == Some("query_append".to_string())
         let groupable_results: (bool, Vec<&(&K, &G)>) = if let Some(items_per_page) = items_per_page {
 
             // Ensure that the `page` number is set correctly before processing:
@@ -103,7 +107,8 @@ impl Request {
         // `GroupableRecord`:
         let mut grouped_results: HashMap<String, Vec<Record>> = HashMap::new();
 
-        // Iterate over the results and insert them into their respective groups:
+        // Iterate over the results and insert them into their respective
+        // groups:
         groupable_results.1
             // Iterate over the results records:
             .iter()
@@ -167,12 +172,12 @@ impl Request {
 
 
 
-        GroupedResults {
+        GroupedResponse {
             results: grouped_results,
             pagination: Pagination {
                 more: groupable_results.0,
             }, // Pagination
-        } // GroupedResults
+        } // GroupedResponse
 
 
 

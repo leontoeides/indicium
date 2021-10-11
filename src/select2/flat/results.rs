@@ -1,4 +1,4 @@
-use crate::select2::selectable::{FlatResults, Selectable};
+use crate::select2::flat::{FlatResponse, Selectable};
 use crate::select2::{Pagination, Record, Request};
 use std::clone::Clone;
 
@@ -6,47 +6,50 @@ use std::clone::Clone;
 
 impl Request {
 
-    /// This function will not perform the `term` or `q` search in the query. Any
-    /// requested search much be performed by the caller, and the search results
-    /// can be processed into `select2` format using this function.
+    /// This function does not perform the `term` or `q` search for the client
+    /// request. The search much be performed by the caller using the
+    /// `search_select2` method. The search results are passed to this function
+    /// to build the response.
     ///
-    /// If no search is requested, the caller can pass the collection (in the form
-    /// of a slice) to this function to be processed into `select2` format.
+    /// If no search is requested, the caller can pass the entire collection (in
+    /// the form of a slice) to this function to be processed into the `Select2`
+    /// format.
+    ///
     /// Steps for processing a `Select2` request:
-    ///
-    /// 1. Convert the query-string received from Select2 into a `Request` struct.
-    /// 2. Search the index using the `search_select2` method and the `Request` struct.
-    /// 3. If desired, filter the search results.
-    /// 4. Look-up references to full records in collections from the keys returned from `search_select2` in step #2.
-    /// 5. **You are here.** Use the `results` method to produce the `Results` struct.
-    /// 6. Convert the `Results` struct into `JSON` and return it to the client.
+    /// 1. Convert the query-string received from the Select2 plug-in into a `Request` struct.
+    /// 2. Search the index using the `search_select2` method, supplying it with the `Request` struct.
+    /// 3. If desired, filter (and further process) the search results.
+    /// 4. Look-up references to full records in collections using the keys returned from `search_select2` method in step #2.
+    /// 5. **You are here.** Use the `Request::results` method to produce the `Response` struct.
+    /// 6. Convert the `Response` struct into `JSON` and return it to the client.
 
+    #[tracing::instrument(level = "trace", name = "Build Flat Response", skip(self, search_results_keys, search_results_values))]
     pub fn flat_results<K: Clone + Ord + ToString, S: Selectable>(
-        request: &Request,
+        &self,
         items_per_page: &Option<usize>,
         selected_record: &Option<String>,
         search_results_keys: &[K],
         search_results_values: &[S]
-    ) -> FlatResults {
+    ) -> FlatResponse {
 
         let search_results: Vec<(&K, &S)> = search_results_keys
             .iter()
             .zip(search_results_values.iter())
             .collect();
 
-        // If the caller specifies a maximum number of items per page, then consider
-        // pagination turned on:
-        // request.request_type == Some("query_append".to_string())
+        // If the caller specifies a maximum number of items per page, then
+        // consider pagination turned on:
+        // self.request_type == Some("query_append".to_string())
         if let Some(items_per_page) = items_per_page {
 
             // Ensure that the `page` number is set correctly before processing:
-            let page = match request.page {
+            let page = match self.page {
                 // If no page number specified, assume page 1:
                 None => 1,
                 // There is no page 0. Assume caller meant page 1:
                 Some(0) => 1,
                 // Otherwise continue with caller's page number:
-                _ => request.page.unwrap(),
+                _ => self.page.unwrap(),
             }; // match
 
             // This function works on the resolved output of a search, or the
@@ -79,13 +82,13 @@ impl Request {
                 // Collect all Select2 records into a `Vec<Record>`:
                 .collect();
 
-            // Return Select2 `FlatResults` to caller:
-            FlatResults {
+            // Return Select2 `FlatResponse` to caller:
+            FlatResponse {
                 results: paginated_results,
                 pagination: Pagination {
                     more: items_per_page * page < search_results.len(),
                 }, // Pagination
-            } // FlatResults
+            } // FlatResponse
 
         } else {
 
@@ -115,11 +118,11 @@ impl Request {
                 // Collect all select2 records into a `Vec<Record>`:
                 .collect();
 
-            // Return Select2 `FlatResults` to caller:
-            FlatResults {
+            // Return Select2 `FlatResponse` to caller:
+            FlatResponse {
                 results: unpaginated_results,
                 pagination: Pagination { more: false }
-            } // FlatResults
+            } // FlatResponse
 
         } // if
 

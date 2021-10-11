@@ -129,6 +129,9 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 self.internal_autocomplete_keyword(&last_keyword)
                     // Iterate over each search result:
                     .iter()
+                    // Only keep this autocompletion if hasn't already been used
+                    // as a keyword:
+                    .filter(|(keyword, _keys)| !keywords.contains(keyword))
                     // We're not interested in the `keyword` since we're
                     // returning `&K` keys. Return only `&K` from the tuple:
                     .map(|(_keyword, keys)| *keys)
