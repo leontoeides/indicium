@@ -17,11 +17,11 @@ impl<K: Ord> SearchIndex<K> {
     /// ```rust
     /// # use indicium::simple::SearchIndex;
     /// # let mut search_index: SearchIndex<usize> = SearchIndex::default();
-    /// assert_eq!(search_index.maximum_keys_per_keyword(), 40_960);
+    /// assert_eq!(search_index.max_keys_per_keyword(), 40_960);
     /// ```
 
     #[tracing::instrument(level = "trace", name = "Get Maximum Keys Per Keyword", skip(self))]
-    pub fn maximum_keys_per_keyword(&self) -> usize {
+    pub fn max_keys_per_keyword(&self) -> usize {
         self.maximum_keys_per_keyword
     } // fn
 

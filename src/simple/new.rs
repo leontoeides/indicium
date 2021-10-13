@@ -57,6 +57,7 @@ impl<K: Ord> SearchIndex<K> {
             maximum_autocomplete_options,
             maximum_search_results,
             maximum_keys_per_keyword: 40_960,
+            dump_keyword: Some("\0".to_string()),
         } // SearchIndex
     } // fn
 

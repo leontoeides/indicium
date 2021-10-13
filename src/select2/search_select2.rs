@@ -25,7 +25,7 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
         query_term.as_ref().map(|query|
             self.search_with(
                 &SearchType::Live,
-                &self.maximum_keys_per_keyword(),
+                &self.max_keys_per_keyword(),
                 query,
             ) // search_with
         ) // query_term

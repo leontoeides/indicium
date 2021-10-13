@@ -93,7 +93,13 @@ impl<K: Clone + Ord> SearchIndex<K> {
     pub fn remove(&mut self, key: &K, value: &dyn Indexable) {
 
         // Get all keywords for the `Indexable` record:
-        let keywords = self.indexable_keywords(value);
+        let mut keywords = self.indexable_keywords(value);
+
+        // If `dump_keyword` feature is turned on, ensure that all records are
+        // detached from this special keyword:
+        if let Some(dump_keyword) = &self.dump_keyword {
+            keywords.push(dump_keyword.to_owned())
+        } // if
 
         // Iterate over the keywords:
         keywords

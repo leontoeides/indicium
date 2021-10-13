@@ -23,6 +23,7 @@ pub struct SearchIndexBuilder<K> {
     maximum_autocomplete_options: usize,
     maximum_search_results: usize,
     maximum_keys_per_keyword: usize,
+    dump_keyword: Option<String>,
 } // SearchIndexBuilder
 
 // -----------------------------------------------------------------------------
@@ -43,6 +44,7 @@ impl<K: Clone + Debug + Ord> From<SearchIndex<K>> for SearchIndexBuilder<K> {
             maximum_autocomplete_options: search_index.maximum_autocomplete_options,
             maximum_search_results: search_index.maximum_search_results,
             maximum_keys_per_keyword: search_index.maximum_keys_per_keyword,
+            dump_keyword: search_index.dump_keyword,
         } // SearchIndexBuilder
     } // fn
 } // impl
@@ -65,6 +67,7 @@ impl<K: Clone + Debug + Ord> From<&SearchIndexBuilder<K>> for SearchIndex<K> {
             maximum_autocomplete_options: search_index.maximum_autocomplete_options,
             maximum_search_results: search_index.maximum_search_results,
             maximum_keys_per_keyword: search_index.maximum_keys_per_keyword,
+            dump_keyword: search_index.dump_keyword.to_owned(),
         } // SearchIndexBuilder
     } // fn
 } // impl
@@ -151,6 +154,14 @@ impl<K: Clone + Debug + Ord> SearchIndexBuilder<K> {
     /// Maximum number of search results to return.
     pub fn max_search_results(&mut self, maximum_search_results: &usize) -> &mut Self {
         self.maximum_search_results = *maximum_search_results;
+        self
+    } // fn
+
+    /// A special keyword that will return or "dump" all keys (or records) in
+    /// the search index. This is helpful for the `Select2` module, where it
+    /// should be returning all records if the search string is empty.
+    pub fn dump_keyword(&mut self, dump_keyword: &Option<String>) -> &mut Self {
+        self.dump_keyword = dump_keyword.to_owned();
         self
     } // fn
 
