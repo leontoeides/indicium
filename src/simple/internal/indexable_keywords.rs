@@ -1,6 +1,5 @@
 use crate::simple::{Indexable, SearchIndex};
 use std::cmp::Ord;
-use std::collections::HashSet;
 
 // -----------------------------------------------------------------------------
 
@@ -15,7 +14,7 @@ impl<K: Ord> SearchIndex<K> {
     pub(crate) fn indexable_keywords(
         &self,
         value: &dyn Indexable,
-    ) -> HashSet<String> {
+    ) -> Vec<String> {
 
         // The implemented trait method `strings()` will return the strings from
         // the record that are meant to be indexed:
