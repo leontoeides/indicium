@@ -17,10 +17,10 @@ use std::string::ToString;
 
 // -----------------------------------------------------------------------------
 //
-/// For the `select2::flat` module to work with your records, you must implement
-/// this `Selectable` trait for it. The trait returns a `FlatRecord` with the
-/// content needed to make it usable and groupable for the `Select2` jQuery
-/// plug-in.
+/// For the `select2::grouped` module to work with your records, you must
+/// implement this `Groupable` trait for it. The trait returns
+/// `GroupableRecord` which contains the information needed to make it usable
+/// and groupable for the `Select2` jQuery plug-in.
 ///
 /// When options are to be generated in `<optgroup>` sections, options should be
 /// nested under the `children` key of each group object. The label for the

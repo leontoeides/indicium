@@ -37,11 +37,11 @@
 ///
 /// If you would like to categorize or classify your records, you could employ
 /// [hash tags](https://en.wikipedia.org/wiki/Hashtag). The purpose of the
-/// _hash tag_ is to prevent category name collisions with user-space keywords.
-/// Of course, consider using another symbol if the hash symbol (`#`) is
-/// anticipated to be in the user-space.
+/// _hash tag_ is to prevent metadata or category name collisions with
+/// user-space keywords. Of course, consider using another symbol if the hash
+/// symbol (`#`) is anticipated to be in the user-space.
 ///
-/// You could preprend the user's search query with hash tag(s). For example:
+/// You could prepend the user's search query with hash tag(s). For example:
 /// you could categorize cities as American by returning the `#US` keyword for
 /// them from your `Indexable` trait. Then, if a user intends to search for
 /// cities in United States, your application could quietly prepend the user's

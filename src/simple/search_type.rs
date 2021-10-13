@@ -22,7 +22,8 @@ pub enum SearchType {
     /// simple, and data-sets are quite small.
     ///
     /// You may change & control the ordering of your records by manually
-    /// implementing the `Ord` trait for your `K` key.
+    /// implementing the [Ord](https://doc.rust-lang.org/std/cmp/trait.Ord.html)
+    /// trait for your `K` key.
     ///
     /// Probably best suited in a form widget.
     Keyword,
@@ -38,7 +39,8 @@ pub enum SearchType {
     /// record for it to be returned as a result.
     ///
     /// You may change & control the ordering of your records by manually
-    /// implementing the `Ord` trait for your `K` key.
+    /// implementing the [Ord](https://doc.rust-lang.org/std/cmp/trait.Ord.html)
+    /// trait for your `K` key.
     ///
     /// This conjuction uses the most CPU resources because the search results
     /// must be gathered for several autocompletion options.
@@ -54,7 +56,8 @@ pub enum SearchType {
     /// record for it to be returned as a result.
     ///
     /// You may change & control the ordering of your records by manually
-    /// implementing the `Ord` trait for your `K` key.
+    /// implementing the [Ord](https://doc.rust-lang.org/std/cmp/trait.Ord.html)
+    /// trait for your `K` key.
     ///
     /// This conjuction uses less CPU resources than `Or`.
     ///

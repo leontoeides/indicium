@@ -1,44 +1,47 @@
-//! Server-side support for the popular `Select2` jQuery plug-in. Select2 gives
-//! you a customizable HTML select box with support for searching, tagging,
-//! remote data sets, infinite scrolling, and many other highly used options.
+//! Server-side support for the popular
+//! [Select2](https://select2.org/) jQuery plug-in. Select2 gives you a
+//! customizable
+//! [HTML \<select\> box](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select)
+//! with support for searching, tagging, remote data sets, infinite scrolling,
+//! and many other highly used options.
 //!
-//! **The documentation for `Select2` server-side support is a bit wanting at the
-//! moment. I will continue working on improving this.**
+//! **The documentation for Select2 server-side support is a bit wanting at
+//! the moment. I will continue working on improving this.**
 //!
-//! Before you begin: implement the [`Selectable`] and/or [`GroupableRecord`]
+//! Before you begin: implement the [`Selectable`] and/or [`Groupable`]
 //! traits for your `struct`.
 //!
 //! [`Selectable`]: flat/trait.Selectable.html
-//! [`GroupableRecord`]: grouped/struct.GroupableRecord.html
+//! [`Groupable`]: grouped/trait.Groupable.html
 //!
-//! What is the difference between `flat` and `grouped`? A `grouped` response
-//! means that there is support for
+//! What is the difference between `flat` response and `grouped` response? A
+//! `grouped` response means that there is support for
 //! [\<optgroup\>](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/optgroup)
 //! in the response, while `flat` provides no `<optgroup>` support.
 //!
-//! Steps for processing a `Select2` request:
+//! Steps for processing a Select2 request:
 //!
-//! 1. Convert the query-string received from the Select2 plug-in into a
-//! [`Request`] struct. Your chosen web framework should provide some
+//! 1. Setup a route to your Select2 server in your Rust web framework. In your
+//! route function, convert the query-string received from the Select2 plug-in
+//! into a [`Request`] struct. Your chosen web framework should provide some
 //! facilities for processing a query-string into a `struct`.
 //!
 //! 2. Your search index must already be initialized. Search the index using the
-//! [`search_select2`] method, supplying it with the [`Request`] struct you've
-//! built from the query-string. The `search` function will return keys as the
+//! [`search_select2`] method, supplying it with the `Request` struct you've
+//! built from the query-string. This search function will return keys as the
 //! search results.
 //!
 //! 3. If desired, filter (and further process) the search results.
 //!
-//! 4. Using the keys returned from the [`search_select2`] search, get the
-//! references to the values from your collection. This crate does not
-//! (necessarily) know how to look up values from your collection using your
-//! keys, so you must do it.
+//! 4. Using the keys returned from the `search_select2` search, get the values
+//! from your collection. This crate does not know how to look up values from
+//! your collection, so you must get them.
 //!
-//! 5. Use either the [`flat_response`] or [`grouped_response`] to method to
-//! produce a response for the `Select2` plug-in, providing:
-//!     * the [`Request`] struct,
-//!     * the keys from [`search_select2`],
-//!     * and the values you looked-up from your collection.
+//! 5. Use either the [`flat_response`] or [`grouped_response`] method to
+//! produce a response for the Select2 plug-in, providing:
+//!     * the `Request` struct _in step #1_,
+//!     * the keys from `search_select2` _in step #2_,
+//!     * and the values you got from your collection _in step #4_,
 //!
 //! [`flat_response`]: struct.Request.html#method.flat_response
 //! [`grouped_response`]: struct.Request.html#method.grouped_response
@@ -114,14 +117,6 @@ pub struct Record {
 //
 /// Your web application will receive a query-string from the Select2 plug-in
 /// that need to be parsed into this `Request` struct.
-///
-/// Steps for processing a `Select2` request:
-/// 1. **You are here.** Convert the query-string received from the Select2 plug-in into a `Request` struct.
-/// 2. Search the index using the `search_select2` method, supplying it with the `Request` struct.
-/// 3. If desired, filter (and further process) the search results.
-/// 4. Look-up references to full records in collections using the keys returned from `search_select2` method in step #2.
-/// 5. Use the `Request::results` method to produce the `Response` struct.
-/// 6. Convert the `Response` struct into `JSON` and return it to the client.
 ///
 /// Select2 will issue a request to the specified URL when the user opens the
 /// control (unless there is a `minimumInputLength` set as a Select2 option),

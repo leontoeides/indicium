@@ -11,28 +11,50 @@ impl<K: Ord> Default for SearchIndex<K> {
         Self::new(
             SearchType::Or,                 // Search type.
             AutocompleteType::Context,      // Autocompletion type.
-            Some(vec![                      // Default split pattern.
-                ' ',
-                '\n',
-                '\r',
-                '\t',
+            // Default split pattern:
+            Some(vec![
+                '\t',                       // Tab
+                '\n',                       // Newline
+                '\r',                       // Carriage return
+                ' ',                        // Space
+                '!',
+                '"',                        // Double quotation
+                '#',
+                '$',
+                '%',
+                '&',
                 '(',
                 ')',
+                '*',
+                '+',
                 ',',
                 '-',
                 '.',
                 '/',
+                ':',
+                ';',
                 '<',
+                '=',
                 '>',
+                '?',
+                '@',
                 '[',
-                '\\',
+                '\'',                       // Single quotation or apostrophe
+                '\\',                       // Backslash
                 ']',
+                '^',
+                '`',
+                '{',
+                '|',
+                '}',
+                '~',
             ]),
             false,                          // Case sensitive?
             1,                              // Minimum keyword length (in chars or codepoints.)
             24,                             // Maximum keyword length (in chars or codepoints.)
             Some(24),                       // Maximum text length (in chars or codepoints.)
-            Some(vec![                      // Default keywords to be excluded.
+            // Default keywords to be excluded:
+            Some(vec![
                 // Some English:
                 "a".to_string(),
                 "an".to_string(),

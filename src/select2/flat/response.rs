@@ -14,14 +14,6 @@ impl Request {
     /// If no search is requested, the caller can pass the entire collection (in
     /// the form of a slice) to this function to be processed into the `Select2`
     /// format.
-    ///
-    /// Steps for processing a `Select2` request:
-    /// 1. Convert the query-string received from the Select2 plug-in into a `Request` struct.
-    /// 2. Search the index using the `search_select2` method, supplying it with the `Request` struct.
-    /// 3. If desired, filter (and further process) the search results.
-    /// 4. Look-up references to full records in collections using the keys returned from `search_select2` method in step #2.
-    /// 5. **You are here.** Use the `Request::results` method to produce the `Response` struct.
-    /// 6. Convert the `Response` struct into `JSON` and return it to the client.
 
     #[tracing::instrument(level = "trace", name = "Build Flat Response", skip(self, search_results_keys, search_results_values))]
     pub fn flat_response<K: Clone + Ord + ToString, S: Selectable>(
