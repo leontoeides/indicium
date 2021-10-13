@@ -19,8 +19,6 @@ impl<K: Ord> Default for SearchIndex<K> {
                 ' ',                        // Space
                 '!',
                 '"',                        // Double quotation
-                '$',
-                '%',
                 '&',
                 '(',
                 ')',
