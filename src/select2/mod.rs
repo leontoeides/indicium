@@ -140,21 +140,30 @@ pub struct Request {
 
 // -----------------------------------------------------------------------------
 
-impl Request {
+impl<'a> Request {
 
     /// For some reason, `Select2` can send the user's search term in either
     /// the `term` field or in the `q` field. This convenience method checks
     /// both fields and returns the user's query term, if available.
-    pub fn query_term(&self) -> Option<&String> {
+    pub fn query_term(&'a self, dump_keyword: &'a Option<String>) -> Option<&'a String> {
         // Get query (search term) if any:
         match &self.q {
             Some(_q) => self.q.as_ref(),
             None => match &self.term {
                 Some(_term) => self.term.as_ref(),
-                None => None,
+                None => match dump_keyword {
+                    Some(dump_keyword) => Some(dump_keyword),
+                    None => None,
+                }, // None
             }, // None
         } // match
     } // fn
+
+} // impl
+
+// -----------------------------------------------------------------------------
+
+impl Request {
 
     /// This convenience method will return the appropriate page number for
     /// pagination.

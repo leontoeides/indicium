@@ -42,8 +42,8 @@ pub struct SearchIndex<K: Ord> {
     /// setting limits the number of keys that may be attached to a keyword. See
     /// also: the `exclude_keywords` list and the `profile` method.
     pub(crate) maximum_keys_per_keyword: usize,
-    /// A special keyword that will return or "dump" all keys (or records) in
-    /// the search index. This is helpful for the `Select2` module, where it
-    /// should be returning all records if the search string is empty.
+    /// A special keyword that will return (or "dump") all keys (or records) in
+    /// the search index. It should be made so that it's difficult or impossible
+    /// for a user inadvertently trigger this behaviour.
     pub(crate) dump_keyword: Option<String>,
 } // SearchIndex

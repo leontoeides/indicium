@@ -25,7 +25,7 @@ impl Request {
         &self,
         items_per_page: &Option<usize>,
         selected_record: &Option<String>,
-        search_results_keys: &[K],
+        search_results_keys: &[&K],
         search_results_values: &[G]
     ) -> GroupedResponse {
 
@@ -56,6 +56,7 @@ impl Request {
 
         let search_results: Vec<(&K, &G)> = search_results_keys
             .iter()
+            .cloned()
             .zip(search_results_values.iter())
             .collect();
 

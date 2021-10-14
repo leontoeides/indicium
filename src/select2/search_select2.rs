@@ -16,19 +16,28 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
     pub fn search_select2(
         &'a self,
         request: &'a Request,
-    ) -> Option<Vec<&'a K>> {
+    ) -> Vec<&'a K> {
 
-        // Get query (search term) if any:
-        let query_term: Option<&String> = request.query_term();
+        // Get query (or "search term"), if any:
+        let query_term: Option<&String> = request.query_term(&self.dump_keyword);
 
-        // Search index for query/term:
-        query_term.as_ref().map(|query|
+        println!("Query: {:#?}", &query_term);
+
+        if let Some(query_term) = query_term {
+
+            // If valid query provided, perform search of index:
             self.search_with(
                 &SearchType::Live,
                 &self.max_keys_per_keyword(),
-                query,
+                query_term,
             ) // search_with
-        ) // query_term
+
+        } else {
+
+            // If no query (or "search term"), then return empty results:
+            Vec::new()
+
+        } // if
 
     } // fn
 

@@ -151,17 +151,20 @@ impl<K: Clone + Ord> SearchIndex<K> {
                     // for this record to _keyword entry_:
                     Some(keys) => {
                         // Check if the maximum number of keys per keyword
-                        // (records per keyword) limit has been reached:
-                        if keys.len() < self.maximum_keys_per_keyword {
+                        // (records per keyword) limit has been reached. Note
+                        // that the `dump_keyword` does not observe this
+                        // limit.
+                        if keys.len() < self.maximum_keys_per_keyword
+                            || self.dump_keyword == Some(keyword.to_string()) {
                             // If it hasn't, insert the key (record) into the
                             // list:
                             keys.insert(key.clone());
                         } else {
                             // If the limit has been reached, do not insert.
-                            // Display warning for debug builds:
+                            // Display warning for debug builds.
                             #[cfg(debug_assertions)]
                             tracing::warn!(
-                                "Internal table limit of {} keys per keyword has been reached. \
+                                "Internal table limit of {} keys per keyword has been reached on insert. \
                                 Record was not attached to `{}` keyword. \
                                 This will impact accuracy of results. \
                                 For this data set, consider using a more comprehensive search solution like MeiliSearch.",

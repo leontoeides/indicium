@@ -41,7 +41,7 @@ impl<K: Ord> SearchIndex<K> {
         #[cfg(debug_assertions)]
         if autocomplete_options.len() >= self.maximum_keys_per_keyword {
             tracing::warn!(
-                "Internal table limit of {} keywords has been exceeded. \
+                "Internal table limit of {} keywords has been exceeded on autocomplete. \
                 Data has been dropped. \
                 This will impact accuracy of results. \
                 For this data set, consider using a more comprehensive search solution like MeiliSearch.",

@@ -52,7 +52,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
         #[cfg(debug_assertions)]
         if search_results.len() >= self.maximum_keys_per_keyword {
             tracing::warn!(
-                "Internal table limit of {} results has been exceeded. \
+                "Internal table limit of {} results has been exceeded on search. \
                 Data has been dropped. \
                 This will impact accuracy of results. \
                 For this data set, consider using a more comprehensive search solution like MeiliSearch.",
