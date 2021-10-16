@@ -2,7 +2,6 @@ use crate::simple::{AutocompleteType, SearchIndex, SearchType};
 use std::clone::Clone;
 use std::cmp::Ord;
 use std::collections::{BTreeMap, BTreeSet};
-use std::fmt::Debug;
 
 // -----------------------------------------------------------------------------
 //
@@ -28,7 +27,7 @@ pub struct SearchIndexBuilder<K> {
 
 // -----------------------------------------------------------------------------
 
-impl<K: Clone + Debug + Ord> From<SearchIndex<K>> for SearchIndexBuilder<K> {
+impl<K: Clone + Ord> From<SearchIndex<K>> for SearchIndexBuilder<K> {
     /// Convert to `SearchIndexBuilder<K>` struct from `SearchIndex<K>` struct.
     fn from(search_index: SearchIndex<K>) -> Self {
         SearchIndexBuilder {
@@ -51,7 +50,7 @@ impl<K: Clone + Debug + Ord> From<SearchIndex<K>> for SearchIndexBuilder<K> {
 
 // -----------------------------------------------------------------------------
 
-impl<K: Clone + Debug + Ord> From<&SearchIndexBuilder<K>> for SearchIndex<K> {
+impl<K: Clone + Ord> From<&SearchIndexBuilder<K>> for SearchIndex<K> {
     /// Convert to `SearchIndex<K>` struct from `SearchIndexBuilder<K>` struct.
     fn from(search_index: &SearchIndexBuilder<K>) -> Self {
         SearchIndex {
@@ -74,7 +73,7 @@ impl<K: Clone + Debug + Ord> From<&SearchIndexBuilder<K>> for SearchIndex<K> {
 
 // -----------------------------------------------------------------------------
 
-impl<K: Clone + Debug + Ord> SearchIndexBuilder<K> {
+impl<K: Clone + Ord> SearchIndexBuilder<K> {
 
     /// Initialize `SearchIndexBuilder` with default settings.
     pub fn default() -> Self {

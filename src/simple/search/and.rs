@@ -102,7 +102,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
         // Split search `String` into keywords (according to the `SearchIndex`
         // settings). `string_keywords` will **not** allow "use entire string as
         // a keyword," even if enabled in user settings:
-        let keywords: Vec<String> = self.string_keywords(string, false);
+        let keywords: Vec<String> = self.string_keywords(string, true);
 
         // For debug builds:
         #[cfg(debug_assertions)]

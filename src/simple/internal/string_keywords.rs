@@ -88,8 +88,10 @@ impl<K: Ord> SearchIndex<K> {
             // Only keep the string if 1) we're using whole strings as keywords,
             // 2) it's shorter than the maximum, and 3) the keyword is not in
             // the exclusion list:
+            let chars = string.chars().count();
             if  use_string_as_keyword &&
-                string.chars().count() <= maximum_string_length &&
+                chars >= self.minimum_keyword_length &&
+                chars <= maximum_string_length &&
                 !exclude_keyword(&string, &self.exclude_keywords) {
                 // Add field text / entire string to the keyword `Vec`:
                 keywords.push(string);

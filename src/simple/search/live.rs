@@ -104,11 +104,13 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
         // Split search `String` into keywords according to the `SearchIndex`
         // settings. Force "use entire string as a keyword" option off:
-        let mut keywords: Vec<String> = self.string_keywords(string, false);
+        let mut keywords: Vec<String> = self.string_keywords(string, true);
 
         // For debug builds:
         #[cfg(debug_assertions)]
         tracing::trace!("Searching: {:?}", keywords);
+
+        println!("Searching: {:?}", keywords);
 
         // Pop the last keyword off the list - the keyword that we'll be
         // autocompleting:

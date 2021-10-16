@@ -21,8 +21,6 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
         // Get query (or "search term"), if any:
         let query_term: Option<&String> = request.query_term(&self.dump_keyword);
 
-        println!("Query: {:#?}", &query_term);
-
         if let Some(query_term) = query_term {
 
             // If valid query provided, perform search of index:
