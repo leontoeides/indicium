@@ -1,7 +1,7 @@
 use crate::simple::{indexable::Indexable, search_index::SearchIndex};
 use std::clone::Clone;
 use std::cmp::Ord;
-use std::collections::BTreeSet;
+use std::collections::{BTreeSet, HashSet};
 
 // -----------------------------------------------------------------------------
 
@@ -131,12 +131,12 @@ impl<K: Clone + Ord> SearchIndex<K> {
     pub fn insert(&mut self, key: &K, value: &dyn Indexable) {
 
         // Get all keywords for the `Indexable` record:
-        let mut keywords: Vec<String> = self.indexable_keywords(value);
+        let mut keywords: HashSet<String> = self.indexable_keywords(value);
 
         // If `dump_keyword` feature is turned on, ensure that all records are
         // attached to this special keyword:
         if let Some(dump_keyword) = &self.dump_keyword {
-            keywords.push(dump_keyword.to_owned())
+            keywords.insert(dump_keyword.to_owned());
         } // if
 
         // Iterate over the keywords:

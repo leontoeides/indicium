@@ -34,7 +34,6 @@ impl<K: Ord> Default for SearchIndex<K> {
                 '=',
                 '>',
                 '?',
-                '@',
                 '[',
                 '\'',                       // Single quotation or apostrophe
                 '\\',                       // Backslash

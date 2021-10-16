@@ -157,6 +157,15 @@ impl<K: Clone + Debug + Ord> SearchIndexBuilder<K> {
         self
     } // fn
 
+    /// Maximum number of keys per keyword. If there are too many records
+    /// attached to a single keyword, performance can begin to degrade. This
+    /// setting limits the number of keys that may be attached to a keyword. See
+    /// also: the `exclude_keywords` list and the `profile` method.
+    pub fn max_keys_per_keyword(&mut self, maximum_keys_per_keyword: &usize) -> &mut Self {
+        self.maximum_keys_per_keyword = *maximum_keys_per_keyword;
+        self
+    } // fn
+
     /// A special keyword that will return or "dump" all keys (or records) in
     /// the search index. This is helpful for the `Select2` module, where it
     /// should be returning all records if the search string is empty.
