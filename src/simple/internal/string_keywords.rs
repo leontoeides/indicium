@@ -36,7 +36,7 @@ impl<K: Ord> SearchIndex<K> {
     /// An associated helper method that splits a `&str` into keywords using a
     /// split pattern (`Vec<char>`). This method will also perform case
     /// conversion if necessary, and filter-out keywords that don't meet the
-    /// defined length constraints.
+    /// defined length restrictions.
 
     pub(crate) fn string_keywords(
         &self,
@@ -83,7 +83,7 @@ impl<K: Ord> SearchIndex<K> {
         };
 
         // If the option is enabled, store the field text / entire string itself
-        // as a keyword. This feature is for autocompletion purposes:
+        // as a keyword. This feature is primarily for autocompletion purposes:
         if let Some(maximum_string_length) = self.maximum_string_length {
             // Only keep the string if 1) we're using whole strings as keywords,
             // 2) it's shorter than the maximum, and 3) the keyword is not in
