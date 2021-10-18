@@ -10,6 +10,9 @@
 //!
 //! # What's New?
 //!
+//! * `0.3.2`: Fixed issue with search indexes that do not use keyword
+//! splitting.
+//!
 //! * `0.3.1`: Autocomplete no longer offers previously used keywords as
 //! options.
 //!
