@@ -32,13 +32,27 @@ impl<K: Ord> SearchIndex<K> {
     /// element, and potentially many other things.
     ///
     /// ```rust
-    /// # use indicium::simple::SearchIndex;
+    /// # use indicium::simple::{AutocompleteType, Indexable, SearchIndex, SearchIndexBuilder};
     /// #
     /// # let mut search_index: SearchIndex<usize> =
     /// #     SearchIndexBuilder::default()
     /// #         .autocomplete_type(&AutocompleteType::Global)
     /// #         .exclude_keywords(&None)
     /// #         .build();
+    /// #
+    /// # struct MyType { text: String }
+    /// #
+    /// # impl From<&str> for MyType {
+    /// #   fn from(string: &str) -> Self {
+    /// #       MyType { text: string.to_string() }
+    /// #   }
+    /// # }
+    /// #
+    /// # impl Indexable for MyType {
+    /// #   fn strings(&self) -> Vec<String> {
+    /// #       vec![self.text.clone()]
+    /// #   }
+    /// # }
     /// #
     /// # search_index.insert(&0, &MyType::from("apple"));
     /// # search_index.insert(&1, &MyType::from("ball"));
@@ -48,10 +62,12 @@ impl<K: Ord> SearchIndex<K> {
     /// # search_index.insert(&5, &MyType::from("red"));
     /// # search_index.insert(&6, &MyType::from("truck"));
     /// #
-    /// assert_eq!(
-    ///     search_index.search(search_index.dump_keyword()).len(),
-    ///     7
-    /// );
+    /// if let Some(dump_keyword) = search_index.dump_keyword() {
+    ///     assert_eq!(
+    ///         search_index.search(&dump_keyword).len(),
+    ///         7
+    ///     );
+    /// }
     /// ```
 
     #[tracing::instrument(level = "trace", name = "Get Dump Keyword", skip(self))]
