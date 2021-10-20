@@ -7,12 +7,11 @@ mod or;
 
 use crate::simple::{SearchIndex, SearchType};
 use std::cmp::Ord;
-use std::fmt::Debug;
 use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<'a, K: 'a + Debug + Hash + Ord> SearchIndex<K> {
+impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //

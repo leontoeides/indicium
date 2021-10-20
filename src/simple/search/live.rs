@@ -2,12 +2,11 @@ use crate::simple::internal::string_keywords::SplitContext;
 use crate::simple::SearchIndex;
 use std::cmp::Ord;
 use std::collections::BTreeSet;
-use std::fmt::Debug;
 use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Debug + Hash + Ord> SearchIndex<K> {
+impl<K: Hash + Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
