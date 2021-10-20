@@ -98,26 +98,29 @@ impl<K: Ord> SearchIndex<K> {
             Vec::new()
         };
 
-        // If the option is enabled, store the field text / entire string itself
-        // as a keyword. This feature is primarily for autocompletion purposes:
-        if let Some(maximum_string_length) = self.maximum_string_length {
+        // * For searching: return the whole string as the search keyword if
+        // keyword splitting is turned off / no split pattern is defined.
+        //
+        // * For indexing: if the option is enabled, store the field text /
+        // entire string itself as a keyword. This feature is primarily for
+        // autocompletion purposes.
+
+        // If we're searching, keep the whole string if there is no split
+        // pattern defined. We'll search by the whole search string without
+        // any keyword splitting:
+        if context == SplitContext::Searching && self.split_pattern == None {
+            keywords = vec![string]
+        // If we're indexing, only keep the whole string if it meets the keyword
+        // criteria: 1) we're using whole strings as keywords, 2) it's shorter
+        // than the maximum, and 3) the keyword is not in the exclusion list.
+        } else if let Some(maximum_string_length) = self.maximum_string_length {
             let chars = string.chars().count();
-            // If we're searching, keep the whole string if there is no split
-            // pattern defined. We'll search by the whole search string without
-            // any keyword splitting:
-            if          context == SplitContext::Searching &&
-                        self.split_pattern == None {
-                keywords = vec![string]
-            // If we're indexing, only keep the whole string if it meets the
-            // keyword criteria: 1) we're using whole strings as keywords, 2)
-            // it's shorter than the maximum, and 3) the keyword is not in the
-            // exclusion list.
-            } else if   context == SplitContext::Indexing &&
-                        chars >= self.minimum_keyword_length &&
-                        chars <= maximum_string_length &&
-                        !exclude_keyword(&string, &self.exclude_keywords) {
-                // Add field text / entire string to the keyword `Vec`:
-                keywords.push(string)
+            if  context == SplitContext::Indexing &&
+                chars >= self.minimum_keyword_length &&
+                chars <= maximum_string_length &&
+                !exclude_keyword(&string, &self.exclude_keywords) {
+                    // Add field text / entire string to the keyword `Vec`:
+                    keywords.push(string)
             } // if
         } // if
 

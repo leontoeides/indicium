@@ -1,6 +1,6 @@
 [package]
 name = "indicium"
-version = "0.3.3"
+version = "0.3.4"
 authors = ["Dylan Bowker <dylan.bowker@arkiteq.ca>"]
 edition = "2018"
 categories = [ "database-implementations" ]
@@ -16,7 +16,7 @@ repository = "https://github.com/leontoeides/indicium"
 maintenance = { status = "actively-developed" }
 
 [features]
-default = [ "simple" ]
+default = [ "simple", "select2" ]
 simple = []
 select2 = [ "simple", "serde" ]
 
