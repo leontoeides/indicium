@@ -2,11 +2,12 @@
 
 use crate::select2::Request;
 use crate::simple::{SearchIndex, SearchType};
+use std::fmt::Debug;
 use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
+impl<'a, K: 'a + Debug + Hash + Ord> SearchIndex<K> {
 
     /// Once the client's `Select2` query-string has been parsed into a
     /// `Request` struct, the struct may be passed to this search method. This

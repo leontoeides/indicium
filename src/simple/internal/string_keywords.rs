@@ -3,6 +3,22 @@ use std::cmp::Ord;
 
 // -----------------------------------------------------------------------------
 //
+/// When a string is passed to the `string_keywords` function, the intended use
+/// for the keywords changes how the keywords are split & processed. The results
+/// of splitting a string for `Indexing` may differ from splitting a string for
+/// `Searching`. (In particular when no split-pattern has been defined.)
+
+#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub(crate) enum SplitContext {
+    /// The intended use for the split keywords is for indexing:
+    Indexing,
+    /// The intended use for the split keywords is to be used for searching or
+    /// autocompletion:
+    Searching,
+}
+
+// -----------------------------------------------------------------------------
+//
 /// Function will check if the provided keyword is in the list of excluded
 /// keywords. If it is, function will return `true`. If there are no excluded
 /// keywords, function will always return `false`.
@@ -41,7 +57,7 @@ impl<K: Ord> SearchIndex<K> {
     pub(crate) fn string_keywords(
         &self,
         string: &str,
-        use_string_as_keyword: bool,
+        context: SplitContext,
     ) -> Vec<String> {
 
         // If case sensitivity set, leave case intact. Otherwise, normalize the
@@ -85,16 +101,23 @@ impl<K: Ord> SearchIndex<K> {
         // If the option is enabled, store the field text / entire string itself
         // as a keyword. This feature is primarily for autocompletion purposes:
         if let Some(maximum_string_length) = self.maximum_string_length {
-            // Only keep the string if 1) we're using whole strings as keywords,
-            // 2) it's shorter than the maximum, and 3) the keyword is not in
-            // the exclusion list:
             let chars = string.chars().count();
-            if  use_string_as_keyword &&
-                chars >= self.minimum_keyword_length &&
-                chars <= maximum_string_length &&
-                !exclude_keyword(&string, &self.exclude_keywords) {
+            // If we're searching, keep the whole string if there is no split
+            // pattern defined. We'll search by the whole search string without
+            // any keyword splitting:
+            if          context == SplitContext::Searching &&
+                        self.split_pattern == None {
+                keywords = vec![string]
+            // If we're indexing, only keep the whole string if it meets the
+            // keyword criteria: 1) we're using whole strings as keywords, 2)
+            // it's shorter than the maximum, and 3) the keyword is not in the
+            // exclusion list.
+            } else if   context == SplitContext::Indexing &&
+                        chars >= self.minimum_keyword_length &&
+                        chars <= maximum_string_length &&
+                        !exclude_keyword(&string, &self.exclude_keywords) {
                 // Add field text / entire string to the keyword `Vec`:
-                keywords.push(string);
+                keywords.push(string)
             } // if
         } // if
 

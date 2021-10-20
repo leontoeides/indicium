@@ -1,11 +1,13 @@
+use crate::simple::internal::string_keywords::SplitContext;
 use crate::simple::SearchIndex;
 use std::cmp::Ord;
 use std::collections::BTreeSet;
+use std::fmt::Debug;
 use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Hash + Ord> SearchIndex<K> {
+impl<K: Debug + Hash + Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
@@ -104,7 +106,10 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
         // Split search `String` into keywords according to the `SearchIndex`
         // settings. Force "use entire string as a keyword" option off:
-        let mut keywords: Vec<String> = self.string_keywords(string, true);
+        let mut keywords: Vec<String> = self.string_keywords(
+            string,
+            SplitContext::Searching,
+        );
 
         // For debug builds:
         #[cfg(debug_assertions)]
@@ -130,6 +135,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
                     // Collect serach results into our `BTreeSet`:
                     .collect();
 
+            println!("Search results: {:#?}", search_results);
+
             // Get all autocomplete options for the last keyword and its keys:
             let autocomplete_options: BTreeSet<&BTreeSet<K>> =
                 self.internal_autocomplete_keyword(&last_keyword)
@@ -143,6 +150,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
                     .map(|(_keyword, keys)| *keys)
                     // Collect search results from each autocomplete option:
                     .collect();
+
+            println!("Autcomplete optiosn: {:#?}", autocomplete_options);
 
             // How we combine `search_results` and `autocomplete_options`
             // together depends on how many keywords there are in the search

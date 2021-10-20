@@ -1,3 +1,4 @@
+use crate::simple::internal::string_keywords::SplitContext;
 use crate::simple::{Indexable, SearchIndex};
 use std::cmp::Ord;
 use std::collections::HashSet;
@@ -28,7 +29,7 @@ impl<K: Ord> SearchIndex<K> {
             // Split each `String` into keywords according to the `SearchIndex`
             // settings. Note that `string_keywords` will allow "use entire
             // string as a keyword" if enabled in user settings:
-            .map(|string| self.string_keywords(string, true))
+            .map(|string| self.string_keywords(string, SplitContext::Indexing))
             // Flatten the string's keywords:
             .flatten()
             // Collect all keywords into a `Vec`:

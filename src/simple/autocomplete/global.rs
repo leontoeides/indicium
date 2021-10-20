@@ -1,3 +1,4 @@
+use crate::simple::internal::string_keywords::SplitContext;
 use crate::simple::search_index::SearchIndex;
 use std::cmp::Ord;
 
@@ -100,7 +101,10 @@ impl<K: Ord> SearchIndex<K> {
 
         // Split search `String` into keywords according to the `SearchIndex`
         // settings. Force "use entire string as a keyword" option off:
-        let mut keywords: Vec<String> = self.string_keywords(string, false);
+        let mut keywords: Vec<String> = self.string_keywords(
+            string,
+            SplitContext::Searching,
+        );
 
         // For debug builds:
         #[cfg(debug_assertions)]

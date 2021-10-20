@@ -1,11 +1,13 @@
+use crate::simple::internal::string_keywords::SplitContext;
 use crate::simple::search_index::SearchIndex;
 use std::cmp::Ord;
 use std::collections::HashSet;
+use std::fmt::Debug;
 use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Hash + Ord> SearchIndex<K> {
+impl<K: Debug + Hash + Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
@@ -102,11 +104,18 @@ impl<K: Hash + Ord> SearchIndex<K> {
         // Split search `String` into keywords (according to the `SearchIndex`
         // settings). `string_keywords` will **not** allow "use entire string as
         // a keyword," even if enabled in user settings:
-        let keywords: Vec<String> = self.string_keywords(string, true);
+        let keywords: Vec<String> = self.string_keywords(
+            string,
+            SplitContext::Searching,
+        );
 
         // For debug builds:
         #[cfg(debug_assertions)]
         tracing::trace!("Searching: {:?}", keywords);
+
+
+
+        println!("Keywords: {:?}", keywords);
 
         // This `BTreeSet` is used to contain the search results:
         let mut search_results: Option<HashSet<&K>> = None;
@@ -121,6 +130,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
                 // Search for keyword in our `BTreeMap`:
                 let keyword_results = self.internal_keyword_search(keyword);
+
+                println!("Keyword Results: {:#?}", keyword_results);
 
                 // Update `search_results` with product of `intersection`:
                 search_results = Some(
@@ -151,6 +162,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
                         None => keyword_results,
                     } // match
                 ); // Some
+
+                println!("Intersection Results: {:#?}", search_results);
 
             }); // for_each
 
