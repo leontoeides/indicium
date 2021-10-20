@@ -10,9 +10,9 @@ use std::cmp::Ord;
 
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub(crate) enum SplitContext {
-    /// The intended use for the split keywords is for indexing:
+    /// The intended use for split keywords is for indexing:
     Indexing,
-    /// The intended use for the split keywords is to be used for searching or
+    /// The intended use for split keywords is to be used for searching or
     /// autocompletion:
     Searching,
 }
