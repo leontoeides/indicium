@@ -115,8 +115,6 @@ impl<K: Debug + Hash + Ord> SearchIndex<K> {
         #[cfg(debug_assertions)]
         tracing::trace!("Searching: {:?}", keywords);
 
-        println!("Searching: {:?}", keywords);
-
         // Pop the last keyword off the list - the keyword that we'll be
         // autocompleting:
         if let Some(last_keyword) = keywords.pop() {
@@ -135,8 +133,6 @@ impl<K: Debug + Hash + Ord> SearchIndex<K> {
                     // Collect serach results into our `BTreeSet`:
                     .collect();
 
-            println!("Search results: {:#?}", search_results);
-
             // Get all autocomplete options for the last keyword and its keys:
             let autocomplete_options: BTreeSet<&BTreeSet<K>> =
                 self.internal_autocomplete_keyword(&last_keyword)
@@ -150,8 +146,6 @@ impl<K: Debug + Hash + Ord> SearchIndex<K> {
                     .map(|(_keyword, keys)| *keys)
                     // Collect search results from each autocomplete option:
                     .collect();
-
-            println!("Autcomplete optiosn: {:#?}", autocomplete_options);
 
             // How we combine `search_results` and `autocomplete_options`
             // together depends on how many keywords there are in the search

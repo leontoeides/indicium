@@ -113,10 +113,6 @@ impl<K: Debug + Hash + Ord> SearchIndex<K> {
         #[cfg(debug_assertions)]
         tracing::trace!("Searching: {:?}", keywords);
 
-
-
-        println!("Keywords: {:?}", keywords);
-
         // This `BTreeSet` is used to contain the search results:
         let mut search_results: Option<HashSet<&K>> = None;
 
@@ -130,8 +126,6 @@ impl<K: Debug + Hash + Ord> SearchIndex<K> {
 
                 // Search for keyword in our `BTreeMap`:
                 let keyword_results = self.internal_keyword_search(keyword);
-
-                println!("Keyword Results: {:#?}", keyword_results);
 
                 // Update `search_results` with product of `intersection`:
                 search_results = Some(
@@ -162,8 +156,6 @@ impl<K: Debug + Hash + Ord> SearchIndex<K> {
                         None => keyword_results,
                     } // match
                 ); // Some
-
-                println!("Intersection Results: {:#?}", search_results);
 
             }); // for_each
 
