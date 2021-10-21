@@ -7,15 +7,24 @@ impl<K: Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
-    /// A special keyword that will return (or "dump") all keys (or records) in
-    /// the search index. It should be made so that it's difficult or impossible
-    /// for a user inadvertently trigger this behaviour.
+    /// Returns the special keyword that will return all keys (or records) in
+    /// the search index.
     ///
-    /// This keyword is helpful for the `Select2` module, where returning all
-    /// keys is the desirable behaviour when the search string is empty.
+    /// A keyword should be selected so that it's difficult for a user
+    /// inadvertently trigger this behaviour. It might be a good idea to turn
+    /// this feature off for extremely large search indexes.
     ///
-    /// The default value of `null` is probably fine, but it was made
-    /// configurable just in case.
+    /// This keyword is helpful for the [Select2](https://select2.org/) jQuery
+    /// plug-in, where returning all keys is the desirable behaviour when the
+    /// search string is empty. It can also be used for fully populating a
+    /// [\<datalist\>](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist)
+    /// element, and potentially other things.
+    ///
+    /// The default value of `null` is probably fine, but it's configurable and
+    /// it can be turned off altogether. For more information on the setting the
+    /// `dump_keyword` for a `SearchIndex` type see: [`SearchIndexBuilder`].
+    ///
+    /// [`SearchIndexBuilder`]: struct.SearchIndexBuilder.html#method.dump_keyword
     ///
     /// Basic usage:
     ///
@@ -26,10 +35,7 @@ impl<K: Ord> SearchIndex<K> {
     /// ```
     ///
     /// The intended usage of `dump_keyword` is retrieve a full listing of all
-    /// records registered in the search index. This is useful for populating
-    /// the [Select2](https://select2.org/) jQuery plug-in, for fully populating
-    /// a [\<datalist\>](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist)
-    /// element, and potentially many other things.
+    /// records registered in the search index. Example usage:
     ///
     /// ```rust
     /// # use indicium::simple::{AutocompleteType, Indexable, SearchIndex, SearchIndexBuilder};
@@ -64,8 +70,8 @@ impl<K: Ord> SearchIndex<K> {
     /// #
     /// if let Some(dump_keyword) = search_index.dump_keyword() {
     ///     assert_eq!(
-    ///         search_index.search(&dump_keyword).len(),
-    ///         7
+    ///         search_index.search(&dump_keyword),
+    ///         [&0, &1, &2, &3, &4, &5, &6]
     ///     );
     /// }
     /// ```
