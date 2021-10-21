@@ -181,10 +181,11 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // `tribble` may be given.
                 //
                 // There are no previous keywords to intersect with, just the
-                // letter `t`. If we attempt to intersect with an empty
-                // `search_results`, no keys will ever be returned. So we must
-                // handle this scenario differently. We will return the keys for
-                // these autocomplete options without further processing:
+                // autocomplete options for the letter `t`. If we attempt to
+                // intersect this with an empty `search_results`, no keys will
+                // ever be returned. So we must handle this scenario
+                // differently. We will return the keys for these autocomplete
+                // options without further processing:
 
                 0 => autocomplete_options
                     // Iterate over all possible keys for the last (partial)
@@ -208,8 +209,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // This match arm will intersect the results from each
                 // autocomplete option with `Shatner`. For both `trouble` and
                 // `tribble` autocomplete options, only keys that also exist for
-                // `Shatner` will be returned. All resulting keys for both
-                // autocomplete options will be flattened together:
+                // `Shatner` will be returned:
 
                 _ => search_results
                     // Intersection will only keep the values that are both in
