@@ -144,7 +144,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // supplied keyword. The below `take_while` will effectively
                 // break iteration when we reach a keyword that does not start
                 // with our supplied (partial) keyword.
-                .take_while(|(key, _value)| key.starts_with(&last_keyword))
+                .take_while(|(keyword, _keys)| keyword.starts_with(&last_keyword))
                 // Only return `maximum_keys_per_keyword` number of keywords:
                 .take(self.maximum_keys_per_keyword)
                 // We're not interested in the `keyword` since we're returning
