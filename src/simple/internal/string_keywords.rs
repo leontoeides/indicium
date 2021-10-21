@@ -99,7 +99,7 @@ impl<K: Ord> SearchIndex<K> {
         };
 
         // * For searching: return the whole string as the search keyword if
-        // keyword splitting is turned off / no split pattern is defined.
+        // no split pattern is defined (keyword splitting is turned off).
         //
         // * For indexing: if the option is enabled, store the field text /
         // entire string itself as a keyword. This feature is primarily for
