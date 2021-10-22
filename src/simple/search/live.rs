@@ -123,51 +123,6 @@ impl<K: Hash + Ord> SearchIndex<K> {
         // autocompleting:
         if let Some(last_keyword) = keywords.pop() {
 
-            // Perform `And` search for entire string, excluding the last
-            // (partial) keyword:
-            let search_results: BTreeSet<&K> =
-                self.internal_search_and(keywords.as_slice())
-                    // Iterate over each key:
-                    .iter()
-                    // Copy each `&K` key reference from the iterator or we'll
-                    // get a doubly-referenced `&&K` key:
-                    .cloned()
-                    // Collect serach results into our `BTreeSet`:
-                    .collect();
-
-            // Get keys for the last (partial) keyword:
-            let autocomplete_options: BTreeSet<&K> = self.b_tree_map
-                // Get matching keywords starting with (partial) keyword string:
-                .range(last_keyword.to_owned()..)
-                // We did not specify an end bound for our `range` function (see
-                // above.) `range` will return _every_ keyword greater than the
-                // supplied keyword. The below `take_while` will effectively
-                // break iteration when we reach a keyword that does not start
-                // with our supplied (partial) keyword.
-                .take_while(|(keyword, _keys)| keyword.starts_with(&last_keyword))
-                // Only return `maximum_keys_per_keyword` number of keywords:
-                .take(self.maximum_keys_per_keyword)
-                // We're not interested in the `keyword` since we're returning
-                // `&K` keys. Return only `&K` from the tuple:
-                .map(|(_keyword, keys)| keys)
-                // Flatten the `BTreeSet<K>` from each autocomplete keyword
-                // option into our collection:
-                .flatten()
-                // Collect all keyword autocompletions into a `Vec`:
-                .collect();
-
-            // For debug builds:
-            #[cfg(debug_assertions)]
-            if autocomplete_options.len() >= self.maximum_keys_per_keyword {
-                tracing::warn!(
-                    "Internal table limit of {} keywords has been exceeded for live search autocompletion. \
-                    Data has been dropped. \
-                    This will impact accuracy of results. \
-                    For this data set, consider using a more comprehensive search solution like MeiliSearch.",
-                    self.maximum_keys_per_keyword
-                ); // warn!
-            } // if
-
             // How we combine `search_results` and `autocomplete_options`
             // together depends on how many keywords there are in the search
             // string. Strings that have only a single keyword, and strings
@@ -187,17 +142,25 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // differently. We will return the keys for these autocomplete
                 // options without further processing:
 
-                0 => autocomplete_options
-                    // Iterate over all possible keys for the last (partial)
-                    // keyword:
-                    .iter()
+                0 => self.b_tree_map
+                    // Get matching keywords starting with (partial) keyword
+                    // string:
+                    .range(last_keyword.to_owned()..)
+                    // We did not specify an end bound for our `range` function
+                    // (see above.) `range` will return _every_ keyword greater
+                    // than the supplied keyword. The below `take_while` will
+                    // effectively break iteration when we reach a keyword that
+                    // does not start with our supplied (partial) keyword.
+                    .take_while(|(keyword, _keys)| keyword.starts_with(&last_keyword))
                     // Only return `maximum_search_results` number of keys:
                     .take(self.maximum_search_results)
-                    // Copy each key from the `Intersection` iterator or we'll
-                    // get a doubly-referenced `&&K` key:
-                    .cloned()
-                    // And collect each key into a `BTreeSet` that will become
-                    // the new `search_results`.
+                    // We're not interested in the `keyword` since we're
+                    // returning `&K` keys. Return only `&K` from the tuple:
+                    .map(|(_keyword, keys)| keys)
+                    // Flatten the `BTreeSet<K>` from each autocomplete keyword
+                    // option into our collection:
+                    .flatten()
+                    // Collect all keyword autocompletions into a `Vec`:
                     .collect(),
 
                 // Consider this example search string: `Shatner t`.
@@ -211,21 +174,49 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // `tribble` autocomplete options, only keys that also exist for
                 // `Shatner` will be returned:
 
-                _ => search_results
-                    // Intersection will only keep the values that are both in
-                    // `search_results` and `autocomplete_options`.
-                    .intersection(&autocomplete_options)
-                    // The `intersection` function will return an `Intersection`
-                    // type that we can iterate over:
-                    .into_iter()
-                    // Only return `maximum_search_results` number of keys:
-                    .take(self.maximum_search_results)
-                    // Copy each key from the `Intersection` iterator or we'll
-                    // get a doubly-referenced `&&K` key:
-                    .cloned()
-                    // And collect each key into a `BTreeSet` that will become
-                    // the new `search_results`.
-                    .collect(),
+                _ => {
+
+                    // Perform `And` search for entire string, excluding the last
+                    // (partial) keyword:
+                    let search_results: BTreeSet<&K> =
+                        self.internal_search_and(keywords.as_slice())
+                            // Iterate over each key:
+                            .iter()
+                            // Copy each `&K` key reference from the iterator or we'll
+                            // get a doubly-referenced `&&K` key:
+                            .cloned()
+                            // Collect serach results into our `BTreeSet`:
+                            .collect();
+
+                    // Get keys for the last (partial) keyword:
+                    self.b_tree_map
+                        // Get matching keywords starting with (partial) keyword
+                        // string:
+                        .range(last_keyword.to_owned()..)
+                        // We did not specify an end bound for our `range`
+                        // function (see above.) `range` will return _every_
+                        // keyword greater than the supplied keyword. The below
+                        // `take_while` will effectively break iteration when we
+                        // reach a keyword that does not start with our supplied
+                        // (partial) keyword.
+                        .take_while(|(keyword, _keys)| keyword.starts_with(&last_keyword))
+                        // We're not interested in the `keyword` since we're
+                        // returning `&K` keys. Return only `&K` from the tuple:
+                        .map(|(_keyword, keys)| keys)
+                        // Flatten the `BTreeSet<K>` from each autocomplete
+                        // keyword option into individual `K` keys:
+                        .flatten()
+                        // Intersect the key results from the autocomplete
+                        // options (produced from this iterator) with the search
+                        // results produced above:
+                        .filter(|key| search_results.contains(key))
+                        // Only return `maximum_keys_per_keyword` number of
+                        // keywords:
+                        .take(self.maximum_keys_per_keyword)
+                        // Collect all keyword autocompletions into a `Vec`:
+                        .collect()
+
+                }, // _
 
             } // match
 
