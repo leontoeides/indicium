@@ -115,15 +115,29 @@ impl<K: Hash + Ord> SearchIndex<K> {
         #[cfg(debug_assertions)]
         tracing::trace!("Searching: {}", keyword);
 
-        self.internal_keyword_search(&String::from(&keyword))
-            // Iterate the results of the keyword search:
-            .iter()
-            // Only return `maximum_search_results` number of keys:
-            .take(*maximum_search_results)
-            // Take ownership of reference so we return `&K` and not `&&K`:
-            .cloned()
-            // Collect all resulting keys into a `Vec`:
-            .collect()
+        // Attempt to get matching keys for the search keyword from BTreeMap:
+        if let Some(keys) = self.b_tree_map.get(&keyword) {
+
+            // Attempt to get matching keys for search keyword:
+            keys
+                // Iterate over all matching keys and only return
+                // `maximum_search_results` number of keys:
+                .iter()
+                // Only return `maximum_search_results` number of keys:
+                .take(*maximum_search_results)
+                // Insert a reference to each resulting key into the hash set:
+                .collect()
+
+            // -> If fuzzy matching were to be implemented for
+            // `indicium::simple` it would probably be put here. <-
+
+        } else {
+
+            // The search keyword did not result in any matches. Return an
+            // empty `HashSet`:
+            Vec::new()
+
+        } // if
 
     } // fn
 

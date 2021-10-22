@@ -31,41 +31,68 @@ impl<K: Hash + Ord> SearchIndex<K> {
             // For each keyword in the search string:
             .for_each(|keyword| {
 
-                // Search for the keyword in our search index `BTreeMap`:
-                let keyword_results = self.internal_keyword_search(keyword);
+                // Attempt to retrieve keyword from search index. If keyword
+                // found, intersect keyword records with search results records.
+                // If keyword not found, empty search results:
+                match self.b_tree_map.get(keyword) {
 
-                // Update `search_results` with product of `intersection`:
-                search_results = Some(
-                    // Check if `search_results` is already populated:
-                    match &search_results {
-                        // If master `search_results` is not empty...
-                        Some(search_results) => {
-                            // ...intersect the current keyword's search results
-                            // with the master search results:
-                            keyword_results
-                                // Intersection will only keep the values that
-                                // are both in `search_results` and
-                                // `keyword_results`.
-                                .intersection(search_results)
-                                // The `intersection` method will return an
-                                // `Intersection` lazy iterator that we must
-                                // iterate over:
-                                .into_iter()
-                                // Copy each `&K` key reference from the
-                                // `Intersection` iterator or we'll get a
-                                // doubly-referenced `&&K` key:
+                    // Keyword found. Update `search_results` with product of an
+                    // intersection with this keyword's records:
+                    Some(keyword_results) => search_results = Some(
+
+                        // Check if `search_results` is already populated:
+                        match &search_results {
+
+                            // If `search_results` is is not empty, intersect
+                            // the current keyword's results with the master
+                            // search results:
+                            Some(search_results) => search_results
+                                // Iterate over each search result record:
+                                .iter()
+                                // Intersect the search result record with the
+                                // keyword results. If the search result record
+                                // doesn't exist in this keyword's results,
+                                // filter it out:
+                                .filter(|key|
+                                    keyword_results.contains(key)
+                                )
+                                // Copy each key from the `Intersection`
+                                // iterator or we'll get a doubly-referenced
+                                // `&&K` key:
                                 .cloned()
-                                // And collect each key into a `HashSet` that
-                                // will become the new `search_results`.
-                                .collect()
-                        }, // Some
-                        // If master `search_results` is empty, initialize it
-                        // with the first keyword's full search results:
-                        None => keyword_results,
-                    } // match
-                ); // Some
+                                // And collect each key into a `BTreeSet` that
+                                // will become the new `search_results`:
+                                .collect(),
+
+                            // If `search_results` is empty, initialize it with
+                            // the first keyword's full search results:
+                            None => self.internal_keyword_search(keyword),
+
+                        } // match
+
+                    ), // Some
+
+                    // Any keyword that returns no results will short-circuit
+                    // the search results into an empty set:
+                    None => search_results = Some(HashSet::new()),
+
+                } // match
 
             }); // for_each
+
+        // For debug builds:
+        #[cfg(debug_assertions)]
+        if let Some(search_results) = &search_results {
+            if search_results.len() >= self.maximum_keys_per_keyword {
+                tracing::warn!(
+                    "Internal table limit of {} results has been exceeded on internal `and` search. \
+                    Data has been dropped. \
+                    This will impact accuracy of results. \
+                    For this data set, consider using a more comprehensive search solution like MeiliSearch.",
+                    self.maximum_keys_per_keyword
+                ); // warn!
+            } // if
+        } // if
 
         // Return search results:
         match search_results {
