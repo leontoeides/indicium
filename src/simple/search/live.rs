@@ -151,7 +151,9 @@ impl<K: Hash + Ord> SearchIndex<K> {
                     // than the supplied keyword. The below `take_while` will
                     // effectively break iteration when we reach a keyword that
                     // does not start with our supplied (partial) keyword.
-                    .take_while(|(keyword, _keys)| keyword.starts_with(&last_keyword))
+                    .take_while(|(keyword, _keys)|
+                        keyword.starts_with(&last_keyword)
+                    )
                     // Only return `maximum_search_results` number of keys:
                     .take(self.maximum_search_results)
                     // We're not interested in the `keyword` since we're
@@ -176,14 +178,14 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
                 _ => {
 
-                    // Perform `And` search for entire string, excluding the last
-                    // (partial) keyword:
+                    // Perform `And` search for entire string, excluding the
+                    // last (partial) keyword:
                     let search_results: BTreeSet<&K> =
                         self.internal_search_and(keywords.as_slice())
                             // Iterate over each key:
                             .iter()
-                            // Copy each `&K` key reference from the iterator or we'll
-                            // get a doubly-referenced `&&K` key:
+                            // Copy each `&K` key reference from the iterator or
+                            // we'll get a doubly-referenced `&&K` key:
                             .cloned()
                             // Collect serach results into our `BTreeSet`:
                             .collect();
@@ -199,7 +201,9 @@ impl<K: Hash + Ord> SearchIndex<K> {
                         // `take_while` will effectively break iteration when we
                         // reach a keyword that does not start with our supplied
                         // (partial) keyword.
-                        .take_while(|(keyword, _keys)| keyword.starts_with(&last_keyword))
+                        .take_while(|(keyword, _keys)|
+                            keyword.starts_with(&last_keyword)
+                        )
                         // We're not interested in the `keyword` since we're
                         // returning `&K` keys. Return only `&K` from the tuple:
                         .map(|(_keyword, keys)| keys)
