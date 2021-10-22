@@ -155,7 +155,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                         keyword.starts_with(&last_keyword)
                     )
                     // Only return `maximum_search_results` number of keys:
-                    .take(self.maximum_search_results)
+                    .take(*maximum_search_results)
                     // We're not interested in the `keyword` since we're
                     // returning `&K` keys. Return only `&K` from the tuple:
                     .map(|(_keyword, keys)| keys)
@@ -214,9 +214,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
                         // options (produced from this iterator) with the search
                         // results produced above:
                         .filter(|key| search_results.contains(key))
-                        // Only return `maximum_keys_per_keyword` number of
-                        // keywords:
-                        .take(self.maximum_keys_per_keyword)
+                        // Only return `maximum_search_results` number of keys:
+                        .take(*maximum_search_results)
                         // Collect all keyword autocompletions into a `Vec`:
                         .collect()
 
