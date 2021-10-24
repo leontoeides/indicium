@@ -2,7 +2,7 @@
 name = "indicium"
 version = "0.3.4"
 authors = ["Dylan Bowker <dylan.bowker@arkiteq.ca>"]
-edition = "2018"
+edition = "2021"
 categories = [ "database-implementations" ]
 description = "Simple in-memory search for collections and key-value stores."
 documentation = "https://docs.rs/indicium"

@@ -24,7 +24,8 @@ may begin to degrade at a point.
 
 # What's New?
 
-* `0.3.4`: 2021-10-20: Peformance improvement `SearchType::Live`.
+* `0.3.4`: 2021-10-21: Peformance improvements to `SearchType::Live`,
+`SearchType::And` and `SearchType::Keyword` searches.
 
 * `0.3.3`: 2021-10-20: Fix: `cargo test` failed.
 

@@ -4,7 +4,7 @@
 //! means that there is support for [\<optgroup\>](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/optgroup)
 //! and `flat` means there are no support.
 
-mod response;
+mod results;
 
 // -----------------------------------------------------------------------------
 
@@ -77,7 +77,7 @@ impl FlatRecord {
 /// `serde_json`), and then returned to the `Select2` jQuery plug-in.
 
 #[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd, Deserialize, Serialize)]
-pub struct FlatResponse {
+pub struct FlatResults {
     /// This format consists of a JSON object containing an array of objects
     /// keyed by the `results` key.
     pub results: Vec<Record>,

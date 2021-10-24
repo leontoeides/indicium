@@ -98,6 +98,8 @@ impl<K: Ord> SearchIndex<K> {
             Vec::new()
         };
 
+        // Using the whole string as a keyword:
+        //
         // * For searching: return the whole string as the search keyword if
         // no split pattern is defined (keyword splitting is turned off).
         //
@@ -105,16 +107,19 @@ impl<K: Ord> SearchIndex<K> {
         // entire string itself as a keyword. This feature is primarily for
         // autocompletion purposes.
 
+        let chars = string.chars().count();
+
         // If we're searching, keep the whole string if there is no split
         // pattern defined. We'll search by the whole search string without
         // any keyword splitting:
-        if context == SplitContext::Searching && self.split_pattern == None {
-            keywords = vec![string]
+        if  context == SplitContext::Searching &&
+            self.split_pattern == None &&
+            chars >= self.minimum_keyword_length {
+                keywords = vec![string]
         // If we're indexing, only keep the whole string if it meets the keyword
         // criteria: 1) we're using whole strings as keywords, 2) it's shorter
         // than the maximum, and 3) the keyword is not in the exclusion list.
         } else if let Some(maximum_string_length) = self.maximum_string_length {
-            let chars = string.chars().count();
             if  context == SplitContext::Indexing &&
                 chars >= self.minimum_keyword_length &&
                 chars <= maximum_string_length &&

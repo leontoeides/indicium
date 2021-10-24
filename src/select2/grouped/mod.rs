@@ -3,7 +3,7 @@
 //! [\<optgroup\>](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/optgroup)
 //! sections.
 
-mod response;
+mod results;
 
 // -----------------------------------------------------------------------------
 
@@ -100,7 +100,7 @@ impl GroupableRecord {
 /// `serde_json`), and then returned to the `Select2` jQuery plug-in.
 
 #[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd, Deserialize, Serialize)]
-pub struct GroupedResponse {
+pub struct GroupedResults {
     /// This format consists of a JSON object containing an array of objects
     /// keyed by the `results` key.
     pub results: Vec<Group>,

@@ -1,10 +1,11 @@
-use crate::select2::grouped::{Group, Groupable, GroupableRecord, GroupedResponse};
+use crate::select2::grouped::{Group, Groupable, GroupableRecord, GroupedResults};
 use crate::select2::{Pagination, Record, Request};
 use std::clone::Clone;
 use std::cmp::{Eq, PartialEq};
 use std::collections::BTreeMap;
 use std::fmt::{Debug, Display};
 use std::hash::Hash;
+use std::io::{Error, ErrorKind};
 use std::string::ToString;
 
 // -----------------------------------------------------------------------------
@@ -20,51 +21,43 @@ impl Request {
     /// the form of a slice) to this function to be processed into the `Select2`
     /// format.
 
-    #[tracing::instrument(level = "trace", name = "Build Grouped Response", skip(self, search_results_keys, search_results_values))]
+    #[tracing::instrument(level = "trace", name = "Build Grouped Results", skip(self, search_results_keys, search_results_values))]
     pub fn grouped_response<K: Clone + Debug + Display + Eq + Hash + PartialEq + ToString, G: Groupable>(
         &self,
         items_per_page: &Option<usize>,
         selected_record: &Option<String>,
         search_results_keys: &[&K],
         search_results_values: &[G]
-    ) -> GroupedResponse {
+    ) -> Result<GroupedResults, Error> {
 
-        // Ensure that there are the same number of keys and values:
+        // Error checking. Ensure that there are the same number of keys and
+        // values:
 
         if search_results_keys.len() != search_results_values.len() {
-            tracing::error!(
-                "Caller supplied {} keys and {} values. \
-                The number of keys and values should be the same. \
-                Returning empty response.",
+
+            let error_message = format!(
+                "{} keys and {} values were supplied to `grouped_response`. \
+                The number of keys and values must be the same.",
                 search_results_keys.len(),
                 search_results_values.len(),
-            ); // error!
-            return GroupedResponse::default()
+            ); // format!
+            tracing::error!("{}", error_message);
+            return Err(Error::new(ErrorKind::InvalidData, error_message))
+
         } else if search_results_keys.is_empty() {
-            tracing::debug!(
-                "List of keys and values is empty. \
-                Returning empty response.",
-            ); // debug!
-            return GroupedResponse::default()
+
+            let error_message = "List of keys and values is empty. \
+                Returning empty response.".to_string();
+            tracing::debug!("{}", error_message);
+            return Ok(GroupedResults::default())
+
         } // if
-
-        // The `search_select2` method will return references to the keys. The
-        // caller needs to look up the full records and return their references
-        // to this method (the `*_results` methods) because we don't necessarily
-        // know how to do this. Here, we zip the keys and records together into
-        // a tuple:
-
-        let search_results: Vec<(&K, &G)> = search_results_keys
-            .iter()
-            .cloned()
-            .zip(search_results_values.iter())
-            .collect();
 
         // Observe pagination. If the caller specifies a maximum number of items
         // per page, then consider pagination turned on:
 
         // self.request_type == Some("query_append".to_string())
-        let groupable_results: (bool, Vec<&(&K, &G)>) = if let Some(items_per_page) = items_per_page {
+        let groupable_results: (bool, Vec<(&K, &G)>) = if let Some(items_per_page) = items_per_page {
 
             // Paginated response:
 
@@ -73,18 +66,24 @@ impl Request {
 
             // This function works on the resolved output of a search, or the
             // records dumped from a key-value store:
-            let paginated_results: Vec<&(&K, &G)> = search_results
-                // Iterate over each passed record:
+            let paginated_results: Vec<(&K, &G)> = search_results_keys
+                // Iterate over each key:
                 .iter()
+                // Track the number of keys we've iterated over, so we can
+                // look-up the corresponding values from the
+                // `search_results_values` slice:
+                .enumerate()
                 // Skip records so we start at beginning of specified `page`:
                 .skip(items_per_page * (page - 1))
                 // Only take a page's worth of records:
                 .take(*items_per_page)
+                // Look-up the `Groupable` value from the enumeration or index:
+                .map(|(index, key)| (*key, &search_results_values[index]))
                 // Collect all Select2 records into a `Vec<GroupableRecord>`:
                 .collect();
 
             // Return pagination status and results to outer scope:
-            (items_per_page * page < search_results.len(), paginated_results)
+            (items_per_page * page < search_results_keys.len(), paginated_results)
 
         } else {
 
@@ -92,9 +91,15 @@ impl Request {
 
             // This function works on the resolved output of a search, or the
             // records dumped from a key-value store:
-            let unpaginated_results: Vec<&(&K, &G)> = search_results
-                // Iterate over each passed record:
+            let unpaginated_results: Vec<(&K, &G)> = search_results_keys
+                // Iterate over each key:
                 .iter()
+                // Track the number of keys we've iterated over, so we can
+                // look-up the corresponding values from the
+                // `search_results_values` slice:
+                .enumerate()
+                // Look-up the `Groupable` value from the enumeration or index:
+                .map(|(index, key)| (*key, &search_results_values[index]))
                 // Collect all select2 records into a `Vec<GroupableRecord>`:
                 .collect();
 
@@ -150,14 +155,14 @@ impl Request {
             }) // map
             .collect();
 
-        // Return Select2 `GroupedResponse` to caller:
+        // Return Select2 `GroupedResults` to caller:
 
-        GroupedResponse {
+        Ok(GroupedResults {
             results: grouped_results,
             pagination: Pagination {
                 more: groupable_results.0,
             }, // Pagination
-        } // GroupedResponse
+        }) // GroupedResults
 
     } // fn
 

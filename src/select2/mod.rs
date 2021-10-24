@@ -47,11 +47,11 @@
 //! [`grouped_response`]: struct.Request.html#method.grouped_response
 //!
 //! 6. Depending on whether flat or grouped output was selected, convert the
-//! [`FlatResponse`] or [`GroupedResponse`] struct into `JSON` and return it to
+//! [`FlatResults`] or [`GroupedResults`] struct into `JSON` and return it to
 //! the client.
 //!
-//! [`FlatResponse`]: flat/struct.FlatResponse.html
-//! [`GroupedResponse`]: grouped/struct.GroupedResponse.html
+//! [`FlatResults`]: flat/struct.FlatResults.html
+//! [`GroupedResults`]: grouped/struct.GroupedResults.html
 
 // Directories:
 pub mod flat;
