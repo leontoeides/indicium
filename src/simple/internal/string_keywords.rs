@@ -115,7 +115,10 @@ impl<K: Ord> SearchIndex<K> {
         if  context == SplitContext::Searching &&
             self.split_pattern == None &&
             chars >= self.minimum_keyword_length {
+
+                // Set keywords to the entire string:
                 keywords = vec![string]
+
         // If we're indexing, only keep the whole string if it meets the keyword
         // criteria: 1) we're using whole strings as keywords, 2) it's shorter
         // than the maximum, and 3) the keyword is not in the exclusion list.
@@ -124,8 +127,10 @@ impl<K: Ord> SearchIndex<K> {
                 chars >= self.minimum_keyword_length &&
                 chars <= maximum_string_length &&
                 !exclude_keyword(&string, &self.exclude_keywords) {
+
                     // Add field text / entire string to the keyword `Vec`:
                     keywords.push(string)
+
             } // if
         } // if
 
