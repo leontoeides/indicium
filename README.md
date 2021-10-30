@@ -24,12 +24,11 @@ may begin to degrade at a point.
 
 # What's New?
 
-* `0.3.4`: 2021-10-21: Peformance improvements to `SearchType::Live`,
-`SearchType::And` and `SearchType::Keyword` searches.
+* `0.3.4`: Peformance improvements.
 
-* `0.3.3`: 2021-10-20: Fix: `cargo test` failed.
+* `0.3.3`: Fix: `cargo test` failed.
 
-* `0.3.2`: 2021-10-18: Fix: issue with search indexes that do not use keyword splitting.
+* `0.3.2`: Fix: issue with search indexes that do not use keyword splitting.
 
 * `0.3.1`: Autocomplete no longer offers previously used keywords as options.
 
