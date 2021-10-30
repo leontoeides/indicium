@@ -115,15 +115,30 @@ impl<K: Ord> SearchIndex<K> {
         if let Some(last_keyword) = keywords.pop() {
 
             // Autocomplete the last keyword:
-            let autocompletions: Vec<&String> = self.autocomplete_keyword(
-                maximum_autocomplete_options,
-                &last_keyword
-            ) // autocomplete_keyword
-                .iter()
-                .cloned()
+            let autocompletions: Vec<&String> = self.b_tree_map
+                // Get matching keywords starting with (partial) keyword string:
+                .range(String::from(&last_keyword)..)
+                // `range` returns a key-value pair. We're autocompleting the
+                // key (keyword), so discard the value (record key):
+                .map(|(key, _value)| key)
+                // We did not specify an end bound for our `range` function (see
+                // above.) `range` will return _every_ keyword greater than the
+                // supplied keyword. The below `take_while` will effectively
+                // break iteration when we reach a keyword that does not start
+                // with our supplied (partial) keyword.
+                .take_while(|key| key.starts_with(&last_keyword))
+                // If the index's keyword matches the user's keyword, don't
+                // return it as a result. For example, if the user's keyword was
+                // "new" (as in New York), do not return "new" as an
+                // auto-completed keyword:
+                // .filter(|key| *key != &keyword)
+                // Only return `maximum_autocomplete_options` number of
+                // keywords:
+                .take(*maximum_autocomplete_options)
                 // Only keep this autocompletion if hasn't already been used as
                 // a keyword:
-                .filter(|last_keyword| !keywords.contains(last_keyword))
+                .filter(|autocompletion| !keywords.contains(autocompletion))
+                // Collect all keyword autocompletions into a `Vec`:
                 .collect();
 
             // Push a blank placeholder onto the end of the keyword list. We
@@ -138,11 +153,11 @@ impl<K: Ord> SearchIndex<K> {
                 .iter()
                 // Use the prepended `keywords` and autocompleted last keyword
                 // to build an autocompleted search string:
-                .map(|last_keyword| {
+                .map(|autocompletion| {
                     // Remove previous autocompleted last keyword from list:
                     keywords.pop();
                     // Add current autocompleted last keyword to end of list:
-                    keywords.push(String::from(*last_keyword));
+                    keywords.push(String::from(*autocompletion));
                     // Join all keywords together into a single `String` using a
                     // space delimiter:
                     keywords.join(" ")

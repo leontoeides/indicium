@@ -105,8 +105,8 @@ impl<K: Ord> SearchIndex<K> {
         self.b_tree_map
             // Get matching keywords starting with (partial) keyword string:
             .range(String::from(&keyword)..)
-            // `range` returns a key-value pair. We're autocompleting the key,
-            // so discard the value:
+            // `range` returns a key-value pair. We're autocompleting the
+            // key (keyword), so discard the value (record key):
             .map(|(key, _value)| key)
             // We did not specify an end bound for our `range` function (see
             // above.) `range` will return _every_ keyword greater than the

@@ -1,7 +1,7 @@
 use crate::simple::internal::string_keywords::SplitContext;
 use crate::simple::SearchIndex;
 use std::cmp::Ord;
-use std::collections::{BTreeSet, HashSet};
+use std::collections::HashSet;
 use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
@@ -117,15 +117,25 @@ impl<K: Hash + Ord> SearchIndex<K> {
             let search_results: HashSet<&K> =
                 self.internal_search_and(keywords.as_slice());
 
-            // Get all autocompletions for the last keyword.
-            let autocompletions: Vec<(&String, &BTreeSet<K>)> =
-                self.internal_autocomplete_keyword(&last_keyword);
-
             // Intersect the autocompletions for the last keyword with the
             // search results for the preceding keywords. This way, only
             // relevant autocompletions are returned:
-            let autocompletions: Vec<&String> = autocompletions
-                .iter()
+            let autocompletions: Vec<&String> = self.b_tree_map
+                // Get matching keywords starting with (partial) keyword string:
+                .range(String::from(&last_keyword)..)
+                // We did not specify an end bound for our `range` function (see
+                // above.) `range` will return _every_ keyword greater than the
+                // supplied keyword. The below `take_while` will effectively
+                // break iteration when we reach a keyword that does not start
+                // with our supplied (partial) keyword.
+                .take_while(|(key, _value)| key.starts_with(&last_keyword))
+                // If the index's keyword matches the user's keyword, don't
+                // return it as a result. For example, if the user's keyword was
+                // "new" (as in New York), do not return "new" as an
+                // auto-completed keyword:
+                // .filter(|(key, _value)| *key != keyword)
+                // Only return `maximum_keys_per_keyword` number of keywords:
+                .take(self.maximum_keys_per_keyword)
                 // Only keep this autocompletion if hasn't already been used as
                 // a keyword:
                 .filter(|(keyword, _keys)| !keywords.contains(keyword))
@@ -134,14 +144,12 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 .filter(|(_keyword, keys)|
                     search_results.is_empty() || keys.iter().any(|key| search_results.contains(key))
                 ) // filter
-                // Only return `maximum_autocomplete_options` number of keywords:
+                // Only return `maximum_autocomplete_options` number of
+                // keywords:
                 .take(*maximum_autocomplete_options)
                 // `internal_autocomplete_keyword` returns a key-value pair.
                 // We're autocompleting the key, so discard the value:
                 .map(|(keyword, _keys)| keyword)
-                // Copy each keyword from the iterator or we'll get a
-                // doubly-referenced `&&String` keyword:
-                .cloned()
                 // Collect all keyword autocompletions into a `Vec`:
                 .collect();
 
