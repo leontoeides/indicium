@@ -12,10 +12,10 @@ collections within my own binary. So, I made `indicium`.
 
 While `indicium` was made with web apps in mind, it is an in-memory search and
 it does not scale indefinitely or to Facebook or Google size. Even in such an
-environment, it would still be a convenient way of searching large static lists
-(such as currencies, languages, countries, etc.) It's also great for
-applications where there is an anticipated scale limit (i.e. searching a list of
-company assets, list of users in a corporate intranet, etc.)
+environment, it would still be a convenient way of searching large lists (such
+as currencies, languages, countries, etc.) It's also great for applications
+where there is an anticipated scale limit (i.e. searching a list of company
+assets, list of users in a corporate intranet, etc.)
 
 Indicium easily can handle 100,000's records without breaking a sweat. This
 crate is primarily limited by available memory. However, depending on the nature

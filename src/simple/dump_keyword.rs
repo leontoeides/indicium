@@ -10,7 +10,7 @@ impl<K: Ord> SearchIndex<K> {
     /// Returns the special keyword that will return all keys (or records) in
     /// the search index.
     ///
-    /// A keyword should be selected so that it's difficult for a user
+    /// A _dump keyword_ should be selected so that it's difficult for a user
     /// inadvertently trigger this behaviour. It might be a good idea to turn
     /// this feature off for extremely large search indexes.
     ///

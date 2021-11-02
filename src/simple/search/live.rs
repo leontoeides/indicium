@@ -1,7 +1,7 @@
 use crate::simple::internal::string_keywords::SplitContext;
 use crate::simple::SearchIndex;
 use std::cmp::Ord;
-use std::collections::BTreeSet;
+use std::collections::{BTreeSet, HashSet};
 use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
@@ -180,15 +180,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
                     // Perform `And` search for entire string, excluding the
                     // last (partial) keyword:
-                    let search_results: BTreeSet<&K> =
-                        self.internal_search_and(keywords.as_slice())
-                            // Iterate over each key:
-                            .iter()
-                            // Copy each `&K` key reference from the iterator or
-                            // we'll get a doubly-referenced `&&K` key:
-                            .cloned()
-                            // Collect serach results into our `BTreeSet`:
-                            .collect();
+                    let search_results: HashSet<&K> =
+                        self.internal_search_and(keywords.as_slice());
 
                     // Get keys for the last (partial) keyword:
                     self.b_tree_map
@@ -204,6 +197,9 @@ impl<K: Hash + Ord> SearchIndex<K> {
                         .take_while(|(keyword, _keys)|
                             keyword.starts_with(&last_keyword)
                         )
+                        // Only keep this autocompletion if hasn't already been
+                        // used as a keyword:
+                        .filter(|(keyword, _keys)| !keywords.contains(keyword))
                         // We're not interested in the `keyword` since we're
                         // returning `&K` keys. Return only `&K` from the tuple:
                         .map(|(_keyword, keys)| keys)
