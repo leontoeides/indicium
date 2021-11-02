@@ -154,14 +154,14 @@ impl<K: Hash + Ord> SearchIndex<K> {
                     .take_while(|(keyword, _keys)|
                         keyword.starts_with(&last_keyword)
                     )
-                    // Only return `maximum_search_results` number of keys:
-                    .take(*maximum_search_results)
                     // We're not interested in the `keyword` since we're
                     // returning `&K` keys. Return only `&K` from the tuple:
                     .map(|(_keyword, keys)| keys)
                     // Flatten the `BTreeSet<K>` from each autocomplete keyword
                     // option into our collection:
                     .flatten()
+                    // Only return `maximum_search_results` number of keys:
+                    .take(*maximum_search_results)
                     // Collect all keyword autocompletions into a `Vec`:
                     .collect(),
 
