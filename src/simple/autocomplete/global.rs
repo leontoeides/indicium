@@ -126,21 +126,23 @@ impl<K: Ord> SearchIndex<K> {
                 // supplied keyword. The below `take_while` will effectively
                 // break iteration when we reach a keyword that does not start
                 // with our supplied (partial) keyword.
-                .take_while(|key| key.starts_with(&last_keyword))
-                // Only keep this autocompletion if hasn't already been used as
-                // a keyword:
-                .filter(|(keyword, _keys)| !keywords.contains(keyword))
+                .take_while(|autocompletion| autocompletion.starts_with(&last_keyword))
                 // If the index's keyword matches the user's keyword, don't
                 // return it as a result. For example, if the user's keyword was
                 // "new" (as in New York), do not return "new" as an
                 // auto-completed keyword:
-                // .filter(|key| *key != &keyword)
-                // Only return `maximum_autocomplete_options` number of
-                // keywords:
-                .take(*maximum_autocomplete_options)
+                // .filter(|autocompletion| *autocompletion != &last_keyword)
                 // Only keep this autocompletion if hasn't already been used as
                 // a keyword:
                 .filter(|autocompletion| !keywords.contains(autocompletion))
+                // If the index's keyword matches the user's keyword, don't
+                // return it as a result. For example, if the user's keyword was
+                // "new" (as in New York), do not return "new" as an
+                // auto-completed keyword:
+                // .filter(|autocompletion| *autocompletion != &keyword)
+                // Only return `maximum_autocomplete_options` number of
+                // keywords:
+                .take(*maximum_autocomplete_options)
                 // Collect all keyword autocompletions into a `Vec`:
                 .collect();
 

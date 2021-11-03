@@ -113,11 +113,11 @@ impl<K: Ord> SearchIndex<K> {
             // supplied keyword. The below `take_while` will effectively break
             // iteration when we reach a keyword that does not start with our
             // supplied (partial) keyword.
-            .take_while(|key| key.starts_with(&keyword))
+            .take_while(|autocompletion| autocompletion.starts_with(&keyword))
             // If the index's keyword matches the user's keyword, don't return
             // it as a result. For example, if the user's keyword was "new" (as
             // in New York), do not return "new" as an auto-completed keyword:
-            // .filter(|key| *key != &keyword)
+            // .filter(|autocompletion| *autocompletion != &keyword)
             // Only return `maximum_autocomplete_options` number of keywords:
             .take(*maximum_autocomplete_options)
             // Collect all keyword autocompletions into a `Vec`:

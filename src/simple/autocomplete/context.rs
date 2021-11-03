@@ -128,14 +128,12 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // supplied keyword. The below `take_while` will effectively
                 // break iteration when we reach a keyword that does not start
                 // with our supplied (partial) keyword.
-                .take_while(|(key, _value)| key.starts_with(&last_keyword))
+                .take_while(|(keyword, _keys)| keyword.starts_with(&last_keyword))
                 // If the index's keyword matches the user's keyword, don't
                 // return it as a result. For example, if the user's keyword was
                 // "new" (as in New York), do not return "new" as an
                 // auto-completed keyword:
-                // .filter(|(key, _value)| *key != keyword)
-                // Only return `maximum_keys_per_keyword` number of keywords:
-                .take(self.maximum_keys_per_keyword)
+                // .filter(|(key, _value)| *key != &last_keyword)
                 // Only keep this autocompletion if hasn't already been used as
                 // a keyword:
                 .filter(|(keyword, _keys)| !keywords.contains(keyword))
@@ -148,9 +146,9 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // Only return `maximum_autocomplete_options` number of
                 // keywords:
                 .take(*maximum_autocomplete_options)
-                // `internal_autocomplete_keyword` returns a key-value pair.
-                // We're autocompleting the key, so discard the value:
-                .map(|(keyword, _keys)| keyword)
+                // `range` returns a key-value pair. We're autocompleting the
+                // key (keyword), so discard the value (record key):
+                .map(|(key, _value)| key)
                 // Collect all keyword autocompletions into a `Vec`:
                 .collect();
 
