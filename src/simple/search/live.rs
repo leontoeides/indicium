@@ -202,7 +202,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                         .filter(|(keyword, _keys)| !keywords.contains(keyword))
                         // We're not interested in the `keyword` since we're
                         // returning `&K` keys. Return only `&K` from the tuple:
-                        .map(|(_keyword, keys)| keys)
+                        .map(|(_key, value)| value)
                         // Flatten the `BTreeSet<K>` from each autocomplete
                         // keyword option into individual `K` keys:
                         .flatten()

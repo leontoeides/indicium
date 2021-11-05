@@ -117,7 +117,7 @@ impl<K: Ord> SearchIndex<K> {
             // Autocomplete the last keyword:
             let autocompletions: Vec<&String> = self.b_tree_map
                 // Get matching keywords starting with (partial) keyword string:
-                .range(String::from(&last_keyword)..)
+                .range(last_keyword.to_string()..)
                 // `range` returns a key-value pair. We're autocompleting the
                 // key (keyword), so discard the value (record key):
                 .map(|(key, _value)| key)
@@ -149,7 +149,7 @@ impl<K: Ord> SearchIndex<K> {
             // Push a blank placeholder onto the end of the keyword list. We
             // will be putting our autocompletions for the last keyword into
             // this spot:
-            keywords.push(String::from(""));
+            keywords.push("".to_string());
 
             // Build autocompleted search strings from the autocompletions
             // derived from the last keyword:
@@ -162,7 +162,7 @@ impl<K: Ord> SearchIndex<K> {
                     // Remove previous autocompleted last keyword from list:
                     keywords.pop();
                     // Add current autocompleted last keyword to end of list:
-                    keywords.push(String::from(*autocompletion));
+                    keywords.push(autocompletion.to_string());
                     // Join all keywords together into a single `String` using a
                     // space delimiter:
                     keywords.join(" ")

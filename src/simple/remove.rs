@@ -99,7 +99,7 @@ impl<K: Clone + Ord> SearchIndex<K> {
         // If `dump_keyword` feature is turned on, ensure that all records are
         // detached from this special keyword:
         if let Some(dump_keyword) = &self.dump_keyword {
-            keywords.insert(dump_keyword.to_owned());
+            keywords.insert(dump_keyword.to_string());
         } // if
 
         // Iterate over the keywords:

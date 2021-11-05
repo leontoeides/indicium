@@ -136,7 +136,7 @@ impl<K: Clone + Ord> SearchIndex<K> {
         // If `dump_keyword` feature is turned on, ensure that all records are
         // attached to this special keyword:
         if let Some(dump_keyword) = &self.dump_keyword {
-            keywords.insert(dump_keyword.to_owned());
+            keywords.insert(dump_keyword.to_string());
         } // if
 
         // Iterate over the keywords:
@@ -178,7 +178,7 @@ impl<K: Clone + Ord> SearchIndex<K> {
                     None => {
                         let mut b_tree_set = BTreeSet::new();
                         b_tree_set.insert(key.clone());
-                        self.b_tree_map.insert(keyword.clone(), b_tree_set);
+                        self.b_tree_map.insert(keyword.to_string(), b_tree_set);
                     }, // None
                 } // match
             ) // for_each
