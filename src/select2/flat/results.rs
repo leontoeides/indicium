@@ -22,7 +22,7 @@ impl Request {
         items_per_page: &Option<usize>,
         selected_record: &Option<String>,
         search_results_keys: &[&K],
-        search_results_values: &[S]
+        search_results_values: &[&S]
     ) -> Result<FlatResults, Error> {
 
         // Error checking. Ensure that there are the same number of keys and

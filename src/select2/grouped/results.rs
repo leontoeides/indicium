@@ -27,7 +27,7 @@ impl Request {
         items_per_page: &Option<usize>,
         selected_record: &Option<String>,
         search_results_keys: &[&K],
-        search_results_values: &[G]
+        search_results_values: &[&G]
     ) -> Result<GroupedResults, Error> {
 
         // Error checking. Ensure that there are the same number of keys and
@@ -78,7 +78,7 @@ impl Request {
                 // Only take a page's worth of records:
                 .take(*items_per_page)
                 // Look-up the `Groupable` value from the enumeration or index:
-                .map(|(index, key)| (*key, &search_results_values[index]))
+                .map(|(index, key)| (*key, search_results_values[index]))
                 // Collect all Select2 records into a `Vec<GroupableRecord>`:
                 .collect();
 
@@ -99,7 +99,7 @@ impl Request {
                 // `search_results_values` slice:
                 .enumerate()
                 // Look-up the `Groupable` value from the enumeration or index:
-                .map(|(index, key)| (*key, &search_results_values[index]))
+                .map(|(index, key)| (*key, search_results_values[index]))
                 // Collect all select2 records into a `Vec<GroupableRecord>`:
                 .collect();
 
