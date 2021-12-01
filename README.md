@@ -24,9 +24,11 @@ may begin to degrade at a point.
 
 # What's New?
 
+* `0.3.5`: Peformance improvements.
+
 * `0.3.4`: Peformance improvements.
 
-* `0.3.3`: Fix: `cargo test` failed.
+* `0.3.3`: Fix: `cargo test` failed. Sorry.
 
 * `0.3.2`: Fix: issue with search indexes that do not use keyword splitting.
 

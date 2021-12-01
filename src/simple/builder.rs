@@ -6,8 +6,12 @@ use std::collections::{BTreeMap, BTreeSet};
 // -----------------------------------------------------------------------------
 //
 /// The [builder pattern](https://doc.rust-lang.org/1.0.0/style/ownership/builders.html)
-/// can be used to customize your search index. If you're in a hurry, you can
-/// instantiate your search index with `SearchIndex::default()` instead.
+/// can be used to customize your search index. Use
+/// `SearchIndexBuilder::default()` to start the builder chain, and `.build()`
+/// to finish it.
+///
+/// If you're in a hurry, you can instantiate your search index with
+/// `SearchIndex::default()` instead.
 
 pub struct SearchIndexBuilder<K> {
     b_tree_map: BTreeMap<String, BTreeSet<K>>,
