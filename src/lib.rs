@@ -10,6 +10,10 @@
 //!
 //! # What's New?
 //!
+//! * `0.3.6`: Implemented `DerefMut` which gives access to the search index's
+//! underlying `BTreeMap`. Implemented `clear()` which is a convenience method
+//! for clearing the search index.
+//!
 //! * `0.3.5`: Peformance improvements.
 //!
 //! * `0.3.4`: Peformance improvements.

@@ -11,8 +11,10 @@ mod search;
 // Methods & structs:
 mod autocomplete_type;
 mod builder;
+mod clear;
 mod default;
 mod deref;
+mod deref_mut;
 mod dump_keyword;
 mod indexable;
 mod insert;
