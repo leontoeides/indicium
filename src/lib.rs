@@ -10,6 +10,9 @@
 //!
 //! # What's New?
 //!
+//! * `0.3.7`: An experimental feature is now disabled by default to reduce
+//! resource consumption.
+//!
 //! * `0.3.6`: Implemented `DerefMut` which gives access to the search index's
 //! underlying `BTreeMap`. Implemented `clear()` which is a convenience method
 //! for clearing the search index.
