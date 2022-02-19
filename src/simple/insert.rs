@@ -117,8 +117,8 @@ impl<K: Clone + Ord> SearchIndex<K> {
     /// #
     /// #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
     /// enum CollectionKey {
-    ///     MyVec(usize),
-    ///     MyHashMap(String),
+    ///     MyVecCollection(usize),
+    ///     MyHashMapCollection(String),
     /// }
     ///
     /// let search_index: SearchIndex<CollectionKey> = SearchIndex::default();

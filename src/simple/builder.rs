@@ -117,13 +117,15 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
         self
     } // fn
 
-    /// Minimum keyword length (in chars or codepoints) to be indexed.
+    /// Minimum keyword length (in chars or codepoints) to be indexed. If the
+    /// keyword is shorter the keyword will not be indexed.
     pub fn min_keyword_len(&mut self, minimum_keyword_length: &usize) -> &mut Self {
         self.minimum_keyword_length = *minimum_keyword_length;
         self
     } // fn
 
-    /// Maximum keyword length (in chars or codepoints) to be indexed.
+    /// Maximum keyword length (in chars or codepoints) to be indexed. If the
+    /// keyword is longer the keyword will not be indexed.
     pub fn max_keyword_len(&mut self, maximum_keyword_length: &usize) -> &mut Self {
         self.maximum_keyword_length = *maximum_keyword_length;
         self
