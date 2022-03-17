@@ -99,7 +99,7 @@ impl<K: Ord> SearchIndex<K> {
 
         // For debug builds:
         #[cfg(debug_assertions)]
-        tracing::trace!("Autocompleting: {:?}", keyword);
+        tracing::debug!("Autocompleting: {:?}", keyword);
 
         // Attempt to get matching keywords from `BTreeMap`:
         self.b_tree_map

@@ -113,7 +113,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
         // For debug builds:
         #[cfg(debug_assertions)]
-        tracing::trace!("Searching: {}", keyword);
+        tracing::debug!("Searching: {}", keyword);
 
         // Attempt to get matching keys for the search keyword from BTreeMap:
         if let Some(keys) = self.b_tree_map.get(&keyword) {

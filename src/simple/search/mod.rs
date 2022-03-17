@@ -112,11 +112,11 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
 
         // For debug builds:
         #[cfg(debug_assertions)]
-        tracing::trace!(
+        tracing::debug!(
             "{} search results for \"{}\".",
             search_results.len(),
             string,
-        ); // trace!
+        ); // debug!
 
         search_results
 
@@ -223,11 +223,11 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
 
         // For debug builds:
         #[cfg(debug_assertions)]
-        tracing::trace!(
+        tracing::debug!(
             "{} search results for \"{}\".",
             search_results.len(),
             string,
-        ); // trace!
+        ); // debug!
 
         search_results
 
@@ -341,11 +341,11 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
 
         // For debug builds:
         #[cfg(debug_assertions)]
-        tracing::trace!(
+        tracing::debug!(
             "{} search results for \"{}\".",
             search_results.len(),
             string,
-        ); // trace!
+        ); // debug!
 
         search_results
 

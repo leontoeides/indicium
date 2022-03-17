@@ -107,11 +107,11 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
         // For debug builds:
         #[cfg(debug_assertions)]
-        tracing::trace!(
+        tracing::debug!(
             "{} autocomplete options for \"{}\".",
             autocomplete_options.len(),
             string,
-        ); // trace!
+        ); // debug!
 
         autocomplete_options
 
@@ -223,11 +223,11 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
         // For debug builds:
         #[cfg(debug_assertions)]
-        tracing::trace!(
+        tracing::debug!(
             "{} autocomplete options for \"{}\".",
             autocomplete_options.len(),
             string,
-        ); // trace!
+        ); // debug!
 
         autocomplete_options
 
@@ -344,11 +344,11 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
         // For debug builds:
         #[cfg(debug_assertions)]
-        tracing::trace!(
+        tracing::debug!(
             "{} autocomplete options for \"{}\".",
             autocomplete_options.len(),
             string,
-        ); // trace!
+        ); // debug!
 
         autocomplete_options
 

@@ -110,7 +110,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
         // For debug builds:
         #[cfg(debug_assertions)]
-        tracing::trace!("Searching: {:?}", keywords);
+        tracing::debug!("Searching: {:?}", keywords);
 
         // This `BTreeSet` is used to contain the search results:
         let mut search_results: Option<HashSet<&K>> = None;

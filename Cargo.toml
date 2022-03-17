@@ -1,6 +1,6 @@
 [package]
 name = "indicium"
-version = "0.3.7"
+version = "0.3.8"
 authors = ["Dylan Bowker <dylan.bowker@arkiteq.ca>"]
 edition = "2021"
 categories = [ "database-implementations" ]
