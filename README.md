@@ -17,10 +17,11 @@ as currencies, languages, countries, etc.) It's also great for applications
 where there is an anticipated scale limit (i.e. searching a list of company
 assets, list of users in a corporate intranet, etc.)
 
-Indicium easily can handle 100,000's records without breaking a sweat. This
-crate is primarily limited by available memory. However, depending on the nature
-your data-set and if there keywords that are repeated many times, performance
-may begin to degrade at a point.
+Indicium easily can handle millions records without breaking a sweat thanks to
+Rust's [BTreeMap](https://cglab.ca/~abeinges/blah/rust-btree-case/). This crate
+is primarily limited by available memory. However, depending on the nature your
+data-set and if there keywords that are repeated many times, performance may
+begin to degrade at a point.
 
 # What's New?
 
