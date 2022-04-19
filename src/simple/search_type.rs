@@ -16,17 +16,6 @@
 
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub enum SearchType {
-    /// The search string is expected to only contain a single keyword. Results
-    /// are returned in lexographic order. This is the lightest and fastest
-    /// search type. It is good for compact interfaces, where records are very
-    /// simple, and data-sets are quite small.
-    ///
-    /// You may change & control the ordering of your records by manually
-    /// implementing the [Ord](https://doc.rust-lang.org/std/cmp/trait.Ord.html)
-    /// trait for your `K` key.
-    ///
-    /// Probably best suited in a form widget.
-    Keyword,
     /// `Live` search allows for "search as you type." It is a hybridization
     /// of `autocomplete` and `search`. This method will effectively search
     /// all of the autocompletion options and return the search results to the
@@ -86,4 +75,14 @@ pub enum SearchType {
     ///
     /// Probably best suited for a search results screen.
     Or,
+    /// The search string is expected to only contain a single keyword. This is
+    /// the lightest and fastest search type. It is good for compact interfaces,
+    /// where records are very simple, and data-sets are quite small.
+    ///
+    /// You may change & control the ordering of your records by manually
+    /// implementing the [Ord](https://doc.rust-lang.org/std/cmp/trait.Ord.html)
+    /// trait for your `K` key.
+    ///
+    /// Probably best suited in a form widget.
+    Keyword,
 } // SearchType
