@@ -103,7 +103,6 @@ impl<K: Ord> Default for SearchIndex<K> {
                 "para".to_string(),
                 "por".to_string(),
                 "que".to_string(),
-                "si".to_string(),
                 "sí".to_string(),
                 "tan".to_string(),
                 "una".to_string(),
