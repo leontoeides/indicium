@@ -4,6 +4,11 @@
 /// autocompletion type that should be used depends on the user interface and
 /// the data-set. See variant descriptions for more information.
 ///
+/// You may change & control the ordering of the autocomplete options by
+/// manually implementing the
+/// [Ord](https://doc.rust-lang.org/std/cmp/trait.Ord.html) trait for your `K`
+/// key.
+///
 /// For more information on the setting the autocompletion type in a
 /// `SearchIndex` type see: [`SearchIndexBuilder`] or [`SearchIndex::new()`].
 ///
