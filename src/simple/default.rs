@@ -9,7 +9,7 @@ use std::cmp::Ord;
 impl<K: Ord> Default for SearchIndex<K> {
     fn default() -> Self {
         Self::new(
-            SearchType::Or,                 // Search type.
+            SearchType::And,                // Search type.
             AutocompleteType::Context,      // Autocompletion type.
             // Default split pattern:
             Some(vec![
