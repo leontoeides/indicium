@@ -112,6 +112,8 @@ impl<K: Ord> Default for SearchIndex<K> {
             ]),
             5,                              // Maximum number of auto-complete options.
             100,                            // Maximum number of search results.
+            40_960,                         // Maximum keys per keyword.
+            Some("\0".to_string()),         // Dump keyword.
         ) // SearchIndex
     } // fn
 } // impl

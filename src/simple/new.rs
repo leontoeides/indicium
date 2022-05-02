@@ -28,6 +28,8 @@ impl<K: Ord> SearchIndex<K> {
     ///     Some(vec!["a".to_string(), "the".to_string()]), // Keyword exclusions.
     ///     5,                              // Maximum number of auto-complete options.
     ///     100,                            // Maximum number of search results.
+    ///     40_960,                         // Maximum keys per keyword.
+    ///     Some("\0".to_string()),         // Dump keyword.
     /// );
     /// ```
 
@@ -43,11 +45,13 @@ impl<K: Ord> SearchIndex<K> {
         exclude_keywords: Option<Vec<String>>,
         maximum_autocomplete_options: usize,
         maximum_search_results: usize,
+        maximum_keys_per_keyword: usize,
+        dump_keyword: Option<String>,
     ) -> SearchIndex<K> {
         SearchIndex {
+            b_tree_map: BTreeMap::new(),
             search_type,
             autocomplete_type,
-            b_tree_map: BTreeMap::new(),
             split_pattern,
             case_sensitive,
             minimum_keyword_length,
@@ -56,8 +60,8 @@ impl<K: Ord> SearchIndex<K> {
             exclude_keywords,
             maximum_autocomplete_options,
             maximum_search_results,
-            maximum_keys_per_keyword: 40_960,
-            dump_keyword: Some("\0".to_string()),
+            maximum_keys_per_keyword,
+            dump_keyword,
         } // SearchIndex
     } // fn
 
