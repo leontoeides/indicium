@@ -1,10 +1,10 @@
 use std::collections::{BTreeSet, HashMap};
-use std::{clone::Clone, cmp::Ord, cmp::PartialOrd, fmt::Debug, hash::Hash};
+use std::{clone::Clone, cmp::Ord, cmp::PartialOrd, hash::Hash};
 
 // -----------------------------------------------------------------------------
 
-#[derive(Debug, Default)]
-pub(crate) struct TopScores<'a, K: Hash + Ord, S: Debug + PartialOrd> {
+#[derive(Default)]
+pub(crate) struct TopScores<'a, K: Hash + Ord, S: PartialOrd> {
     pub(crate) top: HashMap<&'a str, (&'a BTreeSet<K>, S)>,
     pub(crate) bottom: Option<(&'a str, S)>,
     pub(crate) capacity: usize,
@@ -12,7 +12,7 @@ pub(crate) struct TopScores<'a, K: Hash + Ord, S: Debug + PartialOrd> {
 
 // -----------------------------------------------------------------------------
 
-impl<'a, K: Hash + Ord, S: Clone + Debug + PartialOrd> TopScores<'a, K, S> {
+impl<'a, K: Hash + Ord, S: Clone + PartialOrd> TopScores<'a, K, S> {
 
     pub(crate) fn with_capacity(capacity: usize) -> TopScores<'a, K, S> {
         TopScores {

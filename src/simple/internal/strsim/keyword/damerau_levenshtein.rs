@@ -1,10 +1,10 @@
 use crate::simple::search_index::SearchIndex;
-use std::{cmp::Ord, hash::Hash};
+use std::cmp::Ord;
 use strsim::damerau_levenshtein;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Hash + Ord> SearchIndex<K> {
+impl<K: Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //

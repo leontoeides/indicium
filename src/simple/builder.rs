@@ -17,7 +17,7 @@ pub struct SearchIndexBuilder<K> {
     b_tree_map: BTreeMap<String, BTreeSet<K>>,
     search_type: SearchType,
     autocomplete_type: AutocompleteType,
-    #[cfg(feature = "strsim")]
+    #[cfg(feature = "fuzzy")]
     pub(crate) strsim_type: Option<StrSimType>,
     split_pattern: Option<Vec<char>>,
     case_sensitive: bool,
@@ -40,7 +40,7 @@ impl<K: Clone + Ord> From<SearchIndex<K>> for SearchIndexBuilder<K> {
             b_tree_map: search_index.b_tree_map,
             search_type: search_index.search_type,
             autocomplete_type: search_index.autocomplete_type,
-            #[cfg(feature = "strsim")]
+            #[cfg(feature = "fuzzy")]
             strsim_type: search_index.strsim_type,
             split_pattern: search_index.split_pattern,
             case_sensitive: search_index.case_sensitive,
@@ -65,7 +65,7 @@ impl<K: Clone + Ord> From<SearchIndexBuilder<K>> for SearchIndex<K> {
             b_tree_map: search_index.b_tree_map,
             search_type: search_index.search_type,
             autocomplete_type: search_index.autocomplete_type,
-            #[cfg(feature = "strsim")]
+            #[cfg(feature = "fuzzy")]
             strsim_type: search_index.strsim_type,
             split_pattern: search_index.split_pattern,
             case_sensitive: search_index.case_sensitive,

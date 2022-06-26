@@ -1,7 +1,7 @@
 mod indexable_keywords;
 mod search;
 mod search_and;
-#[cfg(feature = "strsim")]
+#[cfg(feature = "fuzzy")]
 mod strsim;
 pub(crate) mod top_scores;
 pub(crate) mod string_keywords;

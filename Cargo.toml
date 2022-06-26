@@ -1,6 +1,6 @@
 [package]
 name = "indicium"
-version = "0.3.8"
+version = "0.4.0"
 authors = ["Dylan Bowker <dylan.bowker@arkiteq.ca>"]
 edition = "2021"
 categories = [ "database-implementations" ]
@@ -16,8 +16,9 @@ repository = "https://github.com/leontoeides/indicium"
 maintenance = { status = "actively-developed" }
 
 [features]
-default = [ "simple", "strsim" ]
+default = [ "simple", "fuzzy" ]
 simple = []
+fuzzy = [ "strsim" ]
 select2 = [ "simple", "serde" ]
 
 [dependencies]

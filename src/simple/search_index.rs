@@ -19,7 +19,7 @@ pub struct SearchIndex<K: Ord> {
     /// overridden by using the `autocompletion_type` method.
     pub(crate) autocomplete_type: AutocompleteType,
     /// The `StrSimType` for string similarity fuzzy matching.
-    #[cfg(feature = "strsim")]
+    #[cfg(feature = "fuzzy")]
     pub(crate) strsim_type: Option<StrSimType>,
     /// Characters used to split strings into keywords.
     pub(crate) split_pattern: Option<Vec<char>>,
