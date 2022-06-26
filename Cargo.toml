@@ -16,10 +16,11 @@ repository = "https://github.com/leontoeides/indicium"
 maintenance = { status = "actively-developed" }
 
 [features]
-default = [ "simple" ]
+default = [ "simple", "strsim" ]
 simple = []
 select2 = [ "simple", "serde" ]
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"], optional = true }
+strsim = { version = "0.10", optional = true }
 tracing = "0.1"

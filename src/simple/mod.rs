@@ -24,6 +24,7 @@ mod remove;
 mod replace;
 mod search_index;
 mod search_type;
+mod strsim_type;
 mod tests;
 
 // For debug builds only:
@@ -37,3 +38,4 @@ pub use crate::simple::builder::SearchIndexBuilder;
 pub use crate::simple::indexable::Indexable;
 pub use crate::simple::search_index::SearchIndex;
 pub use crate::simple::search_type::SearchType;
+pub use crate::simple::strsim_type::StrSimType;

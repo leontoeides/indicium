@@ -1,4 +1,4 @@
-use crate::simple::{AutocompleteType, SearchIndex, SearchType};
+use crate::simple::{AutocompleteType, SearchIndex, SearchType, StrSimType};
 use std::cmp::Ord;
 use std::collections::BTreeMap;
 
@@ -37,6 +37,7 @@ impl<K: Ord> SearchIndex<K> {
     pub fn new(
         search_type: SearchType,
         autocomplete_type: AutocompleteType,
+        strsim_type: Option<StrSimType>,
         split_pattern: Option<Vec<char>>,
         case_sensitive: bool,
         minimum_keyword_length: usize,
@@ -52,6 +53,7 @@ impl<K: Ord> SearchIndex<K> {
             b_tree_map: BTreeMap::new(),
             search_type,
             autocomplete_type,
+            strsim_type,
             split_pattern,
             case_sensitive,
             minimum_keyword_length,

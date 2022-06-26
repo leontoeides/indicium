@@ -1,4 +1,4 @@
-use crate::simple::{AutocompleteType, SearchType};
+use crate::simple::{AutocompleteType, SearchType, StrSimType};
 use std::cmp::Ord;
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -18,6 +18,9 @@ pub struct SearchIndex<K: Ord> {
     /// The `AutocompleteType` for autocompletions. This setting may be manually
     /// overridden by using the `autocompletion_type` method.
     pub(crate) autocomplete_type: AutocompleteType,
+    /// The `StrSimType` for string similarity fuzzy matching.
+    #[cfg(feature = "strsim")]
+    pub(crate) strsim_type: Option<StrSimType>,
     /// Characters used to split strings into keywords.
     pub(crate) split_pattern: Option<Vec<char>>,
     /// Indicates whether the search index is case sensitive or not. If set to

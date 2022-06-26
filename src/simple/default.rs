@@ -1,4 +1,4 @@
-use crate::simple::{AutocompleteType, SearchIndex, SearchType};
+use crate::simple::{AutocompleteType, SearchIndex, SearchType, StrSimType};
 use std::cmp::Ord;
 
 // -----------------------------------------------------------------------------
@@ -11,6 +11,7 @@ impl<K: Ord> Default for SearchIndex<K> {
         Self::new(
             SearchType::And,                // Search type.
             AutocompleteType::Context,      // Autocompletion type.
+            Some(StrSimType::Levenshtein),  // String similarity metric type.
             // Default split pattern:
             Some(vec![
                 '\t',                       // Tab

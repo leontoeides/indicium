@@ -57,14 +57,14 @@ fn simple() {
             search_index.insert(&index, element)
         );
 
-    let search_results = search_index.search("third fourth");
-    assert_eq!(search_results, vec![&3, &4]);
+    let search_results = search_index.search("third william");
+    assert_eq!(search_results, vec![&3]);
 
     // Search for `last` or `wessex`. `Edgar Ætheling` contains both keywords,
     // so he should be returned first. `Harold Godwinson` only contains `last`
     // so he should be returned last:
     let search_results = search_index.search("last Wessex");
-    assert_eq!(search_results, vec![&1, &0]);
+    assert_eq!(search_results, vec![&1]);
 
     let search_results = search_index.search_type(&SearchType::Keyword, "Wessex");
     assert_eq!(search_results, vec![&1]);
