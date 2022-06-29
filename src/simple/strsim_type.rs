@@ -19,9 +19,6 @@ pub enum StrSimType {
     /// Calculates the minimum number of insertions, deletions, and
     /// substitutions required to change one string into the other.
     Levenshtein,
-    /// Like Levenshtein but allows for adjacent transpositions. Each substring
-    /// can only be edited once.
-    OsaDistance,
     /// Calculates a Sørensen-Dice similarity distance using bigrams.
     /// See http://en.wikipedia.org/wiki/S%C3%B8rensen%E2%80%93Dice_coefficient.
     SorensenDice,

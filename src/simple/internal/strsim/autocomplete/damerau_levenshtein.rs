@@ -1,7 +1,7 @@
-use crate::simple::internal::LowestScores;
+use crate::simple::internal::TopScores;
 use crate::simple::search_index::SearchIndex;
 use std::{cmp::Ord, hash::Hash};
-use strsim::damerau_levenshtein;
+use strsim::normalized_damerau_levenshtein;
 
 // -----------------------------------------------------------------------------
 
@@ -16,6 +16,13 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// When the user's last (partial) keyword that is meant to be autocompleted
     /// returns no matches, these `strsim_autocomplete_*` methods can be used to
     /// find the best match for substitution.
+    ///
+    /// Note: the `index_range` limits which keywords to compare the user's
+    /// keyword against. For example, if the `index_range` is "super" and the
+    /// user's keyword is "supersonic": only search index keywords beginning
+    /// with "super" will be compared against the user's keyword, like
+    /// "supersonic" against "superalloy", "supersonic" against "supergiant" and
+    /// so on...
     //
     // Note: these `strsim_autocomplete_*` methods are very similar and may seem
     // repetitive with a lot of boiler plate. These were intentionally made more
@@ -23,38 +30,13 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
     pub(crate) fn strsim_autocomplete_damerau_levenshtein(
         &self,
+        index_range: &str,
         user_keyword: &str,
     ) -> Vec<&str> {
 
-        // Build an index keyword range to fuzzy match against.
-        //
-        // | Example | User Keyword                       | Length | Index Keyword Must Start With... |
-        // |---------|------------------------------------|--------|----------------------------------|
-        // | 1       | Supercalifragilisticexpialidocious | 2      |  Su                              |
-        // | 2       | Antidisestablishmentarianism       | 4      |  Anti                            |
-        // | 3       | Pseudopseudohypoparathyroidism     | 0      |                                  |
-        //
-        // * In example 1, since the length is set to `2`, the user's keyword
-        // will only be fuzzy matched against keywords in the index beginning
-        // with `su`.
-        //
-        // * In example 2, since the length is set to `4`, the user's keyword
-        // will only be fuzzy matched against keywords in the index beginning
-        // with `anti`.
-        //
-        // * In example 3, since the length is set to `0`, the user's keyword
-        // will be fuzzy matched against every keyword in the index. This is OK
-        // or even desirable if the search index isn't large, however, this will
-        // be crippling slow on very large search indicies.
-        let index_range: &str = if self.strsim_length > 0 {
-            &user_keyword[0..self.strsim_length]
-        } else {
-            ""
-        }; // if
-
         // This structure will track the top scoring keywords:
-        let mut lowest_scores: LowestScores<K, usize> =
-            LowestScores::with_capacity(self.maximum_autocomplete_options);
+        let mut top_scores: TopScores<K, f64> =
+            TopScores::with_capacity(self.maximum_autocomplete_options);
 
         // Scan the search index for the highest scoring keywords:
         self.b_tree_map
@@ -70,14 +52,17 @@ impl<K: Hash + Ord> SearchIndex<K> {
             .for_each(|(index_keyword, index_keys)| {
                 // Using this keyword from the search index, calculate its
                 // similarity to the user's keyword:
-                let score = damerau_levenshtein(index_keyword, user_keyword);
-                // Insert the score into the top scores (if it's a high enough):
-                lowest_scores.insert(index_keyword, index_keys, score)
+                let score = normalized_damerau_levenshtein(index_keyword, user_keyword);
+                // Insert the score into the top scores (if it's normal and high
+                // enough):
+                if score.is_normal() && score >= self.strsim_minimum_score {
+                    top_scores.insert(index_keyword, index_keys, score)
+                } // if
             }); // for_each
 
         // Return the top scoring keywords that could be used as autocomplete
         // options to the caller:
-        lowest_scores.keywords()
+        top_scores.keywords()
 
     } // fn
 

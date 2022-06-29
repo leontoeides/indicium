@@ -12,7 +12,8 @@ impl<K: Ord> Default for SearchIndex<K> {
             SearchType::And,                // Search type.
             AutocompleteType::Context,      // Autocompletion type.
             Some(StrSimType::Levenshtein),  // String similarity metric type.
-            3,                              // String similarity keyword length.
+            3,                              // String similarity match length.
+            0.5,                            // String similarity minimum score.
             // Default split pattern:
             Some(vec![
                 '\t',                       // Tab

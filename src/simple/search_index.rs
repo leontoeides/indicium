@@ -10,7 +10,7 @@ use std::collections::{BTreeMap, BTreeSet};
 ///
 /// `K` generic represents the search index key type (i.e. `MyStruct`).
 
-#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub struct SearchIndex<K: Ord> {
     /// Search index data structure.
     pub(crate) b_tree_map: BTreeMap<String, BTreeSet<K>>,
@@ -23,11 +23,15 @@ pub struct SearchIndex<K: Ord> {
     /// The `StrSimType` for string similarity fuzzy matching.
     #[cfg(feature = "fuzzy")]
     pub(crate) strsim_type: Option<StrSimType>,
-    /// Both the user's keyword and search index's keyword must be match each
-    /// other for the first _n_ characters in order to be evaluated for fuzzy
-    /// matching.
+    /// Search index keyword must match the first _n_ characters of the user's
+    /// keyword in order to be evaluated for fuzzy matching.
     #[cfg(feature = "fuzzy")]
     pub(crate) strsim_length: usize,
+    /// Minimum score for the search index's keyword to be returned as an
+    /// alternative to the user's keyword. Score is between 0.0 and 1.0
+    /// (inclusive), where 1.0 means the strings are the same.
+    #[cfg(feature = "fuzzy")]
+    pub(crate) strsim_minimum_score: f64,
     /// Characters used to split strings into keywords.
     pub(crate) split_pattern: Option<Vec<char>>,
     /// Indicates whether the search index is case sensitive or not. If set to

@@ -21,6 +21,8 @@ pub struct SearchIndexBuilder<K> {
     strsim_type: Option<StrSimType>,
     #[cfg(feature = "fuzzy")]
     strsim_length: usize,
+    #[cfg(feature = "fuzzy")]
+    strsim_minimum_score: f64,
     split_pattern: Option<Vec<char>>,
     case_sensitive: bool,
     minimum_keyword_length: usize,
@@ -46,6 +48,8 @@ impl<K: Clone + Ord> From<SearchIndex<K>> for SearchIndexBuilder<K> {
             strsim_type: search_index.strsim_type,
             #[cfg(feature = "fuzzy")]
             strsim_length: search_index.strsim_length,
+            #[cfg(feature = "fuzzy")]
+            strsim_minimum_score: search_index.strsim_minimum_score,
             split_pattern: search_index.split_pattern,
             case_sensitive: search_index.case_sensitive,
             minimum_keyword_length: search_index.minimum_keyword_length,
@@ -73,6 +77,8 @@ impl<K: Clone + Ord> From<SearchIndexBuilder<K>> for SearchIndex<K> {
             strsim_type: search_index.strsim_type,
             #[cfg(feature = "fuzzy")]
             strsim_length: search_index.strsim_length,
+            #[cfg(feature = "fuzzy")]
+            strsim_minimum_score: search_index.strsim_minimum_score,
             split_pattern: search_index.split_pattern,
             case_sensitive: search_index.case_sensitive,
             minimum_keyword_length: search_index.minimum_keyword_length,

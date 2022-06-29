@@ -1,6 +1,6 @@
 use crate::simple::search_index::SearchIndex;
 use std::cmp::Ord;
-use strsim::damerau_levenshtein;
+use strsim::normalized_damerau_levenshtein;
 
 // -----------------------------------------------------------------------------
 
@@ -15,6 +15,13 @@ impl<K: Ord> SearchIndex<K> {
     /// When the user's search string contains a keyword that returns no
     /// matches, these `strsim_keyword_*` methods can be used to find the best
     /// match for substitution.
+    ///
+    /// Note: the `index_range` limits which keywords to compare the user's
+    /// keyword against. For example, if the `index_range` is "super" and the
+    /// user's keyword is "supersonic": only search index keywords beginning
+    /// with "super" will be compared against the user's keyword, like
+    /// "supersonic" against "superalloy", "supersonic" against "supergiant" and
+    /// so on...
     //
     // Note: these `strsim_keyword_*` methods are very similar and may seem
     // repetitive with a lot of boiler plate. These were intentionally made more
@@ -22,34 +29,9 @@ impl<K: Ord> SearchIndex<K> {
 
     pub(crate) fn strsim_keyword_damerau_levenshtein(
         &self,
+        index_range: &str,
         user_keyword: &str,
     ) -> Option<&String> {
-
-        // Build an index keyword range to fuzzy match against.
-        //
-        // | Example | User Keyword                       | Length | Index Keyword Must Start With... |
-        // |---------|------------------------------------|--------|----------------------------------|
-        // | 1       | Supercalifragilisticexpialidocious | 2      |  Su                              |
-        // | 2       | Antidisestablishmentarianism       | 4      |  Anti                            |
-        // | 3       | Pseudopseudohypoparathyroidism     | 0      |                                  |
-        //
-        // * In example 1, since the length is set to `2`, the user's keyword
-        // will only be fuzzy matched against keywords in the index beginning
-        // with `su`.
-        //
-        // * In example 2, since the length is set to `4`, the user's keyword
-        // will only be fuzzy matched against keywords in the index beginning
-        // with `anti`.
-        //
-        // * In example 3, since the length is set to `0`, the user's keyword
-        // will be fuzzy matched against every keyword in the index. This is OK
-        // or even desirable if the search index isn't large, however, this will
-        // be crippling slow on very large search indicies.
-        let index_range: &str = if self.strsim_length > 0 {
-            &user_keyword[0..self.strsim_length]
-        } else {
-            ""
-        }; // if
 
         // Scan the search index for the highest scoring keyword:
         self.b_tree_map
@@ -65,15 +47,15 @@ impl<K: Ord> SearchIndex<K> {
             // to the user's keyword. Map the `(keyword, keys)` tuple into
             // a `(keyword, score)` tuple:
             .map(|(index_keyword, _keys)|
-                (index_keyword, damerau_levenshtein(index_keyword, user_keyword))
+                (index_keyword, normalized_damerau_levenshtein(index_keyword, user_keyword))
             ) // map
-            // Find the `(keyword, score)` tuple with the highest score.
-            // Note that `min_by_key` was considered because it's potentially
-            // more efficient. It causes difficult lifetime issues so it was
-            // abandoned in favour of `min_by`.
-            .min_by(|(_a_keyword, a_score), (_b_keyword, b_score)|
-                a_score.cmp(b_score)
-            ) // min_by
+            // Search index keyword must meet minimum score to be considered as
+            // a fuzzy match:
+            .filter(|(_keyword, score)| score >= &self.strsim_minimum_score)
+            // Find the `(keyword, score)` tuple with the highest score:
+            .max_by(|(_a_keyword, a_score), (_b_keyword, b_score)|
+                a_score.partial_cmp(b_score).unwrap()
+            ) // max_by
             // Return the `keyword` portion of the `(keyword, score)` tuple
             // to the caller:
             .map(|(keyword, _score)| keyword)
