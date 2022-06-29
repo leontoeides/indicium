@@ -10,29 +10,11 @@
 //!
 //! # What's New?
 //!
-//! * `0.3.7`: An experimental feature is now disabled by default to reduce
-//! resource consumption.
+//! * `0.4.0`: Initial support for fuzzy string searching.
 //!
-//! * `0.3.6`: Implemented `DerefMut` which gives access to the search index's
-//! underlying `BTreeMap`. Implemented `clear()` which is a convenience method
-//! for clearing the search index.
-//!
-//! * `0.3.5`: Peformance improvements.
-//!
-//! * `0.3.4`: Peformance improvements.
-//!
-//! * `0.3.3`: Fix: `cargo test` failed. Sorry.
-//!
-//! * `0.3.2`: Fix: issue with search indexes that do not use keyword splitting.
-//!
-//! * `0.3.1`: Autocomplete no longer offers previously used keywords as
-//! options.
-//!
-//! * `0.3.1`: Added `maximum_keys_per_keyword` getter method.
-//!
-//! * `0.3.1`: Added `autocomplete_with` and `search_with` methods which allow
-//! ad-hoc overrides of the `AutocompleteType`/`SearchType` and maximum results
-//! parameters.
+//! * `0.4.0`: New defaults are considered a breaking change. **Any dependent
+//! software should see how the updated defaults change search behaviour before
+//! adopting this update.**
 //!
 //! * `0.3.0`: Added new search type `SearchType::Live` which is for "search as
 //! you type" interfaces. It is sort of a hybrid between `autocomplete` and

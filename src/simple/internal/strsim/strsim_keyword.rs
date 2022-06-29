@@ -39,11 +39,11 @@ impl<K: Hash + Ord> SearchIndex<K> {
         //
         // * In example 3, since the length is set to `0`, the user's keyword
         // will be fuzzy matched against every keyword in the index. This is OK
-        // or even desirable if the search index isn't large, however, this will
-        // be crippling slow on very large search indicies.
+        // (or even desirable) if the search index isn't large, however, this
+        // will be crippling slow on very large search indicies.
         let index_range: &str = if self.strsim_length > 0 {
             // The user keyword must be longer than the match length to be
-            // evaluated:
+            // evaluated for fuzzy-matches:
             if user_keyword.len() >= self.strsim_length {
                 // Use the first _n_ characters of the user's keyword to find
                 // search index keywords to compare against:
