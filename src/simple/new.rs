@@ -20,6 +20,8 @@ impl<K: Ord> SearchIndex<K> {
     /// let mut search_index = SearchIndex::<usize>::new(
     ///     SearchType::Or,                 // Search type.
     ///     AutocompleteType::Context,      // Autocompletion type.
+    ///     Some(StrSimType::Levenshtein),  // String similarity metric type.
+    ///     3,                              // String similarity keyword length.
     ///     Some(vec![' ', '\n', '\r', '\t', ',', '.']), // Split characters.
     ///     false,                          // Case sensitive?
     ///     1,                              // Minimum keyword length (in chars or codepoints.)
@@ -38,6 +40,7 @@ impl<K: Ord> SearchIndex<K> {
         search_type: SearchType,
         autocomplete_type: AutocompleteType,
         strsim_type: Option<StrSimType>,
+        strsim_length: usize,
         split_pattern: Option<Vec<char>>,
         case_sensitive: bool,
         minimum_keyword_length: usize,
@@ -54,6 +57,7 @@ impl<K: Ord> SearchIndex<K> {
             search_type,
             autocomplete_type,
             strsim_type,
+            strsim_length,
             split_pattern,
             case_sensitive,
             minimum_keyword_length,

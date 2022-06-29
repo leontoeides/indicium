@@ -24,6 +24,20 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
     pub(crate) fn internal_keyword_search(&self, keyword: &str) -> HashSet<&K> {
 
+        // Check if the search index contains the user's keyword:
+        let keyword: &str = if self.b_tree_map.contains_key(keyword) {
+            // The search index contains the user's keyword, so we will use it
+            // to return keys:
+            keyword
+        // If user's keyword not in search index, find the most similar keyword:
+        } else if let Some(fuzzy_keyword) = self.strsim_keyword(keyword) {
+            fuzzy_keyword
+        // If search keyword not found and no similar keywords, return an empty
+        // `HashSet`:
+        } else {
+            return HashSet::new()
+        }; // if
+
         // Attempt to get matching keys for the search keyword from BTreeMap:
         let search_results: HashSet<&K> = if let Some(keys) = self.b_tree_map.get(keyword) {
 
@@ -36,9 +50,6 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 .take(self.maximum_keys_per_keyword)
                 // Insert a reference to each resulting key into the hash set:
                 .collect()
-
-            // -> If fuzzy matching were to be implemented for
-            // `indicium::simple` it would probably be put here. <-
 
         } else {
 

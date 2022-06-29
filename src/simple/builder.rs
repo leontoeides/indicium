@@ -18,7 +18,9 @@ pub struct SearchIndexBuilder<K> {
     search_type: SearchType,
     autocomplete_type: AutocompleteType,
     #[cfg(feature = "fuzzy")]
-    pub(crate) strsim_type: Option<StrSimType>,
+    strsim_type: Option<StrSimType>,
+    #[cfg(feature = "fuzzy")]
+    strsim_length: usize,
     split_pattern: Option<Vec<char>>,
     case_sensitive: bool,
     minimum_keyword_length: usize,
@@ -42,6 +44,8 @@ impl<K: Clone + Ord> From<SearchIndex<K>> for SearchIndexBuilder<K> {
             autocomplete_type: search_index.autocomplete_type,
             #[cfg(feature = "fuzzy")]
             strsim_type: search_index.strsim_type,
+            #[cfg(feature = "fuzzy")]
+            strsim_length: search_index.strsim_length,
             split_pattern: search_index.split_pattern,
             case_sensitive: search_index.case_sensitive,
             minimum_keyword_length: search_index.minimum_keyword_length,
@@ -67,6 +71,8 @@ impl<K: Clone + Ord> From<SearchIndexBuilder<K>> for SearchIndex<K> {
             autocomplete_type: search_index.autocomplete_type,
             #[cfg(feature = "fuzzy")]
             strsim_type: search_index.strsim_type,
+            #[cfg(feature = "fuzzy")]
+            strsim_length: search_index.strsim_length,
             split_pattern: search_index.split_pattern,
             case_sensitive: search_index.case_sensitive,
             minimum_keyword_length: search_index.minimum_keyword_length,
@@ -131,7 +137,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     ///
     /// **Default:** [ `tab`, `new line`, `carrier return`, `space`, '!', `"`, `&`,
     /// `(`, `)`, `*`, `+`, `,`, `-`, `.`, `/`, `:`, `;`, `<`, `=`, `>`, `?`,
-    /// `[`, `'`, `\`, `]`, `^`, ```, `{`, `|`, `}`, `~` ]
+    /// `[`, `\`, `]`, `^`, ```, `{`, `|`, `}`, `~` ]
     pub fn split_pattern(&mut self, split_pattern: Option<Vec<char>>) -> &mut Self {
         self.split_pattern = split_pattern;
         self

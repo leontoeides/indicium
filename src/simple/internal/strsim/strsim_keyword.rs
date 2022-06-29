@@ -16,19 +16,32 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// matches, these `strsim_keyword_*` methods can be used to find the best
     /// match for substitution.
 
-    pub(crate) fn strsim_keyword(
+    pub fn strsim_keyword(
         &self,
         user_keyword: &str,
     ) -> Option<&String> {
 
         if let Some(strsim_type) = &self.strsim_type {
             match strsim_type {
-                StrSimType::DamerauLevenshtein => self.strsim_keyword_damerau_levenshtein(user_keyword),
-                StrSimType::Jaro => self.strsim_keyword_jaro(user_keyword),
-                StrSimType::JaroWinkler => self.strsim_keyword_jaro_winkler(user_keyword),
-                StrSimType::Levenshtein => self.strsim_keyword_levenshtein(user_keyword),
-                StrSimType::OsaDistance => self.strsim_keyword_osa_distance(user_keyword),
-                StrSimType::SorensenDice => self.strsim_keyword_sorensen_dice(user_keyword),
+
+                StrSimType::DamerauLevenshtein =>
+                    self.strsim_keyword_damerau_levenshtein(user_keyword),
+
+                StrSimType::Jaro =>
+                    self.strsim_keyword_jaro(user_keyword),
+
+                StrSimType::JaroWinkler =>
+                    self.strsim_keyword_jaro_winkler(user_keyword),
+
+                StrSimType::Levenshtein =>
+                    self.strsim_keyword_levenshtein(user_keyword),
+
+                StrSimType::OsaDistance =>
+                    self.strsim_keyword_osa_distance(user_keyword),
+
+                StrSimType::SorensenDice =>
+                    self.strsim_keyword_sorensen_dice(user_keyword),
+
             } // match
         } else {
             None

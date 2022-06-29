@@ -156,8 +156,9 @@ impl<K: Hash + Ord> SearchIndex<K> {
                                 // will become the new `search_results`:
                                 .collect(),
 
-                            // If `search_results` is empty, initialize it with
-                            // the first keyword's full search results:
+                            // If `search_results` is currently empty,
+                            // initialize it with the first keyword's full
+                            // search results:
                             None => self.internal_keyword_search(keyword),
 
                         } // match

@@ -21,7 +21,7 @@ pub enum AutocompleteType {
     /// keyword will be autocompleted. The last keyword in the search string
     /// will be autocompleted by using the preceding keywords as a filter. This
     /// effectively provides contextual autocompletion. This is the heaviest and
-    /// slowest autocompletion type but likely provides the best user
+    /// slowest autocompletion type but probably provides the best user
     /// experience.
     Context,
     /// The search string may contain multiple keywords and the last (partial)

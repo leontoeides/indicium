@@ -12,6 +12,7 @@ impl<K: Ord> Default for SearchIndex<K> {
             SearchType::And,                // Search type.
             AutocompleteType::Context,      // Autocompletion type.
             Some(StrSimType::Levenshtein),  // String similarity metric type.
+            3,                              // String similarity keyword length.
             // Default split pattern:
             Some(vec![
                 '\t',                       // Tab
@@ -36,7 +37,6 @@ impl<K: Ord> Default for SearchIndex<K> {
                 '>',
                 '?',
                 '[',
-                '\'',                       // Single quotation or apostrophe
                 '\\',                       // Backslash
                 ']',
                 '^',

@@ -7,6 +7,8 @@ use std::collections::{BTreeMap, BTreeSet};
 /// **The search index**. This is the most important structure in Indicium
 /// `simple` search. You may instantiate your search index with
 /// `SearchIndex::default()` or use the `SearchIndexBuilder` builder pattern.
+///
+/// `K` generic represents the search index key type (i.e. `MyStruct`).
 
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct SearchIndex<K: Ord> {
@@ -21,6 +23,11 @@ pub struct SearchIndex<K: Ord> {
     /// The `StrSimType` for string similarity fuzzy matching.
     #[cfg(feature = "fuzzy")]
     pub(crate) strsim_type: Option<StrSimType>,
+    /// Both the user's keyword and search index's keyword must be match each
+    /// other for the first _n_ characters in order to be evaluated for fuzzy
+    /// matching.
+    #[cfg(feature = "fuzzy")]
+    pub(crate) strsim_length: usize,
     /// Characters used to split strings into keywords.
     pub(crate) split_pattern: Option<Vec<char>>,
     /// Indicates whether the search index is case sensitive or not. If set to

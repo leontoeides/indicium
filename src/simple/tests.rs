@@ -99,4 +99,7 @@ fn simple() {
     let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Context, "108");
     assert_eq!(autocomplete_options, vec!["1087".to_string()]);
 
+    let similar_keyword = search_index.strsim_keyword("edward");
+    assert_eq!(similar_keyword, Some(&"edgar".to_string()));
+
 } // fn

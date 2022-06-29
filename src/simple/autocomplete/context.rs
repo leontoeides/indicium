@@ -18,7 +18,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// keyword will be autocompleted. The last keyword in the search string
     /// will be autocompleted by using the preceding keywords as a filter. This
     /// effectively provides contextual autocompletion. It is the heaviest and
-    /// slowest autocompletion type but likely provides the best user
+    /// slowest autocompletion type but probably provides the best user
     /// experience. Results are returned in lexographic order.
     ///
     /// Basic usage:
