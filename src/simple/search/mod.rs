@@ -90,7 +90,7 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
     /// #   );
     /// #
     /// let search_results = search_index.search("last Wessex");
-    /// assert_eq!(search_results, vec![&1, &0]);
+    /// assert_eq!(search_results, vec![&1]);
     /// ```
 
     #[tracing::instrument(level = "trace", name = "Search", skip(self))]

@@ -42,8 +42,8 @@ impl<K: Ord> SearchIndex<K> {
     /// #
     /// # let mut search_index: SearchIndex<usize> =
     /// #     SearchIndexBuilder::default()
-    /// #         .autocomplete_type(&AutocompleteType::Global)
-    /// #         .exclude_keywords(&None)
+    /// #         .autocomplete_type(AutocompleteType::Global)
+    /// #         .exclude_keywords(None)
     /// #         .build();
     /// #
     /// # struct MyType { text: String }

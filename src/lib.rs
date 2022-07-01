@@ -10,11 +10,13 @@
 //!
 //! # What's New?
 //!
-//! * `0.4.0`: Initial support for fuzzy string searching.
+//! * `0.4.0`: Initial support for fuzzy searching.
 //!
-//! * `0.4.0`: New defaults are considered a breaking change. **Any dependent
-//! software should see how the updated defaults change search behaviour before
-//! adopting this update.**
+//! * `0.4.0`: Breaking change: builder pattern now wants owned values.
+//!
+//! * `0.4.0`: Breaking change: new defaults. **Any dependent software should
+//! see if or how the updated defaults change search behaviour before adopting
+//! the 0.4.0 update.**
 //!
 //! * `0.3.0`: Added new search type `SearchType::Live` which is for "search as
 //! you type" interfaces. It is sort of a hybrid between `autocomplete` and
@@ -225,8 +227,8 @@
 //! #
 //! let mut search_index: SearchIndex<usize> =
 //!     SearchIndexBuilder::default()
-//!         .autocomplete_type(&AutocompleteType::Global)
-//!         .exclude_keywords(&None)
+//!         .autocomplete_type(AutocompleteType::Global)
+//!         .exclude_keywords(None)
 //!         .build();
 //!
 //! search_index.insert(&0, &MyType::from("apple"));

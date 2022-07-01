@@ -50,9 +50,11 @@ impl<K: Ord> SearchIndex<K> {
     // -------------------------------------------------------------------------
     //
     /// An associated helper method that splits a `&str` into keywords using a
-    /// split pattern (`Vec<char>`). This method will also perform case
-    /// conversion if necessary, and filter-out keywords that don't meet the
-    /// defined length restrictions.
+    /// split pattern (`Vec<char>`).
+    ///
+    /// This method will also perform case conversion if necessary, filter-out
+    /// keywords that don't meet the defined length restrictions, and remove
+    /// excluded keywords.
 
     pub(crate) fn string_keywords(
         &self,

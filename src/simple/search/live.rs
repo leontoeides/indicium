@@ -1,7 +1,7 @@
 use crate::simple::internal::string_keywords::SplitContext;
 use crate::simple::SearchIndex;
 use std::cmp::Ord;
-use std::collections::{BTreeSet, HashSet};
+use std::collections::BTreeSet;
 use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
@@ -180,7 +180,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
                     // Perform `And` search for entire string, excluding the
                     // last (partial) keyword:
-                    let search_results: HashSet<&K> =
+                    let search_results: BTreeSet<&K> =
                         self.internal_search_and(keywords.as_slice());
 
                     // Get keys for the last (partial) keyword:

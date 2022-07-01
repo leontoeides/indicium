@@ -25,11 +25,17 @@ may begin to degrade at a point.
 
 # What's New?
 
-* `0.4.0`: Initial support for fuzzy string searching.
+* `0.4.0`: Initial support for fuzzy searching.
+
+* `0.4.0`: Breaking change: builder pattern now wants owned values.
+
+* `0.4.0`: Breaking change: new defaults. **Any dependent software should see if
+or how the updated defaults change search behaviour before adopting the 0.4.0
+update.**
 
 * `0.4.0`: New defaults are considered a breaking change. **Any dependent
-software should see how the updated defaults change search behaviour before
-adopting this update.**
+software should see if or how the updated defaults change search behaviour
+before adopting this update.**
 
 * `0.3.7`: An experimental feature is now disabled by default to reduce resource
 consumption.

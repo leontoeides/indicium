@@ -1,7 +1,7 @@
 use crate::simple::internal::string_keywords::SplitContext;
 use crate::simple::SearchIndex;
 use std::cmp::Ord;
-use std::collections::HashSet;
+use std::collections::BTreeSet;
 use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
@@ -114,7 +114,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
         if let Some(last_keyword) = keywords.pop() {
 
             // Perform `And` search for entire string without the last keyword:
-            let search_results: HashSet<&K> =
+            let search_results: BTreeSet<&K> =
                 self.internal_search_and(keywords.as_slice());
 
             // Intersect the autocompletions for the last keyword with the

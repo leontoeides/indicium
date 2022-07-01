@@ -1,6 +1,6 @@
 use crate::simple::search_index::SearchIndex;
 use std::cmp::Ord;
-use std::collections::HashSet;
+use std::collections::BTreeSet;
 use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
@@ -22,10 +22,12 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// not observe any settings such as _case-sensitivity_ or _maximum
     /// results_. These constraints should be observed at higher levels.
 
-    pub(crate) fn internal_keyword_search(&self, keyword: &str) -> HashSet<&K> {
+    pub(crate) fn internal_keyword_search(&self, keyword: &str) -> BTreeSet<&K> {
 
+        // Uncomment below if I intend to perform fuzzy matching in this
+        // function:
         // Check if the search index contains the user's keyword:
-        let keyword: &str = if self.b_tree_map.contains_key(keyword) {
+        /* let keyword: &str = if self.b_tree_map.contains_key(keyword) {
             // The search index contains the user's keyword, so we will use it
             // to return keys:
             keyword
@@ -33,13 +35,13 @@ impl<K: Hash + Ord> SearchIndex<K> {
         } else if let Some(fuzzy_keyword) = self.strsim_keyword(keyword) {
             fuzzy_keyword
         // If search keyword not found and no similar keywords, return an empty
-        // `HashSet`:
+        // `BTreeSet`:
         } else {
-            return HashSet::new()
-        }; // if
+            return BTreeSet::new()
+        }; // if */
 
         // Attempt to get matching keys for the search keyword from BTreeMap:
-        let search_results: HashSet<&K> = if let Some(keys) = self.b_tree_map.get(keyword) {
+        let search_results: BTreeSet<&K> = if let Some(keys) = self.b_tree_map.get(keyword) {
 
             // Attempt to get matching keys for search keyword:
             keys
@@ -54,8 +56,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
         } else {
 
             // The search keyword did not result in any matches. Return an
-            // empty `HashSet`:
-            HashSet::new()
+            // empty `BTreeSet`:
+            BTreeSet::new()
 
         }; // if
 

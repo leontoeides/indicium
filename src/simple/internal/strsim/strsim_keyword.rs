@@ -59,7 +59,10 @@ impl<K: Hash + Ord> SearchIndex<K> {
             ""
         }; // if
 
+        // Attempt to find the closest match for the user's keyword using the
+        // selected string similarity metric defined in the `SearchIndex`:
         if let Some(strsim_type) = &self.strsim_type {
+
             match strsim_type {
 
                 StrSimType::DamerauLevenshtein =>
@@ -78,8 +81,14 @@ impl<K: Hash + Ord> SearchIndex<K> {
                     self.strsim_keyword_sorensen_dice(index_range, user_keyword),
 
             } // match
+
         } else {
+
+            // No string similarity metric was defined in the `SearchIndex`
+            // settings. Fuzzy string matching effectively turned off.
+            // Return a `None` to the caller:
             None
+
         } // if
 
     } // fn

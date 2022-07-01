@@ -1,7 +1,7 @@
 use crate::simple::internal::string_keywords::SplitContext;
 use crate::simple::search_index::SearchIndex;
 use std::cmp::Ord;
-use std::collections::HashSet;
+use std::collections::BTreeSet;
 use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
@@ -113,7 +113,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
         tracing::debug!("Searching: {:?}", keywords);
 
         // This `BTreeSet` is used to contain the search results:
-        let mut search_results: Option<HashSet<&K>> = None;
+        let mut search_results: Option<BTreeSet<&K>> = None;
 
         // Get each keyword from our `BTreeMap`, and intersect the resulting
         // keys with our current keys:
@@ -167,7 +167,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
                     // Any keyword that returns no results will short-circuit
                     // the search results into an empty set:
-                    None => search_results = Some(HashSet::new()),
+                    None => search_results = Some(BTreeSet::new()),
 
                 } // match
 

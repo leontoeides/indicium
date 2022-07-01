@@ -1,6 +1,6 @@
 use crate::simple::search_index::SearchIndex;
 use std::cmp::Ord;
-use std::collections::HashSet;
+use std::collections::BTreeSet;
 use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
@@ -18,10 +18,10 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// matching. Consider providing the `autocomplete` feature to your users as
     /// an ergonomic alternative to fuzzy matching.
 
-    pub(crate) fn internal_search_and(&self, keywords: &[String]) -> HashSet<&K> {
+    pub(crate) fn internal_search_and(&self, keywords: &[String]) -> BTreeSet<&K> {
 
-        // This `HashSet` is used to contain the search results:
-        let mut search_results: Option<HashSet<&K>> = None;
+        // This `BTreeSet` is used to contain the search results:
+        let mut search_results: Option<BTreeSet<&K>> = None;
 
         // Get each keyword from our `BTreeMap`, and intersect the resulting
         // keys with our current keys:
@@ -74,7 +74,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
                     // Any keyword that returns no results will short-circuit
                     // the search results into an empty set:
-                    None => search_results = Some(HashSet::new()),
+                    None => search_results = Some(BTreeSet::new()),
 
                 } // match
 
@@ -98,8 +98,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
         match search_results {
             // If master `search_results` is not empty, return it:
             Some(search_results) => search_results,
-            // If master `search_results` is empty, return an empty `HashSet`:
-            None => HashSet::new(),
+            // If master `search_results` is empty, return an empty `BTreeSet`:
+            None => BTreeSet::new(),
         } // match
 
     } // fn

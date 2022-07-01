@@ -8,5 +8,4 @@ pub(crate) mod string_keywords;
 
 // -----------------------------------------------------------------------------
 
-pub(crate) use crate::simple::internal::top_scores::LowestScores;
 pub(crate) use crate::simple::internal::top_scores::TopScores;

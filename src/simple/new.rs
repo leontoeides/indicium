@@ -15,13 +15,14 @@ impl<K: Ord> SearchIndex<K> {
     /// Basic usage:
     ///
     /// ```rust
-    /// # use indicium::simple::{AutocompleteType, SearchIndex, SearchType};
+    /// # use indicium::simple::{AutocompleteType, SearchIndex, SearchType, StrSimType};
     /// #
     /// let mut search_index = SearchIndex::<usize>::new(
     ///     SearchType::Or,                 // Search type.
     ///     AutocompleteType::Context,      // Autocompletion type.
     ///     Some(StrSimType::Levenshtein),  // String similarity metric type.
     ///     3,                              // String similarity match length.
+    ///     0.5,                            // String similarity minimum score.
     ///     Some(vec![' ', '\n', '\r', '\t', ',', '.']), // Split characters.
     ///     false,                          // Case sensitive?
     ///     1,                              // Minimum keyword length (in chars or codepoints.)

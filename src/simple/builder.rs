@@ -109,7 +109,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// **Default:** `SearchType::Live`
     ///
     /// [`SearchType`]: enum.SearchType.html
-    pub fn search_type(&mut self, search_type: SearchType) -> &mut Self {
+    pub fn search_type(mut self, search_type: SearchType) -> Self {
         self.search_type = search_type;
         self
     } // fn
@@ -121,7 +121,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// **Default:** `AutocompleteType::Context`
     ///
     /// [`AutocompleteType`]: enum.AutocompleteType.html
-    pub fn autocomplete_type(&mut self, autocomplete_type: AutocompleteType) -> &mut Self {
+    pub fn autocomplete_type(mut self, autocomplete_type: AutocompleteType) -> Self {
         self.autocomplete_type = autocomplete_type;
         self
     } // fn
@@ -134,7 +134,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// **Default:** `StrSimType::Levenshtein`
     ///
     /// [`StrSimType`]: enum.StrSimType.html
-    pub fn strsim_type(&mut self, strsim_type: Option<StrSimType>) -> &mut Self {
+    pub fn strsim_type(mut self, strsim_type: Option<StrSimType>) -> Self {
         self.strsim_type = strsim_type;
         self
     } // fn
@@ -144,7 +144,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// **Default:** [ `tab`, `new line`, `carrier return`, `space`, '!', `"`, `&`,
     /// `(`, `)`, `*`, `+`, `,`, `-`, `.`, `/`, `:`, `;`, `<`, `=`, `>`, `?`,
     /// `[`, `\`, `]`, `^`, ```, `{`, `|`, `}`, `~` ]
-    pub fn split_pattern(&mut self, split_pattern: Option<Vec<char>>) -> &mut Self {
+    pub fn split_pattern(mut self, split_pattern: Option<Vec<char>>) -> Self {
         self.split_pattern = split_pattern;
         self
     } // fn
@@ -153,7 +153,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// false (case insensitive), all keywords will be normalized to lower case.
     ///
     /// **Default:** `false`
-    pub fn case_sensitive(&mut self, case_sensitive: bool) -> &mut Self {
+    pub fn case_sensitive(mut self, case_sensitive: bool) -> Self {
         self.case_sensitive = case_sensitive;
         self
     } // fn
@@ -162,7 +162,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// keyword is shorter the keyword will not be indexed.
     ///
     /// **Default:** `1`
-    pub fn min_keyword_len(&mut self, minimum_keyword_length: usize) -> &mut Self {
+    pub fn min_keyword_len(mut self, minimum_keyword_length: usize) -> Self {
         self.minimum_keyword_length = minimum_keyword_length;
         self
     } // fn
@@ -171,7 +171,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// keyword is longer the keyword will not be indexed.
     ///
     /// **Default:** `24`
-    pub fn max_keyword_len(&mut self, maximum_keyword_length: usize) -> &mut Self {
+    pub fn max_keyword_len(mut self, maximum_keyword_length: usize) -> Self {
         self.maximum_keyword_length = maximum_keyword_length;
         self
     } // fn
@@ -181,7 +181,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// a single keyword for autocompletion purposes.
     ///
     /// **Default:** `Some(24)`
-    pub fn max_string_len(&mut self, maximum_string_length: Option<usize>) -> &mut Self {
+    pub fn max_string_len(mut self, maximum_string_length: Option<usize>) -> Self {
         self.maximum_string_length = maximum_string_length;
         self
     } // fn
@@ -192,7 +192,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// `as`, `a`, `as`, `at`, etc. See also: the [`profile`] utility method.
     ///
     /// [`profile`]: struct.SearchIndex.html#method.profile
-    pub fn exclude_keywords(&mut self, exclude_keywords: Option<Vec<String>>) -> &mut Self {
+    pub fn exclude_keywords(mut self, exclude_keywords: Option<Vec<String>>) -> Self {
         self.exclude_keywords = exclude_keywords;
         self
     } // fn
@@ -201,7 +201,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// overidden by some function arguments.
     ///
     /// **Default:** `5`
-    pub fn max_autocomplete_options(&mut self, maximum_autocomplete_options: usize) -> &mut Self {
+    pub fn max_autocomplete_options(mut self, maximum_autocomplete_options: usize) -> Self {
         self.maximum_autocomplete_options = maximum_autocomplete_options;
         self
     } // fn
@@ -210,7 +210,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// overidden by some function arguments.
     ///
     /// **Default:** `100`
-    pub fn max_search_results(&mut self, maximum_search_results: usize) -> &mut Self {
+    pub fn max_search_results(mut self, maximum_search_results: usize) -> Self {
         self.maximum_search_results = maximum_search_results;
         self
     } // fn
@@ -221,7 +221,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// also: the `exclude_keywords` list and the `profile` method.
     ///
     /// **Default:** `40_960`
-    pub fn max_keys_per_keyword(&mut self, maximum_keys_per_keyword: usize) -> &mut Self {
+    pub fn max_keys_per_keyword(mut self, maximum_keys_per_keyword: usize) -> Self {
         self.maximum_keys_per_keyword = maximum_keys_per_keyword;
         self
     } // fn
@@ -231,7 +231,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// should be returning all records if the search string is empty.
     ///
     /// **Default:** `Some("\0".to_string())`
-    pub fn dump_keyword(&mut self, dump_keyword: Option<String>) -> &mut Self {
+    pub fn dump_keyword(mut self, dump_keyword: Option<String>) -> Self {
         self.dump_keyword = dump_keyword;
         self
     } // fn
