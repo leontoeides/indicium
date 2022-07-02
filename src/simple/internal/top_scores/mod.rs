@@ -1,9 +1,7 @@
 mod find_bottom;
 mod insert;
-mod keys;
-mod keywords;
-mod results;
 mod remove_bottom;
+mod results;
 mod with_capacity;
 
 // -----------------------------------------------------------------------------

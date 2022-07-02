@@ -1,3 +1,5 @@
+#![allow(unused_mut)]
+
 use crate::simple::internal::string_keywords::SplitContext;
 use crate::simple::search_index::SearchIndex;
 use std::{cmp::Ord, hash::Hash};

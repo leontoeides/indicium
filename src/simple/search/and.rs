@@ -148,7 +148,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                                 .filter(|key|
                                     keyword_results.contains(key)
                                 )
-                                // Copy each key from the `Intersection`
+                                // Clone each key from the `Intersection`
                                 // iterator or we'll get a doubly-referenced
                                 // `&&K` key:
                                 .cloned()

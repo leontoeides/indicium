@@ -1,8 +1,8 @@
+#![allow(unused_mut)]
+
 use crate::simple::internal::string_keywords::SplitContext;
 use crate::simple::SearchIndex;
-use std::cmp::Ord;
-use std::collections::BTreeSet;
-use std::hash::Hash;
+use std::{cmp::Ord, collections::BTreeSet, hash::Hash};
 
 // -----------------------------------------------------------------------------
 
@@ -141,28 +141,57 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // differently. We will return the keys for these autocomplete
                 // options without further processing:
 
-                0 => self.b_tree_map
-                    // Get matching keywords starting with (partial) keyword
-                    // string:
-                    .range(last_keyword.to_owned()..)
-                    // We did not specify an end bound for our `range` function
-                    // (see above.) `range` will return _every_ keyword greater
-                    // than the supplied keyword. The below `take_while` will
-                    // effectively break iteration when we reach a keyword that
-                    // does not start with our supplied (partial) keyword.
-                    .take_while(|(keyword, _keys)|
-                        keyword.starts_with(&last_keyword)
-                    )
-                    // We're not interested in the `keyword` since we're
-                    // returning `&K` keys. Return only `&K` from the tuple:
-                    .map(|(_keyword, keys)| keys)
-                    // Flatten the `BTreeSet<K>` from each autocomplete keyword
-                    // option into our collection:
-                    .flatten()
-                    // Only return `maximum_search_results` number of keys:
-                    .take(*maximum_search_results)
-                    // Collect all keyword autocompletions into a `Vec`:
-                    .collect(),
+                0 => {
+
+                    let mut search_results: BTreeSet<&K> = self.b_tree_map
+                        // Get matching keywords starting with (partial) keyword
+                        // string:
+                        .range(last_keyword.to_owned()..)
+                        // We did not specify an end bound for our `range`
+                        // function (see above.) `range` will return _every_
+                        // keyword greater than the supplied keyword. The below
+                        // `take_while` will effectively break iteration when we
+                        // reach a keyword that does not start with our supplied
+                        // (partial) keyword.
+                        .take_while(|(keyword, _keys)|
+                            keyword.starts_with(&last_keyword)
+                        ) // take_while
+                        // Only return `maximum_search_results` number of keys:
+                        .take(*maximum_search_results)
+                        // We're not interested in the `keyword` since we're
+                        // returning `&K` keys. Return only `&K` from the tuple.
+                        // Flatten the `BTreeSet<K>` from each autocomplete
+                        // keyword option into our collection:
+                        .flat_map(|(_keyword, keys)| keys)
+                        // Collect all keyword search results into a `Vec`:
+                        .collect();
+
+                    // If fuzzy string searching enabled, examine the search
+                    // results before returning them:
+                    #[cfg(feature = "fuzzy")]
+                    if search_results.is_empty() {
+                        // No search results were found for the user's last
+                        // (partial) keyword. Attempt to use fuzzy string
+                        // search to find other options:
+                        search_results = self.strsim_autocomplete(&last_keyword)
+                            .into_iter()
+                            // Only return `maximum_search_results` number of
+                            // keys:
+                            .take(*maximum_search_results)
+                            // `strsim_autocomplete` returns both the keyword
+                            // and keys. We're searching for the last (partial)
+                            // keyword, so discard the keywords. Flatten the
+                            // `BTreeSet<K>` from each search result into our
+                            // collection:
+                            .flat_map(|(_keyword, keys)| keys)
+                            // Collect all keyword autocompletions into a `Vec`:
+                            .collect()
+                    } // if
+
+                    // Return search results to caller:
+                    search_results
+
+                }, // 0
 
                 // Consider this example search string: `Shatner t`.
                 //
@@ -183,7 +212,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                         self.internal_search_and(keywords.as_slice());
 
                     // Get keys for the last (partial) keyword:
-                    self.b_tree_map
+                    let mut last_results: BTreeSet<&K> = self.b_tree_map
                         // Get matching keywords starting with (partial) keyword
                         // string:
                         .range(last_keyword.to_owned()..)
@@ -195,16 +224,15 @@ impl<K: Hash + Ord> SearchIndex<K> {
                         // (partial) keyword.
                         .take_while(|(keyword, _keys)|
                             keyword.starts_with(&last_keyword)
-                        )
+                        ) // take_while
                         // Only keep this autocompletion if hasn't already been
                         // used as a keyword:
                         .filter(|(keyword, _keys)| !keywords.contains(keyword))
                         // We're not interested in the `keyword` since we're
-                        // returning `&K` keys. Return only `&K` from the tuple:
-                        .map(|(_key, value)| value)
+                        // returning `&K` keys. Return only `&K` from the tuple.
                         // Flatten the `BTreeSet<K>` from each autocomplete
                         // keyword option into individual `K` keys:
-                        .flatten()
+                        .flat_map(|(_key, value)| value)
                         // Intersect the key results from the autocomplete
                         // options (produced from this iterator) with the search
                         // results produced above:
@@ -212,7 +240,41 @@ impl<K: Hash + Ord> SearchIndex<K> {
                         // Only return `maximum_search_results` number of keys:
                         .take(*maximum_search_results)
                         // Collect all keyword autocompletions into a `Vec`:
-                        .collect()
+                        .collect();
+
+                    // If fuzzy string searching enabled, examine the search
+                    // results before returning them:
+                    #[cfg(feature = "fuzzy")]
+                    if last_results.is_empty() {
+                        // No search results were found for the user's last
+                        // (partial) keyword. Attempt to use fuzzy string
+                        // search to find other options:
+                        last_results = self.strsim_autocomplete(&last_keyword)
+                            .into_iter()
+                            // Only keep this result if hasn't already been used
+                            // as a keyword:
+                            .filter(|(keyword, _keys)| !keywords.contains(keyword))
+                            // Only keep this autocompletion if it contains a
+                            // key that the search results contain:
+                            .filter(|(_keyword, keys)|
+                                last_results.is_empty() ||
+                                    keys.iter().any(|key| last_results.contains(key))
+                            ) // filter
+                            // Only return `maximum_search_results` number of
+                            // keys:
+                            .take(*maximum_search_results)
+                            // `strsim_autocomplete` returns both the keyword
+                            // and keys. We're searching for the last (partial)
+                            // keyword, so discard the keywords. Flatten the
+                            // `BTreeSet<K>` from each search result into our
+                            // collection:
+                            .flat_map(|(_keyword, keys)| keys)
+                            // Collect all keyword autocompletions into a `Vec`:
+                            .collect()
+                    } // if
+
+                    // Return search results to caller:
+                    last_results
 
                 }, // _
 

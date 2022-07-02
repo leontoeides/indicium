@@ -17,11 +17,8 @@ pub struct SearchIndexBuilder<K> {
     b_tree_map: BTreeMap<String, BTreeSet<K>>,
     search_type: SearchType,
     autocomplete_type: AutocompleteType,
-    #[cfg(feature = "fuzzy")]
     strsim_type: Option<StrSimType>,
-    #[cfg(feature = "fuzzy")]
     strsim_length: usize,
-    #[cfg(feature = "fuzzy")]
     strsim_minimum_score: f64,
     split_pattern: Option<Vec<char>>,
     case_sensitive: bool,
@@ -44,11 +41,8 @@ impl<K: Clone + Ord> From<SearchIndex<K>> for SearchIndexBuilder<K> {
             b_tree_map: search_index.b_tree_map,
             search_type: search_index.search_type,
             autocomplete_type: search_index.autocomplete_type,
-            #[cfg(feature = "fuzzy")]
             strsim_type: search_index.strsim_type,
-            #[cfg(feature = "fuzzy")]
             strsim_length: search_index.strsim_length,
-            #[cfg(feature = "fuzzy")]
             strsim_minimum_score: search_index.strsim_minimum_score,
             split_pattern: search_index.split_pattern,
             case_sensitive: search_index.case_sensitive,
@@ -73,11 +67,8 @@ impl<K: Clone + Ord> From<SearchIndexBuilder<K>> for SearchIndex<K> {
             b_tree_map: search_index.b_tree_map,
             search_type: search_index.search_type,
             autocomplete_type: search_index.autocomplete_type,
-            #[cfg(feature = "fuzzy")]
             strsim_type: search_index.strsim_type,
-            #[cfg(feature = "fuzzy")]
             strsim_length: search_index.strsim_length,
-            #[cfg(feature = "fuzzy")]
             strsim_minimum_score: search_index.strsim_minimum_score,
             split_pattern: search_index.split_pattern,
             case_sensitive: search_index.case_sensitive,
@@ -134,8 +125,30 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// **Default:** `StrSimType::Levenshtein`
     ///
     /// [`StrSimType`]: enum.StrSimType.html
+    #[cfg(feature = "fuzzy")]
     pub fn strsim_type(mut self, strsim_type: Option<StrSimType>) -> Self {
         self.strsim_type = strsim_type;
+        self
+    } // fn
+
+    /// String's minimum length to use "approximate string matching" or "fuzzy
+    /// matching."
+    ///
+    /// **Default:** 3 characters
+    #[cfg(feature = "fuzzy")]
+    pub fn strsim_length(mut self, strsim_length: usize) -> Self {
+        self.strsim_length = strsim_length;
+        self
+    } // fn
+
+    /// Keyword's minimum score to be used as a possible fuzzy match. Must be a
+    /// value between 0.0 and 1.0 (inclusive), where 1.0 means the strings are
+    /// the same.
+    ///
+    /// **Default:** 0.3
+    #[cfg(feature = "fuzzy")]
+    pub fn strsim_minimum_score(mut self, strsim_minimum_score: f64) -> Self {
+        self.strsim_minimum_score = strsim_minimum_score;
         self
     } // fn
 

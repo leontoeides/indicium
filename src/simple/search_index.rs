@@ -21,16 +21,13 @@ pub struct SearchIndex<K: Ord> {
     /// overridden by using the `autocompletion_type` method.
     pub(crate) autocomplete_type: AutocompleteType,
     /// The `StrSimType` for string similarity fuzzy matching.
-    #[cfg(feature = "fuzzy")]
     pub(crate) strsim_type: Option<StrSimType>,
     /// Search index keyword must match the first _n_ characters of the user's
     /// keyword in order to be evaluated for fuzzy matching.
-    #[cfg(feature = "fuzzy")]
     pub(crate) strsim_length: usize,
     /// Minimum score for the search index's keyword to be returned as an
     /// alternative to the user's keyword. Score is between 0.0 and 1.0
     /// (inclusive), where 1.0 means the strings are the same.
-    #[cfg(feature = "fuzzy")]
     pub(crate) strsim_minimum_score: f64,
     /// Characters used to split strings into keywords.
     pub(crate) split_pattern: Option<Vec<char>>,

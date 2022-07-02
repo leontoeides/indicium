@@ -28,10 +28,9 @@ impl<K: Ord> SearchIndex<K> {
             .iter()
             // Split each `String` into keywords according to the `SearchIndex`
             // settings. Note that `string_keywords` will allow "use entire
-            // string as a keyword" if enabled in user settings:
-            .map(|string| self.string_keywords(string, SplitContext::Indexing))
-            // Flatten the string's keywords:
-            .flatten()
+            // string as a keyword" if enabled in user settings. Flatten the
+            // string's keywords into the `HashSet`:
+            .flat_map(|string| self.string_keywords(string, SplitContext::Indexing))
             // Collect all keywords into a `Vec`:
             .collect()
 
