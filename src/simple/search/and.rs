@@ -178,9 +178,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
             // If `search_results` is is not empty, convert the `BTreeMap` to a
             // `Vec` for caller while observing `maximum_search_results`:
             Some(search_results) => search_results
-                .iter()
+                .into_iter()
                 .take(*maximum_search_results)
-                .cloned()
                 .collect(),
             // If `search_results` is empty, return an empty `Vec`:
             None => Vec::new(),

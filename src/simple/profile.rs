@@ -43,9 +43,8 @@ impl<K: Clone + Ord> SearchIndex<K> {
 
         // Return only `count` number of records to the caller:
         keywords
-            .iter()
+            .into_iter()
             .take(count)
-            .cloned()
             .collect()
 
     } // fn

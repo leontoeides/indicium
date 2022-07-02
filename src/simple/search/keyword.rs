@@ -83,7 +83,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     ///
     /// assert_eq!(
     ///     // Convert `BTreeMap<&K>` to `Vec<&K>` for comparison:
-    ///     search_results.iter().cloned().collect::<Vec<&usize>>(),
+    ///     search_results.into_iter().collect::<Vec<&usize>>(),
     ///     vec![&1]
     /// );
     /// ```

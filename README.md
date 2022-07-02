@@ -28,12 +28,12 @@ may begin to degrade at a point.
 * `0.4.0`: Initial support for fuzzy searching.
 
 * `0.4.0`: Breaking changes:
-	* Builder pattern now wants owned values
-	* `K` key type may require `Hash` trait for fuzzy matching.
+	* Builder pattern is now passed owned values.
+	* `K` key type requires `Hash` trait for `fuzzy` string search feature.
 	* New `SearchIndex` default settings.
 
-**Any dependent software should see if or how the updated defaults change search
-behaviour and tweak accordingly before adopting the 0.4.0 update.**
+**Any dependent software should see if (or how) the updated defaults change
+search behaviour and tweak accordingly before adopting the 0.4.0 update.**
 
 * `0.3.7`: An experimental feature is now disabled by default to reduce resource
 consumption.

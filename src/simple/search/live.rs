@@ -94,8 +94,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// #
     /// let search_results = search_index
     ///     .search_live(&20, "Norman C")
-    ///     .iter()
-    ///     .cloned()
+    ///     .into_iter()
     ///     .collect::<Vec<&usize>>();
     ///
     /// assert_eq!(search_results, vec![&2]);

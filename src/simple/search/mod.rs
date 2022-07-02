@@ -103,8 +103,7 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
                 self.search_keyword(&self.maximum_search_results, string),
             SearchType::Live =>
                 self.search_live(&self.maximum_search_results, string)
-                    .iter()
-                    .cloned()
+                    .into_iter()
                     .collect(),
             SearchType::Or =>
                 self.search_or(&self.maximum_search_results, string),
@@ -214,8 +213,7 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
                 self.search_keyword(&self.maximum_search_results, string),
             SearchType::Live =>
                 self.search_live(&self.maximum_search_results, string)
-                    .iter()
-                    .cloned()
+                    .into_iter()
                     .collect(),
             SearchType::Or =>
                 self.search_or(&self.maximum_search_results, string),
@@ -332,8 +330,7 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
                 self.search_keyword(maximum_search_results, string),
             SearchType::Live =>
                 self.search_live(maximum_search_results, string)
-                    .iter()
-                    .cloned()
+                    .into_iter()
                     .collect(),
             SearchType::Or =>
                 self.search_or(maximum_search_results, string),

@@ -78,7 +78,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     ///
     /// assert_eq!(
     ///     // Convert `BTreeMap<&String>` to `Vec<&String>` for comparison:
-    ///     autocomplete_options.iter().cloned().collect::<Vec<&String>>(),
+    ///     autocomplete_options.into_iter().collect::<Vec<&String>>(),
     ///     vec![&"edgar".to_string(), &"edgar ætheling".to_string(), &"england".to_string()]
     /// );
     /// ```
