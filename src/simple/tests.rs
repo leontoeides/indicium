@@ -78,6 +78,10 @@ fn simple() {
     let search_results = search_index.search_type(&SearchType::Live, "Last m");
     assert_eq!(search_results, vec![&1]);
 
+    // Ensure that fuzzy matching is working with live searches:
+    let search_results = search_index.search_type(&SearchType::Live, "1066 Harry");
+    assert_eq!(search_results, vec![&0]);
+
     let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Keyword, "E");
     assert_eq!(autocomplete_options, vec!["edgar".to_string(), "edgar ætheling".to_string(), "england".to_string()]);
 
@@ -85,17 +89,17 @@ fn simple() {
     assert_eq!(autocomplete_options, vec!["1100 edgar".to_string(), "1100 edgar ætheling".to_string(), "1100 england".to_string()]);
 
     // Test fuzzy-matching for global autocompletion:
-    let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Global, "1100 englelund");
+    let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Global, "1100 Englelund");
     assert_eq!(autocomplete_options, vec!["1100 england".to_string()]);
 
     // The only `w` keywords that `1087` should contain are `William` and
     // `William Rufus`. `Wessex` exists in the index but it is not related to
     // `1087`:
-    let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Context, "1087 w");
+    let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Context, "1087 W");
     assert_eq!(autocomplete_options, vec!["1087 william".to_string(), "1087 william rufus".to_string()]);
 
     // Test fuzzy-matching for context autocompletion:
-    let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Context, "1087 willy");
+    let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Context, "1087 Willy");
     assert_eq!(autocomplete_options, vec!["1087 william".to_string(), "1087 william rufus".to_string()]);
 
     // Ensure that `Context` autocomplete works with an empty search string /
@@ -104,16 +108,12 @@ fn simple() {
     let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Context, "108");
     assert_eq!(autocomplete_options, vec!["1087".to_string()]);
 
-    // Ensure that fuzzy matching is working with
-    let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Context, "108");
-    assert_eq!(autocomplete_options, vec!["1087".to_string()]);
-
     // Test internal fuzzy keyword search interface:
-    let similar_keyword = search_index.strsim_keyword("willy");
+    let similar_keyword = search_index.strsim_keyword(&"Willy".to_lowercase());
     assert_eq!(similar_keyword, Some(&"william".to_string()));
 
     // Test internal fuzzy autocompletion interface:
-    let similar_autocompletions = search_index.strsim_autocomplete("normy");
+    let similar_autocompletions = search_index.strsim_autocomplete(&"Normy".to_lowercase());
     let similar_autocompletions_vec: Vec<&String> = similar_autocompletions.into_iter().map(|(keyword, _keys)| keyword).collect();
     assert_eq!(similar_autocompletions_vec, vec![&"norman".to_string()]);
 
