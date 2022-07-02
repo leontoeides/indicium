@@ -17,7 +17,7 @@ impl<'a, K: Hash + Ord, S: Clone + PartialOrd> TopScores<'a, K, S> {
 
     pub(crate) fn insert(
         &mut self,
-        keyword: &'a str,
+        keyword: &'a String,
         keys: &'a BTreeSet<K>,
         score: S,
     ) {

@@ -1,6 +1,6 @@
 use crate::simple::search_index::SearchIndex;
 use crate::simple::StrSimType;
-use std::{cmp::Ord, hash::Hash};
+use std::{cmp::Ord, collections::BTreeSet, hash::Hash};
 
 // -----------------------------------------------------------------------------
 
@@ -19,7 +19,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     pub fn strsim_autocomplete(
         &self,
         user_keyword: &str,
-    ) -> Vec<&str> {
+    ) -> Vec<(&String, &BTreeSet<K>)> {
 
         // Build an index keyword range to fuzzy match against.
         //

@@ -1,8 +1,6 @@
 use crate::simple::internal::string_keywords::SplitContext;
 use crate::simple::SearchIndex;
-use std::cmp::Ord;
-use std::collections::BTreeSet;
-use std::hash::Hash;
+use std::{cmp::Ord, collections::BTreeSet, hash::Hash};
 
 // -----------------------------------------------------------------------------
 
@@ -120,7 +118,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
             // Intersect the autocompletions for the last keyword with the
             // search results for the preceding keywords. This way, only
             // relevant autocompletions are returned:
-            let autocompletions: Vec<&String> = self.b_tree_map
+            let mut autocompletions: Vec<&String> = self.b_tree_map
                 // Get matching keywords starting with (partial) keyword string:
                 .range(last_keyword.to_string()..)
                 // We did not specify an end bound for our `range` function (see
@@ -152,6 +150,35 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // Collect all keyword autocompletions into a `Vec`:
                 .collect();
 
+            // If fuzzy string searching enabled, examine the resulting
+            // auto-complete options before using them:
+            #[cfg(feature = "fuzzy")]
+            if autocompletions.is_empty() {
+                // No autocomplete options were found for the user's last
+                // (partial) keyword. Attempt to use fuzzy string search to find
+                // other autocomplete options:
+                autocompletions = self.strsim_autocomplete(&last_keyword)
+                    .into_iter()
+                    // Only keep this autocompletion if hasn't already been used
+                    // as a keyword:
+                    .filter(|(keyword, _keys)| !keywords.contains(keyword))
+                    // Only keep this autocompletion if it contains a key that
+                    // the search results contain:
+                    .filter(|(_keyword, keys)|
+                        search_results.is_empty() ||
+                            keys.iter().any(|key| search_results.contains(key))
+                    ) // filter
+                    // Only return `maximum_autocomplete_options` number of
+                    // keywords:
+                    .take(*maximum_autocomplete_options)
+                    // `strsim_autocomplete` returns both the keyword and keys.
+                    // We're autocompleting the last (partial) keyword, so
+                    // discard the keys:
+                    .map(|(keyword, _keys)| keyword)
+                    // Collect all keyword autocompletions into a `Vec`:
+                    .collect()
+            } // if
+
             // Push a blank placeholder onto the end of the keyword list. We
             // will be putting our autocompletions for the last keyword into
             // this spot:
@@ -171,7 +198,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                     keywords.push(last_keyword.to_string());
                     // Join all keywords together into a single `String` using a
                     // space delimiter:
-                    keywords.join(" ")
+                    keywords.join(" ").trim_end().to_owned()
                 })
                 // Collect all string autocompletions into a `Vec`:
                 .collect()

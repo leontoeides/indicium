@@ -11,11 +11,11 @@ collections within my own binary. So, I made `indicium`.
 ![alt text](https://www.arkiteq.ca/crates/indicium/banner.jpg "Indicium: A Simple In-Memory Search for Rust")
 
 While `indicium` was made with web apps in mind, it is an in-memory search and
-it does not scale indefinitely or to Facebook or Google size. Even in such an
-environment, it would still be a convenient way of searching large lists (such
-as currencies, languages, countries, etc.) It's also great for applications
-where there is an anticipated scale limit (i.e. searching a list of company
-assets, list of users in a corporate intranet, etc.)
+it does not scale indefinitely or to cloud size (i.e. Facebook or Google size).
+Even in such an environment, it would still be a convenient way of searching
+large lists (such as currencies, languages, countries, etc.) It's also great for
+applications where there is an anticipated scale limit (i.e. searching a list of
+company assets, list of users in a corporate intranet, etc.)
 
 Indicium easily can handle millions of records without breaking a sweat thanks
 to Rust's [BTreeMap](https://cglab.ca/~abeinges/blah/rust-btree-case/). This
@@ -27,15 +27,13 @@ may begin to degrade at a point.
 
 * `0.4.0`: Initial support for fuzzy searching.
 
-* `0.4.0`: Breaking change: builder pattern now wants owned values.
+* `0.4.0`: Breaking changes:
+	* Builder pattern now wants owned values
+	* `K` key type may require `Hash` trait for fuzzy matching.
+	* New `SearchIndex` default settings.
 
-* `0.4.0`: Breaking change: new defaults. **Any dependent software should see if
-or how the updated defaults change search behaviour before adopting the 0.4.0
-update.**
-
-* `0.4.0`: New defaults are considered a breaking change. **Any dependent
-software should see if or how the updated defaults change search behaviour
-before adopting this update.**
+**Any dependent software should see if or how the updated defaults change search
+behaviour and tweak accordingly before adopting the 0.4.0 update.**
 
 * `0.3.7`: An experimental feature is now disabled by default to reduce resource
 consumption.

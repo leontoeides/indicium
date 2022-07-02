@@ -1,9 +1,9 @@
 use crate::simple::search_index::SearchIndex;
-use std::cmp::Ord;
+use std::{cmp::Ord, hash::Hash};
 
 // -----------------------------------------------------------------------------
 
-impl<K: Ord> SearchIndex<K> {
+impl<K: Hash + Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
@@ -102,7 +102,7 @@ impl<K: Ord> SearchIndex<K> {
         tracing::debug!("Autocompleting: {:?}", keyword);
 
         // Attempt to get matching keywords from `BTreeMap`:
-        self.b_tree_map
+        let autocomplete_options: Vec<&String> = self.b_tree_map
             // Get matching keywords starting with (partial) keyword string:
             .range(String::from(&keyword)..)
             // `range` returns a key-value pair. We're autocompleting the
@@ -121,7 +121,35 @@ impl<K: Ord> SearchIndex<K> {
             // Only return `maximum_autocomplete_options` number of keywords:
             .take(*maximum_autocomplete_options)
             // Collect all keyword autocompletions into a `Vec`:
-            .collect()
+            .collect();
+
+        // If fuzzy string searching enabled, examine the resulting
+        // auto-complete options before returning them:
+        #[cfg(feature = "fuzzy")]
+        if autocomplete_options.is_empty() {
+            // No autocomplete options were found for the user's last
+            // (partial) keyword. Attempt to use fuzzy string search to find
+            // other autocomplete options:
+            self.strsim_autocomplete(&keyword)
+                .into_iter()
+                // Only return `maximum_autocomplete_options` number of
+                // keywords:
+                .take(*maximum_autocomplete_options)
+                // `strsim_autocomplete` returns both the keyword and keys.
+                // We're autocompleting the last (partial) keyword, so discard
+                // the keys:
+                .map(|(keyword, _keys)| keyword)
+                // Collect all keyword autocompletions into a `Vec`:
+                .collect()
+        } else {
+            // There were some matches. Return the results without processing:
+            autocomplete_options
+        } // if
+
+        // If fuzzy string searching disabled, return the resulting
+        // auto-complete options without further processing:
+        #[cfg(not(feature = "fuzzy"))]
+        autocomplete_options
 
     } // fn
 

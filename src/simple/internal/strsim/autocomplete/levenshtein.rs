@@ -1,6 +1,6 @@
 use crate::simple::internal::TopScores;
 use crate::simple::search_index::SearchIndex;
-use std::{cmp::Ord, hash::Hash};
+use std::{cmp::Ord, collections::BTreeSet, hash::Hash};
 use strsim::normalized_levenshtein;
 
 // -----------------------------------------------------------------------------
@@ -32,7 +32,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
         &self,
         index_range: &str,
         user_keyword: &str,
-    ) -> Vec<&str> {
+    ) -> Vec<(&String, &BTreeSet<K>)> {
 
         // This structure will track the top scoring keywords:
         let mut top_scores: TopScores<K, f64> =
@@ -60,9 +60,9 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 } // if
             }); // for_each
 
-        // Return the top scoring keywords that could be used as autocomplete
-        // options to the caller:
-        top_scores.keywords()
+        // Return the top scoring keywords athat could be used as autocomplete
+        // options, and their keys, to the caller:
+        top_scores.results()
 
     } // fn
 

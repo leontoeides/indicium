@@ -20,32 +20,47 @@ impl<K: Ord> Default for SearchIndex<K> {
                 '\n',                       // Newline
                 '\r',                       // Carriage return
                 ' ',                        // Space
-                '!',
+                '!',                        // Exclamation Mark
                 '"',                        // Double quotation
-                '&',
-                '(',
-                ')',
-                '*',
-                '+',
-                ',',
-                '-',
-                '.',
-                '/',
-                ':',
-                ';',
-                '<',
-                '=',
-                '>',
-                '?',
-                '[',
-                '\\',                       // Backslash
-                ']',
-                '^',
-                '`',
-                '{',
-                '|',
-                '}',
-                '~',
+                '&',                        // Ampersand
+                '(',                        // Left Parenthesis
+                ')',                        // Right Parenthesis
+                '*',                        // Asterisk
+                '+',                        // Plus Sign
+                ',',                        // Comma
+                '-',                        // Minus Sign
+                '.',                        // Full Stop
+                '/',                        // Solidus
+                ':',                        // Colon
+                ';',                        // Semicolon
+                '<',                        // Less-Than Sign
+                '=',                        // Equals Sign
+                '>',                        // Greater-Than Sign
+                '?',                        // Question Mark
+                '[',                        // Left Square Bracket
+                '\\',                       // Reverse Solidus
+                ']',                        // Right Square Bracket
+                '^',                        // Circumflex Accent
+                '`',                        // Grave Accent
+                '{',                        // Left Curly Bracket
+                '|',                        // Vertical Line
+                '}',                        // Right Curly Bracket
+                '~',                        // Tilde
+                ' ',                        // No-Break Space
+                '¡',                        // Inverted Exclamation Mark
+                '«',                        // Left-Pointing Double Angle Quotation Mark
+                '»',                        // Right-Pointing Double Angle Quotation Mark
+                '¿',                        // Inverted Question Mark
+                '×',                        // Multiplication Sign
+                '÷',                        // Division Sign
+                'ˆ',                        // Modifier Letter Circumflex Accent
+                '‘',                        // Left Single Quotation Mark
+                '’',                        // Right Single Quotation Mark
+                '“',                        // Left Double Quotation Mark
+                '”',                        // Right Double Quotation Mark
+                '„',                        // Double Low-9 Quotation Mark
+                '‹',                        // Single Left-Pointing Angle Quotation Mark
+                '›',                        // Single Right-Pointing Angle Quotation Mark
             ]),
             false,                          // Case sensitive?
             1,                              // Minimum keyword length (in chars or codepoints.)

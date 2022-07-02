@@ -12,11 +12,13 @@
 //!
 //! * `0.4.0`: Initial support for fuzzy searching.
 //!
-//! * `0.4.0`: Breaking change: builder pattern now wants owned values.
+//! * `0.4.0`: Breaking changes:
+//!     * Builder pattern now wants owned values
+//!     * `K` key type may require `Hash` trait for fuzzy matching.
+//!     * New `SearchIndex` default settings.
 //!
-//! * `0.4.0`: Breaking change: new defaults. **Any dependent software should
-//! see if or how the updated defaults change search behaviour before adopting
-//! the 0.4.0 update.**
+//! **Any dependent software should see if or how the updated defaults change
+//! search behaviour and tweak accordingly before adopting the 0.4.0 update.**
 //!
 //! * `0.3.0`: Added new search type `SearchType::Live` which is for "search as
 //! you type" interfaces. It is sort of a hybrid between `autocomplete` and
