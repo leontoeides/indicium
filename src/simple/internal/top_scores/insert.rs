@@ -1,6 +1,5 @@
 use crate::simple::internal::TopScores;
-use std::collections::BTreeSet;
-use std::{clone::Clone, cmp::Ord, cmp::PartialOrd, hash::Hash};
+use std::{clone::Clone, collections::BTreeSet, cmp::Ord, cmp::PartialOrd, hash::Hash};
 
 // -----------------------------------------------------------------------------
 
@@ -8,12 +7,12 @@ impl<'a, K: Hash + Ord, S: Clone + PartialOrd> TopScores<'a, K, S> {
 
     // -----------------------------------------------------------------------------
     //
-    /// Attempts to insert the provided _keyword-keys-score_ into the top
-    ///  scores.
+    /// Attempts to insert the provided _keyword_, _keys_, & _score_ into the
+    /// top scores.
     ///
     /// If the caller provided score is higher than the current lowest top
     /// score, the caller's score will be inserted into the collection. If it
-    /// doesn't beat the lowest top score, it will be ignored.
+    /// provided score doesn't beat the lowest top score, it will be ignored.
 
     pub(crate) fn insert(
         &mut self,
@@ -45,8 +44,8 @@ impl<'a, K: Hash + Ord, S: Clone + PartialOrd> TopScores<'a, K, S> {
         } else {
 
             // The `TopScores` struct has not reached its capacity, we may
-            // blindly add the _keyword-keys-score_ without checking the lowest
-            // score:
+            // blindly add the _keyword_, _keys_, & _score_ without checking the
+            // lowest score:
             self.top.insert(keyword, (keys, score));
 
         } // if

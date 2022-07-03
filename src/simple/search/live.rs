@@ -173,7 +173,10 @@ impl<K: Hash + Ord> SearchIndex<K> {
                         // No search results were found for the user's last
                         // (partial) keyword. Attempt to use fuzzy string
                         // search to find other options:
-                        search_results = self.strsim_autocomplete(&last_keyword)
+                        search_results = self.strsim_context_autocomplete(
+                            &search_results,
+                            &last_keyword,
+                        ) // strsim_context_autocomplete
                             .into_iter()
                             // Only return `maximum_search_results` number of
                             // keys:
@@ -249,7 +252,10 @@ impl<K: Hash + Ord> SearchIndex<K> {
                         // No search results were found for the user's last
                         // (partial) keyword. Attempt to use fuzzy string
                         // search to find other options:
-                        last_results = self.strsim_autocomplete(&last_keyword)
+                        last_results = self.strsim_context_autocomplete(
+                            &search_results,
+                            &last_keyword,
+                        ) // strsim_context_autocomplete
                             .into_iter()
                             // Only keep this result if hasn't already been used
                             // as a keyword:

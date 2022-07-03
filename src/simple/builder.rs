@@ -166,6 +166,11 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// value between 0.0 and 1.0 (inclusive), where 1.0 means the strings are
     /// the same.
     ///
+    /// When there aren't many good possible matches for a user's keyword, the
+    /// quality of the suggestions and substitutions can become poor. The
+    /// minimum score helps ensure the suggestion and subtitutions are
+    /// reasonable.
+    ///
     /// **Default:** `0.3`
     #[cfg(feature = "fuzzy")]
     pub fn strsim_minimum_score(mut self, strsim_minimum_score: f64) -> Self {

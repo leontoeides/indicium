@@ -27,8 +27,8 @@ may begin to degrade at a point.
 
 * `0.4.0`: Initial support for fuzzy searching. Fuzzy matching is applied to the
 last (partial) keyword in the search string for _autocompletion_ and _live
-search_ only. Keywords at the start or middle of the user's search string will
-not be substituted.
+search_ only. Keywords at the start or in the middle of the user's search string
+will not be substituted.
 	* Some changes for an upcoming `0.5.0` release are being considered.
 	This release could have some big changes that would allow `indicium` to
 	provide feedback to the user about which keywords have been substituted.

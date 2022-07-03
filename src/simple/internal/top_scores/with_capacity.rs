@@ -1,6 +1,5 @@
 use crate::simple::internal::TopScores;
-use std::collections::HashMap;
-use std::{cmp::Ord, cmp::PartialOrd, hash::Hash};
+use std::{cmp::Ord, cmp::PartialOrd, collections::HashMap, hash::Hash};
 
 // -----------------------------------------------------------------------------
 

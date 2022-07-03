@@ -16,8 +16,9 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// returns no matches, these `strsim_autocomplete_*` methods can be used to
     /// find the best match for substitution.
 
-    pub(crate) fn strsim_autocomplete(
+    pub(crate) fn strsim_context_autocomplete(
         &self,
+        key_set: &BTreeSet<&K>,
         user_keyword: &str,
     ) -> Vec<(&String, &BTreeSet<K>)> {
 
@@ -67,19 +68,19 @@ impl<K: Hash + Ord> SearchIndex<K> {
             match strsim_type {
 
                 StrSimType::DamerauLevenshtein =>
-                    self.strsim_autocomplete_damerau_levenshtein(index_range, user_keyword),
+                    self.strsim_autocomplete_context_damerau_levenshtein(index_range, key_set, user_keyword),
 
                 StrSimType::Jaro =>
-                    self.strsim_autocomplete_jaro(index_range, user_keyword),
+                    self.strsim_autocomplete_context_jaro(index_range, key_set, user_keyword),
 
                 StrSimType::JaroWinkler =>
-                    self.strsim_autocomplete_jaro_winkler(index_range, user_keyword),
+                    self.strsim_autocomplete_context_jaro_winkler(index_range, key_set, user_keyword),
 
                 StrSimType::Levenshtein =>
-                    self.strsim_autocomplete_levenshtein(index_range, user_keyword),
+                    self.strsim_autocomplete_context_levenshtein(index_range, key_set, user_keyword),
 
                 StrSimType::SorensenDice =>
-                    self.strsim_autocomplete_sorensen_dice(index_range, user_keyword),
+                    self.strsim_autocomplete_context_sorensen_dice(index_range, key_set, user_keyword),
 
             } // match
 

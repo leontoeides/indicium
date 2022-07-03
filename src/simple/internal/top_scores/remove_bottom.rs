@@ -7,7 +7,7 @@ impl<'a, K: Hash + Ord, S: PartialOrd> TopScores<'a, K, S> {
 
     // -------------------------------------------------------------------------
     //
-    /// Removes the lowest top score from the list. This is done before
+    /// Removes the lowest top score from the list. This is normally done before
     /// replacing it with a higher score.
 
     pub(crate) fn remove_bottom(&mut self) {

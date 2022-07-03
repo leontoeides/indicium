@@ -1,6 +1,6 @@
 use crate::simple::search_index::SearchIndex;
 use crate::simple::StrSimType;
-use std::{cmp::Ord, hash::Hash};
+use std::{cmp::Ord, collections::BTreeSet, hash::Hash};
 
 // -----------------------------------------------------------------------------
 
@@ -8,18 +8,18 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
-    /// Scans the entire search index for the closest matching keyword using
-    /// the configured string similarity metric. This feature relies on Danny
-    /// Guo's [strsim](https://crates.io/crates/strsim) crate.
+    /// Scans the entire search index for the closest matching _n_ keywords
+    /// using the configured string similarity metric. This feature relies on
+    /// Danny Guo's [strsim](https://crates.io/crates/strsim) crate.
     ///
-    /// When the user's search string contains a keyword that returns no
-    /// matches, these `strsim_keyword_*` methods can be used to find the best
-    /// match for substitution.
+    /// When the user's last (partial) keyword that is meant to be autocompleted
+    /// returns no matches, these `strsim_autocomplete_*` methods can be used to
+    /// find the best match for substitution.
 
-    pub(crate) fn strsim_keyword(
+    pub(crate) fn strsim_global_autocomplete(
         &self,
         user_keyword: &str,
-    ) -> Option<&String> {
+    ) -> Vec<(&String, &BTreeSet<K>)> {
 
         // Build an index keyword range to fuzzy match against.
         //
@@ -51,7 +51,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
             } else {
                 // The user's keyword is too short. Do not perform any fuzzy
                 // matching:
-                return None
+                return vec![]
             } // if
         } else {
             // The match length is 0, compare user's keyword against all search
@@ -59,26 +59,27 @@ impl<K: Hash + Ord> SearchIndex<K> {
             ""
         }; // if
 
-        // Attempt to find the closest match for the user's keyword using the
-        // selected string similarity metric defined in the `SearchIndex`:
+        // Attempt to find the top matches for the user's (partial) keyword
+        // using the selected string similarity metric defined in the
+        // `SearchIndex`:
         if let Some(strsim_type) = &self.strsim_type {
 
             match strsim_type {
 
                 StrSimType::DamerauLevenshtein =>
-                    self.strsim_keyword_damerau_levenshtein(index_range, user_keyword),
+                    self.strsim_autocomplete_global_damerau_levenshtein(index_range, user_keyword),
 
                 StrSimType::Jaro =>
-                    self.strsim_keyword_jaro(index_range, user_keyword),
+                    self.strsim_autocomplete_global_jaro(index_range, user_keyword),
 
                 StrSimType::JaroWinkler =>
-                    self.strsim_keyword_jaro_winkler(index_range, user_keyword),
+                    self.strsim_autocomplete_global_jaro_winkler(index_range, user_keyword),
 
                 StrSimType::Levenshtein =>
-                    self.strsim_keyword_levenshtein(index_range, user_keyword),
+                    self.strsim_autocomplete_global_levenshtein(index_range, user_keyword),
 
                 StrSimType::SorensenDice =>
-                    self.strsim_keyword_sorensen_dice(index_range, user_keyword),
+                    self.strsim_autocomplete_global_sorensen_dice(index_range, user_keyword),
 
             } // match
 
@@ -86,8 +87,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
             // No string similarity metric was defined in the `SearchIndex`
             // settings. Fuzzy string matching effectively turned off.
-            // Return a `None` to the caller:
-            None
+            // Return an empty `Vec` to the caller:
+            vec![]
 
         } // if
 

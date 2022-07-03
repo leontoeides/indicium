@@ -27,7 +27,7 @@ impl<K: Ord> SearchIndex<K> {
     // repetitive with a lot of boiler plate. These were intentionally made more
     // "concrete" and less modular in order to be more efficient.
 
-    pub(crate) fn strsim_keyword_damerau_levenshtein(
+    pub(crate) fn strsim_keyword_global_damerau_levenshtein(
         &self,
         index_range: &str,
         user_keyword: &str,

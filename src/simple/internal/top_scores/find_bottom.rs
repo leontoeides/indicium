@@ -7,9 +7,10 @@ impl<'a, K: Hash + Ord, S: Clone + PartialOrd> TopScores<'a, K, S> {
 
     // -------------------------------------------------------------------------
     //
-    /// Finds and caches the lowest (or bottom) top score. If the lowest score
-    /// is cached in the `TopScores` struct, comparisons can be done more
-    /// efficiently.
+    /// Finds and caches the lowest (or bottom) top score.
+    ///
+    /// By caching the lowest score in the `TopScores` struct, comparisons can
+    /// be done more efficiently.
 
     pub(crate) fn find_bottom(&mut self) {
 
