@@ -16,7 +16,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// returns no matches, these `strsim_autocomplete_*` methods can be used to
     /// find the best match for substitution.
 
-    pub fn strsim_autocomplete(
+    pub(crate) fn strsim_autocomplete(
         &self,
         user_keyword: &str,
     ) -> Vec<(&String, &BTreeSet<K>)> {

@@ -16,7 +16,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// matches, these `strsim_keyword_*` methods can be used to find the best
     /// match for substitution.
 
-    pub fn strsim_keyword(
+    pub(crate) fn strsim_keyword(
         &self,
         user_keyword: &str,
     ) -> Option<&String> {

@@ -15,9 +15,9 @@
 //! _live search_ only. Keywords at the start or middle of the user's search
 //! string will not be substituted.
 //!
-//! Some changes for an upcoming `0.5.0` release are being considered. This
-//! release could have some big changes that would allow `indicium` to provide
-//! feedback to the user about which keywords have been substituted.
+//!     * Some changes for an upcoming `0.5.0` release are being considered.
+//!     This release could have some big changes that would allow `indicium` to
+//!     provide feedback to the user about which keywords have been substituted.
 //!
 //! * `0.4.0`: Breaking changes:
 //!     * Builder pattern is now passed owned values.

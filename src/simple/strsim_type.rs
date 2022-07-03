@@ -20,6 +20,6 @@ pub enum StrSimType {
     /// substitutions required to change one string into the other.
     Levenshtein,
     /// Calculates a Sørensen-Dice similarity distance using bigrams.
-    /// See http://en.wikipedia.org/wiki/S%C3%B8rensen%E2%80%93Dice_coefficient.
+    /// See <http://en.wikipedia.org/wiki/S%C3%B8rensen%E2%80%93Dice_coefficient>.
     SorensenDice,
 } // StrSimType

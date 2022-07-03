@@ -134,7 +134,28 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// String's minimum length to use "approximate string matching" or "fuzzy
     /// matching."
     ///
-    /// **Default:** 3 characters
+    /// #### Examples
+    ///
+    /// | Example | User Keyword                       | Minimum Length | Index Keyword Must Start With... |
+    /// |---------|------------------------------------|----------------|----------------------------------|
+    /// | 1       | Supercalifragilisticexpialidocious | 2              | Su                               |
+    /// | 2       | Antidisestablishmentarianism       | 4              | Anti                             |
+    /// | 3       | Pseudopseudohypoparathyroidism     | 0              |                                  |
+    ///
+    /// * In example **1**, since the length is set to `2`, the user's keyword
+    /// will only be fuzzy matched against keywords in the search index that
+    /// begin with `su`.
+    ///
+    /// * In example **2**, since the length is set to `4`, the user's keyword
+    /// will only be fuzzy matched against keywords in the search index that
+    /// begin with `anti`.
+    ///
+    /// * In example **3**, since the length is set to `0`, the user's keyword
+    /// will be fuzzy matched against every keyword in the search index. This is
+    /// OK (or even desirable) if the search index is small, however, this will
+    /// be crippling slow on very large search indicies.
+    ///
+    /// **Default:** `3` characters
     #[cfg(feature = "fuzzy")]
     pub fn strsim_length(mut self, strsim_length: usize) -> Self {
         self.strsim_length = strsim_length;
@@ -145,7 +166,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// value between 0.0 and 1.0 (inclusive), where 1.0 means the strings are
     /// the same.
     ///
-    /// **Default:** 0.3
+    /// **Default:** `0.3`
     #[cfg(feature = "fuzzy")]
     pub fn strsim_minimum_score(mut self, strsim_minimum_score: f64) -> Self {
         self.strsim_minimum_score = strsim_minimum_score;
@@ -154,9 +175,10 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
 
     /// Characters used to split strings into keywords.
     ///
-    /// **Default:** [ `tab`, `new line`, `carrier return`, `space`, '!', `"`, `&`,
-    /// `(`, `)`, `*`, `+`, `,`, `-`, `.`, `/`, `:`, `;`, `<`, `=`, `>`, `?`,
-    /// `[`, `\`, `]`, `^`, ```, `{`, `|`, `}`, `~` ]
+    /// **Default:** [ `tab`, `new line`, `carrier return`, `space`, `!`, `"`,
+    /// `&`, `(`, `)`, `*`, `+`, `,`, `-`, `.`, `/`, `:`, `;`, `<`, `=`, `>`,
+    /// `?`, `[`, `\`, `]`, `^`, `'`, `{`, `|`, `}`, `~`, ` `, `¡`, `«`, `»`,
+    /// `¿`, `×`, `÷`, `ˆ`, `‘`, `’`, `“`, `”`, `„`, `‹`, `›` ]
     pub fn split_pattern(mut self, split_pattern: Option<Vec<char>>) -> Self {
         self.split_pattern = split_pattern;
         self
