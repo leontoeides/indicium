@@ -14,7 +14,6 @@
 //! the last (partial) keyword in the search string for _autocompletion_ and
 //! _live search_ only. Keywords at the start or middle of the user's search
 //! string will not be substituted.
-//!
 //!     * Some changes for an upcoming `0.5.0` release are being considered.
 //!     This release could have some big changes that would allow `indicium` to
 //!     provide feedback to the user about which keywords have been substituted.
@@ -24,8 +23,9 @@
 //!     * `K` key type requires `Hash` trait for `fuzzy` string search feature.
 //!     * New `SearchIndex` default settings.
 //!
-//! **Any dependent software should see if (or how) the updated defaults change
-//! search behaviour and tweak accordingly before adopting the 0.4.0 update.**
+//! * `0.4.0`: **Any dependent software should see if (or how) the updated
+//! defaults change search behaviour and tweak accordingly before adopting the
+//! 0.4.0 update.**
 //!
 //! * `0.3.0`: Added new search type `SearchType::Live` which is for "search as
 //! you type" interfaces. It is sort of a hybrid between `autocomplete` and
