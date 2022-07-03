@@ -27,8 +27,10 @@ pub enum AutocompleteType {
     /// The search string may contain multiple keywords and the last (partial)
     /// keyword will be autocompleted. The last keyword in the search string
     /// will be autocompleted from all available keywords in the search index.
-    /// If your data-set is very large or has repetitive keywords, this is the
-    /// recommended autocomplete type.
+    /// If your data-set is very large or has repetitive keywords (see also: the
+    /// [`profile`] utility method), this is the recommended autocomplete type.
+    ///
+    /// [`profile`]: struct.SearchIndex.html#method.profile
     Global,
     /// The search string is expected to only contain a single keyword. This is
     /// the lightest and fastest autocompletion type. It is good for compact
