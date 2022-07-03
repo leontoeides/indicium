@@ -10,6 +10,8 @@
 //!
 //! # What's New?
 //!
+//! * `0.4.1`: Improved contextual fuzzy matching.
+//!
 //! * `0.4.0`: Initial support for fuzzy searching. Fuzzy matching is applied to
 //! the last (partial) keyword in the search string for _autocompletion_ and
 //! _live search_ only. Keywords at the start or in the middle of the user's

@@ -108,12 +108,12 @@ fn simple() {
     let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Context, "108");
     assert_eq!(autocomplete_options, vec!["1087".to_string()]);
 
-    // Test internal fuzzy keyword search interface:
-    let similar_keyword = search_index.strsim_keyword(&"Willy".to_lowercase());
+    // Test internal global fuzzy keyword search interface:
+    let similar_keyword = search_index.strsim_global_keyword(&"Willy".to_lowercase());
     assert_eq!(similar_keyword, Some(&"william".to_string()));
 
-    // Test internal fuzzy autocompletion interface:
-    let similar_autocompletions = search_index.strsim_autocomplete(&"Normy".to_lowercase());
+    // Test internal global fuzzy autocompletion interface:
+    let similar_autocompletions = search_index.strsim_global_autocomplete(&"Normy".to_lowercase());
     let similar_autocompletions_vec: Vec<&String> = similar_autocompletions.into_iter().map(|(keyword, _keys)| keyword).collect();
     assert_eq!(similar_autocompletions_vec, vec![&"norman".to_string()]);
 
