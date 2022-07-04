@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 //
-/// Indicium `simple` search provides four types of search. The search type
+/// Indicium `simple` search provides four types of search. The best search type
 /// that should be used really depends on your use-case: the nature of the data,
 /// the intent of the user, and the size of your data set.
 ///

@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 //
-/// Indicium `simple` search provides three types of autocomplete. The
+/// Indicium `simple` search provides three types of autocomplete. The best
 /// autocompletion type that should be used depends on the user interface and
 /// the data-set. See variant descriptions for more information.
 ///

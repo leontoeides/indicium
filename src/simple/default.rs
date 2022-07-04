@@ -9,7 +9,7 @@ use std::cmp::Ord;
 impl<K: Ord> Default for SearchIndex<K> {
     fn default() -> Self {
         Self::new(
-            SearchType::And,                // Search type.
+            SearchType::Live,               // Search type.
             AutocompleteType::Context,      // Autocompletion type.
             Some(StrSimType::Levenshtein),  // String similarity metric type.
             3,                              // String similarity match length.

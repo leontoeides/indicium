@@ -131,8 +131,8 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
         self
     } // fn
 
-    /// String's minimum length to use "approximate string matching" or "fuzzy
-    /// matching."
+    /// String's minimum length (in chars or codepoints) to use "approximate
+    /// string matching" or "fuzzy matching."
     ///
     /// #### Examples
     ///
@@ -167,9 +167,12 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// the same.
     ///
     /// When there aren't many good possible matches for a user's keyword, the
-    /// quality of the suggestions and substitutions can become poor. The
+    /// quality of the suggestions and substitutions can become very poor. The
     /// minimum score helps ensure the suggestion and subtitutions are
     /// reasonable.
+    ///
+    /// If there are no reasonable suggestions or subsitutions, nothing will
+    /// be returned to the user.
     ///
     /// **Default:** `0.3`
     #[cfg(feature = "fuzzy")]

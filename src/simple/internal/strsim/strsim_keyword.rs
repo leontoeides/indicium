@@ -74,7 +74,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// #   );
     /// #
     /// #
-    /// let keyword_substitution = search_index.strsim_keyword("harry");
+    /// let keyword_substitution = search_index.strsim_keyword("Harry");
     ///
     /// assert_eq!(
     ///     keyword_substitution,
