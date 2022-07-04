@@ -1,3 +1,6 @@
+//! Used for tracking the top string similarity scores for (fuzzy matching) user
+//! keywords that are not found in the search index.
+
 mod find_bottom;
 mod insert;
 mod remove_bottom;

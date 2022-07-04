@@ -1,3 +1,5 @@
+//! Fuzzy matching for autocompletion.
+
 pub(crate) mod context_damerau_levenshtein;
 pub(crate) mod context_jaro;
 pub(crate) mod context_jaro_winkler;

@@ -1,3 +1,6 @@
+//! Integration with Danny Guo's [strsim](https://crates.io/crates/strsim)
+//! string similarity crate.
+
 pub(crate) mod autocomplete;
 pub(crate) mod keyword;
 pub(crate) mod strsim_autocomplete;
