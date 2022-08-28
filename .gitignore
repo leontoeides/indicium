@@ -18,3 +18,4 @@ Cargo.lock
 **/*.rs.bk
 >>>>>>> 5b80c372faafec53fa73cd79d3c44af6183c5d5e
 >>>>>>> 0724576... Inital commit.
+/mutants.out/

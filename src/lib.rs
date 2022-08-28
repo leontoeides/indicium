@@ -207,11 +207,17 @@
 //! let resulting_keys: Vec<&usize> = search_index.search("William");
 //!
 //! assert_eq!(resulting_keys, vec![&2, &3]);
+//!
+//! // Demonstrating fuzzy matching:
+//!
+//! let resulting_keys: Vec<&usize> = search_index.search("Harry");
+//!
+//! assert_eq!(resulting_keys, vec![&0]);
 //! ```
 //!
-//! Search only supports exact keyword matches and does not use fuzzy matching.
-//! Consider providing the `autocomplete` feature to your users as an ergonomic
-//! alternative to fuzzy matching.
+//! Search only supports exact keyword matches. It only supports fuzzy matching
+//! for the last keyword. Consider providing the `autocomplete` feature to your
+//! users as an ergonomic alternative to fuzzy matching.
 //!
 //! ## 5. Autocompletion
 //!
@@ -251,6 +257,16 @@
 //!
 //! let autocomplete_options: Vec<String> =
 //!     search_index.autocomplete("a very big bi");
+//!
+//! assert_eq!(
+//!     autocomplete_options,
+//!     vec!["a very big bird", "a very big birthday"]
+//! );
+//!
+//! // Demonstrating fuzzy matching:
+//!
+//! let autocomplete_options: Vec<String> =
+//!     search_index.autocomplete("a very big birf");
 //!
 //! assert_eq!(
 //!     autocomplete_options,
