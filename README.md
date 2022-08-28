@@ -109,14 +109,10 @@ impl Indexable for MyStruct {
     }
 }
 ```
-* Note: Don't forget that you may make numbers, numeric identifiers, enums, and
-other types in your `struct` (or other complex type) indexable by converting
-them to a `String` and including them in the returned `Vec<String>`.
 
-* Note: Any type that implements `ToString` (and consequently any type that
-implements `Display`) to, in turn, gets the `Indexable` implementation for free.
-This includes Rust primitives like `String`, `u8`, `u16`, `u32`, `u64`, `i8`,
-`i16`, `i32`, `i64` and so on...
+Don't forget that you may make numbers, numeric identifiers, enums, and other
+types in your `struct` (or other complex type) indexable by converting them to a
+`String` and including them in the returned `Vec<String>`.
 
 ## 2. Indexing a Collection
 
