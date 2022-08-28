@@ -10,6 +10,9 @@
 //!
 //! # What's New?
 //!
+//! * `0.4.2`: Any type that implements `ToString` (and consequently any type
+//! that implements `Display`) now gets the `Indexable` implementation for free.
+//!
 //! * `0.4.1`: Improved contextual fuzzy matching.
 //!
 //! * `0.4.0`: Initial support for fuzzy searching. Fuzzy matching is applied to
