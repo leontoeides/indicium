@@ -33,6 +33,11 @@
 /// other types indexable by converting them to a `String` and including them in
 /// the returned `Vec<String>`.
 ///
+/// Also note: any type that implements `ToString` (and consequently any type
+/// that implements `Display`) to, in turn, gets the `Indexable` implementation
+/// for free. This includes `rust` primitives like `String`, `u8`, `u16`, `u32`,
+/// `u64`, `i8`, `i16`, `i32`, `i64` and so on...
+///
 /// #### Pro-Tip: Hash Tags
 ///
 /// If you would like to categorize or classify your records, you could employ
@@ -56,7 +61,7 @@ pub trait Indexable {
 // -----------------------------------------------------------------------------
 //
 /// The following implementation allows any type that implements `ToString` (and
-/// consequently any type that implements `Display`) to, in turn, get the
+/// consequently any type that implements `Display`) to, in turn, gets the
 /// `Indexable` implementation for free.
 
 impl<T: ToString> Indexable for T {
