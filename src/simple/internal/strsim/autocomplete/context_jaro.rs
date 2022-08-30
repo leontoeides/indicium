@@ -25,7 +25,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     ///
     /// * `key_set` limits which keywords to compare the user's keyword
     /// against. For a search index keyword to be considered as a fuzzy match,
-    /// it must contain at least on key that is in this key set. This is how
+    /// it must contain at least one key that is in this key set. This is how
     /// fuzzy matching is made contextual.
     //
     // Note: these `strsim_autocomplete_*` methods are very similar and may seem
@@ -73,7 +73,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 } // if
             }); // for_each
 
-        // Return the top scoring keywords athat could be used as autocomplete
+        // Return the top scoring keywords that could be used as autocomplete
         // options, and their keys, to the caller:
         top_scores.results()
 

@@ -24,7 +24,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
     pub(crate) fn internal_keyword_search(&self, keyword: &str) -> BTreeSet<&K> {
 
-        // Uncomment below if I intend to perform fuzzy matching in this
+        // Uncomment below if I intend to perform full fuzzy matching in this
         // function:
         // Check if the search index contains the user's keyword:
         /* let keyword: &str = if self.b_tree_map.contains_key(keyword) {

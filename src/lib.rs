@@ -112,7 +112,7 @@
 //!
 //! let my_vec: Vec<MyStruct> = Vec::new();
 //!
-//! // In the case of a `Vec` collection, we use the index as our key.  A
+//! // In the case of a `Vec` collection, we use the index as our key. A
 //! // `Vec` index is a `usize` type. Therefore we will instantiate
 //! // `SearchIndex` as `SearchIndex<usize>`.
 //!

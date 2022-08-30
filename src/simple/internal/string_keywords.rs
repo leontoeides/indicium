@@ -67,7 +67,7 @@ impl<K: Ord> SearchIndex<K> {
         let string = match self.case_sensitive {
             true => string.to_string(),
             false => string.to_lowercase(),
-        };
+        }; // match
 
         // Split the the string into keywords:
         let mut keywords: Vec<String> = if let Some(split_pattern) = &self.split_pattern {
