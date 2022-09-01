@@ -119,26 +119,26 @@ fn simple() {
 
     // Test `Indexable` trait implementation for `ToString` generics:
     let my_vec: Vec<&str> = vec![
-        "Vopnafjarðarhreppur",                      // 1
-        "Weapon Fjord Municipality",                // 2
-        "Annerveenschekanaal",                      // 3
-        "Channel through the peat of Annen",        // 4
-        "Cadibarrawirracanna",                      // 5
-        "The stars were dancing",                   // 6
-        "Newtownmountkennedy",                      // 7
-        "A new town near Mt. Kennedy",              // 8
-        "Cottonshopeburnfoot",                      // 9
-        "The end of the Cottonshope Burn",          // 10
-        "Nyugotszenterzsébet",                      // 11
-        "Western St. Elizabeth",                    // 12
-        "Balatonszentgyörgy",                       // 13
-        "St. George by Balaton",                    // 14
-        "Kirkjubæjarklaustur",                      // 15
-        "Church farm monastery",                    // 16
-        "Jászalsószentgyörgy",                      // 17
-        "Lower St. George in Jászság",              // 18
-        "Krammerjachtensluis",                      // 19
-        "Lock on the river Krammer of the hunt",    // 20
+        "Vopnafjarðarhreppur",                      // 0
+        "Weapon Fjord Municipality",                // 1
+        "Annerveenschekanaal",                      // 2
+        "Channel through the peat of Annen",        // 3
+        "Cadibarrawirracanna",                      // 4
+        "The stars were dancing",                   // 5
+        "Newtownmountkennedy",                      // 6
+        "A new town near Mt. Kennedy",              // 7
+        "Cottonshopeburnfoot",                      // 8
+        "The end of the Cottonshope Burn",          // 9
+        "Nyugotszenterzsébet",                      // 10
+        "Western St. Elizabeth",                    // 11
+        "Balatonszentgyörgy",                       // 12
+        "St. George by Balaton",                    // 13
+        "Kirkjubæjarklaustur",                      // 14
+        "Church farm monastery",                    // 15
+        "Jászalsószentgyörgy",                      // 16
+        "Lower St. George in Jászság",              // 17
+        "Krammerjachtensluis",                      // 18
+        "Lock on the river Krammer of the hunt",    // 19
     ]; // vec!
 
     let mut search_index: SearchIndex<usize> = SearchIndex::default();
