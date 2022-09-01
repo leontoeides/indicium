@@ -10,8 +10,13 @@
 //!
 //! # What's New?
 //!
-//! * `0.4.2`: Any type that implements `ToString` (and consequently any type
-//! that implements `Display`) now gets the `Indexable` implementation for free.
+//! * `0.4.2`: Any type that implements
+//! [ToString](https://doc.rust-lang.org/std/string/trait.ToString.html) (and
+//! consequently any type that implements
+//! [Display](https://doc.rust-lang.org/std/fmt/trait.Display.html))
+//! now gets the
+//! [Indexable](https://docs.rs/indicium/latest/indicium/simple/trait.Indexable.html)
+//! implementation for free.
 //!
 //! * `0.4.1`: Improved contextual fuzzy matching.
 //!
