@@ -117,4 +117,46 @@ fn simple() {
     let similar_autocompletions_vec: Vec<&String> = similar_autocompletions.into_iter().map(|(keyword, _keys)| keyword).collect();
     assert_eq!(similar_autocompletions_vec, vec![&"norman".to_string()]);
 
+    // Test `Indexable` trait implementation for `ToString` generics:
+    let my_vec: Vec<&str> = vec![
+        "Vopnafjarðarhreppur",                      // 1
+        "Weapon Fjord Municipality",                // 2
+        "Annerveenschekanaal",                      // 3
+        "Channel through the peat of Annen",        // 4
+        "Cadibarrawirracanna",                      // 5
+        "The stars were dancing",                   // 6
+        "Newtownmountkennedy",                      // 7
+        "A new town near Mt. Kennedy",              // 8
+        "Cottonshopeburnfoot",                      // 9
+        "The end of the Cottonshope Burn",          // 10
+        "Nyugotszenterzsébet",                      // 11
+        "Western St. Elizabeth",                    // 12
+        "Balatonszentgyörgy",                       // 13
+        "St. George by Balaton",                    // 14
+        "Kirkjubæjarklaustur",                      // 15
+        "Church farm monastery",                    // 16
+        "Jászalsószentgyörgy",                      // 17
+        "Lower St. George in Jászság",              // 18
+        "Krammerjachtensluis",                      // 19
+        "Lock on the river Krammer of the hunt",    // 20
+    ]; // vec!
+
+    let mut search_index: SearchIndex<usize> = SearchIndex::default();
+
+    my_vec
+        .iter()
+        .enumerate()
+        .for_each(|(index, element)|
+            search_index.insert(&index, element)
+        );
+
+    let search_results = search_index.search_type(&SearchType::Live, "rivers");
+    assert_eq!(search_results, vec![&19]);
+
+    let search_results = search_index.search_type(&SearchType::Live, "George");
+    assert_eq!(search_results, vec![&13, &17]);
+
+    let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Context, "George bal");
+    assert_eq!(autocomplete_options, vec!["george balaton".to_string()]);
+
 } // fn
