@@ -150,11 +150,17 @@ fn simple() {
             search_index.insert(&index, element)
         );
 
+    // Fuzzy matching:
     let search_results = search_index.search_type(&SearchType::Live, "rivers");
     assert_eq!(search_results, vec![&19]);
 
+    // Live search:
     let search_results = search_index.search_type(&SearchType::Live, "George");
     assert_eq!(search_results, vec![&13, &17]);
+
+    // Or search:
+    let search_results = search_index.search_type(&SearchType::Or, "George Elizabeth");
+    assert_eq!(search_results, vec![&11, &13, &17]);
 
     let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Context, "George bal");
     assert_eq!(autocomplete_options, vec!["george balaton".to_string()]);
