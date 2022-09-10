@@ -37,7 +37,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
         index_range: &str,
         key_set: &BTreeSet<&K>,
         user_keyword: &str,
-    ) -> Vec<(&String, &BTreeSet<K>)> {
+    ) -> impl Iterator<Item = (&String, &BTreeSet<K>)> {
 
         // This structure will track the top scoring keywords:
         let mut top_scores: TopScores<K, f64> =

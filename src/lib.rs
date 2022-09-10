@@ -190,27 +190,13 @@
 //! ```rust
 //! # use indicium::simple::{Indexable, SearchIndex};
 //! #
-//! # struct MyType { text: String }
-//! #
-//! # impl From<&str> for MyType {
-//! #   fn from(string: &str) -> Self {
-//! #       MyType { text: string.to_string() }
-//! #   }
-//! # }
-//! #
-//! # impl Indexable for MyType {
-//! #   fn strings(&self) -> Vec<String> {
-//! #       vec![self.text.clone()]
-//! #   }
-//! # }
-//! #
 //! let mut search_index: SearchIndex<usize> = SearchIndex::default();
 //!
-//! search_index.insert(&0, &MyType::from("Harold Godwinson"));
-//! search_index.insert(&1, &MyType::from("Edgar Ætheling"));
-//! search_index.insert(&2, &MyType::from("William the Conqueror"));
-//! search_index.insert(&3, &MyType::from("William Rufus"));
-//! search_index.insert(&4, &MyType::from("Henry Beauclerc"));
+//! search_index.insert(&0, &"Harold Godwinson");
+//! search_index.insert(&1, &"Edgar Ætheling");
+//! search_index.insert(&2, &"William the Conqueror");
+//! search_index.insert(&3, &"William Rufus");
+//! search_index.insert(&4, &"Henry Beauclerc");
 //!
 //! let resulting_keys: Vec<&usize> = search_index.search("William");
 //!
@@ -237,31 +223,17 @@
 //! ```rust
 //! # use indicium::simple::{AutocompleteType, Indexable, SearchIndex, SearchIndexBuilder};
 //! #
-//! # struct MyType { text: String }
-//! #
-//! # impl From<&str> for MyType {
-//! #   fn from(string: &str) -> Self {
-//! #       MyType { text: string.to_string() }
-//! #   }
-//! # }
-//! #
-//! # impl Indexable for MyType {
-//! #   fn strings(&self) -> Vec<String> {
-//! #       vec![self.text.clone()]
-//! #   }
-//! # }
-//! #
 //! let mut search_index: SearchIndex<usize> =
 //!     SearchIndexBuilder::default()
 //!         .autocomplete_type(AutocompleteType::Global)
 //!         .exclude_keywords(None)
 //!         .build();
 //!
-//! search_index.insert(&0, &MyType::from("apple"));
-//! search_index.insert(&1, &MyType::from("ball"));
-//! search_index.insert(&3, &MyType::from("bird"));
-//! search_index.insert(&4, &MyType::from("birthday"));
-//! search_index.insert(&5, &MyType::from("red"));
+//! search_index.insert(&0, &"apple");
+//! search_index.insert(&1, &"ball");
+//! search_index.insert(&3, &"bird");
+//! search_index.insert(&4, &"birthday");
+//! search_index.insert(&5, &"red");
 //!
 //! let autocomplete_options: Vec<String> =
 //!     search_index.autocomplete("a very big bi");

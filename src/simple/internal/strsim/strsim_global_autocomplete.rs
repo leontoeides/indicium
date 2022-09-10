@@ -68,19 +68,19 @@ impl<K: Hash + Ord> SearchIndex<K> {
             match strsim_type {
 
                 StrSimType::DamerauLevenshtein =>
-                    self.strsim_autocomplete_global_damerau_levenshtein(index_range, user_keyword),
+                    self.strsim_autocomplete_global_damerau_levenshtein(index_range, user_keyword).collect(),
 
                 StrSimType::Jaro =>
-                    self.strsim_autocomplete_global_jaro(index_range, user_keyword),
+                    self.strsim_autocomplete_global_jaro(index_range, user_keyword).collect(),
 
                 StrSimType::JaroWinkler =>
-                    self.strsim_autocomplete_global_jaro_winkler(index_range, user_keyword),
+                    self.strsim_autocomplete_global_jaro_winkler(index_range, user_keyword).collect(),
 
                 StrSimType::Levenshtein =>
-                    self.strsim_autocomplete_global_levenshtein(index_range, user_keyword),
+                    self.strsim_autocomplete_global_levenshtein(index_range, user_keyword).collect(),
 
                 StrSimType::SorensenDice =>
-                    self.strsim_autocomplete_global_sorensen_dice(index_range, user_keyword),
+                    self.strsim_autocomplete_global_sorensen_dice(index_range, user_keyword).collect(),
 
             } // match
 

@@ -31,7 +31,7 @@ impl<K: Ord> SearchIndex<K> {
             // string as a keyword" if enabled in user settings. Flatten the
             // string's keywords into the `HashSet`:
             .flat_map(|string| self.string_keywords(string, SplitContext::Indexing))
-            // Collect all keywords into a `Vec`:
+            // Collect all keywords into a `HashSet`:
             .collect()
 
     } // fn

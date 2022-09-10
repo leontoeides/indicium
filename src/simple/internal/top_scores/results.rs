@@ -10,7 +10,9 @@ impl<'a, K: Hash + Ord, S: PartialOrd> TopScores<'a, K, S> {
     /// Returns the top scoring keywords with their keys, in order of descending
     /// score.
 
-    pub(crate) fn results(self) -> Vec<(&'a String, &'a BTreeSet<K>)> {
+    pub(crate) fn results(
+        self
+    ) -> impl Iterator<Item = (&'a String, &'a BTreeSet<K>)> {
 
         // Dump the contents of the `HashMap` so that the top scores can be
         // sorted:
@@ -29,7 +31,6 @@ impl<'a, K: Hash + Ord, S: PartialOrd> TopScores<'a, K, S> {
         vec
             .into_iter()
             .map(|(keyword, (keys, _score))| (keyword, keys))
-            .collect()
 
     } // if keywords
 

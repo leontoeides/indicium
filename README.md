@@ -25,6 +25,10 @@ may begin to degrade at a point.
 
 # What's New?
 
+* `0.5.0`: Performance improvements. Some functions will now return an
+`Iterator` rather than return a `Vec` to help improve efficiency. Breaking
+change, bumping version to `0.5`.
+
 * `0.4.2`: Any type that implements
 [ToString](https://doc.rust-lang.org/std/string/trait.ToString.html) (and
 consequently any type that implements
@@ -187,11 +191,11 @@ Basic usage:
 ```rust
 let mut search_index: SearchIndex<usize> = SearchIndex::default();
 
-search_index.insert(&0, &MyType::from("Harold Godwinson"));
-search_index.insert(&1, &MyType::from("Edgar Ætheling"));
-search_index.insert(&2, &MyType::from("William the Conqueror"));
-search_index.insert(&3, &MyType::from("William Rufus"));
-search_index.insert(&4, &MyType::from("Henry Beauclerc"));
+search_index.insert(&0, &"Harold Godwinson");
+search_index.insert(&1, &"Edgar Ætheling");
+search_index.insert(&2, &"William the Conqueror");
+search_index.insert(&3, &"William Rufus");
+search_index.insert(&4, &"Henry Beauclerc");
 
 let resulting_keys: Vec<&usize> = search_index.search("William");
 
@@ -215,11 +219,11 @@ let mut search_index: SearchIndex<usize> =
         .autocomplete_type(&AutocompleteType::Global)
         .build();
 
-search_index.insert(&0, &MyType::from("apple"));
-search_index.insert(&1, &MyType::from("ball"));
-search_index.insert(&3, &MyType::from("bird"));
-search_index.insert(&4, &MyType::from("birthday"));
-search_index.insert(&5, &MyType::from("red"));
+search_index.insert(&0, &"apple");
+search_index.insert(&1, &"ball");
+search_index.insert(&3, &"bird");
+search_index.insert(&4, &"birthday");
+search_index.insert(&5, &"red");
 
 let autocomplete_options: Vec<String> =
     search_index.autocomplete("a very big bi");
