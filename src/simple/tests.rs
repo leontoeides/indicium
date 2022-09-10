@@ -150,19 +150,36 @@ fn simple() {
             search_index.insert(&index, element)
         );
 
-    // Fuzzy matching:
-    let search_results = search_index.search_type(&SearchType::Live, "rivers");
-    assert_eq!(search_results, vec![&19]);
-
-    // Live search:
-    let search_results = search_index.search_type(&SearchType::Live, "George");
-    assert_eq!(search_results, vec![&13, &17]);
+    // Keyword search:
+    let search_results = search_index.search_type(&SearchType::Keyword, "Cottonshope");
+    assert_eq!(search_results, vec![&9]);
 
     // Or search:
     let search_results = search_index.search_type(&SearchType::Or, "George Elizabeth");
     assert_eq!(search_results, vec![&11, &13, &17]);
 
-    let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Context, "George bal");
-    assert_eq!(autocomplete_options, vec!["george balaton".to_string()]);
+    // And search:
+    let search_results = search_index.search_type(&SearchType::And, "George Jászság");
+    assert_eq!(search_results, vec![&17]);
+
+    // Live search:
+    let search_results = search_index.search_type(&SearchType::Live, "Geo");
+    assert_eq!(search_results, vec![&13, &17]);
+
+    // Fuzzy matching:
+    let search_results = search_index.search_type(&SearchType::Live, "rivers");
+    assert_eq!(search_results, vec![&19]);
+
+    // Keyword autocomplete:
+    let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Keyword, "Chan");
+    assert_eq!(autocomplete_options, vec!["channel".to_string()]);
+
+    // Global autocomplete:
+    let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Global, "Lo");
+    assert_eq!(autocomplete_options, vec!["lock".to_string(), "lower".to_string()]);
+
+    // Context autocomplete:
+    let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Context, "Krammer Lo");
+    assert_eq!(autocomplete_options, vec!["krammer lock".to_string()]);
 
 } // fn
