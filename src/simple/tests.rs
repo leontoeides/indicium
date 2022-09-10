@@ -170,6 +170,10 @@ fn simple() {
     let search_results = search_index.search_type(&SearchType::Live, "rivers");
     assert_eq!(search_results, vec![&19]);
 
+    // Fuzzy matching:
+    let search_results = search_index.search_type(&SearchType::Live, "peet of Annan");
+    assert_eq!(search_results, vec![&3]);
+
     // Keyword autocomplete:
     let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Keyword, "Chan");
     assert_eq!(autocomplete_options, vec!["channel".to_string()]);
@@ -181,5 +185,9 @@ fn simple() {
     // Context autocomplete:
     let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Context, "Krammer Lo");
     assert_eq!(autocomplete_options, vec!["krammer lock".to_string()]);
+
+    // Context autocomplete:
+    let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Context, "stars are dancers");
+    assert_eq!(autocomplete_options, vec!["stars are dancing".to_string()]);
 
 } // fn
