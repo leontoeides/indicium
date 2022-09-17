@@ -254,6 +254,8 @@
 //! );
 //! ```
 
+#![forbid(unsafe_code)]
+
 #![doc(html_favicon_url = "https://www.arkiteq.ca/crates/indicium/icon.png")]
 #![doc(html_logo_url = "https://www.arkiteq.ca/crates/indicium/logo.png")]
 
