@@ -25,10 +25,6 @@ may begin to degrade at a point.
 
 # What's New?
 
-* `0.5.0`: Performance improvements. Some functions will now return an
-`Iterator` rather than return a `Vec` to help improve efficiency. Breaking
-change, bumping version to `0.5`.
-
 * `0.4.2`: Any type that implements
 [ToString](https://doc.rust-lang.org/std/string/trait.ToString.html) (and
 consequently any type that implements
