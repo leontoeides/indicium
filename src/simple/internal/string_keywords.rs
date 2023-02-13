@@ -23,7 +23,7 @@ pub(crate) enum SplitContext {
 /// keywords. If it is, function will return `true`. If there are no excluded
 /// keywords, function will always return `false`.
 
-fn exclude_keyword(
+pub(crate) fn exclude_keyword(
     keyword: &str,
     exclude_keywords: &Option<Vec<String>>
 ) -> bool {
@@ -42,6 +42,29 @@ fn exclude_keyword(
     } // if
 
 } // fn
+
+// -----------------------------------------------------------------------------
+
+#[test]
+fn test_exclude_keyword() {
+
+    let excluded_keywords = Some(vec![
+        "awake".to_string(),
+        "arise".to_string(),
+        "or".to_string(),
+        "be".to_string(),
+        "for".to_string(),
+        "ever".to_string(),
+        "fall’n".to_string(),
+    ]); // vec!
+
+    let keyword = "arise";
+    assert!(exclude_keyword(keyword, &excluded_keywords));
+
+    let keyword = "arose";
+    assert!(!exclude_keyword(keyword, &excluded_keywords));
+
+}
 
 // -----------------------------------------------------------------------------
 
@@ -77,8 +100,6 @@ impl<K: Ord> SearchIndex<K> {
                 // Split the `String` into smaller strings / keywords on
                 // specified characters:
                 .split(split_pattern.as_slice())
-                // Iterate over each resulting keyword:
-                .into_iter()
                 // Only keep the keyword if it's longer than the minimum length
                 // and shorter than the maximum length:
                 .filter(|keyword| {
@@ -115,7 +136,7 @@ impl<K: Ord> SearchIndex<K> {
         // pattern defined. We'll search by the whole search string without
         // any keyword splitting:
         if  context == SplitContext::Searching &&
-            self.split_pattern == None &&
+            self.split_pattern.is_none() &&
             chars >= self.minimum_keyword_length {
 
                 // Set keywords to the entire string:

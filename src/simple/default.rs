@@ -61,6 +61,7 @@ impl<K: Ord> Default for SearchIndex<K> {
                 '„',                        // Double Low-9 Quotation Mark
                 '‹',                        // Single Left-Pointing Angle Quotation Mark
                 '›',                        // Single Right-Pointing Angle Quotation Mark
+                '—',                        // Em Dash
             ]),
             false,                          // Case sensitive?
             1,                              // Minimum keyword length (in chars or codepoints.)

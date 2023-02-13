@@ -62,7 +62,7 @@ pub trait Indexable {
 // -----------------------------------------------------------------------------
 //
 /// The following implementation allows any type that implements `ToString` (and
-/// consequently any type that implements `Display`) to, in turn, gets the
+/// consequently any type that implements `Display`) to, in turn, get the
 /// `Indexable` implementation for free.
 
 impl<T: ToString> Indexable for T {

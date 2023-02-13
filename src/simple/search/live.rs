@@ -163,7 +163,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                         // Flatten the `BTreeSet<K>` from each autocomplete
                         // keyword option into our collection:
                         .flat_map(|(_keyword, keys)| keys)
-                        // Collect all keyword search results into a `Vec`:
+                        // Collect all keyword search results into a `BTreeSet`:
                         .collect();
 
                     // If fuzzy string searching enabled, examine the search
@@ -187,7 +187,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
                             // `BTreeSet<K>` from each search result into our
                             // collection:
                             .flat_map(|(_keyword, keys)| keys)
-                            // Collect all keyword autocompletions into a `Vec`:
+                            // Collect all keyword autocompletions into a
+                            // `BTreeSet`:
                             .collect()
                     } // if
 
@@ -242,7 +243,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
                         .filter(|key| search_results.contains(key))
                         // Only return `maximum_search_results` number of keys:
                         .take(*maximum_search_results)
-                        // Collect all keyword autocompletions into a `Vec`:
+                        // Collect all keyword autocompletions into a
+                        // `BTreetSet`:
                         .collect();
 
                     // If fuzzy string searching enabled, examine the search
@@ -275,7 +277,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
                             // `BTreeSet<K>` from each search result into our
                             // collection:
                             .flat_map(|(_keyword, keys)| keys)
-                            // Collect all keyword autocompletions into a `Vec`:
+                            // Collect all keyword autocompletions into a
+                            // `BTreeSet`:
                             .collect()
                     } // if
 

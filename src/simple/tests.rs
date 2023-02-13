@@ -1,7 +1,10 @@
+
+
 #[test]
 fn simple() {
 
     use crate::simple::{AutocompleteType, Indexable, SearchIndex, SearchType};
+    use crate::simple::internal::string_keywords::SplitContext;
 
     #[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
     struct MyStruct {
@@ -49,6 +52,42 @@ fn simple() {
     ];
 
     let mut search_index: SearchIndex<usize> = SearchIndex::default();
+
+    let string_keywords: Vec<String> = search_index.string_keywords(
+        "All is not lost, the unconquerable will, and study of revenge, \
+        immortal hate, and the courage never to submit or yield.",
+        SplitContext::Indexing,
+    );
+
+    assert_eq!(string_keywords,
+        [ "all", "is", "not", "lost", "unconquerable", "will", "study",
+        "revenge", "immortal", "hate", "courage", "never", "submit", "yield" ]
+    );
+
+    let string_keywords: Vec<String> = search_index.string_keywords(
+        "He prayeth best, who loveth best All things both great and small; For \
+        the dear God who loveth us, He made and loveth all.",
+        SplitContext::Searching,
+    );
+
+    assert_eq!(string_keywords,
+        [ "he", "prayeth", "best", "who", "loveth", "best", "all", "things",
+        "both", "great", "small", "dear", "god", "who", "loveth", "us", "he",
+        "made", "loveth", "all" ]
+    );
+
+    let string_keywords: Vec<String> = search_index.string_keywords(
+        "Digby was a floccinaucinihilipilificator at heart—which is an \
+        eight-dollar word meaning a joker who does not believe in anything he \
+        can't bite.",
+        SplitContext::Indexing,
+    );
+
+    assert_eq!(string_keywords,
+        [ "digby", "was", "heart", "which", "is", "eight", "dollar", "word",
+        "meaning", "joker", "who", "does", "not", "believe", "anything", "he",
+        "can't", "bite" ]
+    );
 
     my_vec
         .iter()
