@@ -8,6 +8,8 @@
 //! weight, easy to use, and that could conveniently search structs and
 //! collections in my binary. So, I made `indicium`.
 //!
+//! ![alt text](https://www.arkiteq.ca/crates/indicium/banner.jpg "Indicium Search - In-Memory Search for Rust Collections")
+//!
 //! # What's New?
 //!
 //! * `0.4.2`: Any type that implements
