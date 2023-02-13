@@ -86,12 +86,18 @@ impl<K: Clone + Ord> From<SearchIndexBuilder<K>> for SearchIndex<K> {
 
 // -----------------------------------------------------------------------------
 
-impl<K: Clone + Ord> SearchIndexBuilder<K> {
+impl<K: Clone + Ord> Default for SearchIndexBuilder<K> {
 
     /// Initialize `SearchIndexBuilder` with default settings.
-    pub fn default() -> Self {
+    fn default() -> Self {
         SearchIndexBuilder::from(SearchIndex::default())
     } // fn
+
+} // impl Default
+
+// -----------------------------------------------------------------------------
+
+impl<K: Clone + Ord> SearchIndexBuilder<K> {
 
     /// Search type (or logical conjuction). Used to determine how to connect
     /// search results for each keyword. See [`SearchType`] for more
