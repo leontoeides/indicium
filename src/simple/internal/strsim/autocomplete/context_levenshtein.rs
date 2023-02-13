@@ -52,7 +52,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
             // supplied keyword. The below `take_while` will effectively break
             // iteration when we reach a keyword that does not start with our
             // supplied (partial) keyword.
-            .take_while(|(index_keyword, _keys)| index_keyword.starts_with(&index_range))
+            .take_while(|(index_keyword, _keys)| index_keyword.starts_with(index_range))
             // Only examine search index keywords that intersect with the caller
             // provided key-set. This ensures contextual fuzzy matching. This
             // will filter out search index keywords that don't contain any keys
