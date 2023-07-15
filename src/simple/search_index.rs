@@ -9,6 +9,12 @@ use std::collections::{BTreeMap, BTreeSet};
 /// `SearchIndex::default()` or use the `SearchIndexBuilder` builder pattern.
 ///
 /// `K` generic represents the search index key type (i.e. `MyStruct`).
+///
+/// It's recommended to wrap your target collection and this `SearchIndex`
+/// together in a `struct` new type. Then, implement a `insert`, `replace`,
+/// `remove`, etc. methods for this new type `struct` that will update both the
+/// collection and search index. This will ensure that both your collection and
+/// index are always synchronized.
 
 #[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub struct SearchIndex<K: Ord> {
