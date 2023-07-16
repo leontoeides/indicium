@@ -10,11 +10,11 @@ use std::collections::{BTreeMap, BTreeSet};
 ///
 /// `K` generic represents the search index key type (i.e. `MyStruct`).
 ///
-/// It's recommended to wrap your target collection and this `SearchIndex`
-/// together in a `struct` new type. Then, implement a `insert`, `replace`,
-/// `remove`, etc. methods for this new type `struct` that will update both the
-/// collection and search index. This will ensure that both your collection and
-/// index are always synchronized.
+/// It's recommended to wrap your target collection (your `Vec`, `HashMap`,
+/// etc.) and this `SearchIndex` together in a new `struct` type. Then,
+/// implement the `insert`, `replace`, `remove`, etc. methods for this new
+/// `struct` type that will update both the collection and search index. This
+/// will ensure that both your collection and index are always synchronized.
 
 #[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub struct SearchIndex<K: Ord> {
