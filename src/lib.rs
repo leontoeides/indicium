@@ -217,9 +217,10 @@
 //! assert_eq!(resulting_keys, vec![&0]);
 //! ```
 //!
-//! Search only supports exact keyword matches. It only supports fuzzy matching
-//! for the last keyword. Consider providing the `autocomplete` feature to your
-//! users as an ergonomic alternative to fuzzy matching.
+//! Search only supports exact keyword matches. For `Live` searches, fuzzy
+//! matching is only applied to the last keyword. Consider providing the
+//! `autocomplete` feature to your users as an ergonomic alternative to fuzzy
+//! matching.
 //!
 //! ## 5. Autocompletion
 //!
