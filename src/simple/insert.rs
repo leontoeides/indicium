@@ -126,8 +126,14 @@ impl<K: Clone + Ord> SearchIndex<K> {
     ///
     /// You can use the enum's variants to represent your different collections.
     /// Each variant's associated data can hold the `key` for your record.
+    ///
+    /// Note that I couldn't implement the `FromIterator` trait which would
+    /// allow a caller to `.collect();` into the `SearchIndex`. `FromIterator`
+    /// works with an owned iterator (`IntoIterator`) and uses owned values
+    /// only. If there were a similar trait that worked with borrowed values,
+    /// it would be do-able.
 
-    #[tracing::instrument(level = "trace", name = "Search Index Insert", skip(self, key, value))]
+    #[tracing::instrument(level = "trace", name = "search index insert", skip(self, key, value))]
     pub fn insert(&mut self, key: &K, value: &dyn Indexable) {
 
         // Get all keywords for the `Indexable` record:

@@ -93,7 +93,7 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
     /// assert_eq!(search_results, vec![&1]);
     /// ```
 
-    #[tracing::instrument(level = "trace", name = "Search", skip(self))]
+    #[tracing::instrument(level = "trace", name = "search", skip(self))]
     pub fn search(&'a self, string: &'a str) -> Vec<&'a K> {
 
         let search_results: Vec<&'a K> = match self.search_type {
@@ -199,7 +199,7 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
     /// assert_eq!(search_results, vec![&3]);
     /// ```
 
-    #[tracing::instrument(level = "trace", name = "Search", skip(self))]
+    #[tracing::instrument(level = "trace", name = "search", skip(self))]
     pub fn search_type(
         &'a self,
         search_type: &SearchType,
@@ -315,7 +315,7 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
     /// assert_eq!(search_results, vec![&3]);
     /// ```
 
-    #[tracing::instrument(level = "trace", name = "Search", skip(self))]
+    #[tracing::instrument(level = "trace", name = "search", skip(self))]
     pub fn search_with(
         &'a self,
         search_type: &SearchType,

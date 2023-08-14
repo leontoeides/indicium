@@ -91,7 +91,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// );
     /// ```
 
-    #[tracing::instrument(level = "trace", name = "Context Autocomplete", skip(self))]
+    #[tracing::instrument(level = "trace", name = "context autocomplete", skip(self))]
     pub(crate) fn autocomplete_context(
         &self,
         maximum_autocomplete_options: &usize,
@@ -107,7 +107,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
         // For debug builds:
         #[cfg(debug_assertions)]
-        tracing::debug!("Autocompleting: {:?}", keywords);
+        tracing::debug!("autocompleting: {:?}", keywords);
 
         // Pop the last keyword off the list - the keyword that we'll be
         // autocompleting:

@@ -98,7 +98,7 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
     /// assert_eq!(search_results, vec![&0, &1, &2]);
     /// ```
 
-    #[tracing::instrument(level = "trace", name = "Or Search", skip(self))]
+    #[tracing::instrument(level = "trace", name = "or search", skip(self))]
     pub(crate) fn search_or(
         &'a self,
         maximum_search_results: &usize,
@@ -115,7 +115,7 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
 
         // For debug builds:
         #[cfg(debug_assertions)]
-        tracing::debug!("Searching: {:?}", keywords);
+        tracing::debug!("searching: {:?}", keywords);
 
         // This `BTreeMap` is used to count the number of hits for each
         // resulting key. This is so we can return search results in order of

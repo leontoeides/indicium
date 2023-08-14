@@ -16,7 +16,7 @@ impl Request {
     /// the form of a slice) to this function to be processed into the `Select2`
     /// format.
 
-    #[tracing::instrument(level = "trace", name = "Build Flat Results", skip(self, search_results_keys, search_results_values))]
+    #[tracing::instrument(level = "trace", name = "build flat results", skip(self, search_results_keys, search_results_values))]
     pub fn flat_response<K: Clone + Ord + ToString, S: Selectable>(
         &self,
         items_per_page: &Option<usize>,
@@ -32,7 +32,7 @@ impl Request {
 
             let error_message = format!(
                 "{} keys and {} values were supplied to `flat_response`. \
-                The number of keys and values must be the same.",
+                the number of keys and values must be the same.",
                 search_results_keys.len(),
                 search_results_values.len(),
             ); // format!
@@ -41,8 +41,8 @@ impl Request {
 
         } else if search_results_keys.is_empty() {
 
-            let error_message = "List of keys and values is empty. \
-                Returning empty response.".to_string();
+            let error_message = "list of keys and values is empty. \
+                returning empty response.".to_string();
             tracing::debug!("{}", error_message);
             return Ok(FlatResults::default())
 

@@ -93,7 +93,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// assert_eq!(search_results, vec![&3]);
     /// ```
 
-    #[tracing::instrument(level = "trace", name = "And Search", skip(self))]
+    #[tracing::instrument(level = "trace", name = "and search", skip(self))]
     pub(crate) fn search_and(
         &self,
         maximum_search_results: &usize,
@@ -110,7 +110,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
         // For debug builds:
         #[cfg(debug_assertions)]
-        tracing::debug!("Searching: {:?}", keywords);
+        tracing::debug!("searching: {:?}", keywords);
 
         // This `BTreeSet` is used to contain the search results:
         let mut search_results: Option<BTreeSet<&K>> = None;

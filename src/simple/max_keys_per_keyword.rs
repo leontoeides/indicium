@@ -20,7 +20,7 @@ impl<K: Ord> SearchIndex<K> {
     /// assert_eq!(search_index.max_keys_per_keyword(), 40_960);
     /// ```
 
-    #[tracing::instrument(level = "trace", name = "Get Maximum Keys Per Keyword", skip(self))]
+    #[tracing::instrument(level = "trace", name = "get maximum keys per keyword", skip(self))]
     pub fn max_keys_per_keyword(&self) -> usize {
         self.maximum_keys_per_keyword
     } // fn

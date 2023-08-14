@@ -8,7 +8,7 @@ mod autocomplete;
 mod internal;
 mod search;
 
-// Methods & structs:
+// Methods, structs & implementations:
 mod autocomplete_type;
 mod builder;
 mod clear;

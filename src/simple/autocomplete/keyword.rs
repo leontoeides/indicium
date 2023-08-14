@@ -83,7 +83,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// );
     /// ```
 
-    #[tracing::instrument(level = "trace", name = "Keyword Autocomplete", skip(self))]
+    #[tracing::instrument(level = "trace", name = "keyword autocomplete", skip(self))]
     pub(crate) fn autocomplete_keyword(
         &self,
         maximum_autocomplete_options: &usize,
@@ -99,7 +99,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
         // For debug builds:
         #[cfg(debug_assertions)]
-        tracing::debug!("Autocompleting: {:?}", keyword);
+        tracing::debug!("autocompleting: {:?}", keyword);
 
         // Attempt to get matching keywords from `BTreeMap`:
         let autocomplete_options: Vec<&String> = self.b_tree_map

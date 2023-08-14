@@ -89,7 +89,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// assert_eq!(autocomplete_options, vec!["edgar last cerdic".to_string()]);
     /// ```
 
-    #[tracing::instrument(level = "trace", name = "Autocomplete", skip(self))]
+    #[tracing::instrument(level = "trace", name = "autocomplete", skip(self))]
     pub fn autocomplete(&self, string: &str) -> Vec<String> {
 
         let autocomplete_options: Vec<String> = match &self.autocomplete_type {
@@ -200,7 +200,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// );
     /// ```
 
-    #[tracing::instrument(level = "trace", name = "Autocomplete", skip(self))]
+    #[tracing::instrument(level = "trace", name = "autocomplete", skip(self))]
     pub fn autocomplete_type(
         &self,
         autocomplete_type: &AutocompleteType,
@@ -319,7 +319,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// );
     /// ```
 
-    #[tracing::instrument(level = "trace", name = "Autocomplete", skip(self))]
+    #[tracing::instrument(level = "trace", name = "autocomplete", skip(self))]
     pub fn autocomplete_with(
         &self,
         autocomplete_type: &AutocompleteType,

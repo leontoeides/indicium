@@ -100,7 +100,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// assert_eq!(search_results, vec![&2]);
     /// ```
 
-    #[tracing::instrument(level = "trace", name = "Live Search", skip(self))]
+    #[tracing::instrument(level = "trace", name = "live search", skip(self))]
     pub(crate) fn search_live(
         &self,
         maximum_search_results: &usize,
@@ -116,7 +116,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
         // For debug builds:
         #[cfg(debug_assertions)]
-        tracing::debug!("Searching: {:?}", keywords);
+        tracing::debug!("searching: {:?}", keywords);
 
         // Pop the last keyword off the list - the keyword that we'll be
         // autocompleting:

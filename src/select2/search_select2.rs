@@ -13,7 +13,7 @@ impl<'a, K: 'a + Debug + Hash + Ord> SearchIndex<K> {
     /// `Request` struct, the struct may be passed to this search method. This
     /// method will return all search results for the client's query.
 
-    #[tracing::instrument(level = "trace", name = "Select2 Search", skip(self))]
+    #[tracing::instrument(level = "trace", name = "select2 search", skip(self))]
     pub fn search_select2(
         &'a self,
         request: &'a Request,

@@ -96,7 +96,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     // observes `maximum_search_results`, while `internal_keyword_search` does
     // not.
 
-    #[tracing::instrument(level = "trace", name = "Keyword Search", skip(self))]
+    #[tracing::instrument(level = "trace", name = "keyword search", skip(self))]
     pub(crate) fn search_keyword(
         &self,
         maximum_search_results: &usize,
@@ -112,7 +112,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
         // For debug builds:
         #[cfg(debug_assertions)]
-        tracing::debug!("Searching: {}", keyword);
+        tracing::debug!("searching: {}", keyword);
 
         // Attempt to get matching keys for the search keyword from BTreeMap:
         if let Some(keys) = self.b_tree_map.get(&keyword) {
