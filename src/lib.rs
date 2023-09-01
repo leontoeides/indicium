@@ -50,12 +50,6 @@
 //! defaults change search behaviour and tweak accordingly before adopting the
 //! 0.4.0 update.**
 //!
-//! * `0.3.0`: Added new search type `SearchType::Live` which is for "search as
-//! you type" interfaces. It is sort of a hybrid between `autocomplete` and
-//! `SearchType::And`. It will search using an (incomplete) string and return
-//! keys as the search results. Each resulting key can then be used to retrieve
-//! the full record from its collection to be rendered & displayed to the user.
-//!
 //! # Quick Start Guide
 //!
 //! For our **Quick Start Guide** example, we will be searching inside of the
