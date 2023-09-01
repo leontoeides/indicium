@@ -34,6 +34,7 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
     ///
     /// ```rust
     /// # use indicium::simple::{AutocompleteType, Indexable, SearchIndex, SearchType};
+    /// # use pretty_assertions::assert_eq;
     /// #
     /// # struct MyStruct {
     /// #   title: String,
@@ -140,6 +141,7 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
     ///
     /// ```rust
     /// # use indicium::simple::{AutocompleteType, Indexable, SearchIndex, SearchType};
+    /// # use pretty_assertions::assert_eq;
     /// #
     /// # struct MyStruct {
     /// #   title: String,
@@ -251,6 +253,7 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
     ///
     /// ```rust
     /// # use indicium::simple::{AutocompleteType, Indexable, SearchIndex, SearchType};
+    /// # use pretty_assertions::assert_eq;
     /// #
     /// # struct MyStruct {
     /// #   title: String,

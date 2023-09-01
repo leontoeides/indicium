@@ -21,6 +21,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     ///
     /// ```ignore
     /// # use indicium::simple::{AutocompleteType, Indexable, SearchIndex, SearchType};
+    /// # use pretty_assertions::assert_eq;
     /// #
     /// # struct MyStruct {
     /// #   title: String,

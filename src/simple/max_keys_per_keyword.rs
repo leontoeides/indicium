@@ -16,7 +16,10 @@ impl<K: Ord> SearchIndex<K> {
     ///
     /// ```rust
     /// # use indicium::simple::SearchIndex;
+    /// # use pretty_assertions::assert_eq;
+    /// #
     /// # let mut search_index: SearchIndex<usize> = SearchIndex::default();
+    /// #
     /// assert_eq!(search_index.max_keys_per_keyword(), 40_960);
     /// ```
 

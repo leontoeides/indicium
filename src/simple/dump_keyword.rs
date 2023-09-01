@@ -39,6 +39,7 @@ impl<K: Ord> SearchIndex<K> {
     ///
     /// ```rust
     /// # use indicium::simple::{AutocompleteType, Indexable, SearchIndex, SearchIndexBuilder};
+    /// # use pretty_assertions::assert_eq;
     /// #
     /// # let mut search_index: SearchIndex<usize> =
     /// #     SearchIndexBuilder::default()

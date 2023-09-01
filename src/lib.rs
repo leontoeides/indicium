@@ -207,6 +207,7 @@
 //!
 //! ```rust
 //! # use indicium::simple::{Indexable, SearchIndex};
+//! # use pretty_assertions::assert_eq;
 //! #
 //! let mut search_index: SearchIndex<usize> = SearchIndex::default();
 //!
@@ -241,6 +242,7 @@
 //!
 //! ```rust
 //! # use indicium::simple::{AutocompleteType, Indexable, SearchIndex, SearchIndexBuilder};
+//! # use pretty_assertions::assert_eq;
 //! #
 //! let mut search_index: SearchIndex<usize> =
 //!     SearchIndexBuilder::default()

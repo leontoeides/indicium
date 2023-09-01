@@ -4,6 +4,7 @@ fn simple() {
     use crate::simple::internal::string_keywords::SplitContext;
     use crate::simple::{AutocompleteType, Indexable, SearchIndex, SearchType};
     use kstring::KString;
+    use pretty_assertions::assert_eq;
 
     #[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
     struct MyStruct {

@@ -39,6 +39,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// #   SearchIndex,
     /// #   SearchType
     /// # };
+    /// # use pretty_assertions::assert_eq;
     /// #
     /// # struct MyStruct {
     /// #   title: String,
