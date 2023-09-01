@@ -22,7 +22,7 @@ impl<K: Clone + Ord> SearchIndex<K> {
     /// [`exclude_keywords`]: struct.SearchIndexBuilder.html#method.exclude_keywords
 
     #[tracing::instrument(level = "trace", name = "search index profile", skip(self))]
-    pub fn profile(&self, count: usize) -> impl Iterator<Item = (&KString, usize)> {
+    pub fn profile(&self, count: usize) -> impl Iterator<Item = (&str, usize)> {
 
         // Get a list of all keywords and the number of attached keys for each
         // keyword. For example: keyword "supercalifragilisticexpialidocious"
@@ -45,6 +45,7 @@ impl<K: Clone + Ord> SearchIndex<K> {
         keywords
             .into_iter()
             .take(count)
+            .map(|(kstring, entries)| (kstring.as_str(), entries))
 
     } // fn
 
