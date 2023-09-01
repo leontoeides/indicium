@@ -15,9 +15,10 @@
 //! * `0.5.1`: Fixes for experimental `select2` feature.
 //!
 //! * `0.5.0`: The `simple` search index now internally employs the
-//! [KString](https://crates.io/crates/kstring) crate. The `dump_keyword` and
-//! `profile` function signatures were changed slightly, otherwise there's no
-//! impact to the caller.
+//! [KString](https://crates.io/crates/kstring) crate. This should help with
+//! memory consumption in certain cases. The `dump_keyword` and `profile`
+//! function signatures were changed slightly, otherwise there's no impact to
+//! the caller.
 //!
 //! * `0.5.0`: Performance improvements.
 //!
