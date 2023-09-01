@@ -147,12 +147,12 @@ impl<K: Clone + Ord> SearchIndex<K> {
 
         // Iterate over the keywords:
         keywords
-            .iter()
+            .into_iter()
             // For each keyword, add this record's _key_ to the _keyword entry_:
             .for_each(|keyword|
                 // Attempt to get mutuable reference to the _keyword entry_ in
                 // the search index:
-                match self.b_tree_map.get_mut(keyword) {
+                match self.b_tree_map.get_mut(&keyword) {
                     // If keyword was found in search index, add _key reference_
                     // for this record to _keyword entry_:
                     Some(keys) => {

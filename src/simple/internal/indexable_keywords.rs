@@ -25,12 +25,12 @@ impl<K: Ord> SearchIndex<K> {
         // Store the individual keywords from these strings:
         strings
             // Iterate over each `String` field from the record:
-            .iter()
+            .into_iter()
             // Split each `String` into keywords according to the `SearchIndex`
             // settings. Note that `string_keywords` will allow "use entire
             // string as a keyword" if enabled in user settings. Flatten the
             // string's keywords into the `HashSet`:
-            .flat_map(|string| self.string_keywords(string, SplitContext::Indexing))
+            .flat_map(|string| self.string_keywords(&string, SplitContext::Indexing))
             // Collect all keywords into a `HashSet`:
             .collect()
 

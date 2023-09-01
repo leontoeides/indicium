@@ -103,13 +103,13 @@ impl<K: Clone + Ord> SearchIndex<K> {
 
         // Iterate over the keywords:
         keywords
-            .iter()
+            .into_iter()
             // For each keyword, remove this record's _key_ from the _keyword
             // entry_:
             .for_each(|keyword| {
                 // Attempt to get mutuable reference to the _keyword entry_ in
                 // the search index:
-                let is_empty = if let Some(keys) = self.b_tree_map.get_mut(keyword) {
+                let is_empty = if let Some(keys) = self.b_tree_map.get_mut(&keyword) {
                     // If keyword found in search index, remove the _key
                     // reference_ for this record from _keyword entry_:
                     keys.remove(key);
@@ -124,7 +124,7 @@ impl<K: Clone + Ord> SearchIndex<K> {
                 // If the _keyword entry_ no longer contains any _key
                 // references_, it is empty and we should remove the keyword
                 // from the search index:
-                if is_empty { self.b_tree_map.remove(keyword); }
+                if is_empty { self.b_tree_map.remove(&keyword); }
             }) // for_each
 
     } // fn

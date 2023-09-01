@@ -125,13 +125,13 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
         // a our `BTreeMap`, and track the hit-count for each key:
         keywords
             // Iterate over the keywords supplied in the search string:
-            .iter()
+            .into_iter()
             // For each keyword in the search string:
             .for_each(|keyword| {
                 // Search for keyword in our `BTreeMap`:
-                self.internal_keyword_search(keyword)
+                self.internal_keyword_search(&keyword)
                     // Iterate over the resulting keys (if any):
-                    .iter()
+                    .into_iter()
                     // For each resulting key from the keyword search:
                     .for_each(|key| match search_results.get_mut(key) {
                         // Add "hit" to counter for an already existing key:
@@ -150,9 +150,7 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
 
         let mut search_results: Vec<(&K, usize)> = search_results
             // Iterate over keys in the hash map:
-            .iter()
-            // Convert the key-value pair into a tuple element:
-            .map(|(key, value)| (*key, *value))
+            .into_iter()
             // Collect the tuple elements into a `Vec`:
             .collect();
 
@@ -162,11 +160,11 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
         // Return the search results to the user:
         search_results
             // Iterate over the tuple elements:
-            .iter()
+            .into_iter()
             // Only return `maximum_search_results` number of keys:
             .take(*maximum_search_results)
             // Remove the hit-count from the tuple, returning only the key:
-            .map(|(key, _value)| *key)
+            .map(|(key, _value)| key)
             // Collect the keys into a `Vec`:
             .collect()
 

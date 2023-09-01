@@ -118,14 +118,14 @@ impl<K: Hash + Ord> SearchIndex<K> {
         // keys with our current keys:
         keywords
             // Iterate over the keywords supplied in the search string:
-            .iter()
+            .into_iter()
             // For each keyword in the search string:
             .for_each(|keyword| {
 
                 // Attempt to retrieve keyword from search index. If keyword
                 // found, intersect keyword records with search results records.
                 // If keyword not found, empty search results:
-                match self.b_tree_map.get(keyword) {
+                match self.b_tree_map.get(&keyword) {
 
                     // Keyword found. Update `search_results` with product of an
                     // intersection with this keyword's records:
@@ -158,7 +158,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                             // If `search_results` is currently empty,
                             // initialize it with the first keyword's full
                             // search results:
-                            None => self.internal_keyword_search(keyword),
+                            None => self.internal_keyword_search(&keyword),
 
                         } // match
 

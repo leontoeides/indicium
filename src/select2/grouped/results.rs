@@ -68,7 +68,7 @@ impl Request {
             // records dumped from a key-value store:
             let paginated_results: Vec<(&K, &G)> = search_results_keys
                 // Iterate over each key:
-                .iter()
+                .into_iter()
                 // Track the number of keys we've iterated over, so we can
                 // look-up the corresponding values from the
                 // `search_results_values` slice:
@@ -93,7 +93,7 @@ impl Request {
             // records dumped from a key-value store:
             let unpaginated_results: Vec<(&K, &G)> = search_results_keys
                 // Iterate over each key:
-                .iter()
+                .into_iter()
                 // Track the number of keys we've iterated over, so we can
                 // look-up the corresponding values from the
                 // `search_results_values` slice:
@@ -118,7 +118,7 @@ impl Request {
         // groups:
         groupable_results.1
             // Iterate over the results records:
-            .iter()
+            .into_iter()
             // For each record in the results:
             .for_each(|(key, value)| {
                 // Convert the record from a `&G` into a `GroupableRecord`:
@@ -148,7 +148,7 @@ impl Request {
         // records into `Vec<Group>` which will be returned as the response:
 
         let grouped_results: Vec<Group> = grouped_results
-            .iter()
+            .into_iter()
             .map(|(group, records)| Group {
                 text: group.to_string(),
                 children: records.to_owned(),

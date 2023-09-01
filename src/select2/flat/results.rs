@@ -63,7 +63,7 @@ impl Request {
             // records dumped from a key-value store:
             let paginated_results: Vec<Record> = search_results_keys
                 // Iterate over each passed record:
-                .iter()
+                .into_iter()
                 // Track the number of keys we've iterated over, so we can
                 // look-up the corresponding values from the
                 // `search_results_values` slice:
@@ -111,7 +111,7 @@ impl Request {
             // records dumped from a key-value store:
             let unpaginated_results = search_results_keys
                 // Iterate over each passed record:
-                .iter()
+                .into_iter()
                 // Track the number of keys we've iterated over, so we can
                 // look-up the corresponding values from the
                 // `search_results_values` slice:
