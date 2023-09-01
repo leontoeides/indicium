@@ -150,7 +150,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
         // If fuzzy string searching disabled, return the resulting
         // auto-complete options without further processing:
         #[cfg(not(feature = "fuzzy"))]
-        autocomplete_options
+        autocomplete_options.into_iter().map(|kstring| kstring.as_str()).collect()
 
     } // fn
 
