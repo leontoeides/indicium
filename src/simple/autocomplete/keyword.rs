@@ -78,8 +78,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// let autocomplete_options = search_index.autocomplete_keyword(&5, "E");
     ///
     /// assert_eq!(
-    ///     // Convert `BTreeMap<&String>` to `Vec<&String>` for comparison:
-    ///     autocomplete_options.into_iter().collect::<Vec<&String>>(),
+    ///     // Convert `BTreeMap<&String>` to `Vec<&str>` for comparison:
+    ///     autocomplete_options.into_iter().collect::<Vec<&str>>(),
     ///     vec![&"edgar".to_string(), &"edgar ætheling".to_string(), &"england".to_string()]
     /// );
     /// ```
