@@ -137,7 +137,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // .filter(|autocompletion| *autocompletion != &last_keyword)
                 // Only keep this autocompletion if hasn't already been used as
                 // a keyword:
-                .filter(|autocompletion| !keywords.contains(*autocompletion))
+                .filter(|autocompletion| !keywords.contains(autocompletion))
                 // If the index's keyword matches the user's keyword, don't
                 // return it as a result. For example, if the user's keyword was
                 // "new" (as in New York), do not return "new" as an

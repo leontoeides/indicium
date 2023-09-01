@@ -224,7 +224,7 @@ fn simple() {
     let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Context, "Krammer Lo");
     assert_eq!(autocomplete_options, vec!["krammer lock".to_string()]);
 
-    // Context autocomplete:
+    // Fuzzy matching context autocomplete:
     let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Context, "stars are dancers");
     assert_eq!(autocomplete_options, vec!["stars are dancing".to_string()]);
 

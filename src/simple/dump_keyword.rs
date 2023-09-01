@@ -31,7 +31,7 @@ impl<K: Ord> SearchIndex<K> {
     /// ```rust
     /// # use indicium::simple::SearchIndex;
     /// # let mut search_index: SearchIndex<usize> = SearchIndex::default();
-    /// assert_eq!(search_index.dump_keyword(), Some("\0".to_string()));
+    /// assert_eq!(search_index.dump_keyword(), Some("\0"));
     /// ```
     ///
     /// The intended usage of `dump_keyword` is retrieve a full listing of all
@@ -76,7 +76,6 @@ impl<K: Ord> SearchIndex<K> {
     /// }
     /// ```
 
-    #[tracing::instrument(level = "trace", name = "get dump keyword", skip(self))]
     pub fn dump_keyword(&self) -> Option<&str> {
         self.dump_keyword.as_ref().map(|kstring| kstring.as_str())
     } // fn
