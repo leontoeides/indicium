@@ -77,8 +77,8 @@ impl<K: Ord> SearchIndex<K> {
     /// ```
 
     #[tracing::instrument(level = "trace", name = "get dump keyword", skip(self))]
-    pub fn dump_keyword(&self) -> Option<String> {
-        self.dump_keyword.as_ref().map(|kstring| kstring.to_string())
+    pub fn dump_keyword(&self) -> Option<&str> {
+        self.dump_keyword.as_ref().map(|kstring| kstring.as_str())
     } // fn
 
 } // impl

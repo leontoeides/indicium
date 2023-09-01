@@ -2,8 +2,7 @@
 
 use crate::select2::Request;
 use crate::simple::{SearchIndex, SearchType};
-use std::fmt::Debug;
-use std::hash::Hash;
+use std::{fmt::Debug, hash::Hash};
 
 // -----------------------------------------------------------------------------
 
@@ -20,7 +19,7 @@ impl<'a, K: 'a + Debug + Hash + Ord> SearchIndex<K> {
     ) -> Vec<&'a K> {
 
         // Get query (or "search term"), if any:
-        let query_term: Option<&str> = request.query_term(&self.dump_keyword);
+        let query_term: Option<&str> = request.query_term(self.dump_keyword());
 
         if let Some(query_term) = query_term {
 

@@ -145,16 +145,13 @@ impl<'a> Request {
     /// For some reason, `Select2` can send the user's search term in either
     /// the `term` field or in the `q` field. This convenience method checks
     /// both fields and returns the user's query term, if available.
-    pub fn query_term(&'a self, dump_keyword: &'a Option<String>) -> Option<&'a String> {
+    pub fn query_term(&'a self, dump_keyword: Option<&'a str>) -> Option<&'a str> {
         // Get query (search term) if any:
         match &self.q {
-            Some(_q) => self.q.as_ref(),
+            Some(q) => Some(q.as_str()),
             None => match &self.term {
-                Some(_term) => self.term.as_ref(),
-                None => match dump_keyword {
-                    Some(dump_keyword) => Some(dump_keyword),
-                    None => None,
-                }, // None
+                Some(term) => Some(term.as_str()),
+                None => dump_keyword,
             }, // None
         } // match
     } // fn
