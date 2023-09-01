@@ -38,7 +38,7 @@ impl<'a, K: Hash + Ord, S: Clone + PartialOrd> TopScores<'a, K, S> {
                     // collection:
                     self.remove_bottom();
                     // Insert the new score into the collection:
-                    self.top.insert(keyword.into(), (keys, score));
+                    self.top.insert(keyword, (keys, score));
                 } // if
             } // if
 
@@ -47,7 +47,7 @@ impl<'a, K: Hash + Ord, S: Clone + PartialOrd> TopScores<'a, K, S> {
             // The `TopScores` struct has not reached its capacity, we may
             // blindly add the _keyword_, _keys_, & _score_ without checking the
             // lowest score:
-            self.top.insert(keyword.into(), (keys, score));
+            self.top.insert(keyword, (keys, score));
 
         } // if
 

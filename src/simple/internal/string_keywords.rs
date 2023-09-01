@@ -113,7 +113,7 @@ impl<K: Ord> SearchIndex<K> {
                     !exclude_keyword(keyword, &self.exclude_keywords)
                 ) // filter
                 // Copy string from reference:
-                .map(|str| KString::from_ref(str))
+                .map(KString::from_ref)
                 // Collect all keywords into a `Vec`:
                 .collect()
         } else {
