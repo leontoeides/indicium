@@ -12,7 +12,11 @@
 //!
 //! # What's New?
 //!
-//! * `0.5.1`: Fixes for experimental `select2` feature.
+//! * The release notes on [GitHub](https://github.com/leontoeides/indicium/releases)
+//! will be used as the changelog going forward.
+//!
+//! * `0.5.1`: Fixes compile failure for the experimental `select2` feature and when
+//! not using `fuzzy` feature.
 //!
 //! * `0.5.0`: The `simple` search index now internally employs the
 //! [kstring](https://crates.io/crates/kstring) crate. This should help with
