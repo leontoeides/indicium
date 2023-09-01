@@ -1,9 +1,9 @@
-use crate::simple::internal::OrTopScores;
+use crate::simple::internal::SearchTopScores;
 use std::{cmp::Ord, hash::Hash};
 
 // -----------------------------------------------------------------------------
 
-impl<'a, K: Hash + Ord> OrTopScores<'a, K> {
+impl<'a, K: Hash + Ord> SearchTopScores<'a, K> {
 
     // -------------------------------------------------------------------------
     //
@@ -21,4 +21,4 @@ impl<'a, K: Hash + Ord> OrTopScores<'a, K> {
 
     } // fn remove_bottom
 
-} // impl OrTopScores
+} // impl SearchTopScores

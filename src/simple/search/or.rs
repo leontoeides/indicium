@@ -1,4 +1,4 @@
-use crate::simple::internal::OrTopScores;
+use crate::simple::internal::SearchTopScores;
 use crate::simple::internal::string_keywords::SplitContext;
 use crate::simple::search_index::SearchIndex;
 use kstring::KString;
@@ -149,8 +149,8 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
 
         // This structure will track the top scoring keys:
 
-        let mut top_scores: OrTopScores<K> =
-            OrTopScores::with_capacity(*maximum_search_results);
+        let mut top_scores: SearchTopScores<K> =
+            SearchTopScores::with_capacity(*maximum_search_results);
 
         // Populate the top scores by iterating of the each key's tally-count:
 
@@ -162,7 +162,7 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
 
         // Return the search results to the user:
         top_scores
-            // Get the top scoring results from the `OrTopScores` struct:
+            // Get the top scoring results from the `SearchTopScores` struct:
             .results()
             // Remove the hit-count from the tuple, returning only the key:
             .map(|(key, _hits)| key)

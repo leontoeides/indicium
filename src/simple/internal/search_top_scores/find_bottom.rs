@@ -1,15 +1,15 @@
-use crate::simple::internal::OrTopScores;
+use crate::simple::internal::SearchTopScores;
 use std::{cmp::Ord, cmp::PartialOrd, hash::Hash};
 
 // -----------------------------------------------------------------------------
 
-impl<'a, K: Hash + Ord> OrTopScores<'a, K> {
+impl<'a, K: Hash + Ord> SearchTopScores<'a, K> {
 
     // -------------------------------------------------------------------------
     //
     /// Finds and caches the lowest (or bottom) top score.
     ///
-    /// By caching the lowest score in the `OrTopScores` struct, comparisons can
+    /// By caching the lowest score in the `SearchTopScores` struct, comparisons can
     /// be done more efficiently.
 
     pub(crate) fn find_bottom(&mut self) {
@@ -30,4 +30,4 @@ impl<'a, K: Hash + Ord> OrTopScores<'a, K> {
 
     } // fn find_bottom
 
-} // impl OrTopScores
+} // impl SearchTopScores
