@@ -25,10 +25,10 @@ may begin to degrade at a point.
 
 # What's New?
 
-* `0.4.3`: The `simple` search index now internally employs the
+* `0.5.0`: The `simple` search index now internally employs the
 [KString](https://crates.io/crates/kstring) crate. The `dump_keyword` and
 `profile` function signatures were changed slightly, otherwise there's no impact
-to the user.
+to the end developer.
 
 * `0.4.2`: Any type that implements
 [ToString](https://doc.rust-lang.org/std/string/trait.ToString.html) (and
