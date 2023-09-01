@@ -1,10 +1,10 @@
-use crate::simple::internal::TopScores;
+use crate::simple::internal::StrsimTopScores;
 use kstring::KString;
 use std::{cmp::Ord, cmp::PartialOrd, collections::BTreeSet, hash::Hash};
 
 // -----------------------------------------------------------------------------
 
-impl<'a, K: Hash + Ord, S: PartialOrd> TopScores<'a, K, S> {
+impl<'a, K: Hash + Ord, S: PartialOrd> StrsimTopScores<'a, K, S> {
 
     // -------------------------------------------------------------------------
     //
@@ -35,4 +35,4 @@ impl<'a, K: Hash + Ord, S: PartialOrd> TopScores<'a, K, S> {
 
     } // if keywords
 
-} // impl TopScores
+} // impl StrsimTopScores

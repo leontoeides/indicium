@@ -1,15 +1,15 @@
-use crate::simple::internal::TopScores;
+use crate::simple::internal::StrsimTopScores;
 use std::{clone::Clone, cmp::Ord, cmp::PartialOrd, hash::Hash};
 
 // -----------------------------------------------------------------------------
 
-impl<'a, K: Hash + Ord, S: Clone + PartialOrd> TopScores<'a, K, S> {
+impl<'a, K: Hash + Ord, S: Clone + PartialOrd> StrsimTopScores<'a, K, S> {
 
     // -------------------------------------------------------------------------
     //
     /// Finds and caches the lowest (or bottom) top score.
     ///
-    /// By caching the lowest score in the `TopScores` struct, comparisons can
+    /// By caching the lowest score in the `StrsimTopScores` struct, comparisons can
     /// be done more efficiently.
 
     pub(crate) fn find_bottom(&mut self) {
@@ -30,4 +30,4 @@ impl<'a, K: Hash + Ord, S: Clone + PartialOrd> TopScores<'a, K, S> {
 
     } // fn find_bottom
 
-} // impl TopScores
+} // impl StrsimTopScores

@@ -1,4 +1,4 @@
-use crate::simple::internal::TopScores;
+use crate::simple::internal::StrsimTopScores;
 use crate::simple::search_index::SearchIndex;
 use kstring::KString;
 use std::{cmp::Ord, collections::BTreeSet, hash::Hash};
@@ -41,8 +41,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
     ) -> impl Iterator<Item = (&KString, &BTreeSet<K>)> {
 
         // This structure will track the top scoring keywords:
-        let mut top_scores: TopScores<K, f64> =
-            TopScores::with_capacity(self.maximum_autocomplete_options);
+        let mut top_scores: StrsimTopScores<K, f64> =
+            StrsimTopScores::with_capacity(self.maximum_autocomplete_options);
 
         // Scan the search index for the highest scoring keywords:
         self.b_tree_map

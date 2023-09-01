@@ -19,11 +19,11 @@ use std::{cmp::Ord, cmp::PartialOrd, hash::Hash};
 /// matches for fuzzy string matching.
 
 #[derive(Default)]
-pub(crate) struct TopScores<'a, K: Hash + Ord, S: PartialOrd> {
+pub(crate) struct StrsimTopScores<'a, K: Hash + Ord, S: PartialOrd> {
     /// Tracks the top _n_ scores.
     pub(crate) top: HashMap<&'a KString, (&'a BTreeSet<K>, S)>,
     /// Tracks lowest of the top scores.
     pub(crate) bottom: Option<(&'a KString, S)>,
     /// Number of top scores to keep.
     pub(crate) capacity: usize,
-} // TopScores
+} // StrsimTopScores

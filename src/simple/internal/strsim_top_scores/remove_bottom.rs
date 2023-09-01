@@ -1,9 +1,9 @@
-use crate::simple::internal::TopScores;
+use crate::simple::internal::StrsimTopScores;
 use std::{cmp::Ord, cmp::PartialOrd, hash::Hash};
 
 // -----------------------------------------------------------------------------
 
-impl<'a, K: Hash + Ord, S: PartialOrd> TopScores<'a, K, S> {
+impl<'a, K: Hash + Ord, S: PartialOrd> StrsimTopScores<'a, K, S> {
 
     // -------------------------------------------------------------------------
     //
@@ -21,4 +21,4 @@ impl<'a, K: Hash + Ord, S: PartialOrd> TopScores<'a, K, S> {
 
     } // fn remove_bottom
 
-} // impl TopScores
+} // impl StrsimTopScores
