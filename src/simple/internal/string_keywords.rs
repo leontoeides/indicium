@@ -88,9 +88,9 @@ impl<K: Ord> SearchIndex<K> {
 
         // If case sensitivity set, leave case intact. Otherwise, normalize the
         // entire string to lower case:
-        let string = match self.case_sensitive {
-            true => string.to_string(),
-            false => string.to_lowercase(),
+        let string: KString = match self.case_sensitive {
+            true => KString::from_ref(string),
+            false => KString::from(string.to_lowercase()),
         }; // match
 
         // Split the the string into keywords:
@@ -141,7 +141,7 @@ impl<K: Ord> SearchIndex<K> {
             chars >= self.minimum_keyword_length {
 
                 // Set keywords to the entire string:
-                keywords = vec![string.into()]
+                keywords = vec![string]
 
         // If we're indexing, only keep the whole string if it meets the keyword
         // criteria: 1) we're using whole strings as keywords, 2) it's shorter
@@ -153,7 +153,7 @@ impl<K: Ord> SearchIndex<K> {
                 !exclude_keyword(&string, &self.exclude_keywords) {
 
                     // Add field text / entire string to the keyword `Vec`:
-                    keywords.push(string.into())
+                    keywords.push(string)
 
             } // if
         } // if
