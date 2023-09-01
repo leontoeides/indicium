@@ -9,6 +9,7 @@ mod with_capacity;
 
 // -----------------------------------------------------------------------------
 
+use kstring::KString;
 use std::collections::{BTreeSet, HashMap};
 use std::{cmp::Ord, cmp::PartialOrd, hash::Hash};
 
@@ -20,9 +21,9 @@ use std::{cmp::Ord, cmp::PartialOrd, hash::Hash};
 #[derive(Default)]
 pub(crate) struct TopScores<'a, K: Hash + Ord, S: PartialOrd> {
     /// Tracks the top _n_ scores.
-    pub(crate) top: HashMap<&'a String, (&'a BTreeSet<K>, S)>,
+    pub(crate) top: HashMap<&'a KString, (&'a BTreeSet<K>, S)>,
     /// Tracks lowest of the top scores.
-    pub(crate) bottom: Option<(&'a String, S)>,
+    pub(crate) bottom: Option<(&'a KString, S)>,
     /// Number of top scores to keep.
     pub(crate) capacity: usize,
 } // TopScores

@@ -3,8 +3,9 @@
 #[test]
 fn simple() {
 
-    use crate::simple::{AutocompleteType, Indexable, SearchIndex, SearchType};
     use crate::simple::internal::string_keywords::SplitContext;
+    use crate::simple::{AutocompleteType, Indexable, SearchIndex, SearchType};
+    use kstring::KString;
 
     #[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
     struct MyStruct {
@@ -53,7 +54,7 @@ fn simple() {
 
     let mut search_index: SearchIndex<usize> = SearchIndex::default();
 
-    let string_keywords: Vec<String> = search_index.string_keywords(
+    let string_keywords: Vec<KString> = search_index.string_keywords(
         "All is not lost, the unconquerable will, and study of revenge, \
         immortal hate, and the courage never to submit or yield.",
         SplitContext::Indexing,
@@ -64,7 +65,7 @@ fn simple() {
         "revenge", "immortal", "hate", "courage", "never", "submit", "yield" ]
     );
 
-    let string_keywords: Vec<String> = search_index.string_keywords(
+    let string_keywords: Vec<KString> = search_index.string_keywords(
         "He prayeth best, who loveth best All things both great and small; For \
         the dear God who loveth us, He made and loveth all.",
         SplitContext::Searching,
@@ -76,7 +77,7 @@ fn simple() {
         "made", "loveth", "all" ]
     );
 
-    let string_keywords: Vec<String> = search_index.string_keywords(
+    let string_keywords: Vec<KString> = search_index.string_keywords(
         "Digby was a floccinaucinihilipilificator at heart—which is an \
         eight-dollar word meaning a joker who does not believe in anything he \
         can't bite.",
@@ -149,11 +150,11 @@ fn simple() {
 
     // Test internal global fuzzy keyword search interface:
     let similar_keyword = search_index.strsim_global_keyword(&"Willy".to_lowercase());
-    assert_eq!(similar_keyword, Some(&"william".to_string()));
+    assert_eq!(similar_keyword, Some(&KString::from_ref("william")));
 
     // Test internal global fuzzy autocompletion interface:
     let similar_autocompletions = search_index.strsim_global_autocomplete(&"Normy".to_lowercase());
-    let similar_autocompletions_vec: Vec<&String> = similar_autocompletions.into_iter().map(|(keyword, _keys)| keyword).collect();
+    let similar_autocompletions_vec: Vec<&KString> = similar_autocompletions.into_iter().map(|(keyword, _keys)| keyword).collect();
     assert_eq!(similar_autocompletions_vec, vec![&"norman".to_string()]);
 
     // Test `Indexable` trait implementation for `ToString` generics:

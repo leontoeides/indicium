@@ -1,4 +1,5 @@
 use crate::simple::internal::TopScores;
+use kstring::KString;
 use std::{clone::Clone, collections::BTreeSet, cmp::Ord, cmp::PartialOrd, hash::Hash};
 
 // -----------------------------------------------------------------------------
@@ -16,7 +17,7 @@ impl<'a, K: Hash + Ord, S: Clone + PartialOrd> TopScores<'a, K, S> {
 
     pub(crate) fn insert(
         &mut self,
-        keyword: &'a String,
+        keyword: &'a KString,
         keys: &'a BTreeSet<K>,
         score: S,
     ) {
@@ -37,7 +38,7 @@ impl<'a, K: Hash + Ord, S: Clone + PartialOrd> TopScores<'a, K, S> {
                     // collection:
                     self.remove_bottom();
                     // Insert the new score into the collection:
-                    self.top.insert(keyword, (keys, score));
+                    self.top.insert(keyword.into(), (keys, score));
                 } // if
             } // if
 
@@ -46,7 +47,7 @@ impl<'a, K: Hash + Ord, S: Clone + PartialOrd> TopScores<'a, K, S> {
             // The `TopScores` struct has not reached its capacity, we may
             // blindly add the _keyword_, _keys_, & _score_ without checking the
             // lowest score:
-            self.top.insert(keyword, (keys, score));
+            self.top.insert(keyword.into(), (keys, score));
 
         } // if
 

@@ -100,7 +100,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
             AutocompleteType::Keyword =>
                 self.autocomplete_keyword(&self.maximum_autocomplete_options, string)
                     .into_iter()
-                    .cloned()
+                    .map(|str| str.to_string())
                     .collect(),
         }; // match
 
@@ -215,7 +215,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
             AutocompleteType::Keyword =>
                 self.autocomplete_keyword(&self.maximum_autocomplete_options, string)
                     .into_iter()
-                    .cloned()
+                    .map(|str| str.to_string())
                     .collect(),
         }; // match
 
@@ -335,7 +335,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
             AutocompleteType::Keyword =>
                 self.autocomplete_keyword(maximum_autocomplete_options, string)
                     .into_iter()
-                    .cloned()
+                    .map(|str| str.to_string())
                     .collect(),
         }; // match
 

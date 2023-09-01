@@ -1,4 +1,5 @@
 use crate::simple::search_index::SearchIndex;
+use kstring::KString;
 use std::cmp::Ord;
 use strsim::jaro_winkler;
 
@@ -30,12 +31,12 @@ impl<K: Ord> SearchIndex<K> {
         &self,
         index_range: &str,
         user_keyword: &str,
-    ) -> Option<&String> {
+    ) -> Option<&KString> {
 
         // Scan the search index for the highest scoring keyword:
         self.b_tree_map
             // Get matching keywords starting with (partial) keyword string:
-            .range(index_range.to_string()..)
+            .range(KString::from_ref(index_range)..)
             // We did not specify an end bound for our `range` function (see
             // above.) `range` will return _every_ keyword greater than the
             // supplied keyword. The below `take_while` will effectively break

@@ -1,7 +1,7 @@
 use crate::simple::{indexable::Indexable, search_index::SearchIndex};
-use std::clone::Clone;
-use std::cmp::Ord;
+use kstring::KString;
 use std::collections::{BTreeSet, HashSet};
+use std::{clone::Clone, cmp::Ord};
 
 // -----------------------------------------------------------------------------
 
@@ -137,12 +137,12 @@ impl<K: Clone + Ord> SearchIndex<K> {
     pub fn insert(&mut self, key: &K, value: &dyn Indexable) {
 
         // Get all keywords for the `Indexable` record:
-        let mut keywords: HashSet<String> = self.indexable_keywords(value);
+        let mut keywords: HashSet<KString> = self.indexable_keywords(value);
 
         // If `dump_keyword` feature is turned on, ensure that all records are
         // attached to this special keyword:
         if let Some(dump_keyword) = &self.dump_keyword {
-            keywords.insert(dump_keyword.to_string());
+            keywords.insert(dump_keyword.as_ref().into());
         } // if
 
         // Iterate over the keywords:
@@ -161,7 +161,7 @@ impl<K: Clone + Ord> SearchIndex<K> {
                         // that the `dump_keyword` does not observe this
                         // limit.
                         if keys.len() < self.maximum_keys_per_keyword
-                            || self.dump_keyword == Some(keyword.to_string()) {
+                            || self.dump_keyword == Some(keyword.as_ref().into()) {
                             // If it hasn't, insert the key (record) into the
                             // list:
                             keys.insert(key.clone());
@@ -184,7 +184,7 @@ impl<K: Clone + Ord> SearchIndex<K> {
                     None => {
                         let mut b_tree_set = BTreeSet::new();
                         b_tree_set.insert(key.clone());
-                        self.b_tree_map.insert(keyword.to_string(), b_tree_set);
+                        self.b_tree_map.insert(keyword.as_ref().into(), b_tree_set);
                     }, // None
                 } // match
             ) // for_each

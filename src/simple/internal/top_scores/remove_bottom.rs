@@ -13,7 +13,7 @@ impl<'a, K: Hash + Ord, S: PartialOrd> TopScores<'a, K, S> {
     pub(crate) fn remove_bottom(&mut self) {
 
         // Remove the lowest top score from the collection:
-        if let Some(bottom) = &self.bottom { self.top.remove(bottom.0); }
+        if let Some(bottom) = &self.bottom { self.top.remove(&bottom.0); }
 
         // Remove the score from the lowest top score tracker. This will be
         // re-populated on the next `insert` call:

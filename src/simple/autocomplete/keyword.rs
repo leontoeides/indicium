@@ -1,4 +1,5 @@
 use crate::simple::search_index::SearchIndex;
+use kstring::KString;
 use std::{cmp::Ord, hash::Hash};
 
 // -----------------------------------------------------------------------------
@@ -88,7 +89,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
         &self,
         maximum_autocomplete_options: &usize,
         keyword: &str,
-    ) -> Vec<&String> {
+    ) -> Vec<&str> {
 
         // If case sensitivity set, leave case intact. Otherwise, normalize
         // keyword to lower case:
@@ -102,9 +103,9 @@ impl<K: Hash + Ord> SearchIndex<K> {
         tracing::debug!("autocompleting: {:?}", keyword);
 
         // Attempt to get matching keywords from `BTreeMap`:
-        let autocomplete_options: Vec<&String> = self.b_tree_map
+        let autocomplete_options: Vec<&KString> = self.b_tree_map
             // Get matching keywords starting with (partial) keyword string:
-            .range(String::from(&keyword)..)
+            .range(KString::from_ref(&keyword)..)
             // `range` returns a key-value pair. We're autocompleting the
             // key (keyword), so discard the value (record key):
             .map(|(key, _value)| key)
@@ -138,12 +139,12 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // `strsim_autocomplete` returns both the keyword and keys.
                 // We're autocompleting the last (partial) keyword, so discard
                 // the keys:
-                .map(|(keyword, _keys)| keyword)
+                .map(|(keyword, _keys)| keyword.as_str())
                 // Collect all keyword autocompletions into a `Vec`:
                 .collect()
         } else {
             // There were some matches. Return the results without processing:
-            autocomplete_options
+            autocomplete_options.iter().map(|kstring| kstring.as_str()).collect()
         } // if
 
         // If fuzzy string searching disabled, return the resulting

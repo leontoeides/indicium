@@ -1,4 +1,5 @@
 use crate::simple::{AutocompleteType, SearchType, StrSimType};
+use kstring::KString;
 use std::cmp::Ord;
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -19,7 +20,7 @@ use std::collections::{BTreeMap, BTreeSet};
 #[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub struct SearchIndex<K: Ord> {
     /// Search index data structure.
-    pub(crate) b_tree_map: BTreeMap<String, BTreeSet<K>>,
+    pub(crate) b_tree_map: BTreeMap<KString, BTreeSet<K>>,
     /// The `SearchType` for searches. This setting may be manually overridden
     /// by using the `search_type` method.
     pub(crate) search_type: SearchType,
@@ -49,7 +50,7 @@ pub struct SearchIndex<K: Ord> {
     /// single keyword for autocompletion purposes.
     pub(crate) maximum_string_length: Option<usize>,
     /// Keywords that should not be indexed.
-    pub(crate) exclude_keywords: Option<Vec<String>>,
+    pub(crate) exclude_keywords: Option<Vec<KString>>,
     /// Maximum number of auto-complete options to return.
     pub(crate) maximum_autocomplete_options: usize,
     /// Maximum number of search results to return.
@@ -62,5 +63,5 @@ pub struct SearchIndex<K: Ord> {
     /// A special keyword that will return (or "dump") all keys (or records) in
     /// the search index. It should be made so that it's difficult or impossible
     /// for a user inadvertently trigger this behaviour.
-    pub(crate) dump_keyword: Option<String>,
+    pub(crate) dump_keyword: Option<KString>,
 } // SearchIndex

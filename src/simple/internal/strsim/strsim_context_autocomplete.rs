@@ -1,5 +1,6 @@
 use crate::simple::search_index::SearchIndex;
 use crate::simple::StrSimType;
+use kstring::KString;
 use std::{cmp::Ord, collections::BTreeSet, hash::Hash};
 
 // -----------------------------------------------------------------------------
@@ -21,7 +22,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
         &self,
         key_set: &BTreeSet<&K>,
         user_keyword: &str,
-    ) -> Vec<(&String, &BTreeSet<K>)> {
+    ) -> Vec<(&KString, &BTreeSet<K>)> {
 
         // Build an index keyword range to fuzzy match against.
         //

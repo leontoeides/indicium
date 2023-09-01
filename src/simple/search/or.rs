@@ -1,8 +1,7 @@
 use crate::simple::internal::string_keywords::SplitContext;
 use crate::simple::search_index::SearchIndex;
-use std::cmp::Ord;
-use std::collections::BTreeMap;
-use std::hash::Hash;
+use kstring::KString;
+use std::{cmp::Ord, collections::BTreeMap, hash::Hash};
 
 // -----------------------------------------------------------------------------
 
@@ -108,7 +107,7 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
         // Split search `String` into keywords (according to the `SearchIndex`
         // settings). `string_keywords` will allow "use entire string as a
         // keyword" if enabled in user settings:
-        let keywords: Vec<String> = self.string_keywords(
+        let keywords: Vec<KString> = self.string_keywords(
             string,
             SplitContext::Searching,
         );

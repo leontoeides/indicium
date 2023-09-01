@@ -2,6 +2,7 @@
 
 use crate::simple::internal::string_keywords::SplitContext;
 use crate::simple::SearchIndex;
+use kstring::KString;
 use std::{cmp::Ord, collections::BTreeSet, hash::Hash};
 
 // -----------------------------------------------------------------------------
@@ -109,7 +110,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
         // Split search `String` into keywords according to the `SearchIndex`
         // settings. Force "use entire string as a keyword" option off:
-        let mut keywords: Vec<String> = self.string_keywords(
+        let mut keywords: Vec<KString> = self.string_keywords(
             string,
             SplitContext::Searching,
         );
@@ -154,7 +155,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                         // reach a keyword that does not start with our supplied
                         // (partial) keyword.
                         .take_while(|(keyword, _keys)|
-                            keyword.starts_with(&last_keyword)
+                            keyword.starts_with(&*last_keyword)
                         ) // take_while
                         // Only return `maximum_search_results` number of keys:
                         .take(*maximum_search_results)
@@ -227,7 +228,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                         // reach a keyword that does not start with our supplied
                         // (partial) keyword.
                         .take_while(|(keyword, _keys)|
-                            keyword.starts_with(&last_keyword)
+                            keyword.starts_with(&*last_keyword)
                         ) // take_while
                         // Only keep this autocompletion if hasn't already been
                         // used as a keyword:

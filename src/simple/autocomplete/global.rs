@@ -2,6 +2,7 @@
 
 use crate::simple::internal::string_keywords::SplitContext;
 use crate::simple::search_index::SearchIndex;
+use kstring::KString;
 use std::{cmp::Ord, hash::Hash};
 
 // -----------------------------------------------------------------------------
@@ -103,7 +104,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
         // Split search `String` into keywords according to the `SearchIndex`
         // settings. Force "use entire string as a keyword" option off:
-        let mut keywords: Vec<String> = self.string_keywords(
+        let mut keywords: Vec<KString> = self.string_keywords(
             string,
             SplitContext::Searching,
         );
@@ -117,9 +118,9 @@ impl<K: Hash + Ord> SearchIndex<K> {
         if let Some(last_keyword) = keywords.pop() {
 
             // Autocomplete the last keyword:
-            let mut autocompletions: Vec<&String> = self.b_tree_map
+            let mut autocompletions: Vec<&KString> = self.b_tree_map
                 // Get matching keywords starting with (partial) keyword string:
-                .range(last_keyword.to_string()..)
+                .range(KString::from_ref(&last_keyword)..)
                 // `range` returns a key-value pair. We're autocompleting the
                 // key (keyword), so discard the value (record key):
                 .map(|(key, _value)| key)
@@ -128,7 +129,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // supplied keyword. The below `take_while` will effectively
                 // break iteration when we reach a keyword that does not start
                 // with our supplied (partial) keyword.
-                .take_while(|autocompletion| autocompletion.starts_with(&last_keyword))
+                .take_while(|autocompletion| autocompletion.starts_with(&*last_keyword))
                 // If the index's keyword matches the user's keyword, don't
                 // return it as a result. For example, if the user's keyword was
                 // "new" (as in New York), do not return "new" as an
@@ -136,7 +137,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // .filter(|autocompletion| *autocompletion != &last_keyword)
                 // Only keep this autocompletion if hasn't already been used as
                 // a keyword:
-                .filter(|autocompletion| !keywords.contains(autocompletion))
+                .filter(|autocompletion| !keywords.contains(*autocompletion))
                 // If the index's keyword matches the user's keyword, don't
                 // return it as a result. For example, if the user's keyword was
                 // "new" (as in New York), do not return "new" as an
@@ -174,23 +175,23 @@ impl<K: Hash + Ord> SearchIndex<K> {
             // Push a blank placeholder onto the end of the keyword list. We
             // will be putting our autocompletions for the last keyword into
             // this spot:
-            keywords.push("".to_string());
+            keywords.push("".into());
 
             // Build autocompleted search strings from the autocompletions
             // derived from the last keyword:
             autocompletions
                 // Iterate over each autocompleted last keyword:
-                .iter()
+                .into_iter()
                 // Use the prepended `keywords` and autocompleted last keyword
                 // to build an autocompleted search string:
                 .map(|autocompletion| {
                     // Remove previous autocompleted last keyword from list:
                     keywords.pop();
                     // Add current autocompleted last keyword to end of list:
-                    keywords.push(autocompletion.to_string());
+                    keywords.push(autocompletion.clone());
                     // Join all keywords together into a single `String` using a
                     // space delimiter:
-                    keywords.join(" ").trim_end().to_owned()
+                    keywords.join(" ").trim_end().to_string()
                 })
                 // Collect all string autocompletions into a `Vec`:
                 .collect()

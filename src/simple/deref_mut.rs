@@ -1,6 +1,5 @@
 use crate::simple::search_index::SearchIndex;
-use std::cmp::Ord;
-use std::ops::DerefMut;
+use std::{cmp::Ord, ops::DerefMut};
 
 // -----------------------------------------------------------------------------
 //

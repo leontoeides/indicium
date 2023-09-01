@@ -1,4 +1,5 @@
 use crate::simple::search_index::SearchIndex;
+use kstring::KString;
 use std::{cmp::Ord, hash::Hash};
 
 // -----------------------------------------------------------------------------
@@ -115,7 +116,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
         tracing::debug!("searching: {}", keyword);
 
         // Attempt to get matching keys for the search keyword from BTreeMap:
-        if let Some(keys) = self.b_tree_map.get(&keyword) {
+        if let Some(keys) = self.b_tree_map.get(&KString::from_ref(&keyword)) {
 
             // Attempt to get matching keys for search keyword:
             keys

@@ -1,4 +1,5 @@
 use crate::simple::search_index::SearchIndex;
+use kstring::KString;
 use std::cmp::Ord;
 
 // -----------------------------------------------------------------------------
@@ -25,7 +26,7 @@ pub(crate) enum SplitContext {
 
 pub(crate) fn exclude_keyword(
     keyword: &str,
-    exclude_keywords: &Option<Vec<String>>
+    exclude_keywords: &Option<Vec<KString>>
 ) -> bool {
 
     // Check to see if there's any keywords in the exclusion list:
@@ -48,21 +49,21 @@ pub(crate) fn exclude_keyword(
 #[test]
 fn test_exclude_keyword() {
 
-    let excluded_keywords = Some(vec![
-        "awake".to_string(),
-        "arise".to_string(),
-        "or".to_string(),
-        "be".to_string(),
-        "for".to_string(),
-        "ever".to_string(),
-        "fall’n".to_string(),
+    let excluded_keywords: Option<Vec<KString>> = Some(vec![
+        "awake".into(),
+        "arise".into(),
+        "or".into(),
+        "be".into(),
+        "for".into(),
+        "ever".into(),
+        "fall’n".into(),
     ]); // vec!
 
-    let keyword = "arise";
-    assert!(exclude_keyword(keyword, &excluded_keywords));
+    let keyword: KString = "arise".into();
+    assert!(exclude_keyword(&keyword, &excluded_keywords));
 
-    let keyword = "arose";
-    assert!(!exclude_keyword(keyword, &excluded_keywords));
+    let keyword: KString = "arose".into();
+    assert!(!exclude_keyword(&keyword, &excluded_keywords));
 
 }
 
@@ -83,7 +84,7 @@ impl<K: Ord> SearchIndex<K> {
         &self,
         string: &str,
         context: SplitContext,
-    ) -> Vec<String> {
+    ) -> Vec<KString> {
 
         // If case sensitivity set, leave case intact. Otherwise, normalize the
         // entire string to lower case:
@@ -93,11 +94,11 @@ impl<K: Ord> SearchIndex<K> {
         }; // match
 
         // Split the the string into keywords:
-        let mut keywords: Vec<String> = if let Some(split_pattern) = &self.split_pattern {
-            // Use the split pattern (a `Vec<char>`) to split the `String` into
+        let mut keywords: Vec<KString> = if let Some(split_pattern) = &self.split_pattern {
+            // Use the split pattern (a `Vec<char>`) to split the `KString` into
             // keywords and filter the results:
             string
-                // Split the `String` into smaller strings / keywords on
+                // Split the `KString` into smaller strings / keywords on
                 // specified characters:
                 .split(split_pattern.as_slice())
                 // Only keep the keyword if it's longer than the minimum length
@@ -112,11 +113,11 @@ impl<K: Ord> SearchIndex<K> {
                     !exclude_keyword(keyword, &self.exclude_keywords)
                 ) // filter
                 // Copy string from reference:
-                .map(String::from)
+                .map(|str| KString::from_ref(str))
                 // Collect all keywords into a `Vec`:
                 .collect()
         } else {
-            // Split pattern was set to `None`, so do not split the `String`
+            // Split pattern was set to `None`, so do not split the `KString`
             // into keywords. Return an empty `Vec` instead:
             Vec::new()
         };
@@ -140,7 +141,7 @@ impl<K: Ord> SearchIndex<K> {
             chars >= self.minimum_keyword_length {
 
                 // Set keywords to the entire string:
-                keywords = vec![string]
+                keywords = vec![string.into()]
 
         // If we're indexing, only keep the whole string if it meets the keyword
         // criteria: 1) we're using whole strings as keywords, 2) it's shorter
@@ -152,7 +153,7 @@ impl<K: Ord> SearchIndex<K> {
                 !exclude_keyword(&string, &self.exclude_keywords) {
 
                     // Add field text / entire string to the keyword `Vec`:
-                    keywords.push(string)
+                    keywords.push(string.into())
 
             } // if
         } // if

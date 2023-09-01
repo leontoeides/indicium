@@ -1,5 +1,6 @@
 use crate::simple::search_index::SearchIndex;
 use crate::simple::StrSimType;
+use kstring::KString;
 use std::{cmp::Ord, hash::Hash};
 
 // -----------------------------------------------------------------------------
@@ -19,7 +20,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     pub(crate) fn strsim_global_keyword(
         &self,
         user_keyword: &str,
-    ) -> Option<&String> {
+    ) -> Option<&KString> {
 
         // Build an index keyword range to fuzzy match against.
         //

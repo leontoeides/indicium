@@ -1,7 +1,6 @@
 use crate::simple::{indexable::Indexable, search_index::SearchIndex};
-use std::clone::Clone;
-use std::cmp::Ord;
-use std::collections::HashSet;
+use kstring::KString;
+use std::{clone::Clone, cmp::Ord, collections::HashSet};
 
 // -----------------------------------------------------------------------------
 
@@ -94,12 +93,12 @@ impl<K: Clone + Ord> SearchIndex<K> {
     pub fn remove(&mut self, key: &K, value: &dyn Indexable) {
 
         // Get all keywords for the `Indexable` record:
-        let mut keywords: HashSet<String> = self.indexable_keywords(value);
+        let mut keywords: HashSet<KString> = self.indexable_keywords(value);
 
         // If `dump_keyword` feature is turned on, ensure that all records are
         // detached from this special keyword:
         if let Some(dump_keyword) = &self.dump_keyword {
-            keywords.insert(dump_keyword.to_string());
+            keywords.insert(dump_keyword.as_ref().into());
         } // if
 
         // Iterate over the keywords:

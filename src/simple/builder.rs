@@ -1,7 +1,7 @@
 use crate::simple::{AutocompleteType, SearchIndex, SearchType, StrSimType};
-use std::clone::Clone;
-use std::cmp::Ord;
+use kstring::KString;
 use std::collections::{BTreeMap, BTreeSet};
+use std::{clone::Clone, cmp::Ord};
 
 // -----------------------------------------------------------------------------
 //
@@ -14,7 +14,7 @@ use std::collections::{BTreeMap, BTreeSet};
 /// `SearchIndex::default()` instead.
 
 pub struct SearchIndexBuilder<K> {
-    b_tree_map: BTreeMap<String, BTreeSet<K>>,
+    b_tree_map: BTreeMap<KString, BTreeSet<K>>,
     search_type: SearchType,
     autocomplete_type: AutocompleteType,
     strsim_type: Option<StrSimType>,
@@ -25,11 +25,11 @@ pub struct SearchIndexBuilder<K> {
     minimum_keyword_length: usize,
     maximum_keyword_length: usize,
     maximum_string_length: Option<usize>,
-    exclude_keywords: Option<Vec<String>>,
+    exclude_keywords: Option<Vec<KString>>,
     maximum_autocomplete_options: usize,
     maximum_search_results: usize,
     maximum_keys_per_keyword: usize,
-    dump_keyword: Option<String>,
+    dump_keyword: Option<KString>,
 } // SearchIndexBuilder
 
 // -----------------------------------------------------------------------------
@@ -242,7 +242,8 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     ///
     /// [`profile`]: struct.SearchIndex.html#method.profile
     pub fn exclude_keywords(mut self, exclude_keywords: Option<Vec<String>>) -> Self {
-        self.exclude_keywords = exclude_keywords;
+        self.exclude_keywords = exclude_keywords
+            .map(|vec| vec.into_iter().map(|string| string.into()).collect());
         self
     } // fn
 
@@ -281,7 +282,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     ///
     /// **Default:** `Some("\0".to_string())`
     pub fn dump_keyword(mut self, dump_keyword: Option<String>) -> Self {
-        self.dump_keyword = dump_keyword;
+        self.dump_keyword = dump_keyword.map(|string| string.into());
         self
     } // fn
 

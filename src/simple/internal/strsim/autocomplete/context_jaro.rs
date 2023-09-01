@@ -1,5 +1,6 @@
 use crate::simple::internal::TopScores;
 use crate::simple::search_index::SearchIndex;
+use kstring::KString;
 use std::{cmp::Ord, collections::BTreeSet, hash::Hash};
 use strsim::jaro;
 
@@ -37,7 +38,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
         index_range: &str,
         key_set: &BTreeSet<&K>,
         user_keyword: &str,
-    ) -> impl Iterator<Item = (&String, &BTreeSet<K>)> {
+    ) -> impl Iterator<Item = (&KString, &BTreeSet<K>)> {
 
         // This structure will track the top scoring keywords:
         let mut top_scores: TopScores<K, f64> =
@@ -46,7 +47,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
         // Scan the search index for the highest scoring keywords:
         self.b_tree_map
             // Get matching keywords starting with (partial) keyword string:
-            .range(index_range.to_string()..)
+            .range(KString::from_ref(index_range)..)
             // We did not specify an end bound for our `range` function (see
             // above.) `range` will return _every_ keyword greater than the
             // supplied keyword. The below `take_while` will effectively break
@@ -69,7 +70,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // Insert the score into the top scores (if it's normal and high
                 // enough):
                 if score.is_normal() && score >= self.strsim_minimum_score {
-                    top_scores.insert(index_keyword, index_keys, score)
+                    top_scores.insert(index_keyword.into(), index_keys, score)
                 } // if
             }); // for_each
 

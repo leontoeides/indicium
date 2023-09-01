@@ -1,7 +1,6 @@
 use crate::simple::search_index::SearchIndex;
-use std::cmp::Ord;
-use std::collections::BTreeSet;
-use std::hash::Hash;
+use kstring::KString;
+use std::{cmp::Ord, collections::BTreeSet, hash::Hash};
 
 // -----------------------------------------------------------------------------
 
@@ -18,7 +17,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// matching. Consider providing the `autocomplete` feature to your users as
     /// an ergonomic alternative to fuzzy matching.
 
-    pub(crate) fn internal_search_and(&self, keywords: &[String]) -> BTreeSet<&K> {
+    pub(crate) fn internal_search_and(&self, keywords: &[KString]) -> BTreeSet<&K> {
 
         // This `BTreeSet` is used to contain the search results:
         let mut search_results: Option<BTreeSet<&K>> = None;

@@ -78,14 +78,14 @@ impl<K: Hash + Ord> SearchIndex<K> {
     ///
     /// assert_eq!(
     ///     keyword_substitution,
-    ///     Some(&"harold".to_string())
+    ///     Some("harold")
     /// );
     /// ```
 
     pub fn strsim_keyword(
         &self,
         keyword: &str,
-    ) -> Option<&String> {
+    ) -> Option<&str> {
 
         // If case sensitivity set, leave case intact. Otherwise, normalize
         // keyword to lower case:
@@ -95,7 +95,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
         }; // match
 
         // Call global keyword subtitution provider:
-        self.strsim_global_keyword(&keyword)
+        self.strsim_global_keyword(&keyword).map(|kstring| kstring.as_str())
 
     } // fn
 

@@ -1,6 +1,6 @@
 use crate::simple::search_index::SearchIndex;
-use std::clone::Clone;
-use std::cmp::Ord;
+use kstring::KString;
+use std::{clone::Clone, cmp::Ord};
 
 // -----------------------------------------------------------------------------
 
@@ -22,12 +22,12 @@ impl<K: Clone + Ord> SearchIndex<K> {
     /// [`exclude_keywords`]: struct.SearchIndexBuilder.html#method.exclude_keywords
 
     #[tracing::instrument(level = "trace", name = "search index profile", skip(self))]
-    pub fn profile(&self, count: usize) -> impl Iterator<Item = (&String, usize)> {
+    pub fn profile(&self, count: usize) -> impl Iterator<Item = (&KString, usize)> {
 
         // Get a list of all keywords and the number of attached keys for each
         // keyword. For example: keyword "supercalifragilisticexpialidocious"
         // has 28 keys (or records) attached to it:
-        let mut keywords: Vec<(&String, usize)> = self.b_tree_map
+        let mut keywords: Vec<(&KString, usize)> = self.b_tree_map
             // Iterate over every entry (representing a keyword) in the search
             // index:
             .iter()

@@ -1,6 +1,5 @@
 use crate::simple::{AutocompleteType, SearchIndex, SearchType, StrSimType};
-use std::cmp::Ord;
-use std::collections::BTreeMap;
+use std::{cmp::Ord, collections::BTreeMap};
 
 // -----------------------------------------------------------------------------
 
@@ -54,6 +53,7 @@ impl<K: Ord> SearchIndex<K> {
         maximum_keys_per_keyword: usize,
         dump_keyword: Option<String>,
     ) -> SearchIndex<K> {
+
         SearchIndex {
             b_tree_map: BTreeMap::new(),
             search_type,
@@ -66,12 +66,13 @@ impl<K: Ord> SearchIndex<K> {
             minimum_keyword_length,
             maximum_keyword_length,
             maximum_string_length,
-            exclude_keywords,
+            exclude_keywords: exclude_keywords.map(|vec| vec.into_iter().map(|string| string.into()).collect()),
             maximum_autocomplete_options,
             maximum_search_results,
             maximum_keys_per_keyword,
-            dump_keyword,
+            dump_keyword: dump_keyword.map(|string| string.into()),
         } // SearchIndex
+
     } // fn
 
 } // impl

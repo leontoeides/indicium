@@ -90,7 +90,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     pub fn strsim_autocomplete(
         &self,
         keyword: &str,
-    ) -> Vec<&String> {
+    ) -> Vec<&str> {
 
         // If case sensitivity set, leave case intact. Otherwise, normalize
         // keyword to lower case:
@@ -102,7 +102,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
         // Call global autocompletion provider:
         self.strsim_global_autocomplete(&keyword)
             .into_iter()
-            .map(|(keyword, _keys)| keyword)
+            .map(|(keyword, _keys)| keyword.as_str())
             .collect()
 
     } // fn
