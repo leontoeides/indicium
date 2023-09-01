@@ -1,3 +1,4 @@
+use crate::simple::internal::OrTopScores;
 use crate::simple::internal::string_keywords::SplitContext;
 use crate::simple::search_index::SearchIndex;
 use kstring::KString;
@@ -144,27 +145,26 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
         // At this point, we have a list of resulting keys in a `BTreeMap`. The
         // hash map value holds the number of times each key has been returned
         // in the above keywords search.
-        //
-        // We want to sort these keys by descending hit-count. First, we must
-        // convert it to a `Vec` so this can be done:
 
-        let mut search_results: Vec<(&K, usize)> = search_results
+        // This structure will track the top scoring keys:
+
+        let mut top_scores: OrTopScores<K> =
+            OrTopScores::with_capacity(*maximum_search_results);
+
+        // Populate the top scores by iterating of the each key's tally-count:
+
+        search_results
             // Iterate over keys in the hash map:
             .into_iter()
             // Collect the tuple elements into a `Vec`:
-            .collect();
-
-        // Sort the tuple elements by hit-count descending:
-        search_results.sort_unstable_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
+            .for_each(|(key, hits)| top_scores.insert(key, hits));
 
         // Return the search results to the user:
-        search_results
-            // Iterate over the tuple elements:
-            .into_iter()
-            // Only return `maximum_search_results` number of keys:
-            .take(*maximum_search_results)
+        top_scores
+            // Get the top scoring results from the `OrTopScores` struct:
+            .results()
             // Remove the hit-count from the tuple, returning only the key:
-            .map(|(key, _value)| key)
+            .map(|(key, _hits)| key)
             // Collect the keys into a `Vec`:
             .collect()
 
