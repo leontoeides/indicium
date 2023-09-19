@@ -26,9 +26,9 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// containing keywords both `this` and `that`. In other words, _all_
     /// keywords must be present in a record for it to be returned as a result.
     ///
-    /// Search only supports exact keyword matches and does not use fuzzy
-    /// matching. Consider providing the `autocomplete` feature to your users as
-    /// an ergonomic alternative to fuzzy matching.
+    /// Search only supports exact keyword matches. For `Live` searches, fuzzy
+    /// matching is only applied to the last keyword. Also, consider providing
+    /// the `autocomplete` feature to your users for a better experience.
     ///
     /// Basic usage:
     ///
