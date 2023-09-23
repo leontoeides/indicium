@@ -183,10 +183,8 @@
 //! `SearchIndex` as you insert into your collection (Vec, HashMap, etc.)
 //!
 //! It's recommended to wrap your target collection (your `Vec`, `HashMap`,
-//! etc.) and this `SearchIndex` together in a new `struct` type. (This is
-//! called the
-//! [Newtype pattern](https://doc.rust-lang.org/book/ch19-04-advanced-types.html#using-the-newtype-pattern-for-type-safety-and-abstraction]).)
-//! Then, implement the `insert`, `replace`, `remove`, etc. methods for this new
+//! etc.) and this `SearchIndex` together in a new `struct` type. Then,
+//! implement the `insert`, `replace`, `remove`, etc. methods for this new
 //! `struct` type that will update both the collection and search index. This
 //! will ensure that both your collection and index are always synchronized.
 //!
