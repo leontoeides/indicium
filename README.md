@@ -20,8 +20,8 @@ company assets, list of users in a corporate intranet, etc.)
 Indicium easily can handle millions of records without breaking a sweat thanks
 to Rust's [BTreeMap](https://cglab.ca/~abeinges/blah/rust-btree-case/). This
 crate is primarily limited by available memory. However, depending on the nature
-your data-set and if there keywords that are repeated many times, performance
-may begin to degrade at a point.
+your data-set and if there are keywords that are repeated many times,
+performance may begin to degrade at a point.
 
 # What's New?
 
@@ -52,10 +52,6 @@ implementation for free.
 last (partial) keyword in the search string for _autocompletion_ and _live
 search_ only. Keywords at the start or in the middle of the user's search string
 will not be substituted.
-	* Some changes for an upcoming `0.5.0` release are being considered.
-	This release could have some changes that would allow `indicium` to
-	provide feedback to the user, including which keywords have been
-	substituted.
 
 * `0.4.0`: Breaking changes:
 	* Builder pattern is now passed owned values.
