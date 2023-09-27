@@ -1,5 +1,6 @@
+use ahash::{HashMap, HashMapExt};
 use crate::simple::internal::SearchTopScores;
-use std::{cmp::Ord, collections::HashMap, hash::Hash};
+use std::{cmp::Ord, hash::Hash};
 
 // -----------------------------------------------------------------------------
 

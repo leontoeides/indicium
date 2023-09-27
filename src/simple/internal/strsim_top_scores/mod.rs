@@ -9,8 +9,9 @@ mod with_capacity;
 
 // -----------------------------------------------------------------------------
 
+use ahash::HashMap;
 use kstring::KString;
-use std::collections::{BTreeSet, HashMap};
+use std::collections::BTreeSet;
 use std::{cmp::Ord, cmp::PartialOrd, hash::Hash};
 
 // -----------------------------------------------------------------------------

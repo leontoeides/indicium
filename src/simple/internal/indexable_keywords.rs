@@ -1,7 +1,8 @@
+use ahash::HashSet;
 use crate::simple::internal::string_keywords::SplitContext;
 use crate::simple::{Indexable, SearchIndex};
 use kstring::KString;
-use std::{cmp::Ord, collections::HashSet};
+use std::cmp::Ord;
 
 // -----------------------------------------------------------------------------
 

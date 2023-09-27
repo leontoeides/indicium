@@ -135,7 +135,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
         } else {
 
             // The search keyword did not result in any matches. Return an
-            // empty `HashSet`:
+            // empty `Vec`:
             Vec::new()
 
         } // if

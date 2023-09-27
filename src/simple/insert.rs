@@ -1,6 +1,7 @@
+use ahash::HashSet;
 use crate::simple::{indexable::Indexable, search_index::SearchIndex};
 use kstring::KString;
-use std::collections::{BTreeSet, HashSet};
+use std::collections::BTreeSet;
 use std::{clone::Clone, cmp::Ord};
 
 // -----------------------------------------------------------------------------

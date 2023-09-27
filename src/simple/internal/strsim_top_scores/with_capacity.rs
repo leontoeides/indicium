@@ -1,5 +1,6 @@
+use ahash::{HashMap, HashMapExt};
 use crate::simple::internal::StrsimTopScores;
-use std::{cmp::Ord, cmp::PartialOrd, collections::HashMap, hash::Hash};
+use std::{cmp::Ord, cmp::PartialOrd, hash::Hash};
 
 // -----------------------------------------------------------------------------
 
