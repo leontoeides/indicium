@@ -1,7 +1,7 @@
 # What's New?
 
-* The release notes on [GitHub](https://github.com/leontoeides/indicium/releases)
-will be used as the changelog going forward.
+* Release notes are available on
+[GitHub](https://github.com/leontoeides/indicium/releases).
 
 * `0.5.1`: Fixes compile failure for the experimental `select2` feature and when
 not using `fuzzy` feature.

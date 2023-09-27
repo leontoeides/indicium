@@ -152,7 +152,7 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
         let mut top_scores: SearchTopScores<K> =
             SearchTopScores::with_capacity(*maximum_search_results);
 
-        // Populate the top scores by iterating of the each key's tally-count:
+        // Populate the top scores by iterating over each key's tally-count:
 
         search_results
             // Iterate over keys in the hash map:

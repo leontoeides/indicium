@@ -12,8 +12,12 @@
 //!
 //! # What's New?
 //!
-//! * The release notes on [GitHub](https://github.com/leontoeides/indicium/releases)
-//! will be used as the changelog going forward.
+//! * Release notes are available on
+//! [GitHub](https://github.com/leontoeides/indicium/releases).
+//!
+//! * The full [change
+//! log](https://github.com/leontoeides/indicium/blob/main/CHANGELOG.md) is
+//! available on GitHub.
 //!
 //! * `0.5.1`: Fixes compile failure for the experimental `select2` feature and when
 //! not using `fuzzy` feature.
