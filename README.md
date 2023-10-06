@@ -96,8 +96,8 @@ impl Indexable for MyStruct {
 ```
 
 Don't forget that you may make numbers, numeric identifiers, enums, and other
-types in your `struct` (or other complex type) indexable by converting them to a
-`String` and including them in the returned `Vec<String>`.
+types in your `struct` (or other complex types) indexable by converting them to
+a `String` and including them in the returned `Vec<String>`.
 
 ## 2. Indexing a Collection
 
