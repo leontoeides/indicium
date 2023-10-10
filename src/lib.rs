@@ -19,6 +19,11 @@
 //! log](https://github.com/leontoeides/indicium/blob/main/CHANGELOG.md) is
 //! available on GitHub.
 //!
+//! * `0.5.2`: New optional `ahash` feature which is turned on by default. When
+//! this feature is enabled, this library will utilize `ahash` for faster
+//! `HashMap` and `HashSet` hashing rather than the standard library's
+//! `SipHash`.
+//!
 //! * `0.5.1`: Fixes compile failure for the experimental `select2` feature and when
 //! not using `fuzzy` feature.
 //!
