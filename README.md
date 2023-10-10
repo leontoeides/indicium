@@ -29,8 +29,9 @@ performance may begin to degrade at a point.
 will be used as the changelog going forward.
 
 * `0.5.2`: New optional `ahash` feature which is turned on by default. When this
-feature is enabled, this library will utilize `ahash` for faster `HashMap` and
-`HashSet` hashing rather than the standard library's `SipHash`.
+feature is enabled, this library will utilize
+[ahash](https://lib.rs/crates/ahash) for faster `HashMap` and `HashSet` hashing
+rather than the standard library's SipHash.
 
 * `0.5.1`: Fixes compile failure for the experimental `select2` feature and when
 not using `fuzzy` feature.
