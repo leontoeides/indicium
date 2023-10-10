@@ -3,8 +3,8 @@
 * Release notes are available on
 [GitHub](https://github.com/leontoeides/indicium/releases).
 
-* `0.5.2`: New optional `ahash` feature which is turned on by default. When this
-feature is enabled, this library will utilize
+* `0.5.2`: New, optional `ahash` feature which is turned on by default. When
+this feature is enabled, this library will utilize
 [ahash](https://lib.rs/crates/ahash) for faster `HashMap` and `HashSet` hashing
 rather than the standard library's SipHash.
 
