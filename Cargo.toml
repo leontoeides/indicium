@@ -16,13 +16,14 @@ repository = "https://github.com/leontoeides/indicium"
 maintenance = { status = "actively-developed" }
 
 [features]
-default = [ "simple", "fuzzy" ]
+default = [ "simple", "fuzzy", "ahash" ]
 simple = []
 fuzzy = [ "strsim" ]
+ahash = [ "dep:ahash" ]
 select2 = [ "simple", "serde" ]
 
 [dependencies]
-ahash = "0.8"
+ahash = { version = "0.8", optional = true }
 kstring = "2.0"
 serde = { version = "1.0", features = [ "derive" ], optional = true }
 strsim = { version = "0.10", optional = true }

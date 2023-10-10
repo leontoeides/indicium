@@ -1,4 +1,10 @@
+// Conditionally select hash map type based on feature flags:
+#[cfg(feature = "ahash")]
 use ahash::{HashMap, HashMapExt};
+#[cfg(not(feature = "ahash"))]
+use std::collections::HashMap;
+
+// Static dependencies:
 use crate::simple::internal::SearchTopScores;
 use std::{cmp::Ord, hash::Hash};
 

@@ -9,7 +9,13 @@ mod with_capacity;
 
 // -----------------------------------------------------------------------------
 
+// Conditionally select hash map type based on feature flags:
+#[cfg(feature = "ahash")]
 use ahash::HashMap;
+#[cfg(not(feature = "ahash"))]
+use std::collections::HashMap;
+
+// Static dependencies:
 use kstring::KString;
 use std::collections::BTreeSet;
 use std::{cmp::Ord, cmp::PartialOrd, hash::Hash};

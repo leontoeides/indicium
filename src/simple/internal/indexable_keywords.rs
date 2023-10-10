@@ -1,4 +1,10 @@
+// Conditionally select hash map type based on feature flags:
+#[cfg(feature = "ahash")]
 use ahash::HashSet;
+#[cfg(not(feature = "ahash"))]
+use std::collections::HashSet;
+
+// Static dependencies:
 use crate::simple::internal::string_keywords::SplitContext;
 use crate::simple::{Indexable, SearchIndex};
 use kstring::KString;
