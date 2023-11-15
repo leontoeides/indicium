@@ -1,4 +1,4 @@
-use crate::simple::{AutocompleteType, SearchType, StrsimMetric};
+use crate::simple::{AutocompleteType, EddieMetric, SearchType, StrsimMetric};
 use kstring::KString;
 use std::cmp::Ord;
 use std::collections::{BTreeMap, BTreeSet};
@@ -27,15 +27,21 @@ pub struct SearchIndex<K: Ord> {
     /// The `AutocompleteType` for autocompletions. This setting may be manually
     /// overridden by using the `autocompletion_type` method.
     pub(crate) autocomplete_type: AutocompleteType,
-    /// The `StrsimMetric` for string similarity fuzzy matching.
+    /// Used for the `strsim` optional feature. The `StrsimMetric` is used to
+    /// select the string similarity metric (or algorithm) for fuzzy matching.
     pub(crate) strsim_metric: Option<StrsimMetric>,
-    /// Search index keyword must match the first _n_ characters of the user's
-    /// keyword in order to be evaluated for fuzzy matching.
-    pub(crate) strsim_length: usize,
-    /// Minimum score for the search index's keyword to be returned as an
-    /// alternative to the user's keyword. Score is between 0.0 and 1.0
-    /// (inclusive), where 1.0 means the strings are the same.
-    pub(crate) strsim_minimum_score: f64,
+    /// Used for the `eddie` optional feature. The `EddieMetric` is used to
+    /// select the string similarity metric (or algorithm) for fuzzy matching.
+    pub(crate) eddie_metric: Option<EddieMetric>,
+    /// Used for both the `strsim` and `eddie` optional features. Search index
+    /// keyword must match the first _n_ characters of the user's keyword in
+    /// order to be evaluated for fuzzy matching.
+    pub(crate) fuzzy_length: usize,
+    /// Used for both the `strsim` and `eddie` optional features. Minimum score
+    /// for the search index's keyword to be returned as an alternative to the
+    /// user's keyword. Score is between `0.0` and `1.0` (inclusive), where
+    /// `1.0` means the strings are the same.
+    pub(crate) fuzzy_minimum_score: f64,
     /// Characters used to split strings into keywords.
     pub(crate) split_pattern: Option<Vec<char>>,
     /// Indicates whether the search index is case sensitive or not. If set to

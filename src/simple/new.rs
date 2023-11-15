@@ -1,4 +1,4 @@
-use crate::simple::{AutocompleteType, SearchIndex, SearchType, StrsimMetric};
+use crate::simple::{AutocompleteType, EddieMetric, SearchIndex, SearchType, StrsimMetric};
 use std::{cmp::Ord, collections::BTreeMap};
 
 // -----------------------------------------------------------------------------
@@ -14,12 +14,13 @@ impl<K: Ord> SearchIndex<K> {
     /// Basic usage:
     ///
     /// ```rust
-    /// # use indicium::simple::{AutocompleteType, SearchIndex, SearchType, StrsimMetric};
+    /// # use indicium::simple::{AutocompleteType, EddieMetric, SearchIndex, SearchType, StrsimMetric};
     /// #
     /// let mut search_index = SearchIndex::<usize>::new(
     ///     SearchType::Or,                 // Search type.
     ///     AutocompleteType::Context,      // Autocompletion type.
-    ///     Some(StrsimMetric::Levenshtein),  // String similarity metric type.
+    ///     Some(StrsimMetric::Levenshtein),// String similarity metric type.
+    ///     Some(EddieMetric::Levenshtein), // String similarity metric type.
     ///     3,                              // String similarity match length.
     ///     0.5,                            // String similarity minimum score.
     ///     Some(vec![' ', '\n', '\r', '\t', ',', '.']), // Split characters.
@@ -40,8 +41,9 @@ impl<K: Ord> SearchIndex<K> {
         search_type: SearchType,
         autocomplete_type: AutocompleteType,
         strsim_metric: Option<StrsimMetric>,
-        strsim_length: usize,
-        strsim_minimum_score: f64,
+        eddie_metric: Option<EddieMetric>,
+        fuzzy_length: usize,
+        fuzzy_minimum_score: f64,
         split_pattern: Option<Vec<char>>,
         case_sensitive: bool,
         minimum_keyword_length: usize,
@@ -59,8 +61,9 @@ impl<K: Ord> SearchIndex<K> {
             search_type,
             autocomplete_type,
             strsim_metric,
-            strsim_length,
-            strsim_minimum_score,
+            eddie_metric,
+            fuzzy_length,
+            fuzzy_minimum_score,
             split_pattern,
             case_sensitive,
             minimum_keyword_length,

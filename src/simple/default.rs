@@ -1,4 +1,4 @@
-use crate::simple::{AutocompleteType, SearchIndex, SearchType, StrsimMetric};
+use crate::simple::{AutocompleteType, EddieMetric, SearchIndex, SearchType, StrsimMetric};
 use std::cmp::Ord;
 
 // -----------------------------------------------------------------------------
@@ -11,7 +11,8 @@ impl<K: Ord> Default for SearchIndex<K> {
         Self::new(
             SearchType::Live,               // Search type.
             AutocompleteType::Context,      // Autocompletion type.
-            Some(StrsimMetric::Levenshtein),  // String similarity metric type.
+            Some(StrsimMetric::Levenshtein),// String similarity metric type.
+            Some(EddieMetric::Levenshtein), // String similarity metric type.
             3,                              // String similarity match length.
             0.3,                            // String similarity minimum score.
             // Default split pattern:

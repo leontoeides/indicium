@@ -1,4 +1,4 @@
-use crate::simple::{AutocompleteType, SearchIndex, SearchType, StrsimMetric};
+use crate::simple::{AutocompleteType, EddieMetric, SearchIndex, SearchType, StrsimMetric};
 use kstring::KString;
 use std::collections::{BTreeMap, BTreeSet};
 use std::{clone::Clone, cmp::Ord};
@@ -18,8 +18,9 @@ pub struct SearchIndexBuilder<K> {
     search_type: SearchType,
     autocomplete_type: AutocompleteType,
     strsim_metric: Option<StrsimMetric>,
-    strsim_length: usize,
-    strsim_minimum_score: f64,
+    eddie_metric: Option<EddieMetric>,
+    fuzzy_length: usize,
+    fuzzy_minimum_score: f64,
     split_pattern: Option<Vec<char>>,
     case_sensitive: bool,
     minimum_keyword_length: usize,
@@ -42,8 +43,9 @@ impl<K: Clone + Ord> From<SearchIndex<K>> for SearchIndexBuilder<K> {
             search_type: search_index.search_type,
             autocomplete_type: search_index.autocomplete_type,
             strsim_metric: search_index.strsim_metric,
-            strsim_length: search_index.strsim_length,
-            strsim_minimum_score: search_index.strsim_minimum_score,
+            eddie_metric: search_index.eddie_metric,
+            fuzzy_length: search_index.fuzzy_length,
+            fuzzy_minimum_score: search_index.fuzzy_minimum_score,
             split_pattern: search_index.split_pattern,
             case_sensitive: search_index.case_sensitive,
             minimum_keyword_length: search_index.minimum_keyword_length,
@@ -68,8 +70,9 @@ impl<K: Clone + Ord> From<SearchIndexBuilder<K>> for SearchIndex<K> {
             search_type: search_index.search_type,
             autocomplete_type: search_index.autocomplete_type,
             strsim_metric: search_index.strsim_metric,
-            strsim_length: search_index.strsim_length,
-            strsim_minimum_score: search_index.strsim_minimum_score,
+            eddie_metric: search_index.eddie_metric,
+            fuzzy_length: search_index.fuzzy_length,
+            fuzzy_minimum_score: search_index.fuzzy_minimum_score,
             split_pattern: search_index.split_pattern,
             case_sensitive: search_index.case_sensitive,
             minimum_keyword_length: search_index.minimum_keyword_length,
@@ -163,8 +166,8 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     ///
     /// **Default:** `3` characters
     #[cfg(feature = "strsim")]
-    pub fn strsim_length(mut self, strsim_length: usize) -> Self {
-        self.strsim_length = strsim_length;
+    pub fn fuzzy_length(mut self, fuzzy_length: usize) -> Self {
+        self.fuzzy_length = fuzzy_length;
         self
     } // fn
 
@@ -182,8 +185,8 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     ///
     /// **Default:** `0.3`
     #[cfg(feature = "strsim")]
-    pub fn strsim_minimum_score(mut self, strsim_minimum_score: f64) -> Self {
-        self.strsim_minimum_score = strsim_minimum_score;
+    pub fn fuzzy_minimum_score(mut self, fuzzy_minimum_score: f64) -> Self {
+        self.fuzzy_minimum_score = fuzzy_minimum_score;
         self
     } // fn
 

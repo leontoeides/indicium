@@ -52,7 +52,7 @@ impl<K: Ord> SearchIndex<K> {
             ) // map
             // Search index keyword must meet minimum score to be considered as
             // a fuzzy match:
-            .filter(|(_keyword, score)| score >= &self.strsim_minimum_score)
+            .filter(|(_keyword, score)| score >= &self.fuzzy_minimum_score)
             // Find the `(keyword, score)` tuple with the highest score:
             .max_by(|(_a_keyword, a_score), (_b_keyword, b_score)|
                 a_score.partial_cmp(b_score).unwrap()

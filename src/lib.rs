@@ -225,8 +225,10 @@
 //!
 //! // Demonstrating fuzzy matching:
 //!
+//! # #[cfg(feature = "strsim")]
 //! let resulting_keys: Vec<&usize> = search_index.search("Harry");
 //!
+//! # #[cfg(feature = "strsim")]
 //! assert_eq!(resulting_keys, vec![&0]);
 //! ```
 //!
@@ -268,9 +270,11 @@
 //!
 //! // Demonstrating fuzzy matching:
 //!
+//! # #[cfg(feature = "strsim")]
 //! let autocomplete_options: Vec<String> =
 //!     search_index.autocomplete("a very big birf");
 //!
+//! # #[cfg(feature = "strsim")]
 //! assert_eq!(
 //!     autocomplete_options,
 //!     vec!["a very big bird", "a very big birthday"]

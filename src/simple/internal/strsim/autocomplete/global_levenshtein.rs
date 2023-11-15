@@ -55,7 +55,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 let score = normalized_levenshtein(index_keyword, user_keyword);
                 // Insert the score into the top scores (if it's normal and high
                 // enough):
-                if score.is_normal() && score >= self.strsim_minimum_score {
+                if score.is_normal() && score >= self.fuzzy_minimum_score {
                     top_scores.insert(index_keyword, index_keys, score)
                 } // if
             }); // for_each
