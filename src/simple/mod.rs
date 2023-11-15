@@ -16,6 +16,7 @@ mod default;
 mod deref;
 mod deref_mut;
 mod dump_keyword;
+mod eddie_type;
 mod indexable;
 mod insert;
 mod max_keys_per_keyword;
@@ -35,6 +36,7 @@ mod profile;
 
 pub use crate::simple::autocomplete_type::AutocompleteType;
 pub use crate::simple::builder::SearchIndexBuilder;
+pub use crate::simple::eddie_type::EddieType;
 pub use crate::simple::indexable::Indexable;
 pub use crate::simple::search_index::SearchIndex;
 pub use crate::simple::search_type::SearchType;

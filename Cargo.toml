@@ -16,7 +16,7 @@ repository = "https://github.com/leontoeides/indicium"
 maintenance = { status = "actively-developed" }
 
 [features]
-default = [ "simple", "ahash" ]
+default = [ "simple", "strsim", "ahash" ]
 simple = []
 strsim = [ "dep:strsim" ]
 ahash = [ "dep:ahash" ]

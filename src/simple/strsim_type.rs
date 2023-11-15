@@ -1,11 +1,7 @@
 // -----------------------------------------------------------------------------
 //
-/// The `StrSimType` string similarity type is used to select a string
-/// similarity metric implemented by the `strsim` crate. This allows fuzzy
-/// searching.
-///
-/// Indicium relies on Danny Guo's [strsim](https://crates.io/crates/strsim)
-/// string similarity crate for fuzzy matching.
+/// This is used to select a string similarity metric implemented by the
+/// Danny Guo's [strsim](https://crates.io/crates/strsim) crate.
 
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub enum StrSimType {
