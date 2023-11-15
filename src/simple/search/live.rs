@@ -168,9 +168,9 @@ impl<K: Hash + Ord> SearchIndex<K> {
                         // Collect all keyword search results into a `BTreeSet`:
                         .collect();
 
-                    // If fuzzy string searching enabled, examine the search
+                    // If `strsim` string searching enabled, examine the search
                     // results before returning them:
-                    #[cfg(feature = "fuzzy")]
+                    #[cfg(feature = "strsim")]
                     if search_results.is_empty() {
                         // No search results were found for the user's last
                         // (partial) keyword. Attempt to use fuzzy string
@@ -251,7 +251,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
                     // If fuzzy string searching enabled, examine the search
                     // results before returning them:
-                    #[cfg(feature = "fuzzy")]
+                    #[cfg(feature = "strsim")]
                     if last_results.is_empty() {
                         // No search results were found for the user's last
                         // (partial) keyword. Attempt to use fuzzy string

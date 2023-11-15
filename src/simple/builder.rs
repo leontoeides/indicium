@@ -131,7 +131,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// **Default:** `StrSimType::Levenshtein`
     ///
     /// [`StrSimType`]: enum.StrSimType.html
-    #[cfg(feature = "fuzzy")]
+    #[cfg(feature = "strsim")]
     pub fn strsim_type(mut self, strsim_type: Option<StrSimType>) -> Self {
         self.strsim_type = strsim_type;
         self
@@ -162,7 +162,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// be crippling slow on very large search indicies.
     ///
     /// **Default:** `3` characters
-    #[cfg(feature = "fuzzy")]
+    #[cfg(feature = "strsim")]
     pub fn strsim_length(mut self, strsim_length: usize) -> Self {
         self.strsim_length = strsim_length;
         self
@@ -181,7 +181,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// be returned to the user.
     ///
     /// **Default:** `0.3`
-    #[cfg(feature = "fuzzy")]
+    #[cfg(feature = "strsim")]
     pub fn strsim_minimum_score(mut self, strsim_minimum_score: f64) -> Self {
         self.strsim_minimum_score = strsim_minimum_score;
         self

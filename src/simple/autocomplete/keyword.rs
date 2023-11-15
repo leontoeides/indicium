@@ -125,9 +125,9 @@ impl<K: Hash + Ord> SearchIndex<K> {
             // Collect all keyword autocompletions into a `Vec`:
             .collect();
 
-        // If fuzzy string searching enabled, examine the resulting
+        // If `strsim` string searching enabled, examine the resulting
         // auto-complete options before returning them:
-        #[cfg(feature = "fuzzy")]
+        #[cfg(feature = "strsim")]
         if autocomplete_options.is_empty() {
             // No autocomplete options were found for the user's last
             // (partial) keyword. Attempt to use fuzzy string search to find
@@ -150,7 +150,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
         // If fuzzy string searching disabled, return the resulting
         // auto-complete options without further processing:
-        #[cfg(not(feature = "fuzzy"))]
+        #[cfg(not(feature = "strsim"))]
         autocomplete_options.into_iter().map(|kstring| kstring.as_str()).collect()
 
     } // fn

@@ -150,9 +150,9 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // Collect all keyword autocompletions into a `Vec`:
                 .collect();
 
-            // If fuzzy string searching enabled, examine the resulting
+            // If `strsim` string searching enabled, examine the resulting
             // auto-complete options before using them:
-            #[cfg(feature = "fuzzy")]
+            #[cfg(feature = "strsim")]
             if autocompletions.is_empty() {
                 // No autocomplete options were found for the user's last
                 // (partial) keyword. Attempt to use fuzzy string search to find
