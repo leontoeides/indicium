@@ -1,4 +1,4 @@
-use crate::simple::{AutocompleteType, SearchType, StrSimType};
+use crate::simple::{AutocompleteType, SearchType, StrsimMetric};
 use kstring::KString;
 use std::cmp::Ord;
 use std::collections::{BTreeMap, BTreeSet};
@@ -27,8 +27,8 @@ pub struct SearchIndex<K: Ord> {
     /// The `AutocompleteType` for autocompletions. This setting may be manually
     /// overridden by using the `autocompletion_type` method.
     pub(crate) autocomplete_type: AutocompleteType,
-    /// The `StrSimType` for string similarity fuzzy matching.
-    pub(crate) strsim_type: Option<StrSimType>,
+    /// The `StrsimMetric` for string similarity fuzzy matching.
+    pub(crate) strsim_metric: Option<StrsimMetric>,
     /// Search index keyword must match the first _n_ characters of the user's
     /// keyword in order to be evaluated for fuzzy matching.
     pub(crate) strsim_length: usize,

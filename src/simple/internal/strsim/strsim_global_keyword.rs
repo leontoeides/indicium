@@ -1,5 +1,5 @@
 use crate::simple::search_index::SearchIndex;
-use crate::simple::StrSimType;
+use crate::simple::StrsimMetric;
 use kstring::KString;
 use std::{cmp::Ord, hash::Hash};
 
@@ -62,23 +62,23 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
         // Attempt to find the closest match for the user's keyword using the
         // selected string similarity metric defined in the `SearchIndex`:
-        if let Some(strsim_type) = &self.strsim_type {
+        if let Some(strsim_metric) = &self.strsim_metric {
 
-            match strsim_type {
+            match strsim_metric {
 
-                StrSimType::DamerauLevenshtein =>
+                StrsimMetric::DamerauLevenshtein =>
                     self.strsim_keyword_global_damerau_levenshtein(index_range, user_keyword),
 
-                StrSimType::Jaro =>
+                StrsimMetric::Jaro =>
                     self.strsim_keyword_global_jaro(index_range, user_keyword),
 
-                StrSimType::JaroWinkler =>
+                StrsimMetric::JaroWinkler =>
                     self.strsim_keyword_global_jaro_winkler(index_range, user_keyword),
 
-                StrSimType::Levenshtein =>
+                StrsimMetric::Levenshtein =>
                     self.strsim_keyword_global_levenshtein(index_range, user_keyword),
 
-                StrSimType::SorensenDice =>
+                StrsimMetric::SorensenDice =>
                     self.strsim_keyword_global_sorensen_dice(index_range, user_keyword),
 
             } // match

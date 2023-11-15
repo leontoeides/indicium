@@ -1,4 +1,4 @@
-use crate::simple::{AutocompleteType, SearchIndex, SearchType, StrSimType};
+use crate::simple::{AutocompleteType, SearchIndex, SearchType, StrsimMetric};
 use kstring::KString;
 use std::collections::{BTreeMap, BTreeSet};
 use std::{clone::Clone, cmp::Ord};
@@ -17,7 +17,7 @@ pub struct SearchIndexBuilder<K> {
     b_tree_map: BTreeMap<KString, BTreeSet<K>>,
     search_type: SearchType,
     autocomplete_type: AutocompleteType,
-    strsim_type: Option<StrSimType>,
+    strsim_metric: Option<StrsimMetric>,
     strsim_length: usize,
     strsim_minimum_score: f64,
     split_pattern: Option<Vec<char>>,
@@ -41,7 +41,7 @@ impl<K: Clone + Ord> From<SearchIndex<K>> for SearchIndexBuilder<K> {
             b_tree_map: search_index.b_tree_map,
             search_type: search_index.search_type,
             autocomplete_type: search_index.autocomplete_type,
-            strsim_type: search_index.strsim_type,
+            strsim_metric: search_index.strsim_metric,
             strsim_length: search_index.strsim_length,
             strsim_minimum_score: search_index.strsim_minimum_score,
             split_pattern: search_index.split_pattern,
@@ -67,7 +67,7 @@ impl<K: Clone + Ord> From<SearchIndexBuilder<K>> for SearchIndex<K> {
             b_tree_map: search_index.b_tree_map,
             search_type: search_index.search_type,
             autocomplete_type: search_index.autocomplete_type,
-            strsim_type: search_index.strsim_type,
+            strsim_metric: search_index.strsim_metric,
             strsim_length: search_index.strsim_length,
             strsim_minimum_score: search_index.strsim_minimum_score,
             split_pattern: search_index.split_pattern,
@@ -125,15 +125,15 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
 
     /// String similarity metric type from Danny Guo's
     /// [strsim](https://crates.io/crates/strsim) crate. Used for fuzzy matching
-    /// user's keywords when no exact matches were found. See [`StrSimType`] for
+    /// user's keywords when no exact matches were found. See [`StrsimMetric`] for
     /// more information.
     ///
-    /// **Default:** `StrSimType::Levenshtein`
+    /// **Default:** `StrsimMetric::Levenshtein`
     ///
-    /// [`StrSimType`]: enum.StrSimType.html
+    /// [`StrsimMetric`]: enum.StrsimMetric.html
     #[cfg(feature = "strsim")]
-    pub fn strsim_type(mut self, strsim_type: Option<StrSimType>) -> Self {
-        self.strsim_type = strsim_type;
+    pub fn strsim_metric(mut self, strsim_metric: Option<StrsimMetric>) -> Self {
+        self.strsim_metric = strsim_metric;
         self
     } // fn
 

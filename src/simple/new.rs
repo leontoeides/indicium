@@ -1,4 +1,4 @@
-use crate::simple::{AutocompleteType, SearchIndex, SearchType, StrSimType};
+use crate::simple::{AutocompleteType, SearchIndex, SearchType, StrsimMetric};
 use std::{cmp::Ord, collections::BTreeMap};
 
 // -----------------------------------------------------------------------------
@@ -14,12 +14,12 @@ impl<K: Ord> SearchIndex<K> {
     /// Basic usage:
     ///
     /// ```rust
-    /// # use indicium::simple::{AutocompleteType, SearchIndex, SearchType, StrSimType};
+    /// # use indicium::simple::{AutocompleteType, SearchIndex, SearchType, StrsimMetric};
     /// #
     /// let mut search_index = SearchIndex::<usize>::new(
     ///     SearchType::Or,                 // Search type.
     ///     AutocompleteType::Context,      // Autocompletion type.
-    ///     Some(StrSimType::Levenshtein),  // String similarity metric type.
+    ///     Some(StrsimMetric::Levenshtein),  // String similarity metric type.
     ///     3,                              // String similarity match length.
     ///     0.5,                            // String similarity minimum score.
     ///     Some(vec![' ', '\n', '\r', '\t', ',', '.']), // Split characters.
@@ -39,7 +39,7 @@ impl<K: Ord> SearchIndex<K> {
     pub fn new(
         search_type: SearchType,
         autocomplete_type: AutocompleteType,
-        strsim_type: Option<StrSimType>,
+        strsim_metric: Option<StrsimMetric>,
         strsim_length: usize,
         strsim_minimum_score: f64,
         split_pattern: Option<Vec<char>>,
@@ -58,7 +58,7 @@ impl<K: Ord> SearchIndex<K> {
             b_tree_map: BTreeMap::new(),
             search_type,
             autocomplete_type,
-            strsim_type,
+            strsim_metric,
             strsim_length,
             strsim_minimum_score,
             split_pattern,
