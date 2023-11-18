@@ -32,6 +32,9 @@ performance may begin to degrade at a point.
 log](https://github.com/leontoeides/indicium/blob/master/CHANGELOG.md) is
 available on GitHub.
 
+* `0.6.0`: Correction for contextual fuzzy matching in live, interactive
+searches.
+
 * `0.6.0`: New, optional `eddie` feature which is turned on by default. When
 this feature is enabled, this library will utilize
 [Ilia Schelokov](https://github.com/thaumant)'s [eddie](https://lib.rs/crates/eddie)

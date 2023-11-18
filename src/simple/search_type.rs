@@ -16,10 +16,10 @@
 
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub enum SearchType {
-    /// `Live` search allows for "search as you type." It is a hybridization
-    /// of `autocomplete` and `search`. This method will effectively search
-    /// all of the autocompletion options and return the search results to the
-    /// caller.
+    /// Interactive `Live` search allows for "search as you type." It is a
+    /// hybridization of `autocomplete` and `search`. This method will
+    /// effectively search all of the autocompletion options and return the
+    /// search results to the caller.
     ///
     /// This search method accepts multiple keywords in the search string. The
     /// logical conjuction for multiple keywords is `And`. For example, a search
