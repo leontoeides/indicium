@@ -3,6 +3,18 @@
 * Release notes are available on
 [GitHub](https://github.com/leontoeides/indicium/releases).
 
+* `0.6.0`: New, optional `eddie` feature which is turned on by default. When
+this feature is enabled, this library will utilize
+[Ilia Schelokov](https://github.com/thaumant)'s [eddie](https://lib.rs/crates/eddie)
+crate for [faster](https://github.com/thaumant/eddie/blob/master/benchmarks.md)
+UTF-8 string distance and string similarity calculations.
+
+* `0.6.0`: New, optional `gxhash` feature. `ahash` is still the default hasher.
+When this feature is enabled, this library will utilize
+[Olivier Giniaux](https://github.com/ogxd)'s bleeding edge
+[gxhash](https://lib.rs/crates/gxhash) crate for faster `HashMap` and `HashSet`
+hashing.
+
 * `0.5.2`: New, optional `ahash` feature which is turned on by default. When
 this feature is enabled, this library will utilize
 [ahash](https://lib.rs/crates/ahash) for faster `HashMap` and `HashSet` hashing

@@ -25,8 +25,12 @@ performance may begin to degrade at a point.
 
 # What's New?
 
-* The release notes on [GitHub](https://github.com/leontoeides/indicium/releases)
-will be used as the changelog going forward.
+* Release notes are available on
+[GitHub](https://github.com/leontoeides/indicium/releases).
+
+* The full [change
+log](https://github.com/leontoeides/indicium/blob/master/CHANGELOG.md) is
+available on GitHub.
 
 * `0.6.0`: New, optional `eddie` feature which is turned on by default. When
 this feature is enabled, this library will utilize
