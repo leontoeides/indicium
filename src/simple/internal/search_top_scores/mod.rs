@@ -10,9 +10,11 @@ mod with_capacity;
 // -----------------------------------------------------------------------------
 
 // Conditionally select hash map type based on feature flags:
-#[cfg(feature = "ahash")]
+#[cfg(feature = "gxhash")]
+type HashMap<K, V> = std::collections::HashMap<K, V, gxhash::GxBuildHasher>;
+#[cfg(all(feature = "ahash", not(feature = "gxhash")))]
 use ahash::HashMap;
-#[cfg(not(feature = "ahash"))]
+#[cfg(all(not(feature = "ahash"), not(feature = "gxhash")))]
 use std::collections::HashMap;
 
 // Static dependencies:

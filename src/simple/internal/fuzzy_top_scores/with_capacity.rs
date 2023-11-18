@@ -1,7 +1,9 @@
 // Conditionally select hash map type based on feature flags:
-#[cfg(feature = "ahash")]
-use ahash::{HashMap, HashMapExt};
-#[cfg(not(feature = "ahash"))]
+#[cfg(feature = "gxhash")]
+type HashMap<K, V> = std::collections::HashMap<K, V, gxhash::GxBuildHasher>;
+#[cfg(all(feature = "ahash", not(feature = "gxhash")))]
+use ahash::HashMap;
+#[cfg(all(not(feature = "ahash"), not(feature = "gxhash")))]
 use std::collections::HashMap;
 
 // Static dependencies:
@@ -21,7 +23,10 @@ impl<'a, K: Hash + Ord, S: PartialOrd> FuzzyTopScores<'a, K, S> {
     pub(crate) fn with_capacity(capacity: usize) -> FuzzyTopScores<'a, K, S> {
 
         FuzzyTopScores {
-            top: HashMap::with_capacity(capacity),
+            top: HashMap::with_capacity_and_hasher(
+                capacity,
+                std::default::Default::default()
+            ), // HashMap
             bottom: None,
             capacity,
         } // FuzzyTopScores
