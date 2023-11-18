@@ -17,16 +17,17 @@ hashing.
 
 * `0.5.2`: New, optional `ahash` feature which is turned on by default. When
 this feature is enabled, this library will utilize
-[ahash](https://lib.rs/crates/ahash) for faster `HashMap` and `HashSet` hashing
-rather than the standard library's SipHash.
+[Tom Kaitchuck](https://crates.io/users/tkaitchuck)'s [ahash](https://lib.rs/crates/ahash)
+crate for faster `HashMap` and `HashSet` hashing rather than the standard
+library's SipHash.
 
 * `0.5.1`: Fixes compile failure for the experimental `select2` feature and when
 not using `fuzzy` feature.
 
-* `0.5.0`: The `simple` search index now internally employs the
-[kstring](https://crates.io/crates/kstring) crate. This should help with
-performance in certain cases. The `dump_keyword` and `profile` function
-signatures were changed slightly, otherwise there's no impact to the caller.
+* `0.5.0`: The `simple` search index now internally employs
+[Ed Page](https://github.com/epage)'s [kstring](https://crates.io/crates/kstring)
+crate. The `dump_keyword` and `profile` function signatures were changed
+slightly, otherwise there's no impact to the caller.
 
 * `0.5.0`: Performance improvements.
 
@@ -43,11 +44,9 @@ implementation for free.
 * `0.4.0`: Initial support for fuzzy searching. Fuzzy matching is applied to the
 last (partial) keyword in the search string for _autocompletion_ and _live
 search_ only. Keywords at the start or in the middle of the user's search string
-will not be substituted.
-	* Some changes for an upcoming `0.5.0` release are being considered.
-	This release could have some changes that would allow `indicium` to
-	provide feedback to the user, including which keywords have been
-	substituted.
+will not be substituted. Indicium uses [Danny Guo](https://github.com/dguo)'s
+[strsim](https://crates.io/crates/strsim) crate for string similarity
+calculations.
 
 * `0.4.0`: Breaking changes:
 	* Builder pattern is now passed owned values.
