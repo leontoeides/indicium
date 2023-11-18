@@ -44,48 +44,6 @@ When this feature is enabled, this library will utilize
 [gxhash](https://lib.rs/crates/gxhash) crate for faster `HashMap` and `HashSet`
 hashing.
 
-* `0.5.2`: New, optional `ahash` feature which is turned on by default. When
-this feature is enabled, this library will utilize
-[Tom Kaitchuck](https://crates.io/users/tkaitchuck)'s [ahash](https://lib.rs/crates/ahash)
-crate for faster `HashMap` and `HashSet` hashing rather than the standard
-library's SipHash.
-
-* `0.5.1`: Fixes compile failure for the experimental `select2` feature and when
-not using `fuzzy` feature.
-
-* `0.5.0`: The `simple` search index now internally employs
-[Ed Page](https://github.com/epage)'s [kstring](https://crates.io/crates/kstring)
-crate. The `dump_keyword` and `profile` function signatures were changed
-slightly, otherwise there's no impact to the caller.
-
-* `0.5.0`: Performance improvements.
-
-* `0.4.2`: Any type that implements
-[ToString](https://doc.rust-lang.org/std/string/trait.ToString.html) (and
-consequently any type that implements
-[Display](https://doc.rust-lang.org/std/fmt/trait.Display.html))
-now gets the
-[Indexable](https://docs.rs/indicium/latest/indicium/simple/trait.Indexable.html)
-implementation for free.
-
-* `0.4.1`: Improved contextual fuzzy matching.
-
-* `0.4.0`: Initial support for fuzzy searching. Fuzzy matching is applied to the
-last (partial) keyword in the search string for _autocompletion_ and _live
-search_ only. Keywords at the start or in the middle of the user's search string
-will not be substituted. Indicium uses [Danny Guo](https://github.com/dguo)'s
-[strsim](https://crates.io/crates/strsim) crate for string similarity
-calculations.
-
-* `0.4.0`: Breaking changes:
-	* Builder pattern is now passed owned values.
-	* `K` key type requires `Hash` trait for `fuzzy` string search feature.
-	* New `SearchIndex` default settings.
-
-* `0.4.0`: **Any dependent software should see if (or how) the updated defaults
-change search behaviour and tweak accordingly before adopting the 0.4.0
-update.**
-
 # Quick Start Guide
 
 For our **Quick Start Guide** example, we will be searching inside of the
