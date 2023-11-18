@@ -32,8 +32,10 @@ performance may begin to degrade at a point.
 log](https://github.com/leontoeides/indicium/blob/master/CHANGELOG.md) is
 available on GitHub.
 
-* `0.6.0`: Correction for contextual fuzzy matching in live, interactive
-searches.
+* `0.6.0`: Fix for contextual fuzzy matching for `Live` interactive searches.
+In some cases `Live` search would return global results without properly
+observing the `maximum_search_results` setting. This has been fixed. This will
+improve performance and user experience.
 
 * `0.6.0`: New, optional `eddie` feature which is turned on by default. When
 this feature is enabled, this library will utilize
