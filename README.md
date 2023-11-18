@@ -31,11 +31,12 @@ will be used as the changelog going forward.
 * `0.6.0`: New, optional `eddie` feature which is turned on by default. When
 this feature is enabled, this library will utilize
 [Ilia Schelokov](https://github.com/thaumant)'s [eddie](https://lib.rs/crates/eddie)
-crate for faster string distance and string similarity calculations.
+crate for [faster](https://github.com/thaumant/eddie/blob/master/benchmarks.md)
+UTF-8 string distance and string similarity calculations.
 
 * `0.6.0`: New, optional `gxhash` feature. `ahash` is still the default hasher.
 When this feature is enabled, this library will utilize
-[Olivier Giniaux](https://github.com/ogxd)'s bleeding-edge
+[Olivier Giniaux](https://github.com/ogxd)'s bleeding edge
 [gxhash](https://lib.rs/crates/gxhash) crate for faster `HashMap` and `HashSet`
 hashing.
 

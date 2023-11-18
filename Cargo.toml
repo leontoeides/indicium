@@ -19,7 +19,7 @@ maintenance = { status = "actively-developed" }
 default = [ "simple", "eddie", "ahash" ]
 simple = []
 select2 = [ "simple", "serde" ]
-fuzzy = [ "eddie" ]
+fuzzy = [ "eddie" ] # Deprecated feature. Redirects to `eddie` feature.
 ahash = [ "dep:ahash" ]
 eddie = [ "dep:eddie" ]
 gxhash = [ "dep:gxhash" ]
