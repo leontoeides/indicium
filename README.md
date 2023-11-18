@@ -28,10 +28,22 @@ performance may begin to degrade at a point.
 * The release notes on [GitHub](https://github.com/leontoeides/indicium/releases)
 will be used as the changelog going forward.
 
+* `0.6.0`: New, optional `eddie` feature which is turned on by default. When
+this feature is enabled, this library will utilize
+[Ilia Schelokov](https://github.com/thaumant)'s [eddie](https://lib.rs/crates/eddie)
+crate for faster string distance and string similarity calculations.
+
+* `0.6.0`: New, optional `gxhash` feature. `ahash` is still the default hasher.
+When this feature is enabled, this library will utilize
+[Olivier Giniaux](https://github.com/ogxd)'s bleeding-edge
+[gxhash](https://lib.rs/crates/gxhash) crate for faster `HashMap` and `HashSet`
+hashing.
+
 * `0.5.2`: New, optional `ahash` feature which is turned on by default. When
 this feature is enabled, this library will utilize
-[ahash](https://lib.rs/crates/ahash) for faster `HashMap` and `HashSet` hashing
-rather than the standard library's SipHash.
+[Tom Kaitchuck](https://crates.io/users/tkaitchuck)'s [ahash](https://lib.rs/crates/ahash)
+crate for faster `HashMap` and `HashSet` hashing rather than the standard
+library's SipHash.
 
 * `0.5.1`: Fixes compile failure for the experimental `select2` feature and when
 not using `fuzzy` feature.
@@ -56,7 +68,9 @@ implementation for free.
 * `0.4.0`: Initial support for fuzzy searching. Fuzzy matching is applied to the
 last (partial) keyword in the search string for _autocompletion_ and _live
 search_ only. Keywords at the start or in the middle of the user's search string
-will not be substituted.
+will not be substituted. Indicium uses [Danny Guo](https://github.com/dguo)'s
+[strsim](https://crates.io/crates/strsim) crate for string similarity
+calculations.
 
 * `0.4.0`: Breaking changes:
 	* Builder pattern is now passed owned values.
