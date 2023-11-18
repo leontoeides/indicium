@@ -33,6 +33,6 @@ impl<'a, K: Hash + Ord, S: PartialOrd> FuzzyTopScores<'a, K, S> {
             .into_iter()
             .map(|(keyword, (keys, _score))| (keyword, keys))
 
-    } // if keywords
+    } // fn results
 
 } // impl FuzzyTopScores

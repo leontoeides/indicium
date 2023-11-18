@@ -25,7 +25,7 @@ use std::{cmp::Ord, hash::Hash};
 /// Tracks the top scoring keys. This is intended to track the best _n_ matches
 /// for returning search results.
 
-#[derive(Default)]
+#[derive(Debug, Default)]
 pub(crate) struct SearchTopScores<'a, K: Hash + Ord> {
     /// Tracks the top _n_ scores.
     pub(crate) top: HashMap<&'a K, usize>,

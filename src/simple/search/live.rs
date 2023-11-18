@@ -178,17 +178,17 @@ impl<K: Hash + Ord> SearchIndex<K> {
                         search_results = self.eddie_context_autocomplete(
                             &search_results,
                             &last_keyword,
-                        ) // strsim_context_autocomplete
+                        ) // eddie_context_autocomplete
                             .into_iter()
-                            // Only return `maximum_search_results` number of
-                            // keys:
-                            .take(*maximum_search_results)
                             // `strsim_autocomplete` returns both the keyword
                             // and keys. We're searching for the last (partial)
                             // keyword, so discard the keywords. Flatten the
                             // `BTreeSet<K>` from each search result into our
                             // collection:
                             .flat_map(|(_keyword, keys)| keys)
+                            // Only return `maximum_search_results` number of
+                            // keys:
+                            .take(*maximum_search_results)
                             // Collect all keyword autocompletions into a
                             // `BTreeSet`:
                             .collect()
@@ -206,15 +206,15 @@ impl<K: Hash + Ord> SearchIndex<K> {
                             &last_keyword,
                         ) // strsim_context_autocomplete
                             .into_iter()
-                            // Only return `maximum_search_results` number of
-                            // keys:
-                            .take(*maximum_search_results)
                             // `strsim_autocomplete` returns both the keyword
                             // and keys. We're searching for the last (partial)
                             // keyword, so discard the keywords. Flatten the
                             // `BTreeSet<K>` from each search result into our
                             // collection:
                             .flat_map(|(_keyword, keys)| keys)
+                            // Only return `maximum_search_results` number of
+                            // keys:
+                            .take(*maximum_search_results)
                             // Collect all keyword autocompletions into a
                             // `BTreeSet`:
                             .collect()
@@ -285,26 +285,27 @@ impl<K: Hash + Ord> SearchIndex<K> {
                         last_results = self.eddie_context_autocomplete(
                             &search_results,
                             &last_keyword,
-                        ) // strsim_context_autocomplete
+                        ) // eddie_context_autocomplete
                             .into_iter()
                             // Only keep this result if hasn't already been used
                             // as a keyword:
                             .filter(|(keyword, _keys)| !keywords.contains(keyword))
-                            // Only keep this autocompletion if it contains a
-                            // key that the search results contain:
-                            .filter(|(_keyword, keys)|
-                                last_results.is_empty() ||
-                                    keys.iter().any(|key| last_results.contains(key))
-                            ) // filter
-                            // Only return `maximum_search_results` number of
-                            // keys:
-                            .take(*maximum_search_results)
-                            // `strsim_autocomplete` returns both the keyword
-                            // and keys. We're searching for the last (partial)
-                            // keyword, so discard the keywords. Flatten the
+                            // Intersect the key results from the autocomplete
+                            // options (produced from this iterator) with the
+                            // search results produced at the top:
+                            .map(|(keyword, keys)| (
+                                keyword,
+                                keys.iter().filter(|key| search_results.contains(key)).collect::<BTreeSet<_>>(),
+                            )) // map
+                            // Autocomplete returns both the keyword and keys.
+                            // We're searching for the last (partial) keyword,
+                            // so discard the keywords. Flatten the
                             // `BTreeSet<K>` from each search result into our
                             // collection:
                             .flat_map(|(_keyword, keys)| keys)
+                            // Only return `maximum_search_results` number of
+                            // keys:
+                            .take(*maximum_search_results)
                             // Collect all keyword autocompletions into a
                             // `BTreeSet`:
                             .collect()
@@ -325,21 +326,22 @@ impl<K: Hash + Ord> SearchIndex<K> {
                             // Only keep this result if hasn't already been used
                             // as a keyword:
                             .filter(|(keyword, _keys)| !keywords.contains(keyword))
-                            // Only keep this autocompletion if it contains a
-                            // key that the search results contain:
-                            .filter(|(_keyword, keys)|
-                                last_results.is_empty() ||
-                                    keys.iter().any(|key| last_results.contains(key))
-                            ) // filter
-                            // Only return `maximum_search_results` number of
-                            // keys:
-                            .take(*maximum_search_results)
-                            // `strsim_autocomplete` returns both the keyword
-                            // and keys. We're searching for the last (partial)
-                            // keyword, so discard the keywords. Flatten the
+                            // Intersect the key results from the autocomplete
+                            // options (produced from this iterator) with the
+                            // search results produced at the top:
+                            .map(|(keyword, keys)| (
+                                keyword,
+                                keys.iter().filter(|key| search_results.contains(key)).collect::<BTreeSet<_>>(),
+                            )) // map
+                            // Autocomplete returns both the keyword and keys.
+                            // We're searching for the last (partial) keyword,
+                            // so discard the keywords. Flatten the
                             // `BTreeSet<K>` from each search result into our
                             // collection:
                             .flat_map(|(_keyword, keys)| keys)
+                            // Only return `maximum_search_results` number of
+                            // keys:
+                            .take(*maximum_search_results)
                             // Collect all keyword autocompletions into a
                             // `BTreeSet`:
                             .collect()

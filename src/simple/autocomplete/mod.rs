@@ -5,8 +5,7 @@ mod keyword;
 // -----------------------------------------------------------------------------
 
 use crate::simple::{AutocompleteType, SearchIndex};
-use std::cmp::Ord;
-use std::hash::Hash;
+use std::{cmp::Ord, hash::Hash};
 
 // -----------------------------------------------------------------------------
 

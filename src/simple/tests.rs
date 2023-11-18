@@ -228,7 +228,7 @@ fn simple() {
 
     // Fuzzy matching:
     #[cfg(any(feature = "eddie", feature = "strsim"))]
-    let search_results = search_index.search_type(&SearchType::Live, "peet of Annan");
+    let search_results = search_index.search_type(&SearchType::Live, "peat of Annan");
     #[cfg(any(feature = "eddie", feature = "strsim"))]
     assert_eq!(search_results, vec![&3]);
 
