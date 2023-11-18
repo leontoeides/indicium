@@ -48,10 +48,10 @@ library's SipHash.
 * `0.5.1`: Fixes compile failure for the experimental `select2` feature and when
 not using `fuzzy` feature.
 
-* `0.5.0`: The `simple` search index now internally employs the
-[kstring](https://crates.io/crates/kstring) crate. This should help with
-performance in certain cases. The `dump_keyword` and `profile` function
-signatures were changed slightly, otherwise there's no impact to the caller.
+* `0.5.0`: The `simple` search index now internally employs
+[Ed Page](https://github.com/epage)'s [kstring](https://crates.io/crates/kstring)
+crate. The `dump_keyword` and `profile` function signatures were changed
+slightly, otherwise there's no impact to the caller.
 
 * `0.5.0`: Performance improvements.
 
