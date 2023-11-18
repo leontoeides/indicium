@@ -1,7 +1,10 @@
 //! The simple Indicium search implementation. Fewer bells-and-whistles but
 //! easier to use than the other options.
 //!
-//! There will be more search implementations in future versions.
+//! There might be more search implementations in future versions.
+
+#[cfg(all(feature = "eddie", feature = "strsim"))]
+compile_error!("feature `eddie` and `strsim` are mutually exclusive and cannot be enabled together");
 
 // Directories:
 mod autocomplete;

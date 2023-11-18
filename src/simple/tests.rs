@@ -154,13 +154,17 @@ fn simple() {
     assert_eq!(autocomplete_options, vec!["1087".to_string()]);
 
     // Test internal global fuzzy keyword search interface:
-    #[cfg(any(feature = "eddie", feature = "strsim"))]
+    #[cfg(feature = "eddie")]
+    let similar_keyword = search_index.eddie_global_keyword(&"Willy".to_lowercase());
+    #[cfg(feature = "strsim")]
     let similar_keyword = search_index.strsim_global_keyword(&"Willy".to_lowercase());
     #[cfg(any(feature = "eddie", feature = "strsim"))]
     assert_eq!(similar_keyword, Some(&KString::from_ref("william")));
 
     // Test internal global fuzzy autocompletion interface:
-    #[cfg(any(feature = "eddie", feature = "strsim"))]
+    #[cfg(feature = "eddie")]
+    let similar_autocompletions = search_index.eddie_global_autocomplete(&"Normy".to_lowercase());
+    #[cfg(feature = "strsim")]
     let similar_autocompletions = search_index.strsim_global_autocomplete(&"Normy".to_lowercase());
     #[cfg(any(feature = "eddie", feature = "strsim"))]
     let similar_autocompletions_vec: Vec<&KString> = similar_autocompletions.into_iter().map(|(keyword, _keys)| keyword).collect();
