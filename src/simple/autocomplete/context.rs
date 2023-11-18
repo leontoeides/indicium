@@ -164,7 +164,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 autocompletions = self.eddie_context_autocomplete(
                     &search_results,
                     &last_keyword,
-                ) // strsim_context_autocomplete
+                ) // eddie_context_autocomplete
                     .into_iter()
                     // Only keep this autocompletion if hasn't already been used
                     // as a keyword:
@@ -172,7 +172,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                     // Only return `maximum_autocomplete_options` number of
                     // keywords:
                     .take(*maximum_autocomplete_options)
-                    // `strsim_autocomplete` returns both the keyword and keys.
+                    // `eddie_autocomplete` returns both the keyword and keys.
                     // We're autocompleting the last (partial) keyword, so
                     // discard the keys:
                     .map(|(keyword, _keys)| keyword)

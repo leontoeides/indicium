@@ -165,7 +165,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                     // Only return `maximum_autocomplete_options` number of
                     // keywords:
                     .take(*maximum_autocomplete_options)
-                    // `strsim_autocomplete` returns both the keyword and keys.
+                    // `eddie_autocomplete` returns both the keyword and keys.
                     // We're autocompleting the last (partial) keyword, so
                     // discard the keys:
                     .map(|(keyword, _keys)| keyword)

@@ -4,7 +4,10 @@
 //! There might be more search implementations in future versions.
 
 #[cfg(all(feature = "eddie", feature = "strsim"))]
-compile_error!("feature `eddie` and `strsim` are mutually exclusive and cannot be enabled together");
+compile_error!("features `eddie` (preferred) and `strsim` cannot both be enabled");
+
+#[cfg(all(feature = "ahash", feature = "gxhash"))]
+compile_error!("features `ahash` (preferred) and `gxhash` cannot both be enabled");
 
 // Directories:
 mod autocomplete;
