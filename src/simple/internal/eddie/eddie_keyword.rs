@@ -8,11 +8,11 @@ impl<K: Hash + Ord> SearchIndex<K> {
     // -------------------------------------------------------------------------
     //
     /// Scans the entire search index for the closest matching keyword using
-    /// the configured string similarity metric. This feature relies on Danny
-    /// Guo's [strsim](https://crates.io/crates/strsim) crate.
+    /// the configured string similarity metric. Ilia Schelokov's
+    /// [eddie](https://crates.io/crates/eddie) crate.
     ///
     /// When the user's search string contains a keyword that returns no
-    /// matches, these `strsim_keyword_*` methods can be used to find the best
+    /// matches, these `eddie_keyword_*` methods can be used to find the best
     /// match for substitution.
     ///
     /// Basic usage:
@@ -75,7 +75,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// #   );
     /// #
     /// #
-    /// let keyword_substitution = search_index.strsim_keyword("Harry");
+    /// let keyword_substitution = search_index.eddie_keyword("Harry");
     ///
     /// assert_eq!(
     ///     keyword_substitution,
@@ -83,7 +83,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// );
     /// ```
 
-    pub fn strsim_keyword(
+    pub fn eddie_keyword(
         &self,
         keyword: &str,
     ) -> Option<&str> {
@@ -96,7 +96,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
         }; // match
 
         // Call global keyword subtitution provider:
-        self.strsim_global_keyword(&keyword).map(|kstring| kstring.as_str())
+        self.eddie_global_keyword(&keyword).map(|kstring| kstring.as_str())
 
     } // fn
 

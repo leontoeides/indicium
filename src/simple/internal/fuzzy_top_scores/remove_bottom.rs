@@ -1,9 +1,9 @@
-use crate::simple::internal::StrsimTopScores;
+use crate::simple::internal::FuzzyTopScores;
 use std::{cmp::Ord, cmp::PartialOrd, hash::Hash};
 
 // -----------------------------------------------------------------------------
 
-impl<'a, K: Hash + Ord, S: PartialOrd> StrsimTopScores<'a, K, S> {
+impl<'a, K: Hash + Ord, S: PartialOrd> FuzzyTopScores<'a, K, S> {
 
     // -------------------------------------------------------------------------
     //
@@ -21,4 +21,4 @@ impl<'a, K: Hash + Ord, S: PartialOrd> StrsimTopScores<'a, K, S> {
 
     } // fn remove_bottom
 
-} // impl StrsimTopScores
+} // impl FuzzyTopScores

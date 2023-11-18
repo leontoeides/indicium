@@ -140,6 +140,20 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
         self
     } // fn
 
+    /// String similarity metric type from Ilia Schelokov's
+    /// [eddie](https://crates.io/crates/eddie) crate. Used for fuzzy matching
+    /// user's keywords when no exact matches were found. See [`EddieMetric`] for
+    /// more information.
+    ///
+    /// **Default:** `EddieMetric::Levenshtein`
+    ///
+    /// [`EddieMetric`]: enum.EddieMetric.html
+    #[cfg(feature = "eddie")]
+    pub fn eddie_metric(mut self, eddie_metric: Option<EddieMetric>) -> Self {
+        self.eddie_metric = eddie_metric;
+        self
+    } // fn
+
     /// String's minimum length (in chars or codepoints) to use "approximate
     /// string matching" or "fuzzy matching."
     ///
@@ -165,7 +179,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// be crippling slow on very large search indicies.
     ///
     /// **Default:** `3` characters
-    #[cfg(feature = "strsim")]
+    #[cfg(any(feature = "eddie", feature = "strsim"))]
     pub fn fuzzy_length(mut self, fuzzy_length: usize) -> Self {
         self.fuzzy_length = fuzzy_length;
         self
@@ -184,7 +198,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// be returned to the user.
     ///
     /// **Default:** `0.3`
-    #[cfg(feature = "strsim")]
+    #[cfg(any(feature = "eddie", feature = "strsim"))]
     pub fn fuzzy_minimum_score(mut self, fuzzy_minimum_score: f64) -> Self {
         self.fuzzy_minimum_score = fuzzy_minimum_score;
         self

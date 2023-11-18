@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------
 //
-/// This is used to select a string similarity metric implemented by the
-/// Danny Guo's [strsim](https://crates.io/crates/strsim) crate.
+/// This is used to select a string similarity metric implemented by Danny Guo's
+/// [strsim](https://crates.io/crates/strsim) crate.
 
 #[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub enum StrsimMetric {

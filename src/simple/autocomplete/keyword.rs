@@ -125,9 +125,32 @@ impl<K: Hash + Ord> SearchIndex<K> {
             // Collect all keyword autocompletions into a `Vec`:
             .collect();
 
-        // If `strsim` string searching enabled, examine the resulting
+        // If `eddie` fuzzy matching enabled, examine the resulting
         // auto-complete options before returning them:
-        #[cfg(feature = "strsim")]
+        #[cfg(feature = "eddie")]
+        if autocomplete_options.is_empty() {
+            // No autocomplete options were found for the user's last
+            // (partial) keyword. Attempt to use fuzzy string search to find
+            // other autocomplete options:
+            self.eddie_global_autocomplete(&keyword)
+                .into_iter()
+                // Only return `maximum_autocomplete_options` number of
+                // keywords:
+                .take(*maximum_autocomplete_options)
+                // `eddie_autocomplete` returns both the keyword and keys.
+                // We're autocompleting the last (partial) keyword, so discard
+                // the keys:
+                .map(|(keyword, _keys)| keyword.as_str())
+                // Collect all keyword autocompletions into a `Vec`:
+                .collect()
+        } else {
+            // There were some matches. Return the results without processing:
+            autocomplete_options.into_iter().map(|kstring| kstring.as_str()).collect()
+        } // if
+
+        // If `strsim` fuzzy matching enabled, examine the resulting
+        // auto-complete options before returning them:
+        #[cfg(all(feature = "strsim", not(feature = "eddie")))]
         if autocomplete_options.is_empty() {
             // No autocomplete options were found for the user's last
             // (partial) keyword. Attempt to use fuzzy string search to find
@@ -150,7 +173,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
         // If fuzzy string searching disabled, return the resulting
         // auto-complete options without further processing:
-        #[cfg(not(feature = "strsim"))]
+        #[cfg(not(any(feature = "strsim", feature = "eddie")))]
         autocomplete_options.into_iter().map(|kstring| kstring.as_str()).collect()
 
     } // fn

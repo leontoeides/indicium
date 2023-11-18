@@ -118,9 +118,9 @@ fn simple() {
     assert_eq!(search_results, vec![&1]);
 
     // Ensure that fuzzy matching is working with live searches:
-    #[cfg(feature = "strsim")]
+    #[cfg(any(feature = "eddie", feature = "strsim"))]
     let search_results = search_index.search_type(&SearchType::Live, "1066 Harry");
-    #[cfg(feature = "strsim")]
+    #[cfg(any(feature = "eddie", feature = "strsim"))]
     assert_eq!(search_results, vec![&0]);
 
     let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Keyword, "E");
@@ -130,9 +130,9 @@ fn simple() {
     assert_eq!(autocomplete_options, vec!["1100 edgar".to_string(), "1100 edgar ætheling".to_string(), "1100 england".to_string()]);
 
     // Test fuzzy-matching for global autocompletion:
-    #[cfg(feature = "strsim")]
+    #[cfg(any(feature = "eddie", feature = "strsim"))]
     let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Global, "1100 Englelund");
-    #[cfg(feature = "strsim")]
+    #[cfg(any(feature = "eddie", feature = "strsim"))]
     assert_eq!(autocomplete_options, vec!["1100 england".to_string()]);
 
     // The only `w` keywords that `1087` should contain are `William` and
@@ -142,9 +142,9 @@ fn simple() {
     assert_eq!(autocomplete_options, vec!["1087 william".to_string(), "1087 william rufus".to_string()]);
 
     // Test fuzzy-matching for context autocompletion:
-    #[cfg(feature = "strsim")]
+    #[cfg(any(feature = "eddie", feature = "strsim"))]
     let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Context, "1087 Willy");
-    #[cfg(feature = "strsim")]
+    #[cfg(any(feature = "eddie", feature = "strsim"))]
     assert_eq!(autocomplete_options, vec!["1087 william".to_string(), "1087 william rufus".to_string()]);
 
     // Ensure that `Context` autocomplete works with an empty search string /
@@ -154,17 +154,17 @@ fn simple() {
     assert_eq!(autocomplete_options, vec!["1087".to_string()]);
 
     // Test internal global fuzzy keyword search interface:
-    #[cfg(feature = "strsim")]
+    #[cfg(any(feature = "eddie", feature = "strsim"))]
     let similar_keyword = search_index.strsim_global_keyword(&"Willy".to_lowercase());
-    #[cfg(feature = "strsim")]
+    #[cfg(any(feature = "eddie", feature = "strsim"))]
     assert_eq!(similar_keyword, Some(&KString::from_ref("william")));
 
     // Test internal global fuzzy autocompletion interface:
-    #[cfg(feature = "strsim")]
+    #[cfg(any(feature = "eddie", feature = "strsim"))]
     let similar_autocompletions = search_index.strsim_global_autocomplete(&"Normy".to_lowercase());
-    #[cfg(feature = "strsim")]
+    #[cfg(any(feature = "eddie", feature = "strsim"))]
     let similar_autocompletions_vec: Vec<&KString> = similar_autocompletions.into_iter().map(|(keyword, _keys)| keyword).collect();
-    #[cfg(feature = "strsim")]
+    #[cfg(any(feature = "eddie", feature = "strsim"))]
     assert_eq!(similar_autocompletions_vec, vec![&"norman".to_string()]);
 
     // Test `Indexable` trait implementation for `ToString` generics:
@@ -217,15 +217,15 @@ fn simple() {
     assert_eq!(search_results, vec![&13, &17]);
 
     // Fuzzy matching:
-    #[cfg(feature = "strsim")]
+    #[cfg(any(feature = "eddie", feature = "strsim"))]
     let search_results = search_index.search_type(&SearchType::Live, "rivers");
-    #[cfg(feature = "strsim")]
+    #[cfg(any(feature = "eddie", feature = "strsim"))]
     assert_eq!(search_results, vec![&19]);
 
     // Fuzzy matching:
-    #[cfg(feature = "strsim")]
+    #[cfg(any(feature = "eddie", feature = "strsim"))]
     let search_results = search_index.search_type(&SearchType::Live, "peet of Annan");
-    #[cfg(feature = "strsim")]
+    #[cfg(any(feature = "eddie", feature = "strsim"))]
     assert_eq!(search_results, vec![&3]);
 
     // Keyword autocomplete:
@@ -241,9 +241,9 @@ fn simple() {
     assert_eq!(autocomplete_options, vec!["krammer lock".to_string()]);
 
     // Fuzzy matching context autocomplete:
-    #[cfg(feature = "strsim")]
+    #[cfg(any(feature = "eddie", feature = "strsim"))]
     let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Context, "stars are dancers");
-    #[cfg(feature = "strsim")]
+    #[cfg(any(feature = "eddie", feature = "strsim"))]
     assert_eq!(autocomplete_options, vec!["stars are dancing".to_string()]);
 
 } // fn

@@ -1,21 +1,19 @@
-use crate::simple::internal::StrsimTopScores;
-use crate::simple::search_index::SearchIndex;
+use crate::simple::internal::FuzzyTopScores;
 use kstring::KString;
-use std::{cmp::Ord, collections::BTreeSet, hash::Hash};
-use strsim::jaro_winkler;
+use std::collections::BTreeSet;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Hash + Ord> SearchIndex<K> {
+impl<K: std::hash::Hash + std::cmp::Ord> crate::simple::search_index::SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
     /// Scans the entire search index for the closest matching _n_ keywords
-    /// using the Jaro-Winkler string similarity metric from Danny Guo's
-    /// [strsim](https://crates.io/crates/strsim) crate.
+    /// using the Jaro-Winkler string similarity metric from Ilia Schelokov's
+    /// [eddie](https://crates.io/crates/eddie) crate.
     ///
     /// When the user's last (partial) keyword that is meant to be autocompleted
-    /// returns no matches, these `strsim_autocomplete_*` methods can be used to
+    /// returns no matches, these `eddie_autocomplete_*` methods can be used to
     /// find the best match for substitution.
     ///
     /// * `index_range` limits which keywords to compare the user's keyword
@@ -29,11 +27,11 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// it must contain at least one key that is in this key set. This is how
     /// fuzzy matching is made contextual.
     //
-    // Note: these `strsim_autocomplete_*` methods are very similar and may seem
+    // Note: these `eddie_autocomplete_*` methods are very similar and may seem
     // repetitive with a lot of boiler plate. These were intentionally made more
     // "concrete" and less modular in order to be more efficient.
 
-    pub(crate) fn strsim_autocomplete_context_jaro_winkler(
+    pub(crate) fn eddie_autocomplete_context_jaro_winkler(
         &self,
         index_range: &str,
         key_set: &BTreeSet<&K>,
@@ -41,8 +39,11 @@ impl<K: Hash + Ord> SearchIndex<K> {
     ) -> impl Iterator<Item = (&KString, &BTreeSet<K>)> {
 
         // This structure will track the top scoring keywords:
-        let mut top_scores: StrsimTopScores<K, f64> =
-            StrsimTopScores::with_capacity(self.maximum_autocomplete_options);
+        let mut top_scores: FuzzyTopScores<K, f64> =
+            FuzzyTopScores::with_capacity(self.maximum_autocomplete_options);
+
+        // Instantiate eddie's Jaro-Winkler similarity struct:
+        let jaro_winkler = eddie::JaroWinkler::new();
 
         // Scan the search index for the highest scoring keywords:
         self.b_tree_map
@@ -66,7 +67,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
             .for_each(|(index_keyword, index_keys)| {
                 // Using this keyword from the search index, calculate its
                 // similarity to the user's keyword:
-                let score = jaro_winkler(index_keyword, user_keyword);
+                let score = jaro_winkler.similarity(index_keyword, user_keyword);
                 // Insert the score into the top scores (if it's normal and high
                 // enough):
                 if score.is_normal() && score >= self.fuzzy_minimum_score {

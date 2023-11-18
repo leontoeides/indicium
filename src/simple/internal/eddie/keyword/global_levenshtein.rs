@@ -1,20 +1,17 @@
-use crate::simple::search_index::SearchIndex;
 use kstring::KString;
-use std::cmp::Ord;
-use strsim::normalized_levenshtein;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Ord> SearchIndex<K> {
+impl<K: std::cmp::Ord> crate::simple::search_index::SearchIndex<K> {
 
     // -------------------------------------------------------------------------
     //
     /// Scans the entire search index for the closest matching keyword using
-    /// the Levenshtein string similarity metric from Danny Guo's
-    /// [strsim](https://crates.io/crates/strsim) crate.
+    /// the Levenshtein string distance metric from Ilia Schelokov's
+    /// [eddie](https://crates.io/crates/eddie) crate.
     ///
     /// When the user's search string contains a keyword that returns no
-    /// matches, these `strsim_keyword_*` methods can be used to find the best
+    /// matches, these `eddie_keyword_*` methods can be used to find the best
     /// match for substitution.
     ///
     /// * `index_range` limits which keywords to compare the user's keyword
@@ -23,15 +20,18 @@ impl<K: Ord> SearchIndex<K> {
     /// "super" will be compared against the user's keyword: "supersonic"
     /// against "superalloy", "supersonic" against "supergiant" and so on...
     //
-    // Note: these `strsim_keyword_*` methods are very similar and may seem
+    // Note: these `eddie_keyword_*` methods are very similar and may seem
     // repetitive with a lot of boiler plate. These were intentionally made more
     // "concrete" and less modular in order to be more efficient.
 
-    pub(crate) fn strsim_keyword_global_levenshtein(
+    pub(crate) fn eddie_keyword_global_levenshtein(
         &self,
         index_range: &str,
         user_keyword: &str,
     ) -> Option<&KString> {
+
+        // Instantiate eddie's Levenshtein distance struct:
+        let levenshtein = eddie::Levenshtein::new();
 
         // Scan the search index for the highest scoring keyword:
         self.b_tree_map
@@ -47,7 +47,7 @@ impl<K: Ord> SearchIndex<K> {
             // to the user's keyword. Map the `(keyword, keys)` tuple into
             // a `(keyword, score)` tuple:
             .map(|(index_keyword, _keys)|
-                (index_keyword, normalized_levenshtein(index_keyword, user_keyword))
+                (index_keyword, levenshtein.similarity(index_keyword, user_keyword))
             ) // map
             // Search index keyword must meet minimum score to be considered as
             // a fuzzy match:

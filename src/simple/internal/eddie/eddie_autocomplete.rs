@@ -9,11 +9,11 @@ impl<K: Hash + Ord> SearchIndex<K> {
     //
     /// Scans the entire search index for the closest matching _n_ keywords
     /// using the provided keyword and configured string similarity metric. This
-    /// feature relies on Danny Guo's [strsim](https://crates.io/crates/strsim)
+    /// feature relies on Ilia Schelokov's [eddie](https://crates.io/crates/eddie)
     /// crate.
     ///
     /// When the user's last (partial) keyword that is meant to be autocompleted
-    /// returns no matches, these `strsim_autocomplete_*` methods can be used to
+    /// returns no matches, these `eddie_autocomplete_*` methods can be used to
     /// find the best match for substitution.
     ///
     /// Basic usage:
@@ -76,7 +76,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// #   );
     /// #
     /// #
-    /// let autocomplete_options = search_index.strsim_autocomplete(
+    /// let autocomplete_options = search_index.eddie_autocomplete(
     ///     "Wesley"
     /// );
     ///
@@ -88,7 +88,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// );
     /// ```
 
-    pub fn strsim_autocomplete(
+    pub fn eddie_autocomplete(
         &self,
         keyword: &str,
     ) -> Vec<&str> {
@@ -101,7 +101,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
         }; // match
 
         // Call global autocompletion provider:
-        self.strsim_global_autocomplete(&keyword)
+        self.eddie_global_autocomplete(&keyword)
             .into_iter()
             .map(|(keyword, _keys)| keyword.as_str())
             .collect()

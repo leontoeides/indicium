@@ -1,10 +1,10 @@
-use crate::simple::internal::StrsimTopScores;
+use crate::simple::internal::FuzzyTopScores;
 use kstring::KString;
 use std::{clone::Clone, collections::BTreeSet, cmp::Ord, cmp::PartialOrd, hash::Hash};
 
 // -----------------------------------------------------------------------------
 
-impl<'a, K: Hash + Ord, S: Clone + PartialOrd> StrsimTopScores<'a, K, S> {
+impl<'a, K: Hash + Ord, S: Clone + PartialOrd> FuzzyTopScores<'a, K, S> {
 
     // -----------------------------------------------------------------------------
     //
@@ -22,10 +22,10 @@ impl<'a, K: Hash + Ord, S: Clone + PartialOrd> StrsimTopScores<'a, K, S> {
         score: S,
     ) {
 
-        // Check if the `StrsimTopScores` struct has reached its maximum capacity:
+        // Check if the `FuzzyTopScores` struct has reached its maximum capacity:
         if self.top.len() >= self.capacity {
 
-            // If the `StrsimTopScores` is at capacity and the lowest top score (the
+            // If the `FuzzyTopScores` is at capacity and the lowest top score (the
             // bottom) is currently unknown, find it:
             if self.bottom.is_none() { self.find_bottom() }
 
@@ -44,7 +44,7 @@ impl<'a, K: Hash + Ord, S: Clone + PartialOrd> StrsimTopScores<'a, K, S> {
 
         } else {
 
-            // The `StrsimTopScores` struct has not reached its capacity, we may
+            // The `FuzzyTopScores` struct has not reached its capacity, we may
             // blindly add the _keyword_, _keys_, & _score_ without checking the
             // lowest score:
             self.top.insert(keyword, (keys, score));
@@ -53,4 +53,4 @@ impl<'a, K: Hash + Ord, S: Clone + PartialOrd> StrsimTopScores<'a, K, S> {
 
     } // fn insert
 
-} // impl StrsimTopScores
+} // impl FuzzyTopScores

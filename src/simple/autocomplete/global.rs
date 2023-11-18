@@ -150,9 +150,32 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // Collect all keyword autocompletions into a `Vec`:
                 .collect();
 
-            // If `strsim` string searching enabled, examine the resulting
+            // If `eddie` fuzzy matching enabled, examine the resulting
             // auto-complete options before using them:
-            #[cfg(feature = "strsim")]
+            #[cfg(feature = "eddie")]
+            if autocompletions.is_empty() {
+                // No autocomplete options were found for the user's last
+                // (partial) keyword. Attempt to use fuzzy string search to find
+                // other autocomplete options:
+                autocompletions = self.eddie_global_autocomplete(&last_keyword)
+                    .into_iter()
+                    // Only keep this autocompletion if hasn't already been used
+                    // as a keyword:
+                    .filter(|(keyword, _keys)| !keywords.contains(keyword))
+                    // Only return `maximum_autocomplete_options` number of
+                    // keywords:
+                    .take(*maximum_autocomplete_options)
+                    // `strsim_autocomplete` returns both the keyword and keys.
+                    // We're autocompleting the last (partial) keyword, so
+                    // discard the keys:
+                    .map(|(keyword, _keys)| keyword)
+                    // Collect all keyword autocompletions into a `Vec`:
+                    .collect()
+            } // if
+
+            // If `strsim` fuzzy matching enabled, examine the resulting
+            // auto-complete options before using them:
+            #[cfg(all(feature = "strsim", not(feature = "eddie")))]
             if autocompletions.is_empty() {
                 // No autocomplete options were found for the user's last
                 // (partial) keyword. Attempt to use fuzzy string search to find

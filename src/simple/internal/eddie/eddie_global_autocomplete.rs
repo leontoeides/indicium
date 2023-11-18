@@ -1,5 +1,5 @@
 use crate::simple::search_index::SearchIndex;
-use crate::simple::StrsimMetric;
+use crate::simple::EddieMetric;
 use kstring::KString;
 use std::{cmp::Ord, collections::BTreeSet, hash::Hash};
 
@@ -11,14 +11,14 @@ impl<K: Hash + Ord> SearchIndex<K> {
     //
     /// Scans the entire search index for the closest matching _n_ keywords
     /// using the provided keyword and configured string similarity metric. This
-    /// feature relies on Danny Guo's [strsim](https://crates.io/crates/strsim)
+    /// feature relies on Ilia Schelokov's [eddie](https://crates.io/crates/eddie)
     /// crate.
     ///
     /// When the user's last (partial) keyword that is meant to be autocompleted
-    /// returns no matches, these `strsim_autocomplete_*` methods can be used to
+    /// returns no matches, these `eddie_autocomplete_*` methods can be used to
     /// find the best match for substitution.
 
-    pub(crate) fn strsim_global_autocomplete(
+    pub(crate) fn eddie_global_autocomplete(
         &self,
         user_keyword: &str,
     ) -> Vec<(&KString, &BTreeSet<K>)> {
@@ -64,24 +64,21 @@ impl<K: Hash + Ord> SearchIndex<K> {
         // Attempt to find the top matches for the user's (partial) keyword
         // using the selected string similarity metric defined in the
         // `SearchIndex`:
-        if let Some(strsim_metric) = &self.strsim_metric {
+        if let Some(eddie_metric) = &self.eddie_metric {
 
-            match strsim_metric {
+            match eddie_metric {
 
-                StrsimMetric::DamerauLevenshtein =>
-                    self.strsim_autocomplete_global_damerau_levenshtein(index_range, user_keyword).collect(),
+                EddieMetric::DamerauLevenshtein =>
+                    self.eddie_autocomplete_global_damerau_levenshtein(index_range, user_keyword).collect(),
 
-                StrsimMetric::Jaro =>
-                    self.strsim_autocomplete_global_jaro(index_range, user_keyword).collect(),
+                EddieMetric::Jaro =>
+                    self.eddie_autocomplete_global_jaro(index_range, user_keyword).collect(),
 
-                StrsimMetric::JaroWinkler =>
-                    self.strsim_autocomplete_global_jaro_winkler(index_range, user_keyword).collect(),
+                EddieMetric::JaroWinkler =>
+                    self.eddie_autocomplete_global_jaro_winkler(index_range, user_keyword).collect(),
 
-                StrsimMetric::Levenshtein =>
-                    self.strsim_autocomplete_global_levenshtein(index_range, user_keyword).collect(),
-
-                StrsimMetric::SorensenDice =>
-                    self.strsim_autocomplete_global_sorensen_dice(index_range, user_keyword).collect(),
+                EddieMetric::Levenshtein =>
+                    self.eddie_autocomplete_global_levenshtein(index_range, user_keyword).collect(),
 
             } // match
 

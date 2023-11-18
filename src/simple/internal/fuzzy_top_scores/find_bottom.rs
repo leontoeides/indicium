@@ -1,16 +1,16 @@
-use crate::simple::internal::StrsimTopScores;
+use crate::simple::internal::FuzzyTopScores;
 use std::{clone::Clone, cmp::Ord, cmp::PartialOrd, hash::Hash};
 
 // -----------------------------------------------------------------------------
 
-impl<'a, K: Hash + Ord, S: Clone + PartialOrd> StrsimTopScores<'a, K, S> {
+impl<'a, K: Hash + Ord, S: Clone + PartialOrd> FuzzyTopScores<'a, K, S> {
 
     // -------------------------------------------------------------------------
     //
     /// Finds and caches the lowest (or bottom) top score.
     ///
-    /// By caching the lowest score in the `StrsimTopScores` struct, comparisons can
-    /// be done more efficiently.
+    /// By caching the lowest score in the `FuzzyTopScores` struct, comparisons
+    /// can be done more efficiently.
 
     pub(crate) fn find_bottom(&mut self) {
 
@@ -30,4 +30,4 @@ impl<'a, K: Hash + Ord, S: Clone + PartialOrd> StrsimTopScores<'a, K, S> {
 
     } // fn find_bottom
 
-} // impl StrsimTopScores
+} // impl FuzzyTopScores
