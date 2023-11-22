@@ -181,7 +181,7 @@ Search only supports exact keyword matches. For `Live` searches, fuzzy matching
 is only applied to the last keyword. Consider providing the `autocomplete`
 feature to your users as an ergonomic alternative to fuzzy matching.
 
-## 5. Autocompletion
+## 4. Autocompletion
 
 The `autocomplete` method will provide several autocompletion options for the
 last keyword in the supplied string.

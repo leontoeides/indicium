@@ -198,7 +198,7 @@
 //! `autocomplete` feature to your users as an ergonomic alternative to fuzzy
 //! matching.
 //!
-//! ## 5. Autocompletion
+//! ## 4. Autocompletion
 //!
 //! The `autocomplete` method will provide several autocompletion options for
 //! the last keyword in the supplied string.
