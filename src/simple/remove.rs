@@ -112,8 +112,7 @@ impl<K: Clone + Ord> SearchIndex<K> {
         } // if
 
         // Iterate over the keywords:
-        for keyword in keywords
-            .into_iter() {
+        for keyword in keywords {
                 // Attempt to get mutuable reference to the _keyword entry_ in
                 // the search index:
                 let is_empty = if let Some(keys) = self.b_tree_map.get_mut(&keyword) {

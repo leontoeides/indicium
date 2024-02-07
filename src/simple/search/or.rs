@@ -125,9 +125,7 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
 
         // Get each keyword from our search index, record the resulting keys in
         // a our `BTreeMap`, and track the hit-count for each key:
-        for keyword in keywords
-            // Iterate over the keywords supplied in the search string:
-            .into_iter() {
+        for keyword in keywords {
                 // Search for keyword in our `BTreeMap`:
                 self.internal_keyword_search(&keyword)
                     // Iterate over the resulting keys (if any):

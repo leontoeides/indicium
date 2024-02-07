@@ -24,9 +24,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
         // Get each keyword from our `BTreeMap`, and intersect the resulting
         // keys with our current keys:
-        for keyword in keywords
-            // Iterate over the keywords supplied in the search string:
-            .iter() {
+        for keyword in keywords {
 
                 // Attempt to retrieve keyword from search index. If keyword
                 // found, intersect keyword records with search results records.
