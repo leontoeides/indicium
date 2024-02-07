@@ -19,7 +19,7 @@ impl<'a, K: Hash + Ord> SearchTopScores<'a, K> {
             // If the `SearchTopScores` is at capacity and the lowest top score (the
             // bottom) is currently unknown, find it:
             if self.bottom.is_none() {
-                self.find_bottom()
+                self.find_bottom();
             }
 
             // The lowest top score should be known at this point:

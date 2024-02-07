@@ -20,7 +20,7 @@ impl<'a, K: Hash + Ord, S: Clone + PartialOrd> FuzzyTopScores<'a, K, S> {
             // If the `FuzzyTopScores` is at capacity and the lowest top score (the
             // bottom) is currently unknown, find it:
             if self.bottom.is_none() {
-                self.find_bottom()
+                self.find_bottom();
             }
 
             // The lowest top score should be known at this point:

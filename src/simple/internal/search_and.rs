@@ -56,7 +56,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                             // the first keyword's full search results:
                             None => self.internal_keyword_search(keyword),
                         }, // match
-                    )
+                    );
                 } // Some
 
                 // Any keyword that returns no results will short-circuit
