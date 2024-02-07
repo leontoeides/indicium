@@ -4,7 +4,6 @@ use std::{cmp::Ord, hash::Hash};
 // -----------------------------------------------------------------------------
 
 impl<K: Hash + Ord> SearchIndex<K> {
-
     // -------------------------------------------------------------------------
     //
     /// Scans the entire search index for the closest matching _n_ keywords
@@ -88,11 +87,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// );
     /// ```
 
-    pub fn strsim_autocomplete(
-        &self,
-        keyword: &str,
-    ) -> Vec<&str> {
-
+    pub fn strsim_autocomplete(&self, keyword: &str) -> Vec<&str> {
         // If case sensitivity set, leave case intact. Otherwise, normalize
         // keyword to lower case:
         let keyword = match self.case_sensitive {
@@ -105,7 +100,5 @@ impl<K: Hash + Ord> SearchIndex<K> {
             .into_iter()
             .map(|(keyword, _keys)| keyword.as_str())
             .collect()
-
     } // fn
-
 } // impl

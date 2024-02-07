@@ -4,7 +4,6 @@ use std::cmp::Ord;
 // -----------------------------------------------------------------------------
 
 impl<K: Ord> SearchIndex<K> {
-
     // -------------------------------------------------------------------------
     //
     /// Returns the special keyword that will return all keys (or records) in
@@ -77,8 +76,8 @@ impl<K: Ord> SearchIndex<K> {
     /// }
     /// ```
 
-    #[must_use] pub fn dump_keyword(&self) -> Option<&str> {
+    #[must_use]
+    pub fn dump_keyword(&self) -> Option<&str> {
         self.dump_keyword.as_ref().map(kstring::KStringBase::as_str)
     } // fn
-
 } // impl

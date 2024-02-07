@@ -5,7 +5,6 @@ use std::{clone::Clone, cmp::Ord};
 // -----------------------------------------------------------------------------
 
 impl<K: Clone + Ord> SearchIndex<K> {
-
     // -------------------------------------------------------------------------
     //
     /// **This method is only available in debug builds.**
@@ -23,11 +22,11 @@ impl<K: Clone + Ord> SearchIndex<K> {
 
     #[tracing::instrument(level = "trace", name = "search index profile", skip(self))]
     pub fn profile(&self, count: usize) -> impl Iterator<Item = (&str, usize)> {
-
         // Get a list of all keywords and the number of attached keys for each
         // keyword. For example: keyword "supercalifragilisticexpialidocious"
         // has 28 keys (or records) attached to it:
-        let mut keywords: Vec<(&KString, usize)> = self.b_tree_map
+        let mut keywords: Vec<(&KString, usize)> = self
+            .b_tree_map
             // Iterate over every entry (representing a keyword) in the search
             // index:
             .iter()
@@ -46,7 +45,5 @@ impl<K: Clone + Ord> SearchIndex<K> {
             .into_iter()
             .take(count)
             .map(|(kstring, entries)| (kstring.as_str(), entries))
-
     } // fn
-
 } // impl

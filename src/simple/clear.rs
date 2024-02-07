@@ -4,7 +4,6 @@ use std::cmp::Ord;
 // -----------------------------------------------------------------------------
 
 impl<K: Ord> SearchIndex<K> {
-
     // -------------------------------------------------------------------------
     //
     /// Clears the search index, removing all elements.
@@ -12,5 +11,4 @@ impl<K: Ord> SearchIndex<K> {
     pub fn clear(&mut self) {
         self.b_tree_map.clear();
     } // fn
-
 } // impl

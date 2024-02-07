@@ -1,5 +1,5 @@
-use crate::simple::internal::SearchTopScores;
 use crate::simple::internal::string_keywords::SplitContext;
+use crate::simple::internal::SearchTopScores;
 use crate::simple::search_index::SearchIndex;
 use kstring::KString;
 use std::{cmp::Ord, collections::BTreeMap, hash::Hash};
@@ -7,7 +7,6 @@ use std::{cmp::Ord, collections::BTreeMap, hash::Hash};
 // -----------------------------------------------------------------------------
 
 impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
-
     // -------------------------------------------------------------------------
     //
     /// This search function will return keys as the search results. Each
@@ -105,14 +104,10 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
         maximum_search_results: &usize,
         string: &'a str,
     ) -> Vec<&'a K> {
-
         // Split search `String` into keywords (according to the `SearchIndex`
         // settings). `string_keywords` will allow "use entire string as a
         // keyword" if enabled in user settings:
-        let keywords: Vec<KString> = self.string_keywords(
-            string,
-            SplitContext::Searching,
-        );
+        let keywords: Vec<KString> = self.string_keywords(string, SplitContext::Searching);
 
         // For debug builds:
         #[cfg(debug_assertions)]
@@ -126,18 +121,20 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
         // Get each keyword from our search index, record the resulting keys in
         // a our `BTreeMap`, and track the hit-count for each key:
         for keyword in keywords {
-                // Search for keyword in our `BTreeMap`:
-                self.internal_keyword_search(&keyword)
-                    // Iterate over the resulting keys (if any):
-                    .into_iter()
-                    // For each resulting key from the keyword search:
-                    .for_each(|key| match search_results.get_mut(key) {
-                        // Add "hit" to counter for an already existing key:
-                        Some(result_entry) => { *result_entry += 1 },
-                        // No record for this key, initialize to one hit:
-                        None => { search_results.insert(key, 1); },
-                    }); // for_each
-            } // for_each
+            // Search for keyword in our `BTreeMap`:
+            self.internal_keyword_search(&keyword)
+                // Iterate over the resulting keys (if any):
+                .into_iter()
+                // For each resulting key from the keyword search:
+                .for_each(|key| match search_results.get_mut(key) {
+                    // Add "hit" to counter for an already existing key:
+                    Some(result_entry) => *result_entry += 1,
+                    // No record for this key, initialize to one hit:
+                    None => {
+                        search_results.insert(key, 1);
+                    }
+                }); // for_each
+        } // for_each
 
         // At this point, we have a list of resulting keys in a `BTreeMap`. The
         // hash map value holds the number of times each key has been returned
@@ -164,7 +161,5 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
             .map(|(key, _hits)| key)
             // Collect the keys into a `Vec`:
             .collect()
-
     } // fn
-
 } // impl

@@ -6,7 +6,6 @@ use std::{cmp::Ord, hash::Hash};
 // -----------------------------------------------------------------------------
 
 impl<K: Hash + Ord> SearchIndex<K> {
-
     // -------------------------------------------------------------------------
     //
     /// Scans the entire search index for the closest matching keyword using
@@ -17,11 +16,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// matches, these `eddie_keyword_*` methods can be used to find the best
     /// match for substitution.
 
-    pub(crate) fn eddie_global_keyword(
-        &self,
-        user_keyword: &str,
-    ) -> Option<&KString> {
-
+    pub(crate) fn eddie_global_keyword(&self, user_keyword: &str) -> Option<&KString> {
         // Build an index keyword range to fuzzy match against.
         //
         // | Example | User Keyword                       | Length | Index Keyword Must Start With... |
@@ -52,7 +47,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
             } else {
                 // The user's keyword is too short. Do not perform any fuzzy
                 // matching:
-                return None
+                return None;
             } // if
         } else {
             // The match length is 0, compare user's keyword against all search
@@ -63,32 +58,26 @@ impl<K: Hash + Ord> SearchIndex<K> {
         // Attempt to find the closest match for the user's keyword using the
         // selected string similarity metric defined in the `SearchIndex`:
         if let Some(eddie_metric) = &self.eddie_metric {
-
             match eddie_metric {
+                EddieMetric::DamerauLevenshtein => {
+                    self.eddie_keyword_global_damerau_levenshtein(index_range, user_keyword)
+                }
 
-                EddieMetric::DamerauLevenshtein =>
-                    self.eddie_keyword_global_damerau_levenshtein(index_range, user_keyword),
+                EddieMetric::Jaro => self.eddie_keyword_global_jaro(index_range, user_keyword),
 
-                EddieMetric::Jaro =>
-                    self.eddie_keyword_global_jaro(index_range, user_keyword),
+                EddieMetric::JaroWinkler => {
+                    self.eddie_keyword_global_jaro_winkler(index_range, user_keyword)
+                }
 
-                EddieMetric::JaroWinkler =>
-                    self.eddie_keyword_global_jaro_winkler(index_range, user_keyword),
-
-                EddieMetric::Levenshtein =>
-                    self.eddie_keyword_global_levenshtein(index_range, user_keyword),
-
+                EddieMetric::Levenshtein => {
+                    self.eddie_keyword_global_levenshtein(index_range, user_keyword)
+                }
             } // match
-
         } else {
-
             // No string similarity metric was defined in the `SearchIndex`
             // settings. Fuzzy string matching effectively turned off.
             // Return a `None` to the caller:
             None
-
         } // if
-
     } // fn
-
 } // impl

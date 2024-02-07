@@ -5,7 +5,6 @@ use std::{cmp::Ord, hash::Hash};
 // -----------------------------------------------------------------------------
 
 impl<K: Hash + Ord> SearchIndex<K> {
-
     // -------------------------------------------------------------------------
     //
     /// Returns matching autocompleted keywords for the provided search string.
@@ -91,7 +90,6 @@ impl<K: Hash + Ord> SearchIndex<K> {
         maximum_autocomplete_options: &usize,
         keyword: &str,
     ) -> Vec<&str> {
-
         // If case sensitivity set, leave case intact. Otherwise, normalize
         // keyword to lower case:
         let keyword = match self.case_sensitive {
@@ -104,7 +102,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
         tracing::debug!("autocompleting: {:?}", keyword);
 
         // Attempt to get matching keywords from `BTreeMap`:
-        let autocomplete_options: Vec<&KString> = self.b_tree_map
+        let autocomplete_options: Vec<&KString> = self
+            .b_tree_map
             // Get matching keywords starting with (partial) keyword string:
             .range(KString::from_ref(&keyword)..)
             // `range` returns a key-value pair. We're autocompleting the
@@ -145,7 +144,10 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 .collect()
         } else {
             // There were some matches. Return the results without processing:
-            autocomplete_options.into_iter().map(kstring::KStringBase::as_str).collect()
+            autocomplete_options
+                .into_iter()
+                .map(kstring::KStringBase::as_str)
+                .collect()
         } // if
 
         // If `strsim` fuzzy matching enabled, examine the resulting
@@ -168,14 +170,18 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 .collect()
         } else {
             // There were some matches. Return the results without processing:
-            autocomplete_options.into_iter().map(|kstring| kstring.as_str()).collect()
+            autocomplete_options
+                .into_iter()
+                .map(|kstring| kstring.as_str())
+                .collect()
         } // if
 
         // If fuzzy string searching disabled, return the resulting
         // auto-complete options without further processing:
         #[cfg(not(any(feature = "strsim", feature = "eddie")))]
-        autocomplete_options.into_iter().map(|kstring| kstring.as_str()).collect()
-
+        autocomplete_options
+            .into_iter()
+            .map(|kstring| kstring.as_str())
+            .collect()
     } // fn
-
 } // impl

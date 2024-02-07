@@ -3,7 +3,6 @@ use kstring::KString;
 // -----------------------------------------------------------------------------
 
 impl<K: std::cmp::Ord> crate::simple::search_index::SearchIndex<K> {
-
     // -------------------------------------------------------------------------
     //
     /// Scans the entire search index for the closest matching keyword using
@@ -29,7 +28,6 @@ impl<K: std::cmp::Ord> crate::simple::search_index::SearchIndex<K> {
         index_range: &str,
         user_keyword: &str,
     ) -> Option<&KString> {
-
         // Instantiate eddie's Jaro similarity struct:
         let jaro = eddie::Jaro::new();
 
@@ -46,20 +44,18 @@ impl<K: std::cmp::Ord> crate::simple::search_index::SearchIndex<K> {
             // For each keyword in the search index, calculate its similarity
             // to the user's keyword. Map the `(keyword, keys)` tuple into
             // a `(keyword, score)` tuple:
-            .map(|(index_keyword, _keys)|
+            .map(|(index_keyword, _keys)| {
                 (index_keyword, jaro.similarity(index_keyword, user_keyword))
-            ) // map
+            }) // map
             // Search index keyword must meet minimum score to be considered as
             // a fuzzy match:
             .filter(|(_keyword, score)| score >= &self.fuzzy_minimum_score)
             // Find the `(keyword, score)` tuple with the highest score:
-            .max_by(|(_a_keyword, a_score), (_b_keyword, b_score)|
+            .max_by(|(_a_keyword, a_score), (_b_keyword, b_score)| {
                 a_score.partial_cmp(b_score).unwrap()
-            ) // max_by
+            }) // max_by
             // Return the `keyword` portion of the `(keyword, score)` tuple
             // to the caller:
             .map(|(keyword, _score)| keyword)
-
     } // fn
-
 } // impl

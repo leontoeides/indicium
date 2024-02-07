@@ -1,6 +1,5 @@
 #[test]
 fn simple() {
-
     use crate::simple::internal::string_keywords::SplitContext;
     use crate::simple::{AutocompleteType, Indexable, SearchIndex, SearchType};
     use kstring::KString;
@@ -15,11 +14,7 @@ fn simple() {
 
     impl Indexable for MyStruct {
         fn strings(&self) -> Vec<String> {
-            vec![
-                self.title.clone(),
-                self.year.to_string(),
-                self.body.clone(),
-            ]
+            vec![self.title.clone(), self.year.to_string(), self.body.clone()]
         }
     }
 
@@ -59,9 +54,24 @@ fn simple() {
         SplitContext::Indexing,
     );
 
-    assert_eq!(string_keywords,
-        [ "all", "is", "not", "lost", "unconquerable", "will", "study",
-        "revenge", "immortal", "hate", "courage", "never", "submit", "yield" ]
+    assert_eq!(
+        string_keywords,
+        [
+            "all",
+            "is",
+            "not",
+            "lost",
+            "unconquerable",
+            "will",
+            "study",
+            "revenge",
+            "immortal",
+            "hate",
+            "courage",
+            "never",
+            "submit",
+            "yield"
+        ]
     );
 
     let string_keywords: Vec<KString> = search_index.string_keywords(
@@ -70,10 +80,12 @@ fn simple() {
         SplitContext::Searching,
     );
 
-    assert_eq!(string_keywords,
-        [ "he", "prayeth", "best", "who", "loveth", "best", "all", "things",
-        "both", "great", "small", "dear", "god", "who", "loveth", "us", "he",
-        "made", "loveth", "all" ]
+    assert_eq!(
+        string_keywords,
+        [
+            "he", "prayeth", "best", "who", "loveth", "best", "all", "things", "both", "great",
+            "small", "dear", "god", "who", "loveth", "us", "he", "made", "loveth", "all"
+        ]
     );
 
     let string_keywords: Vec<KString> = search_index.string_keywords(
@@ -83,18 +95,18 @@ fn simple() {
         SplitContext::Indexing,
     );
 
-    assert_eq!(string_keywords,
-        [ "digby", "was", "heart", "which", "is", "eight", "dollar", "word",
-        "meaning", "joker", "who", "does", "not", "believe", "anything", "he",
-        "can't", "bite" ]
+    assert_eq!(
+        string_keywords,
+        [
+            "digby", "was", "heart", "which", "is", "eight", "dollar", "word", "meaning", "joker",
+            "who", "does", "not", "believe", "anything", "he", "can't", "bite"
+        ]
     );
 
     my_vec
         .iter()
         .enumerate()
-        .for_each(|(index, element)|
-            search_index.insert(&index, element)
-        );
+        .for_each(|(index, element)| search_index.insert(&index, element));
 
     let search_results = search_index.search("third william");
     assert_eq!(search_results, vec![&3]);
@@ -124,14 +136,29 @@ fn simple() {
     assert_eq!(search_results, vec![&0]);
 
     let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Keyword, "E");
-    assert_eq!(autocomplete_options, vec!["edgar".to_string(), "edgar ætheling".to_string(), "england".to_string()]);
+    assert_eq!(
+        autocomplete_options,
+        vec![
+            "edgar".to_string(),
+            "edgar ætheling".to_string(),
+            "england".to_string()
+        ]
+    );
 
     let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Global, "1100 e");
-    assert_eq!(autocomplete_options, vec!["1100 edgar".to_string(), "1100 edgar ætheling".to_string(), "1100 england".to_string()]);
+    assert_eq!(
+        autocomplete_options,
+        vec![
+            "1100 edgar".to_string(),
+            "1100 edgar ætheling".to_string(),
+            "1100 england".to_string()
+        ]
+    );
 
     // Test fuzzy-matching for global autocompletion:
     #[cfg(any(feature = "eddie", feature = "strsim"))]
-    let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Global, "1100 Englelund");
+    let autocomplete_options =
+        search_index.autocomplete_type(&AutocompleteType::Global, "1100 Englelund");
     #[cfg(any(feature = "eddie", feature = "strsim"))]
     assert_eq!(autocomplete_options, vec!["1100 england".to_string()]);
 
@@ -139,13 +166,20 @@ fn simple() {
     // `William Rufus`. `Wessex` exists in the index but it is not related to
     // `1087`:
     let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Context, "1087 W");
-    assert_eq!(autocomplete_options, vec!["1087 william".to_string(), "1087 william rufus".to_string()]);
+    assert_eq!(
+        autocomplete_options,
+        vec!["1087 william".to_string(), "1087 william rufus".to_string()]
+    );
 
     // Test fuzzy-matching for context autocompletion:
     #[cfg(any(feature = "eddie", feature = "strsim"))]
-    let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Context, "1087 Willy");
+    let autocomplete_options =
+        search_index.autocomplete_type(&AutocompleteType::Context, "1087 Willy");
     #[cfg(any(feature = "eddie", feature = "strsim"))]
-    assert_eq!(autocomplete_options, vec!["1087 william".to_string(), "1087 william rufus".to_string()]);
+    assert_eq!(
+        autocomplete_options,
+        vec!["1087 william".to_string(), "1087 william rufus".to_string()]
+    );
 
     // Ensure that `Context` autocomplete works with an empty search string /
     // single keyword. Context autocomplete works in two parts - an `And` search
@@ -167,32 +201,35 @@ fn simple() {
     #[cfg(feature = "strsim")]
     let similar_autocompletions = search_index.strsim_global_autocomplete(&"Normy".to_lowercase());
     #[cfg(any(feature = "eddie", feature = "strsim"))]
-    let similar_autocompletions_vec: Vec<&KString> = similar_autocompletions.into_iter().map(|(keyword, _keys)| keyword).collect();
+    let similar_autocompletions_vec: Vec<&KString> = similar_autocompletions
+        .into_iter()
+        .map(|(keyword, _keys)| keyword)
+        .collect();
     #[cfg(any(feature = "eddie", feature = "strsim"))]
     assert_eq!(similar_autocompletions_vec, vec![&"norman".to_string()]);
 
     // Test `Indexable` trait implementation for `ToString` generics:
     let my_vec: Vec<&str> = vec![
-        "Vopnafjarðarhreppur",                      // 0
-        "Weapon Fjord Municipality",                // 1
-        "Annerveenschekanaal",                      // 2
-        "Channel through the peat of Annen",        // 3
-        "Cadibarrawirracanna",                      // 4
-        "The stars were dancing",                   // 5
-        "Newtownmountkennedy",                      // 6
-        "A new town near Mt. Kennedy",              // 7
-        "Cottonshopeburnfoot",                      // 8
-        "The end of the Cottonshope Burn",          // 9
-        "Nyugotszenterzsébet",                      // 10
-        "Western St. Elizabeth",                    // 11
-        "Balatonszentgyörgy",                       // 12
-        "St. George by Balaton",                    // 13
-        "Kirkjubæjarklaustur",                      // 14
-        "Church farm monastery",                    // 15
-        "Jászalsószentgyörgy",                      // 16
-        "Lower St. George in Jászság",              // 17
-        "Krammerjachtensluis",                      // 18
-        "Lock on the river Krammer of the hunt",    // 19
+        "Vopnafjarðarhreppur",                   // 0
+        "Weapon Fjord Municipality",             // 1
+        "Annerveenschekanaal",                   // 2
+        "Channel through the peat of Annen",     // 3
+        "Cadibarrawirracanna",                   // 4
+        "The stars were dancing",                // 5
+        "Newtownmountkennedy",                   // 6
+        "A new town near Mt. Kennedy",           // 7
+        "Cottonshopeburnfoot",                   // 8
+        "The end of the Cottonshope Burn",       // 9
+        "Nyugotszenterzsébet",                   // 10
+        "Western St. Elizabeth",                 // 11
+        "Balatonszentgyörgy",                    // 12
+        "St. George by Balaton",                 // 13
+        "Kirkjubæjarklaustur",                   // 14
+        "Church farm monastery",                 // 15
+        "Jászalsószentgyörgy",                   // 16
+        "Lower St. George in Jászság",           // 17
+        "Krammerjachtensluis",                   // 18
+        "Lock on the river Krammer of the hunt", // 19
     ]; // vec!
 
     let mut search_index: SearchIndex<usize> = SearchIndex::default();
@@ -200,9 +237,7 @@ fn simple() {
     my_vec
         .iter()
         .enumerate()
-        .for_each(|(index, element)|
-            search_index.insert(&index, element)
-        );
+        .for_each(|(index, element)| search_index.insert(&index, element));
 
     // Keyword search:
     let search_results = search_index.search_type(&SearchType::Keyword, "Cottonshope");
@@ -238,16 +273,20 @@ fn simple() {
 
     // Global autocomplete:
     let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Global, "Lo");
-    assert_eq!(autocomplete_options, vec!["lock".to_string(), "lower".to_string()]);
+    assert_eq!(
+        autocomplete_options,
+        vec!["lock".to_string(), "lower".to_string()]
+    );
 
     // Context autocomplete:
-    let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Context, "Krammer Lo");
+    let autocomplete_options =
+        search_index.autocomplete_type(&AutocompleteType::Context, "Krammer Lo");
     assert_eq!(autocomplete_options, vec!["krammer lock".to_string()]);
 
     // Fuzzy matching context autocomplete:
     #[cfg(any(feature = "eddie", feature = "strsim"))]
-    let autocomplete_options = search_index.autocomplete_type(&AutocompleteType::Context, "stars are dancers");
+    let autocomplete_options =
+        search_index.autocomplete_type(&AutocompleteType::Context, "stars are dancers");
     #[cfg(any(feature = "eddie", feature = "strsim"))]
     assert_eq!(autocomplete_options, vec!["stars are dancing".to_string()]);
-
 } // fn

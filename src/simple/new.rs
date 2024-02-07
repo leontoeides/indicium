@@ -4,7 +4,6 @@ use std::{cmp::Ord, collections::BTreeMap};
 // -----------------------------------------------------------------------------
 
 impl<K: Ord> SearchIndex<K> {
-
     // -------------------------------------------------------------------------
     //
     /// Makes a new, empty `SearchIndex`. It might be more convenient to use
@@ -55,7 +54,6 @@ impl<K: Ord> SearchIndex<K> {
         maximum_keys_per_keyword: usize,
         dump_keyword: Option<String>,
     ) -> Self {
-
         Self {
             b_tree_map: BTreeMap::new(),
             search_type,
@@ -69,13 +67,12 @@ impl<K: Ord> SearchIndex<K> {
             minimum_keyword_length,
             maximum_keyword_length,
             maximum_string_length,
-            exclude_keywords: exclude_keywords.map(|vec| vec.into_iter().map(std::convert::Into::into).collect()),
+            exclude_keywords: exclude_keywords
+                .map(|vec| vec.into_iter().map(std::convert::Into::into).collect()),
             maximum_autocomplete_options,
             maximum_search_results,
             maximum_keys_per_keyword,
             dump_keyword: dump_keyword.map(std::convert::Into::into),
         } // SearchIndex
-
     } // fn
-
 } // impl

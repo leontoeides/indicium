@@ -6,7 +6,6 @@ use std::io::{Error, ErrorKind};
 // -----------------------------------------------------------------------------
 
 impl Request {
-
     /// This function does not perform the `term` or `q` search for the client
     /// request. The search much be performed by the caller using the
     /// `search_select2` method. The search results are passed to this function
@@ -16,20 +15,22 @@ impl Request {
     /// the form of a slice) to this function to be processed into the `Select2`
     /// format.
 
-    #[tracing::instrument(level = "trace", name = "build flat results", skip(self, search_results_keys, search_results_values))]
+    #[tracing::instrument(
+        level = "trace",
+        name = "build flat results",
+        skip(self, search_results_keys, search_results_values)
+    )]
     pub fn flat_response<K: Clone + Ord + ToString, S: Selectable>(
         &self,
         items_per_page: &Option<usize>,
         selected_record: &Option<String>,
         search_results_keys: &[&K],
-        search_results_values: &[&S]
+        search_results_values: &[&S],
     ) -> Result<FlatResults, Error> {
-
         // Error checking. Ensure that there are the same number of keys and
         // values:
 
         if search_results_keys.len() != search_results_values.len() {
-
             let error_message = format!(
                 "{} keys and {} values were supplied to `flat_response`. \
                 the number of keys and values must be the same.",
@@ -37,15 +38,13 @@ impl Request {
                 search_results_values.len(),
             ); // format!
             tracing::error!("{}", error_message);
-            return Err(Error::new(ErrorKind::InvalidData, error_message))
-
+            return Err(Error::new(ErrorKind::InvalidData, error_message));
         } else if search_results_keys.is_empty() {
-
             let error_message = "list of keys and values is empty. \
-                returning empty response.".to_string();
+                returning empty response."
+                .to_string();
             tracing::debug!("{}", error_message);
-            return Ok(FlatResults::default())
-
+            return Ok(FlatResults::default());
         } // if
 
         // Observe pagination. If the caller specifies a maximum number of items
@@ -53,7 +52,6 @@ impl Request {
 
         // self.request_type == Some("query_append".to_string())
         if let Some(items_per_page) = items_per_page {
-
             // Paginated response:
 
             // Get the `page` number from the request:
@@ -76,9 +74,7 @@ impl Request {
                 .map(|(index, key)| (*key, &search_results_values[index]))
                 // Convert internal `SelectableRecord` format to output `Record`
                 // format:
-                .map(|(key, value)|
-                    value.record().to_record(&key.to_string())
-                ) // map
+                .map(|(key, value)| value.record().to_record(&key.to_string())) // map
                 // Check if this record was specified as being selected:
                 .map(|mut record| {
                     // Check if the `selected_record` was set...
@@ -102,9 +98,7 @@ impl Request {
                     more: items_per_page * page < search_results_keys.len(),
                 }, // Pagination
             }) // FlatResults
-
         } else {
-
             // Unpaginated response:
 
             // This function works on the resolved output of a search, or the
@@ -120,9 +114,7 @@ impl Request {
                 .map(|(index, key)| (*key, &search_results_values[index]))
                 // Convert internal `SelectableRecord` format to output `Record`
                 // format:
-                .map(|(key, value)|
-                    value.record().to_record(&key.to_string())
-                ) // map
+                .map(|(key, value)| value.record().to_record(&key.to_string())) // map
                 // Check if this record was specified as being selected:
                 .map(|mut record| {
                     // Check if the `selected_record` was set...
@@ -142,11 +134,8 @@ impl Request {
             // Return Select2 `FlatResults` to caller:
             Ok(FlatResults {
                 results: unpaginated_results,
-                pagination: Pagination { more: false }
+                pagination: Pagination { more: false },
             }) // FlatResults
-
         } // if
-
     } // fn
-
 } // impl

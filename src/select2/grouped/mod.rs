@@ -80,10 +80,7 @@ impl GroupableRecord {
     /// Combines a `GroupableRecord` with a `K` key to produce a `Select2Record`
     /// that can be returned to the user's client for use in the `Select2`
     /// plug-in.
-    pub fn to_record<K: ToString>(
-        &self,
-        key: &K,
-    ) -> Record {
+    pub fn to_record<K: ToString>(&self, key: &K) -> Record {
         Record {
             id: key.to_string(),
             text: self.text.clone(),

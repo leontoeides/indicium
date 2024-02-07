@@ -1,11 +1,10 @@
 use crate::simple::internal::FuzzyTopScores;
 use kstring::KString;
-use std::{clone::Clone, collections::BTreeSet, cmp::Ord, cmp::PartialOrd, hash::Hash};
+use std::{clone::Clone, cmp::Ord, cmp::PartialOrd, collections::BTreeSet, hash::Hash};
 
 // -----------------------------------------------------------------------------
 
 impl<'a, K: Hash + Ord, S: Clone + PartialOrd> FuzzyTopScores<'a, K, S> {
-
     // -----------------------------------------------------------------------------
     //
     /// Attempts to insert the provided _keyword_, _keys_, & _score_ into the
@@ -15,19 +14,14 @@ impl<'a, K: Hash + Ord, S: Clone + PartialOrd> FuzzyTopScores<'a, K, S> {
     /// score, the caller's score will be inserted into the collection. If it
     /// provided score doesn't beat the lowest top score, it will be ignored.
 
-    pub(crate) fn insert(
-        &mut self,
-        keyword: &'a KString,
-        keys: &'a BTreeSet<K>,
-        score: S,
-    ) {
-
+    pub(crate) fn insert(&mut self, keyword: &'a KString, keys: &'a BTreeSet<K>, score: S) {
         // Check if the `FuzzyTopScores` struct has reached its maximum capacity:
         if self.top.len() >= self.capacity {
-
             // If the `FuzzyTopScores` is at capacity and the lowest top score (the
             // bottom) is currently unknown, find it:
-            if self.bottom.is_none() { self.find_bottom() }
+            if self.bottom.is_none() {
+                self.find_bottom()
+            }
 
             // The lowest top score should be known at this point:
             if let Some(bottom) = &self.bottom {
@@ -41,16 +35,11 @@ impl<'a, K: Hash + Ord, S: Clone + PartialOrd> FuzzyTopScores<'a, K, S> {
                     self.top.insert(keyword, (keys, score));
                 } // if
             } // if
-
         } else {
-
             // The `FuzzyTopScores` struct has not reached its capacity, we may
             // blindly add the _keyword_, _keys_, & _score_ without checking the
             // lowest score:
             self.top.insert(keyword, (keys, score));
-
         } // if
-
     } // fn insert
-
 } // impl FuzzyTopScores

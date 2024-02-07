@@ -6,7 +6,6 @@ use std::hash::Hash;
 // -----------------------------------------------------------------------------
 
 impl<K: Hash + Ord> SearchIndex<K> {
-
     // -------------------------------------------------------------------------
     //
     /// This search function will return keys as the search results. Each
@@ -23,7 +22,6 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// results_. These constraints should be observed at higher levels.
 
     pub(crate) fn internal_keyword_search(&self, keyword: &str) -> BTreeSet<&K> {
-
         // Uncomment below if I intend to perform full fuzzy matching in this
         // function:
         // Check if the search index contains the user's keyword:
@@ -42,7 +40,6 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
         // Attempt to get matching keys for the search keyword from BTreeMap:
         let search_results: BTreeSet<&K> = if let Some(keys) = self.b_tree_map.get(keyword) {
-
             // Attempt to get matching keys for search keyword:
             keys
                 // Iterate over all matching keys and only return
@@ -52,13 +49,10 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 .take(self.maximum_keys_per_keyword)
                 // Insert a reference to each resulting key into the hash set:
                 .collect()
-
         } else {
-
             // The search keyword did not result in any matches. Return an
             // empty `BTreeSet`:
             BTreeSet::new()
-
         }; // if
 
         // For debug builds:
@@ -74,7 +68,5 @@ impl<K: Hash + Ord> SearchIndex<K> {
         } // if
 
         search_results
-
     } // fn
-
 } // impl

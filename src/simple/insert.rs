@@ -15,7 +15,6 @@ use std::{clone::Clone, cmp::Ord};
 // -----------------------------------------------------------------------------
 
 impl<K: Clone + Ord> SearchIndex<K> {
-
     // -------------------------------------------------------------------------
     //
     /// Inserts a key-value pair into the search index.
@@ -144,7 +143,6 @@ impl<K: Clone + Ord> SearchIndex<K> {
 
     #[tracing::instrument(level = "trace", name = "search index insert", skip(self, key, value))]
     pub fn insert(&mut self, key: &K, value: &dyn Indexable) {
-
         // Get all keywords for the `Indexable` record:
         let mut keywords: HashSet<KString> = self.indexable_keywords(value);
 
@@ -197,7 +195,5 @@ impl<K: Clone + Ord> SearchIndex<K> {
                     }, // None
                 } // match
             ); // for_each
-
     } // fn
-
 } // impl

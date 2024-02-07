@@ -13,7 +13,6 @@ use std::{cmp::Ord, cmp::PartialOrd, hash::Hash};
 // -----------------------------------------------------------------------------
 
 impl<'a, K: Hash + Ord, S: PartialOrd> FuzzyTopScores<'a, K, S> {
-
     // -------------------------------------------------------------------------
     //
     /// Instantiates a new "top scores" struct with the caller provided
@@ -21,16 +20,10 @@ impl<'a, K: Hash + Ord, S: PartialOrd> FuzzyTopScores<'a, K, S> {
     /// provided keyword, the caller would call `FuzzyTopScores::with_capacity(10)`.
 
     pub(crate) fn with_capacity(capacity: usize) -> FuzzyTopScores<'a, K, S> {
-
         FuzzyTopScores {
-            top: HashMap::with_capacity_and_hasher(
-                capacity,
-                std::default::Default::default()
-            ), // HashMap
+            top: HashMap::with_capacity_and_hasher(capacity, std::default::Default::default()), // HashMap
             bottom: None,
             capacity,
         } // FuzzyTopScores
-
     } // fn with_capacity
-
 } // impl FuzzyTopScores

@@ -6,7 +6,6 @@ use std::{cmp::Ord, collections::BTreeSet, hash::Hash};
 // -----------------------------------------------------------------------------
 
 impl<K: Hash + Ord> SearchIndex<K> {
-
     // -------------------------------------------------------------------------
     //
     /// Scans the entire search index for the closest matching _n_ keywords
@@ -23,7 +22,6 @@ impl<K: Hash + Ord> SearchIndex<K> {
         key_set: &BTreeSet<&K>,
         user_keyword: &str,
     ) -> Vec<(&KString, &BTreeSet<K>)> {
-
         // Build an index keyword range to fuzzy match against.
         //
         // | Example | User Keyword                       | Length | Index Keyword Must Start With... |
@@ -54,7 +52,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
             } else {
                 // The user's keyword is too short. Do not perform any fuzzy
                 // matching:
-                return vec![]
+                return vec![];
             } // if
         } else {
             // The match length is 0, compare user's keyword against all search
@@ -66,35 +64,36 @@ impl<K: Hash + Ord> SearchIndex<K> {
         // using the selected string similarity metric defined in the
         // `SearchIndex`:
         if let Some(strsim_metric) = &self.strsim_metric {
-
             match strsim_metric {
+                StrsimMetric::DamerauLevenshtein => self
+                    .strsim_autocomplete_context_damerau_levenshtein(
+                        index_range,
+                        key_set,
+                        user_keyword,
+                    )
+                    .collect(),
 
-                StrsimMetric::DamerauLevenshtein =>
-                    self.strsim_autocomplete_context_damerau_levenshtein(index_range, key_set, user_keyword).collect(),
+                StrsimMetric::Jaro => self
+                    .strsim_autocomplete_context_jaro(index_range, key_set, user_keyword)
+                    .collect(),
 
-                StrsimMetric::Jaro =>
-                    self.strsim_autocomplete_context_jaro(index_range, key_set, user_keyword).collect(),
+                StrsimMetric::JaroWinkler => self
+                    .strsim_autocomplete_context_jaro_winkler(index_range, key_set, user_keyword)
+                    .collect(),
 
-                StrsimMetric::JaroWinkler =>
-                    self.strsim_autocomplete_context_jaro_winkler(index_range, key_set, user_keyword).collect(),
+                StrsimMetric::Levenshtein => self
+                    .strsim_autocomplete_context_levenshtein(index_range, key_set, user_keyword)
+                    .collect(),
 
-                StrsimMetric::Levenshtein =>
-                    self.strsim_autocomplete_context_levenshtein(index_range, key_set, user_keyword).collect(),
-
-                StrsimMetric::SorensenDice =>
-                    self.strsim_autocomplete_context_sorensen_dice(index_range, key_set, user_keyword).collect(),
-
+                StrsimMetric::SorensenDice => self
+                    .strsim_autocomplete_context_sorensen_dice(index_range, key_set, user_keyword)
+                    .collect(),
             } // match
-
         } else {
-
             // No string similarity metric was defined in the `SearchIndex`
             // settings. Fuzzy string matching effectively turned off.
             // Return an empty `Vec` to the caller:
             vec![]
-
         } // if
-
     } // fn
-
 } // impl

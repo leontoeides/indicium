@@ -4,7 +4,6 @@ use std::cmp::Ord;
 // -----------------------------------------------------------------------------
 
 impl<K: Ord> SearchIndex<K> {
-
     // -------------------------------------------------------------------------
     //
     /// If there are too many records attached to a single keyword, performance
@@ -27,5 +26,4 @@ impl<K: Ord> SearchIndex<K> {
     pub fn max_keys_per_keyword(&self) -> usize {
         self.maximum_keys_per_keyword
     } // fn
-
 } // impl

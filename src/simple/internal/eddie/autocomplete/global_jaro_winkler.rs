@@ -4,7 +4,6 @@ use kstring::KString;
 // -----------------------------------------------------------------------------
 
 impl<K: std::hash::Hash + std::cmp::Ord> crate::simple::search_index::SearchIndex<K> {
-
     // -------------------------------------------------------------------------
     //
     /// Scans the entire search index for the closest matching _n_ keywords
@@ -30,7 +29,6 @@ impl<K: std::hash::Hash + std::cmp::Ord> crate::simple::search_index::SearchInde
         index_range: &str,
         user_keyword: &str,
     ) -> impl Iterator<Item = (&KString, &std::collections::BTreeSet<K>)> {
-
         // Instantiate eddie's Jaro-Winkler similarity struct:
         let jaro_winkler = eddie::JaroWinkler::new();
 
@@ -63,7 +61,5 @@ impl<K: std::hash::Hash + std::cmp::Ord> crate::simple::search_index::SearchInde
         // Return the top scoring keywords athat could be used as autocomplete
         // options, and their keys, to the caller:
         top_scores.results()
-
     } // fn
-
 } // impl

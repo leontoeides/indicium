@@ -6,7 +6,6 @@ use std::{cmp::Ord, collections::BTreeSet, hash::Hash};
 // -----------------------------------------------------------------------------
 
 impl<K: Hash + Ord> SearchIndex<K> {
-
     // -------------------------------------------------------------------------
     //
     /// Scans the entire search index for the closest matching _n_ keywords
@@ -22,7 +21,6 @@ impl<K: Hash + Ord> SearchIndex<K> {
         &self,
         user_keyword: &str,
     ) -> Vec<(&KString, &BTreeSet<K>)> {
-
         // Build an index keyword range to fuzzy match against.
         //
         // | Example | User Keyword                       | Length | Index Keyword Must Start With... |
@@ -53,7 +51,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
             } else {
                 // The user's keyword is too short. Do not perform any fuzzy
                 // matching:
-                return vec![]
+                return vec![];
             } // if
         } else {
             // The match length is 0, compare user's keyword against all search
@@ -65,32 +63,28 @@ impl<K: Hash + Ord> SearchIndex<K> {
         // using the selected string similarity metric defined in the
         // `SearchIndex`:
         if let Some(eddie_metric) = &self.eddie_metric {
-
             match eddie_metric {
+                EddieMetric::DamerauLevenshtein => self
+                    .eddie_autocomplete_global_damerau_levenshtein(index_range, user_keyword)
+                    .collect(),
 
-                EddieMetric::DamerauLevenshtein =>
-                    self.eddie_autocomplete_global_damerau_levenshtein(index_range, user_keyword).collect(),
+                EddieMetric::Jaro => self
+                    .eddie_autocomplete_global_jaro(index_range, user_keyword)
+                    .collect(),
 
-                EddieMetric::Jaro =>
-                    self.eddie_autocomplete_global_jaro(index_range, user_keyword).collect(),
+                EddieMetric::JaroWinkler => self
+                    .eddie_autocomplete_global_jaro_winkler(index_range, user_keyword)
+                    .collect(),
 
-                EddieMetric::JaroWinkler =>
-                    self.eddie_autocomplete_global_jaro_winkler(index_range, user_keyword).collect(),
-
-                EddieMetric::Levenshtein =>
-                    self.eddie_autocomplete_global_levenshtein(index_range, user_keyword).collect(),
-
+                EddieMetric::Levenshtein => self
+                    .eddie_autocomplete_global_levenshtein(index_range, user_keyword)
+                    .collect(),
             } // match
-
         } else {
-
             // No string similarity metric was defined in the `SearchIndex`
             // settings. Fuzzy string matching effectively turned off.
             // Return an empty `Vec` to the caller:
             vec![]
-
         } // if
-
     } // fn
-
 } // impl

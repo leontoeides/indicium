@@ -15,18 +15,13 @@ use std::cmp::Ord;
 // -----------------------------------------------------------------------------
 
 impl<K: Ord> SearchIndex<K> {
-
     // -------------------------------------------------------------------------
     //
     /// An associated helper method that returns all keywords for the given
     /// `Indexable` record. This function also relies on the `string_keywords`
     /// helper method.
 
-    pub(crate) fn indexable_keywords(
-        &self,
-        value: &dyn Indexable,
-    ) -> HashSet<KString> {
-
+    pub(crate) fn indexable_keywords(&self, value: &dyn Indexable) -> HashSet<KString> {
         // The implemented trait method `strings()` will return the strings from
         // the record that are meant to be indexed:
         let strings = value.strings();
@@ -42,7 +37,5 @@ impl<K: Ord> SearchIndex<K> {
             .flat_map(|string| self.string_keywords(&string, SplitContext::Indexing))
             // Collect all keywords into a `HashSet`:
             .collect()
-
     } // fn
-
 } // impl

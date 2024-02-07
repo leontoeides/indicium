@@ -4,7 +4,6 @@ use std::{cmp::Ord, hash::Hash};
 // -----------------------------------------------------------------------------
 
 impl<K: Hash + Ord> SearchIndex<K> {
-
     // -------------------------------------------------------------------------
     //
     /// Scans the entire search index for the closest matching keyword using
@@ -83,11 +82,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// );
     /// ```
 
-    #[must_use] pub fn eddie_keyword(
-        &self,
-        keyword: &str,
-    ) -> Option<&str> {
-
+    #[must_use]
+    pub fn eddie_keyword(&self, keyword: &str) -> Option<&str> {
         // If case sensitivity set, leave case intact. Otherwise, normalize
         // keyword to lower case:
         let keyword = match self.case_sensitive {
@@ -96,8 +92,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
         }; // match
 
         // Call global keyword subtitution provider:
-        self.eddie_global_keyword(&keyword).map(kstring::KStringBase::as_str)
-
+        self.eddie_global_keyword(&keyword)
+            .map(kstring::KStringBase::as_str)
     } // fn
-
 } // impl

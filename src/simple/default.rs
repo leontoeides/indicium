@@ -9,65 +9,65 @@ use std::cmp::Ord;
 impl<K: Ord> Default for SearchIndex<K> {
     fn default() -> Self {
         Self::new(
-            SearchType::Live,               // Search type.
-            AutocompleteType::Context,      // Autocompletion type.
-            Some(StrsimMetric::Levenshtein),// String similarity metric type.
-            Some(EddieMetric::Levenshtein), // String similarity metric type.
-            3,                              // String similarity match length.
-            0.3,                            // String similarity minimum score.
+            SearchType::Live,                // Search type.
+            AutocompleteType::Context,       // Autocompletion type.
+            Some(StrsimMetric::Levenshtein), // String similarity metric type.
+            Some(EddieMetric::Levenshtein),  // String similarity metric type.
+            3,                               // String similarity match length.
+            0.3,                             // String similarity minimum score.
             // Default split pattern:
             Some(vec![
-                '\t',                       // Tab
-                '\n',                       // Newline
-                '\r',                       // Carriage return
-                ' ',                        // Space
-                '!',                        // Exclamation Mark
-                '"',                        // Double quotation
-                '&',                        // Ampersand
-                '(',                        // Left Parenthesis
-                ')',                        // Right Parenthesis
-                '*',                        // Asterisk
-                '+',                        // Plus Sign
-                ',',                        // Comma
-                '-',                        // Minus Sign
-                '.',                        // Full Stop
-                '/',                        // Solidus
-                ':',                        // Colon
-                ';',                        // Semicolon
-                '<',                        // Less-Than Sign
-                '=',                        // Equals Sign
-                '>',                        // Greater-Than Sign
-                '?',                        // Question Mark
-                '[',                        // Left Square Bracket
-                '\\',                       // Reverse Solidus
-                ']',                        // Right Square Bracket
-                '^',                        // Circumflex Accent
-                '`',                        // Grave Accent
-                '{',                        // Left Curly Bracket
-                '|',                        // Vertical Line
-                '}',                        // Right Curly Bracket
-                '~',                        // Tilde
-                ' ',                        // No-Break Space
-                '¡',                        // Inverted Exclamation Mark
-                '«',                        // Left-Pointing Double Angle Quotation Mark
-                '»',                        // Right-Pointing Double Angle Quotation Mark
-                '¿',                        // Inverted Question Mark
-                '×',                        // Multiplication Sign
-                '÷',                        // Division Sign
-                'ˆ',                        // Modifier Letter Circumflex Accent
-                '‘',                        // Left Single Quotation Mark
-                '’',                        // Right Single Quotation Mark
-                '“',                        // Left Double Quotation Mark
-                '”',                        // Right Double Quotation Mark
-                '„',                        // Double Low-9 Quotation Mark
-                '‹',                        // Single Left-Pointing Angle Quotation Mark
-                '›',                        // Single Right-Pointing Angle Quotation Mark
-                '—',                        // Em Dash
+                '\t', // Tab
+                '\n', // Newline
+                '\r', // Carriage return
+                ' ',  // Space
+                '!',  // Exclamation Mark
+                '"',  // Double quotation
+                '&',  // Ampersand
+                '(',  // Left Parenthesis
+                ')',  // Right Parenthesis
+                '*',  // Asterisk
+                '+',  // Plus Sign
+                ',',  // Comma
+                '-',  // Minus Sign
+                '.',  // Full Stop
+                '/',  // Solidus
+                ':',  // Colon
+                ';',  // Semicolon
+                '<',  // Less-Than Sign
+                '=',  // Equals Sign
+                '>',  // Greater-Than Sign
+                '?',  // Question Mark
+                '[',  // Left Square Bracket
+                '\\', // Reverse Solidus
+                ']',  // Right Square Bracket
+                '^',  // Circumflex Accent
+                '`',  // Grave Accent
+                '{',  // Left Curly Bracket
+                '|',  // Vertical Line
+                '}',  // Right Curly Bracket
+                '~',  // Tilde
+                ' ',  // No-Break Space
+                '¡',  // Inverted Exclamation Mark
+                '«',  // Left-Pointing Double Angle Quotation Mark
+                '»',  // Right-Pointing Double Angle Quotation Mark
+                '¿',  // Inverted Question Mark
+                '×',  // Multiplication Sign
+                '÷',  // Division Sign
+                'ˆ',  // Modifier Letter Circumflex Accent
+                '‘',  // Left Single Quotation Mark
+                '’',  // Right Single Quotation Mark
+                '“',  // Left Double Quotation Mark
+                '”',  // Right Double Quotation Mark
+                '„',  // Double Low-9 Quotation Mark
+                '‹',  // Single Left-Pointing Angle Quotation Mark
+                '›',  // Single Right-Pointing Angle Quotation Mark
+                '—',  // Em Dash
             ]),
-            false,                          // Case sensitive?
-            1,                              // Minimum keyword length (in chars or codepoints.)
-            24,                             // Maximum keyword length (in chars or codepoints.)
-            Some(24),                       // Maximum text length (in chars or codepoints.)
+            false,    // Case sensitive?
+            1,        // Minimum keyword length (in chars or codepoints.)
+            24,       // Maximum keyword length (in chars or codepoints.)
+            Some(24), // Maximum text length (in chars or codepoints.)
             // Default keywords to be excluded:
             Some(vec![
                 // Some English:
@@ -130,10 +130,10 @@ impl<K: Ord> Default for SearchIndex<K> {
                 "vía".to_string(),
                 "y".to_string(),
             ]),
-            5,                              // Maximum number of auto-complete options.
-            100,                            // Maximum number of search results.
-            40_960,                         // Maximum keys per keyword.
-            Some("\0".to_string()),         // Dump keyword.
+            5,                      // Maximum number of auto-complete options.
+            100,                    // Maximum number of search results.
+            40_960,                 // Maximum keys per keyword.
+            Some("\0".to_string()), // Dump keyword.
         ) // SearchIndex
     } // fn
 } // impl

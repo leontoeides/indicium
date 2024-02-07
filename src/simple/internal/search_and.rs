@@ -5,7 +5,6 @@ use std::{cmp::Ord, collections::BTreeSet, hash::Hash};
 // -----------------------------------------------------------------------------
 
 impl<K: Hash + Ord> SearchIndex<K> {
-
     // -------------------------------------------------------------------------
     //
     /// This search function will return keys as the search results. Each
@@ -18,26 +17,22 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// an ergonomic alternative to fuzzy matching.
 
     pub(crate) fn internal_search_and(&self, keywords: &[KString]) -> BTreeSet<&K> {
-
         // This `BTreeSet` is used to contain the search results:
         let mut search_results: Option<BTreeSet<&K>> = None;
 
         // Get each keyword from our `BTreeMap`, and intersect the resulting
         // keys with our current keys:
         for keyword in keywords {
-
-                // Attempt to retrieve keyword from search index. If keyword
-                // found, intersect keyword records with search results records.
-                // If keyword not found, empty search results:
-                match self.b_tree_map.get(keyword) {
-
-                    // Keyword found. Update `search_results` with product of an
-                    // intersection with this keyword's records:
-                    Some(keyword_results) => search_results = Some(
-
+            // Attempt to retrieve keyword from search index. If keyword
+            // found, intersect keyword records with search results records.
+            // If keyword not found, empty search results:
+            match self.b_tree_map.get(keyword) {
+                // Keyword found. Update `search_results` with product of an
+                // intersection with this keyword's records:
+                Some(keyword_results) => {
+                    search_results = Some(
                         // Check if `search_results` is already populated:
                         match &search_results {
-
                             // If `search_results` is is not empty, intersect
                             // the current keyword's results with the master
                             // search results:
@@ -48,9 +43,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                                 // keyword results. If the search result record
                                 // doesn't exist in this keyword's results,
                                 // filter it out:
-                                .filter(|key|
-                                    keyword_results.contains(key)
-                                )
+                                .filter(|key| keyword_results.contains(key))
                                 // Copy each key from the `Intersection`
                                 // iterator or we'll get a doubly-referenced
                                 // `&&K` key:
@@ -62,18 +55,15 @@ impl<K: Hash + Ord> SearchIndex<K> {
                             // If `search_results` is empty, initialize it with
                             // the first keyword's full search results:
                             None => self.internal_keyword_search(keyword),
+                        }, // match
+                    )
+                } // Some
 
-                        } // match
-
-                    ), // Some
-
-                    // Any keyword that returns no results will short-circuit
-                    // the search results into an empty set:
-                    None => search_results = Some(BTreeSet::new()),
-
-                } // match
-
-            } // for_each
+                // Any keyword that returns no results will short-circuit
+                // the search results into an empty set:
+                None => search_results = Some(BTreeSet::new()),
+            } // match
+        } // for_each
 
         // For debug builds:
         #[cfg(debug_assertions)]
@@ -96,7 +86,5 @@ impl<K: Hash + Ord> SearchIndex<K> {
             // If master `search_results` is empty, return an empty `BTreeSet`:
             None => BTreeSet::new(),
         } // match
-
     } // fn
-
 } // impl

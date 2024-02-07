@@ -14,7 +14,6 @@ use std::{clone::Clone, cmp::Ord};
 // -----------------------------------------------------------------------------
 
 impl<K: Clone + Ord> SearchIndex<K> {
-
     // -------------------------------------------------------------------------
     //
     /// Removes a key-value pair from the search index.
@@ -101,7 +100,6 @@ impl<K: Clone + Ord> SearchIndex<K> {
 
     #[tracing::instrument(level = "trace", name = "search index remove", skip(self, key, value))]
     pub fn remove(&mut self, key: &K, value: &dyn Indexable) {
-
         // Get all keywords for the `Indexable` record:
         let mut keywords: HashSet<KString> = self.indexable_keywords(value);
 
@@ -113,26 +111,26 @@ impl<K: Clone + Ord> SearchIndex<K> {
 
         // Iterate over the keywords:
         for keyword in keywords {
-                // Attempt to get mutuable reference to the _keyword entry_ in
-                // the search index:
-                let is_empty = if let Some(keys) = self.b_tree_map.get_mut(&keyword) {
-                    // If keyword found in search index, remove the _key
-                    // reference_ for this record from _keyword entry_:
-                    keys.remove(key);
-                    // Return whether the _keyword entry_ is now empty or not:
-                    keys.is_empty()
-                } else {
-                    // If keyword not found in search index, signal that we
-                    // should **not** remove the _keyword entry_ because that
-                    // would result in an error:
-                    false
-                }; // if
-                // If the _keyword entry_ no longer contains any _key
-                // references_, it is empty and we should remove the keyword
-                // from the search index:
-                if is_empty { self.b_tree_map.remove(&keyword); }
-            } // for_each
-
+            // Attempt to get mutuable reference to the _keyword entry_ in
+            // the search index:
+            let is_empty = if let Some(keys) = self.b_tree_map.get_mut(&keyword) {
+                // If keyword found in search index, remove the _key
+                // reference_ for this record from _keyword entry_:
+                keys.remove(key);
+                // Return whether the _keyword entry_ is now empty or not:
+                keys.is_empty()
+            } else {
+                // If keyword not found in search index, signal that we
+                // should **not** remove the _keyword entry_ because that
+                // would result in an error:
+                false
+            }; // if
+               // If the _keyword entry_ no longer contains any _key
+               // references_, it is empty and we should remove the keyword
+               // from the search index:
+            if is_empty {
+                self.b_tree_map.remove(&keyword);
+            }
+        } // for_each
     } // fn
-
 } // impl

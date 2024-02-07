@@ -13,7 +13,6 @@ use std::{cmp::Ord, hash::Hash};
 // -----------------------------------------------------------------------------
 
 impl<'a, K: Hash + Ord> SearchTopScores<'a, K> {
-
     // -------------------------------------------------------------------------
     //
     /// Instantiates a new "top scores" struct with the caller provided
@@ -21,16 +20,10 @@ impl<'a, K: Hash + Ord> SearchTopScores<'a, K> {
     /// provided keyword, the caller would call `SearchTopScores::with_capacity(10)`.
 
     pub(crate) fn with_capacity(capacity: usize) -> SearchTopScores<'a, K> {
-
         SearchTopScores {
-            top: HashMap::with_capacity_and_hasher(
-                capacity,
-                std::default::Default::default()
-            ), // HashMap
+            top: HashMap::with_capacity_and_hasher(capacity, std::default::Default::default()), // HashMap
             bottom: None,
             capacity,
         } // SearchTopScores
-
     } // fn with_capacity
-
 } // impl SearchTopScores

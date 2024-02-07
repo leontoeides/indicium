@@ -24,11 +24,7 @@ pub enum SplitContext {
 /// keywords. If it is, function will return `true`. If there are no excluded
 /// keywords, function will always return `false`.
 
-pub fn exclude_keyword(
-    keyword: &str,
-    exclude_keywords: &Option<Vec<KString>>
-) -> bool {
-
+pub fn exclude_keyword(keyword: &str, exclude_keywords: &Option<Vec<KString>>) -> bool {
     // Check to see if there's any keywords in the exclusion list:
     if let Some(exclude_keywords) = exclude_keywords {
         // If there are keywords to be excluded, scan the list to see if this
@@ -41,14 +37,12 @@ pub fn exclude_keyword(
         // (true = filter, false = keep):
         false
     } // if
-
 } // fn
 
 // -----------------------------------------------------------------------------
 
 #[test]
 fn test_exclude_keyword() {
-
     let excluded_keywords: Option<Vec<KString>> = Some(vec![
         "awake".into(),
         "arise".into(),
@@ -64,13 +58,11 @@ fn test_exclude_keyword() {
 
     let keyword: KString = "arose".into();
     assert!(!exclude_keyword(&keyword, &excluded_keywords));
-
 }
 
 // -----------------------------------------------------------------------------
 
 impl<K: Ord> SearchIndex<K> {
-
     // -------------------------------------------------------------------------
     //
     /// An associated helper method that splits a `&str` into keywords using a
@@ -80,12 +72,7 @@ impl<K: Ord> SearchIndex<K> {
     /// keywords that don't meet the defined length restrictions, and remove
     /// excluded keywords.
 
-    pub(crate) fn string_keywords(
-        &self,
-        string: &str,
-        context: SplitContext,
-    ) -> Vec<KString> {
-
+    pub(crate) fn string_keywords(&self, string: &str, context: SplitContext) -> Vec<KString> {
         // If case sensitivity set, leave case intact. Otherwise, normalize the
         // entire string to lower case:
         let string: KString = match self.case_sensitive {
@@ -105,13 +92,10 @@ impl<K: Ord> SearchIndex<K> {
                 // and shorter than the maximum length:
                 .filter(|keyword| {
                     let chars = keyword.chars().count();
-                    chars >= self.minimum_keyword_length
-                        && chars <= self.maximum_keyword_length
+                    chars >= self.minimum_keyword_length && chars <= self.maximum_keyword_length
                 }) // filter
                 // Only keep the keyword if it's not in the exclusion list:
-                .filter(|keyword|
-                    !exclude_keyword(keyword, &self.exclude_keywords)
-                ) // filter
+                .filter(|keyword| !exclude_keyword(keyword, &self.exclude_keywords)) // filter
                 // Copy string from reference:
                 .map(KString::from_ref)
                 // Collect all keywords into a `Vec`:
@@ -136,31 +120,28 @@ impl<K: Ord> SearchIndex<K> {
         // If we're searching, keep the whole string if there is no split
         // pattern defined. We'll search by the whole search string without
         // any keyword splitting:
-        if  context == SplitContext::Searching &&
-            self.split_pattern.is_none() &&
-            chars >= self.minimum_keyword_length {
-
-                // Set keywords to the entire string:
-                keywords = vec![string];
+        if context == SplitContext::Searching
+            && self.split_pattern.is_none()
+            && chars >= self.minimum_keyword_length
+        {
+            // Set keywords to the entire string:
+            keywords = vec![string];
 
         // If we're indexing, only keep the whole string if it meets the keyword
         // criteria: 1) we're using whole strings as keywords, 2) it's shorter
         // than the maximum, and 3) the keyword is not in the exclusion list.
         } else if let Some(maximum_string_length) = self.maximum_string_length {
-            if  context == SplitContext::Indexing &&
-                chars >= self.minimum_keyword_length &&
-                chars <= maximum_string_length &&
-                !exclude_keyword(&string, &self.exclude_keywords) {
-
-                    // Add field text / entire string to the keyword `Vec`:
-                    keywords.push(string);
-
+            if context == SplitContext::Indexing
+                && chars >= self.minimum_keyword_length
+                && chars <= maximum_string_length
+                && !exclude_keyword(&string, &self.exclude_keywords)
+            {
+                // Add field text / entire string to the keyword `Vec`:
+                keywords.push(string);
             } // if
         } // if
 
         // Return keywords to caller:
         keywords
-
     } // fn
-
 } // impl

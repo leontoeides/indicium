@@ -11,7 +11,6 @@ use std::string::ToString;
 // -----------------------------------------------------------------------------
 
 impl Request {
-
     /// This function does not perform the `term` or `q` search for the client
     /// request. The search much be performed by the caller using the
     /// `search_select2` method. The search results are passed to this function
@@ -21,20 +20,25 @@ impl Request {
     /// the form of a slice) to this function to be processed into the `Select2`
     /// format.
 
-    #[tracing::instrument(level = "trace", name = "build grouped results", skip(self, search_results_keys, search_results_values))]
-    pub fn grouped_response<K: Clone + Debug + Display + Eq + Hash + PartialEq + ToString, G: Groupable>(
+    #[tracing::instrument(
+        level = "trace",
+        name = "build grouped results",
+        skip(self, search_results_keys, search_results_values)
+    )]
+    pub fn grouped_response<
+        K: Clone + Debug + Display + Eq + Hash + PartialEq + ToString,
+        G: Groupable,
+    >(
         &self,
         items_per_page: &Option<usize>,
         selected_record: &Option<String>,
         search_results_keys: &[&K],
-        search_results_values: &[&G]
+        search_results_values: &[&G],
     ) -> Result<GroupedResults, Error> {
-
         // Error checking. Ensure that there are the same number of keys and
         // values:
 
         if search_results_keys.len() != search_results_values.len() {
-
             let error_message = format!(
                 "{} keys and {} values were supplied to `grouped_response`. \
                 the number of keys and values must be the same.",
@@ -42,23 +46,21 @@ impl Request {
                 search_results_values.len(),
             ); // format!
             tracing::error!("{}", error_message);
-            return Err(Error::new(ErrorKind::InvalidData, error_message))
-
+            return Err(Error::new(ErrorKind::InvalidData, error_message));
         } else if search_results_keys.is_empty() {
-
             let error_message = "list of keys and values is empty. \
-                returning empty response.".to_string();
+                returning empty response."
+                .to_string();
             tracing::debug!("{}", error_message);
-            return Ok(GroupedResults::default())
-
+            return Ok(GroupedResults::default());
         } // if
 
         // Observe pagination. If the caller specifies a maximum number of items
         // per page, then consider pagination turned on:
 
         // self.request_type == Some("query_append".to_string())
-        let groupable_results: (bool, Vec<(&K, &G)>) = if let Some(items_per_page) = items_per_page {
-
+        let groupable_results: (bool, Vec<(&K, &G)>) = if let Some(items_per_page) = items_per_page
+        {
             // Paginated response:
 
             // Get the `page` number from the request:
@@ -83,10 +85,11 @@ impl Request {
                 .collect();
 
             // Return pagination status and results to outer scope:
-            (items_per_page * page < search_results_keys.len(), paginated_results)
-
+            (
+                items_per_page * page < search_results_keys.len(),
+                paginated_results,
+            )
         } else {
-
             // Unpaginated response:
 
             // This function works on the resolved output of a search, or the
@@ -105,7 +108,6 @@ impl Request {
 
             // Return pagination status and results to outer scope:
             (false, unpaginated_results)
-
         }; // if
 
         // This `BTreeMap` is used to organize the records into their groups.
@@ -116,7 +118,8 @@ impl Request {
 
         // Iterate over the results and insert them into their respective
         // groups:
-        groupable_results.1
+        groupable_results
+            .1
             // Iterate over the results records:
             .into_iter()
             // For each record in the results:
@@ -131,16 +134,15 @@ impl Request {
                     // return record:
                     record.selected = record.id == *selected_record;
                 } // if
-                // Attempt to get mutuable reference to the group entry in
-                // the B-tree map:
+                  // Attempt to get mutuable reference to the group entry in
+                  // the B-tree map:
                 match grouped_results.get_mut(&groupable_record.group) {
                     // If group exists in hash map, add record to the group:
                     Some(group) => group.push(record),
                     // If group does not exist, initialize with this record:
-                    None => { grouped_results.insert(
-                        groupable_record.group.to_owned(),
-                        vec![record]
-                    ); } // None
+                    None => {
+                        grouped_results.insert(groupable_record.group.to_owned(), vec![record]);
+                    } // None
                 } // match
             }); // for_each
 
@@ -163,7 +165,5 @@ impl Request {
                 more: groupable_results.0,
             }, // Pagination
         }) // GroupedResults
-
     } // fn
-
 } // impl

@@ -8,7 +8,6 @@ use std::{cmp::Ord, collections::BTreeSet, hash::Hash};
 // -----------------------------------------------------------------------------
 
 impl<K: Hash + Ord> SearchIndex<K> {
-
     // -------------------------------------------------------------------------
     //
     /// This search function will return keys as the search results. Each
@@ -103,18 +102,10 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// ```
 
     #[tracing::instrument(level = "trace", name = "live search", skip(self))]
-    pub(crate) fn search_live(
-        &self,
-        maximum_search_results: &usize,
-        string: &str,
-    ) -> BTreeSet<&K> {
-
+    pub(crate) fn search_live(&self, maximum_search_results: &usize, string: &str) -> BTreeSet<&K> {
         // Split search `String` into keywords according to the `SearchIndex`
         // settings. Force "use entire string as a keyword" option off:
-        let mut keywords: Vec<KString> = self.string_keywords(
-            string,
-            SplitContext::Searching,
-        );
+        let mut keywords: Vec<KString> = self.string_keywords(string, SplitContext::Searching);
 
         // For debug builds:
         #[cfg(debug_assertions)]
@@ -123,14 +114,12 @@ impl<K: Hash + Ord> SearchIndex<K> {
         // Pop the last keyword off the list - the keyword that we'll be
         // autocompleting:
         if let Some(last_keyword) = keywords.pop() {
-
             // How we combine `search_results` and `autocomplete_options`
             // together depends on how many keywords there are in the search
             // string. Strings that have only a single keyword, and strings
             // that have multiple keywords must be handled differently:
 
             match keywords.len() {
-
                 // Consider this example search string: `t`.
                 //
                 // Depending on the data-set, autocomplete options `trouble` and
@@ -142,10 +131,9 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // ever be returned. So we must handle this scenario
                 // differently. We will return the keys for these autocomplete
                 // options without further processing:
-
                 0 => {
-
-                    let mut search_results: BTreeSet<&K> = self.b_tree_map
+                    let mut search_results: BTreeSet<&K> = self
+                        .b_tree_map
                         // Get matching keywords starting with (partial) keyword
                         // string:
                         .range(last_keyword.clone()..)
@@ -155,9 +143,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                         // `take_while` will effectively break iteration when we
                         // reach a keyword that does not start with our supplied
                         // (partial) keyword.
-                        .take_while(|(keyword, _keys)|
-                            keyword.starts_with(&*last_keyword)
-                        ) // take_while
+                        .take_while(|(keyword, _keys)| keyword.starts_with(&*last_keyword)) // take_while
                         // Only return `maximum_search_results` number of keys:
                         .take(*maximum_search_results)
                         // We're not interested in the `keyword` since we're
@@ -175,10 +161,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
                         // No search results were found for the user's last
                         // (partial) keyword. Attempt to use fuzzy string
                         // search to find other options:
-                        search_results = self.eddie_context_autocomplete(
-                            &search_results,
-                            &last_keyword,
-                        ) // eddie_context_autocomplete
+                        search_results = self
+                            .eddie_context_autocomplete(&search_results, &last_keyword) // eddie_context_autocomplete
                             .into_iter()
                             // `strsim_autocomplete` returns both the keyword
                             // and keys. We're searching for the last (partial)
@@ -201,10 +185,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
                         // No search results were found for the user's last
                         // (partial) keyword. Attempt to use fuzzy string
                         // search to find other options:
-                        search_results = self.strsim_context_autocomplete(
-                            &search_results,
-                            &last_keyword,
-                        ) // strsim_context_autocomplete
+                        search_results = self
+                            .strsim_context_autocomplete(&search_results, &last_keyword) // strsim_context_autocomplete
                             .into_iter()
                             // `strsim_autocomplete` returns both the keyword
                             // and keys. We're searching for the last (partial)
@@ -222,8 +204,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
                     // Return search results to caller:
                     search_results
-
-                }, // 0
+                } // 0
 
                 // Consider this example search string: `Shatner t`.
                 //
@@ -235,16 +216,15 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // autocomplete option with `Shatner`. For both `trouble` and
                 // `tribble` autocomplete options, only keys that also exist for
                 // `Shatner` will be returned:
-
                 _ => {
-
                     // Perform `And` search for entire string, excluding the
                     // last (partial) keyword:
                     let search_results: BTreeSet<&K> =
                         self.internal_search_and(keywords.as_slice());
 
                     // Get keys for the last (partial) keyword:
-                    let mut last_results: BTreeSet<&K> = self.b_tree_map
+                    let mut last_results: BTreeSet<&K> = self
+                        .b_tree_map
                         // Get matching keywords starting with (partial) keyword
                         // string:
                         .range(last_keyword.clone()..)
@@ -254,9 +234,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                         // `take_while` will effectively break iteration when we
                         // reach a keyword that does not start with our supplied
                         // (partial) keyword.
-                        .take_while(|(keyword, _keys)|
-                            keyword.starts_with(&*last_keyword)
-                        ) // take_while
+                        .take_while(|(keyword, _keys)| keyword.starts_with(&*last_keyword)) // take_while
                         // Only keep this autocompletion if hasn't already been
                         // used as a keyword:
                         .filter(|(keyword, _keys)| !keywords.contains(keyword))
@@ -282,10 +260,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
                         // No search results were found for the user's last
                         // (partial) keyword. Attempt to use fuzzy string
                         // search to find other options:
-                        last_results = self.eddie_context_autocomplete(
-                            &search_results,
-                            &last_keyword,
-                        ) // eddie_context_autocomplete
+                        last_results = self
+                            .eddie_context_autocomplete(&search_results, &last_keyword) // eddie_context_autocomplete
                             .into_iter()
                             // Only keep this result if hasn't already been used
                             // as a keyword:
@@ -293,10 +269,14 @@ impl<K: Hash + Ord> SearchIndex<K> {
                             // Intersect the key results from the autocomplete
                             // options (produced from this iterator) with the
                             // search results produced at the top:
-                            .map(|(keyword, keys)| (
-                                keyword,
-                                keys.iter().filter(|key| search_results.contains(key)).collect::<BTreeSet<_>>(),
-                            )) // map
+                            .map(|(keyword, keys)| {
+                                (
+                                    keyword,
+                                    keys.iter()
+                                        .filter(|key| search_results.contains(key))
+                                        .collect::<BTreeSet<_>>(),
+                                )
+                            }) // map
                             // Autocomplete returns both the keyword and keys.
                             // We're searching for the last (partial) keyword,
                             // so discard the keywords. Flatten the
@@ -318,10 +298,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
                         // No search results were found for the user's last
                         // (partial) keyword. Attempt to use fuzzy string
                         // search to find other options:
-                        last_results = self.strsim_context_autocomplete(
-                            &search_results,
-                            &last_keyword,
-                        ) // strsim_context_autocomplete
+                        last_results = self
+                            .strsim_context_autocomplete(&search_results, &last_keyword) // strsim_context_autocomplete
                             .into_iter()
                             // Only keep this result if hasn't already been used
                             // as a keyword:
@@ -329,10 +307,14 @@ impl<K: Hash + Ord> SearchIndex<K> {
                             // Intersect the key results from the autocomplete
                             // options (produced from this iterator) with the
                             // search results produced at the top:
-                            .map(|(keyword, keys)| (
-                                keyword,
-                                keys.iter().filter(|key| search_results.contains(key)).collect::<BTreeSet<_>>(),
-                            )) // map
+                            .map(|(keyword, keys)| {
+                                (
+                                    keyword,
+                                    keys.iter()
+                                        .filter(|key| search_results.contains(key))
+                                        .collect::<BTreeSet<_>>(),
+                                )
+                            }) // map
                             // Autocomplete returns both the keyword and keys.
                             // We're searching for the last (partial) keyword,
                             // so discard the keywords. Flatten the
@@ -349,19 +331,12 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
                     // Return search results to caller:
                     last_results
-
-                }, // _
-
+                } // _
             } // match
-
         } else {
-
             // The search string did not have a last keyword to autocomplete (or
             // any keywords to search for.) Return an empty `BTreeSet`:
             BTreeSet::new()
-
         } // if
-
     } // fn
-
 } // impl

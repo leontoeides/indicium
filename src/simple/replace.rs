@@ -5,7 +5,6 @@ use std::cmp::Ord;
 // -----------------------------------------------------------------------------
 
 impl<K: Clone + Ord> SearchIndex<K> {
-
     // -------------------------------------------------------------------------
     //
     /// Replaces (or updates) the value for a key-value pair in the search
@@ -96,17 +95,15 @@ impl<K: Clone + Ord> SearchIndex<K> {
     /// assert_eq!(search_results, vec![&0]);
     /// ```
 
-    #[tracing::instrument(level = "trace", name = "search index replace", skip(self, key, before, after))]
-    pub fn replace(
-        &mut self,
-        key: &K,
-        before: &dyn Indexable,
-        after: &dyn Indexable,
-    ) {
+    #[tracing::instrument(
+        level = "trace",
+        name = "search index replace",
+        skip(self, key, before, after)
+    )]
+    pub fn replace(&mut self, key: &K, before: &dyn Indexable, after: &dyn Indexable) {
         // Remove all references to the old record and its keywords:
         self.remove(key, before);
         // Index the updated record:
         self.insert(key, after);
     } // fn
-
 } // impl

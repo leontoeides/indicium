@@ -6,7 +6,6 @@ use std::{cmp::Ord, collections::BTreeSet, hash::Hash};
 // -----------------------------------------------------------------------------
 
 impl<K: Hash + Ord> SearchIndex<K> {
-
     // -------------------------------------------------------------------------
     //
     /// This search function will return keys as the search results. Each
@@ -94,19 +93,11 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// ```
 
     #[tracing::instrument(level = "trace", name = "and search", skip(self))]
-    pub(crate) fn search_and(
-        &self,
-        maximum_search_results: &usize,
-        string: &str,
-    ) -> Vec<&K> {
-
+    pub(crate) fn search_and(&self, maximum_search_results: &usize, string: &str) -> Vec<&K> {
         // Split search `String` into keywords (according to the `SearchIndex`
         // settings). `string_keywords` will **not** allow "use entire string as
         // a keyword," even if enabled in user settings:
-        let keywords: Vec<KString> = self.string_keywords(
-            string,
-            SplitContext::Searching,
-        );
+        let keywords: Vec<KString> = self.string_keywords(string, SplitContext::Searching);
 
         // For debug builds:
         #[cfg(debug_assertions)]
@@ -118,19 +109,16 @@ impl<K: Hash + Ord> SearchIndex<K> {
         // Get each keyword from our `BTreeMap`, and intersect the resulting
         // keys with our current keys:
         for keyword in keywords {
-
-                // Attempt to retrieve keyword from search index. If keyword
-                // found, intersect keyword records with search results records.
-                // If keyword not found, empty search results:
-                match self.b_tree_map.get(&keyword) {
-
-                    // Keyword found. Update `search_results` with product of an
-                    // intersection with this keyword's records:
-                    Some(keyword_results) => search_results = Some(
-
+            // Attempt to retrieve keyword from search index. If keyword
+            // found, intersect keyword records with search results records.
+            // If keyword not found, empty search results:
+            match self.b_tree_map.get(&keyword) {
+                // Keyword found. Update `search_results` with product of an
+                // intersection with this keyword's records:
+                Some(keyword_results) => {
+                    search_results = Some(
                         // Check if `search_results` is already populated:
                         match &search_results {
-
                             // If `search_results` is is not empty, intersect
                             // the current keyword's results with the master
                             // search results:
@@ -141,9 +129,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                                 // keyword results. If the search result record
                                 // doesn't exist in this keyword's results,
                                 // filter it out:
-                                .filter(|key|
-                                    keyword_results.contains(key)
-                                )
+                                .filter(|key| keyword_results.contains(key))
                                 // Clone each key from the `Intersection`
                                 // iterator or we'll get a doubly-referenced
                                 // `&&K` key:
@@ -156,18 +142,15 @@ impl<K: Hash + Ord> SearchIndex<K> {
                             // initialize it with the first keyword's full
                             // search results:
                             None => self.internal_keyword_search(&keyword),
+                        }, // match
+                    )
+                } // Some
 
-                        } // match
-
-                    ), // Some
-
-                    // Any keyword that returns no results will short-circuit
-                    // the search results into an empty set:
-                    None => search_results = Some(BTreeSet::new()),
-
-                } // match
-
-            } // for_each
+                // Any keyword that returns no results will short-circuit
+                // the search results into an empty set:
+                None => search_results = Some(BTreeSet::new()),
+            } // match
+        } // for_each
 
         // Return search results:
         match search_results {
@@ -180,7 +163,5 @@ impl<K: Hash + Ord> SearchIndex<K> {
             // If `search_results` is empty, return an empty `Vec`:
             None => Vec::new(),
         } // match
-
     } // fn
-
 } // impl

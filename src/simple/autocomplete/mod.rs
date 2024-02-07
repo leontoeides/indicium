@@ -10,7 +10,6 @@ use std::{cmp::Ord, hash::Hash};
 // -----------------------------------------------------------------------------
 
 impl<K: Hash + Ord> SearchIndex<K> {
-
     // -------------------------------------------------------------------------
     //
     /// Returns matching autocompleted keywords for the provided search string.
@@ -91,17 +90,18 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
     #[tracing::instrument(level = "trace", name = "autocomplete", skip(self))]
     pub fn autocomplete(&self, string: &str) -> Vec<String> {
-
         let autocomplete_options: Vec<String> = match &self.autocomplete_type {
-            AutocompleteType::Context =>
-                self.autocomplete_context(&self.maximum_autocomplete_options, string),
-            AutocompleteType::Global =>
-                self.autocomplete_global(&self.maximum_autocomplete_options, string),
-            AutocompleteType::Keyword =>
-                self.autocomplete_keyword(&self.maximum_autocomplete_options, string)
-                    .into_iter()
-                    .map(std::string::ToString::to_string)
-                    .collect(),
+            AutocompleteType::Context => {
+                self.autocomplete_context(&self.maximum_autocomplete_options, string)
+            }
+            AutocompleteType::Global => {
+                self.autocomplete_global(&self.maximum_autocomplete_options, string)
+            }
+            AutocompleteType::Keyword => self
+                .autocomplete_keyword(&self.maximum_autocomplete_options, string)
+                .into_iter()
+                .map(std::string::ToString::to_string)
+                .collect(),
         }; // match
 
         // For debug builds:
@@ -113,7 +113,6 @@ impl<K: Hash + Ord> SearchIndex<K> {
         ); // debug!
 
         autocomplete_options
-
     } // fn
 
     // -------------------------------------------------------------------------
@@ -207,17 +206,18 @@ impl<K: Hash + Ord> SearchIndex<K> {
         autocomplete_type: &AutocompleteType,
         string: &str,
     ) -> Vec<String> {
-
         let autocomplete_options: Vec<String> = match autocomplete_type {
-            AutocompleteType::Context =>
-                self.autocomplete_context(&self.maximum_autocomplete_options, string),
-            AutocompleteType::Global =>
-                self.autocomplete_global(&self.maximum_autocomplete_options, string),
-            AutocompleteType::Keyword =>
-                self.autocomplete_keyword(&self.maximum_autocomplete_options, string)
-                    .into_iter()
-                    .map(std::string::ToString::to_string)
-                    .collect(),
+            AutocompleteType::Context => {
+                self.autocomplete_context(&self.maximum_autocomplete_options, string)
+            }
+            AutocompleteType::Global => {
+                self.autocomplete_global(&self.maximum_autocomplete_options, string)
+            }
+            AutocompleteType::Keyword => self
+                .autocomplete_keyword(&self.maximum_autocomplete_options, string)
+                .into_iter()
+                .map(std::string::ToString::to_string)
+                .collect(),
         }; // match
 
         // For debug builds:
@@ -229,7 +229,6 @@ impl<K: Hash + Ord> SearchIndex<K> {
         ); // debug!
 
         autocomplete_options
-
     } // fn
 
     // -------------------------------------------------------------------------
@@ -328,17 +327,18 @@ impl<K: Hash + Ord> SearchIndex<K> {
         maximum_autocomplete_options: &usize,
         string: &str,
     ) -> Vec<String> {
-
         let autocomplete_options: Vec<String> = match autocomplete_type {
-            AutocompleteType::Context =>
-                self.autocomplete_context(maximum_autocomplete_options, string),
-            AutocompleteType::Global =>
-                self.autocomplete_global(maximum_autocomplete_options, string),
-            AutocompleteType::Keyword =>
-                self.autocomplete_keyword(maximum_autocomplete_options, string)
-                    .into_iter()
-                    .map(std::string::ToString::to_string)
-                    .collect(),
+            AutocompleteType::Context => {
+                self.autocomplete_context(maximum_autocomplete_options, string)
+            }
+            AutocompleteType::Global => {
+                self.autocomplete_global(maximum_autocomplete_options, string)
+            }
+            AutocompleteType::Keyword => self
+                .autocomplete_keyword(maximum_autocomplete_options, string)
+                .into_iter()
+                .map(std::string::ToString::to_string)
+                .collect(),
         }; // match
 
         // For debug builds:
@@ -350,7 +350,5 @@ impl<K: Hash + Ord> SearchIndex<K> {
         ); // debug!
 
         autocomplete_options
-
     } // fn
-
 } // impl

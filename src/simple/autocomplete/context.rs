@@ -8,7 +8,6 @@ use std::{cmp::Ord, collections::BTreeSet, hash::Hash};
 // -----------------------------------------------------------------------------
 
 impl<K: Hash + Ord> SearchIndex<K> {
-
     // -------------------------------------------------------------------------
     //
     /// Returns matching autocompleted keywords for the provided search string.
@@ -99,13 +98,9 @@ impl<K: Hash + Ord> SearchIndex<K> {
         maximum_autocomplete_options: &usize,
         string: &str,
     ) -> Vec<String> {
-
         // Split search `String` into keywords according to the `SearchIndex`
         // settings. Force "use entire string as a keyword" option off:
-        let mut keywords: Vec<KString> = self.string_keywords(
-            string,
-            SplitContext::Searching,
-        );
+        let mut keywords: Vec<KString> = self.string_keywords(string, SplitContext::Searching);
 
         // For debug builds:
         #[cfg(debug_assertions)]
@@ -114,15 +109,14 @@ impl<K: Hash + Ord> SearchIndex<K> {
         // Pop the last keyword off the list - the keyword that we'll be
         // autocompleting:
         if let Some(last_keyword) = keywords.pop() {
-
             // Perform `And` search for entire string without the last keyword:
-            let search_results: BTreeSet<&K> =
-                self.internal_search_and(keywords.as_slice());
+            let search_results: BTreeSet<&K> = self.internal_search_and(keywords.as_slice());
 
             // Intersect the autocompletions for the last keyword with the
             // search results for the preceding keywords. This way, only
             // relevant autocompletions are returned:
-            let mut autocompletions: Vec<&KString> = self.b_tree_map
+            let mut autocompletions: Vec<&KString> = self
+                .b_tree_map
                 // Get matching keywords starting with (partial) keyword string:
                 .range(KString::from_ref(&last_keyword)..)
                 // We did not specify an end bound for our `range` function (see
@@ -141,10 +135,9 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 .filter(|(keyword, _keys)| !keywords.contains(keyword))
                 // Only keep this autocompletion if it contains a key that the
                 // search results contain:
-                .filter(|(_keyword, keys)|
-                    search_results.is_empty() ||
-                        keys.iter().any(|key| search_results.contains(key))
-                ) // filter
+                .filter(|(_keyword, keys)| {
+                    search_results.is_empty() || keys.iter().any(|key| search_results.contains(key))
+                }) // filter
                 // Only return `maximum_autocomplete_options` number of
                 // keywords:
                 .take(*maximum_autocomplete_options)
@@ -161,10 +154,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // No autocomplete options were found for the user's last
                 // (partial) keyword. Attempt to use fuzzy string search to find
                 // other autocomplete options:
-                autocompletions = self.eddie_context_autocomplete(
-                    &search_results,
-                    &last_keyword,
-                ) // eddie_context_autocomplete
+                autocompletions = self
+                    .eddie_context_autocomplete(&search_results, &last_keyword) // eddie_context_autocomplete
                     .into_iter()
                     // Only keep this autocompletion if hasn't already been used
                     // as a keyword:
@@ -187,10 +178,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // No autocomplete options were found for the user's last
                 // (partial) keyword. Attempt to use fuzzy string search to find
                 // other autocomplete options:
-                autocompletions = self.strsim_context_autocomplete(
-                    &search_results,
-                    &last_keyword,
-                ) // strsim_context_autocomplete
+                autocompletions = self
+                    .strsim_context_autocomplete(&search_results, &last_keyword) // strsim_context_autocomplete
                     .into_iter()
                     // Only keep this autocompletion if hasn't already been used
                     // as a keyword:
@@ -229,15 +218,10 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 })
                 // Collect all string autocompletions into a `Vec`:
                 .collect()
-
         } else {
-
             // The search string did not have a last keyword to autocomplete.
             // Return an empty `Vec`:
             Vec::new()
-
         } // if
-
     } // fn
-
 } // impl

@@ -7,7 +7,6 @@ use strsim::normalized_levenshtein;
 // -----------------------------------------------------------------------------
 
 impl<K: Hash + Ord> SearchIndex<K> {
-
     // -------------------------------------------------------------------------
     //
     /// Scans the entire search index for the closest matching _n_ keywords
@@ -33,7 +32,6 @@ impl<K: Hash + Ord> SearchIndex<K> {
         index_range: &str,
         user_keyword: &str,
     ) -> impl Iterator<Item = (&KString, &BTreeSet<K>)> {
-
         // This structure will track the top scoring keywords:
         let mut top_scores: FuzzyTopScores<K, f64> =
             FuzzyTopScores::with_capacity(self.maximum_autocomplete_options);
@@ -63,7 +61,5 @@ impl<K: Hash + Ord> SearchIndex<K> {
         // Return the top scoring keywords athat could be used as autocomplete
         // options, and their keys, to the caller:
         top_scores.results()
-
     } // fn
-
 } // impl
