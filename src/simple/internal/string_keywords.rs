@@ -10,7 +10,7 @@ use std::cmp::Ord;
 /// `Searching`. (In particular when no split-pattern has been defined.)
 
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-pub(crate) enum SplitContext {
+pub enum SplitContext {
     /// The intended use for split keywords is for indexing:
     Indexing = 0,
     /// The intended use for split keywords is to be used for searching or
@@ -24,7 +24,7 @@ pub(crate) enum SplitContext {
 /// keywords. If it is, function will return `true`. If there are no excluded
 /// keywords, function will always return `false`.
 
-pub(crate) fn exclude_keyword(
+pub fn exclude_keyword(
     keyword: &str,
     exclude_keywords: &Option<Vec<KString>>
 ) -> bool {
@@ -141,7 +141,7 @@ impl<K: Ord> SearchIndex<K> {
             chars >= self.minimum_keyword_length {
 
                 // Set keywords to the entire string:
-                keywords = vec![string]
+                keywords = vec![string];
 
         // If we're indexing, only keep the whole string if it meets the keyword
         // criteria: 1) we're using whole strings as keywords, 2) it's shorter
@@ -153,7 +153,7 @@ impl<K: Ord> SearchIndex<K> {
                 !exclude_keyword(&string, &self.exclude_keywords) {
 
                     // Add field text / entire string to the keyword `Vec`:
-                    keywords.push(string)
+                    keywords.push(string);
 
             } // if
         } // if

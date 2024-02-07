@@ -125,11 +125,9 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
 
         // Get each keyword from our search index, record the resulting keys in
         // a our `BTreeMap`, and track the hit-count for each key:
-        keywords
+        for keyword in keywords
             // Iterate over the keywords supplied in the search string:
-            .into_iter()
-            // For each keyword in the search string:
-            .for_each(|keyword| {
+            .into_iter() {
                 // Search for keyword in our `BTreeMap`:
                 self.internal_keyword_search(&keyword)
                     // Iterate over the resulting keys (if any):
@@ -140,8 +138,8 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
                         Some(result_entry) => { *result_entry += 1 },
                         // No record for this key, initialize to one hit:
                         None => { search_results.insert(key, 1); },
-                    }) // for_each
-            }); // for_each
+                    }); // for_each
+            } // for_each
 
         // At this point, we have a list of resulting keys in a `BTreeMap`. The
         // hash map value holds the number of times each key has been returned

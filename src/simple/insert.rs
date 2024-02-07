@@ -196,7 +196,7 @@ impl<K: Clone + Ord> SearchIndex<K> {
                         self.b_tree_map.insert(keyword.as_ref().into(), b_tree_set);
                     }, // None
                 } // match
-            ) // for_each
+            ); // for_each
 
     } // fn
 

@@ -88,7 +88,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// );
     /// ```
 
-    pub fn eddie_autocomplete(
+    #[must_use] pub fn eddie_autocomplete(
         &self,
         keyword: &str,
     ) -> Vec<&str> {

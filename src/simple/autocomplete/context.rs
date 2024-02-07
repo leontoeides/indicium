@@ -177,7 +177,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                     // discard the keys:
                     .map(|(keyword, _keys)| keyword)
                     // Collect all keyword autocompletions into a `Vec`:
-                    .collect()
+                    .collect();
             } // if
 
             // If `strsim` fuzzy matching enabled, examine the resulting

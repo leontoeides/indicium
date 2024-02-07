@@ -38,7 +38,7 @@ pub struct SearchIndexBuilder<K> {
 impl<K: Clone + Ord> From<SearchIndex<K>> for SearchIndexBuilder<K> {
     /// Convert to `SearchIndexBuilder<K>` struct from `SearchIndex<K>` struct.
     fn from(search_index: SearchIndex<K>) -> Self {
-        SearchIndexBuilder {
+        Self {
             b_tree_map: search_index.b_tree_map,
             search_type: search_index.search_type,
             autocomplete_type: search_index.autocomplete_type,
@@ -65,7 +65,7 @@ impl<K: Clone + Ord> From<SearchIndex<K>> for SearchIndexBuilder<K> {
 impl<K: Clone + Ord> From<SearchIndexBuilder<K>> for SearchIndex<K> {
     /// Convert to `SearchIndex<K>` struct from `SearchIndexBuilder<K>` struct.
     fn from(search_index: SearchIndexBuilder<K>) -> Self {
-        SearchIndex {
+        Self {
             b_tree_map: search_index.b_tree_map,
             search_type: search_index.search_type,
             autocomplete_type: search_index.autocomplete_type,
@@ -93,7 +93,7 @@ impl<K: Clone + Ord> Default for SearchIndexBuilder<K> {
 
     /// Initialize `SearchIndexBuilder` with default settings.
     fn default() -> Self {
-        SearchIndexBuilder::from(SearchIndex::default())
+        Self::from(SearchIndex::default())
     } // fn
 
 } // impl Default
@@ -109,7 +109,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// **Default:** `SearchType::Live`
     ///
     /// [`SearchType`]: enum.SearchType.html
-    pub fn search_type(mut self, search_type: SearchType) -> Self {
+    #[must_use] pub fn search_type(mut self, search_type: SearchType) -> Self {
         self.search_type = search_type;
         self
     } // fn
@@ -121,7 +121,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// **Default:** `AutocompleteType::Context`
     ///
     /// [`AutocompleteType`]: enum.AutocompleteType.html
-    pub fn autocomplete_type(mut self, autocomplete_type: AutocompleteType) -> Self {
+    #[must_use] pub fn autocomplete_type(mut self, autocomplete_type: AutocompleteType) -> Self {
         self.autocomplete_type = autocomplete_type;
         self
     } // fn
@@ -149,7 +149,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     ///
     /// [`EddieMetric`]: enum.EddieMetric.html
     #[cfg(feature = "eddie")]
-    pub fn eddie_metric(mut self, eddie_metric: Option<EddieMetric>) -> Self {
+    #[must_use] pub fn eddie_metric(mut self, eddie_metric: Option<EddieMetric>) -> Self {
         self.eddie_metric = eddie_metric;
         self
     } // fn
@@ -180,7 +180,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     ///
     /// **Default:** `3` characters
     #[cfg(any(feature = "eddie", feature = "strsim"))]
-    pub fn fuzzy_length(mut self, fuzzy_length: usize) -> Self {
+    #[must_use] pub fn fuzzy_length(mut self, fuzzy_length: usize) -> Self {
         self.fuzzy_length = fuzzy_length;
         self
     } // fn
@@ -199,7 +199,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     ///
     /// **Default:** `0.3`
     #[cfg(any(feature = "eddie", feature = "strsim"))]
-    pub fn fuzzy_minimum_score(mut self, fuzzy_minimum_score: f64) -> Self {
+    #[must_use] pub fn fuzzy_minimum_score(mut self, fuzzy_minimum_score: f64) -> Self {
         self.fuzzy_minimum_score = fuzzy_minimum_score;
         self
     } // fn
@@ -210,7 +210,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// `&`, `(`, `)`, `*`, `+`, `,`, `-`, `.`, `/`, `:`, `;`, `<`, `=`, `>`,
     /// `?`, `[`, `\`, `]`, `^`, `'`, `{`, `|`, `}`, `~`, ` `, `¡`, `«`, `»`,
     /// `¿`, `×`, `÷`, `ˆ`, `‘`, `’`, `“`, `”`, `„`, `‹`, `›` ]
-    pub fn split_pattern(mut self, split_pattern: Option<Vec<char>>) -> Self {
+    #[must_use] pub fn split_pattern(mut self, split_pattern: Option<Vec<char>>) -> Self {
         self.split_pattern = split_pattern;
         self
     } // fn
@@ -219,7 +219,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// false (case insensitive), all keywords will be normalized to lower case.
     ///
     /// **Default:** `false`
-    pub fn case_sensitive(mut self, case_sensitive: bool) -> Self {
+    #[must_use] pub fn case_sensitive(mut self, case_sensitive: bool) -> Self {
         self.case_sensitive = case_sensitive;
         self
     } // fn
@@ -228,7 +228,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// keyword is shorter the keyword will not be indexed.
     ///
     /// **Default:** `1`
-    pub fn min_keyword_len(mut self, minimum_keyword_length: usize) -> Self {
+    #[must_use] pub fn min_keyword_len(mut self, minimum_keyword_length: usize) -> Self {
         self.minimum_keyword_length = minimum_keyword_length;
         self
     } // fn
@@ -237,7 +237,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// keyword is longer the keyword will not be indexed.
     ///
     /// **Default:** `24`
-    pub fn max_keyword_len(mut self, maximum_keyword_length: usize) -> Self {
+    #[must_use] pub fn max_keyword_len(mut self, maximum_keyword_length: usize) -> Self {
         self.maximum_keyword_length = maximum_keyword_length;
         self
     } // fn
@@ -247,7 +247,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// a single keyword for autocompletion purposes.
     ///
     /// **Default:** `Some(24)`
-    pub fn max_string_len(mut self, maximum_string_length: Option<usize>) -> Self {
+    #[must_use] pub fn max_string_len(mut self, maximum_string_length: Option<usize>) -> Self {
         self.maximum_string_length = maximum_string_length;
         self
     } // fn
@@ -258,9 +258,9 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// `as`, `a`, `as`, `at`, etc. See also: the [`profile`] utility method.
     ///
     /// [`profile`]: struct.SearchIndex.html#method.profile
-    pub fn exclude_keywords(mut self, exclude_keywords: Option<Vec<String>>) -> Self {
+    #[must_use] pub fn exclude_keywords(mut self, exclude_keywords: Option<Vec<String>>) -> Self {
         self.exclude_keywords = exclude_keywords
-            .map(|vec| vec.into_iter().map(|string| string.into()).collect());
+            .map(|vec| vec.into_iter().map(std::convert::Into::into).collect());
         self
     } // fn
 
@@ -268,7 +268,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// overidden by some function arguments.
     ///
     /// **Default:** `5`
-    pub fn max_autocomplete_options(mut self, maximum_autocomplete_options: usize) -> Self {
+    #[must_use] pub fn max_autocomplete_options(mut self, maximum_autocomplete_options: usize) -> Self {
         self.maximum_autocomplete_options = maximum_autocomplete_options;
         self
     } // fn
@@ -277,7 +277,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// overidden by some function arguments.
     ///
     /// **Default:** `100`
-    pub fn max_search_results(mut self, maximum_search_results: usize) -> Self {
+    #[must_use] pub fn max_search_results(mut self, maximum_search_results: usize) -> Self {
         self.maximum_search_results = maximum_search_results;
         self
     } // fn
@@ -288,7 +288,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// also: the `exclude_keywords` list and the `profile` method.
     ///
     /// **Default:** `40_960`
-    pub fn max_keys_per_keyword(mut self, maximum_keys_per_keyword: usize) -> Self {
+    #[must_use] pub fn max_keys_per_keyword(mut self, maximum_keys_per_keyword: usize) -> Self {
         self.maximum_keys_per_keyword = maximum_keys_per_keyword;
         self
     } // fn
@@ -298,13 +298,13 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// should be returning all records if the search string is empty.
     ///
     /// **Default:** `Some("\0".to_string())`
-    pub fn dump_keyword(mut self, dump_keyword: Option<String>) -> Self {
-        self.dump_keyword = dump_keyword.map(|string| string.into());
+    #[must_use] pub fn dump_keyword(mut self, dump_keyword: Option<String>) -> Self {
+        self.dump_keyword = dump_keyword.map(std::convert::Into::into);
         self
     } // fn
 
     /// Build `SearchIndex` from the settings given to the `SearchIndexBuilder`.
-    pub fn build(self) -> SearchIndex<K> {
+    #[must_use] pub fn build(self) -> SearchIndex<K> {
         SearchIndex::from(self)
     } // fn
 

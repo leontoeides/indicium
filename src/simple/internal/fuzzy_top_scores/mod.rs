@@ -28,7 +28,7 @@ use std::{cmp::Ord, cmp::PartialOrd, hash::Hash};
 /// matches for fuzzy string matching.
 
 #[derive(Default)]
-pub(crate) struct FuzzyTopScores<'a, K: Hash + Ord, S: PartialOrd> {
+pub struct FuzzyTopScores<'a, K: Hash + Ord, S: PartialOrd> {
     /// Tracks the top _n_ scores.
     pub(crate) top: HashMap<&'a KString, (&'a BTreeSet<K>, S)>,
     /// Tracks lowest of the top scores.

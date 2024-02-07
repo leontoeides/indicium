@@ -1,6 +1,6 @@
 //! # Indicium Search
 //!
-//! 🔎 A simple in-memory search for collections (Vec, HashMap, BTreeMap, etc)
+//! 🔎 A simple in-memory search for collections (Vec, `HashMap`, `BTreeMap`, etc)
 //! and key-value stores. Features autocompletion.
 //!
 //! There are many incredible search engines available for Rust. Many seem to
@@ -106,7 +106,7 @@
 //!     );
 //! ```
 //!
-//! #### HashMap
+//! #### `HashMap`
 //!
 //! ```rust
 //! # struct MyStruct {
@@ -150,7 +150,7 @@
 //! As long as the `Indexable` trait was implemented for your value type, the
 //! above examples will index a previously populated `Vec` or `HashMap`.
 //! However, the preferred method for large collections is to `insert` into the
-//! `SearchIndex` as you insert into your collection (Vec, HashMap, etc.)
+//! `SearchIndex` as you insert into your collection (Vec, `HashMap`, etc.)
 //!
 //! It's recommended to wrap your target collection (your `Vec`, `HashMap`,
 //! etc.) and this `SearchIndex` together in a new `struct` type. Then,

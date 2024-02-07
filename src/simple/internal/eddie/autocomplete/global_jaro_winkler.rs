@@ -56,7 +56,7 @@ impl<K: std::hash::Hash + std::cmp::Ord> crate::simple::search_index::SearchInde
                 // Insert the score into the top scores (if it's normal and high
                 // enough):
                 if score.is_normal() && score >= self.fuzzy_minimum_score {
-                    top_scores.insert(index_keyword, index_keys, score)
+                    top_scores.insert(index_keyword, index_keys, score);
                 } // if
             }); // for_each
 

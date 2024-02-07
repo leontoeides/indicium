@@ -26,7 +26,7 @@ use std::{cmp::Ord, hash::Hash};
 /// for returning search results.
 
 #[derive(Debug, Default)]
-pub(crate) struct SearchTopScores<'a, K: Hash + Ord> {
+pub struct SearchTopScores<'a, K: Hash + Ord> {
     /// Tracks the top _n_ scores.
     pub(crate) top: HashMap<&'a K, usize>,
     /// Tracks lowest of the top scores.

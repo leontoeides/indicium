@@ -83,7 +83,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// );
     /// ```
 
-    pub fn eddie_keyword(
+    #[must_use] pub fn eddie_keyword(
         &self,
         keyword: &str,
     ) -> Option<&str> {
@@ -96,7 +96,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
         }; // match
 
         // Call global keyword subtitution provider:
-        self.eddie_global_keyword(&keyword).map(|kstring| kstring.as_str())
+        self.eddie_global_keyword(&keyword).map(kstring::KStringBase::as_str)
 
     } // fn
 

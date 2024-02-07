@@ -54,9 +54,9 @@ impl<K: Ord> SearchIndex<K> {
         maximum_search_results: usize,
         maximum_keys_per_keyword: usize,
         dump_keyword: Option<String>,
-    ) -> SearchIndex<K> {
+    ) -> Self {
 
-        SearchIndex {
+        Self {
             b_tree_map: BTreeMap::new(),
             search_type,
             autocomplete_type,
@@ -69,11 +69,11 @@ impl<K: Ord> SearchIndex<K> {
             minimum_keyword_length,
             maximum_keyword_length,
             maximum_string_length,
-            exclude_keywords: exclude_keywords.map(|vec| vec.into_iter().map(|string| string.into()).collect()),
+            exclude_keywords: exclude_keywords.map(|vec| vec.into_iter().map(std::convert::Into::into).collect()),
             maximum_autocomplete_options,
             maximum_search_results,
             maximum_keys_per_keyword,
-            dump_keyword: dump_keyword.map(|string| string.into()),
+            dump_keyword: dump_keyword.map(std::convert::Into::into),
         } // SearchIndex
 
     } // fn

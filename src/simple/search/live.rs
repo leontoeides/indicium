@@ -148,7 +148,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                     let mut search_results: BTreeSet<&K> = self.b_tree_map
                         // Get matching keywords starting with (partial) keyword
                         // string:
-                        .range(last_keyword.to_owned()..)
+                        .range(last_keyword.clone()..)
                         // We did not specify an end bound for our `range`
                         // function (see above.) `range` will return _every_
                         // keyword greater than the supplied keyword. The below
@@ -191,7 +191,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                             .take(*maximum_search_results)
                             // Collect all keyword autocompletions into a
                             // `BTreeSet`:
-                            .collect()
+                            .collect();
                     } // if
 
                     // If `strsim` fuzzy matching enabled, examine the search
@@ -247,7 +247,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                     let mut last_results: BTreeSet<&K> = self.b_tree_map
                         // Get matching keywords starting with (partial) keyword
                         // string:
-                        .range(last_keyword.to_owned()..)
+                        .range(last_keyword.clone()..)
                         // We did not specify an end bound for our `range`
                         // function (see above.) `range` will return _every_
                         // keyword greater than the supplied keyword. The below
@@ -308,7 +308,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                             .take(*maximum_search_results)
                             // Collect all keyword autocompletions into a
                             // `BTreeSet`:
-                            .collect()
+                            .collect();
                     } // if
 
                     // If fuzzy string searching enabled, examine the search
