@@ -107,7 +107,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     ///
     /// [`SearchType`]: enum.SearchType.html
     #[must_use]
-    pub fn search_type(mut self, search_type: SearchType) -> Self {
+    pub const fn search_type(mut self, search_type: SearchType) -> Self {
         self.search_type = search_type;
         self
     } // fn
@@ -120,7 +120,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     ///
     /// [`AutocompleteType`]: enum.AutocompleteType.html
     #[must_use]
-    pub fn autocomplete_type(mut self, autocomplete_type: AutocompleteType) -> Self {
+    pub const fn autocomplete_type(mut self, autocomplete_type: AutocompleteType) -> Self {
         self.autocomplete_type = autocomplete_type;
         self
     } // fn
@@ -134,7 +134,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     ///
     /// [`StrsimMetric`]: enum.StrsimMetric.html
     #[cfg(feature = "strsim")]
-    pub fn strsim_metric(mut self, strsim_metric: Option<StrsimMetric>) -> Self {
+    pub const fn strsim_metric(mut self, strsim_metric: Option<StrsimMetric>) -> Self {
         self.strsim_metric = strsim_metric;
         self
     } // fn
@@ -149,7 +149,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// [`EddieMetric`]: enum.EddieMetric.html
     #[cfg(feature = "eddie")]
     #[must_use]
-    pub fn eddie_metric(mut self, eddie_metric: Option<EddieMetric>) -> Self {
+    pub const fn eddie_metric(mut self, eddie_metric: Option<EddieMetric>) -> Self {
         self.eddie_metric = eddie_metric;
         self
     } // fn
@@ -181,7 +181,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// **Default:** `3` characters
     #[cfg(any(feature = "eddie", feature = "strsim"))]
     #[must_use]
-    pub fn fuzzy_length(mut self, fuzzy_length: usize) -> Self {
+    pub const fn fuzzy_length(mut self, fuzzy_length: usize) -> Self {
         self.fuzzy_length = fuzzy_length;
         self
     } // fn
@@ -201,7 +201,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// **Default:** `0.3`
     #[cfg(any(feature = "eddie", feature = "strsim"))]
     #[must_use]
-    pub fn fuzzy_minimum_score(mut self, fuzzy_minimum_score: f64) -> Self {
+    pub const fn fuzzy_minimum_score(mut self, fuzzy_minimum_score: f64) -> Self {
         self.fuzzy_minimum_score = fuzzy_minimum_score;
         self
     } // fn
@@ -223,7 +223,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     ///
     /// **Default:** `false`
     #[must_use]
-    pub fn case_sensitive(mut self, case_sensitive: bool) -> Self {
+    pub const fn case_sensitive(mut self, case_sensitive: bool) -> Self {
         self.case_sensitive = case_sensitive;
         self
     } // fn
@@ -233,7 +233,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     ///
     /// **Default:** `1`
     #[must_use]
-    pub fn min_keyword_len(mut self, minimum_keyword_length: usize) -> Self {
+    pub const fn min_keyword_len(mut self, minimum_keyword_length: usize) -> Self {
         self.minimum_keyword_length = minimum_keyword_length;
         self
     } // fn
@@ -243,7 +243,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     ///
     /// **Default:** `24`
     #[must_use]
-    pub fn max_keyword_len(mut self, maximum_keyword_length: usize) -> Self {
+    pub const fn max_keyword_len(mut self, maximum_keyword_length: usize) -> Self {
         self.maximum_keyword_length = maximum_keyword_length;
         self
     } // fn
@@ -254,7 +254,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     ///
     /// **Default:** `Some(24)`
     #[must_use]
-    pub fn max_string_len(mut self, maximum_string_length: Option<usize>) -> Self {
+    pub const fn max_string_len(mut self, maximum_string_length: Option<usize>) -> Self {
         self.maximum_string_length = maximum_string_length;
         self
     } // fn
@@ -277,7 +277,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     ///
     /// **Default:** `5`
     #[must_use]
-    pub fn max_autocomplete_options(mut self, maximum_autocomplete_options: usize) -> Self {
+    pub const fn max_autocomplete_options(mut self, maximum_autocomplete_options: usize) -> Self {
         self.maximum_autocomplete_options = maximum_autocomplete_options;
         self
     } // fn
@@ -287,7 +287,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     ///
     /// **Default:** `100`
     #[must_use]
-    pub fn max_search_results(mut self, maximum_search_results: usize) -> Self {
+    pub const fn max_search_results(mut self, maximum_search_results: usize) -> Self {
         self.maximum_search_results = maximum_search_results;
         self
     } // fn
@@ -299,7 +299,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     ///
     /// **Default:** `40_960`
     #[must_use]
-    pub fn max_keys_per_keyword(mut self, maximum_keys_per_keyword: usize) -> Self {
+    pub const fn max_keys_per_keyword(mut self, maximum_keys_per_keyword: usize) -> Self {
         self.maximum_keys_per_keyword = maximum_keys_per_keyword;
         self
     } // fn

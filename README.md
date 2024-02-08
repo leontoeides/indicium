@@ -1,4 +1,7 @@
-# Indicium Search
+# indicium
+[![Docs](https://docs.rs/indicium/badge.svg)](https://docs.rs/indicium)
+[![Crates.io](https://img.shields.io/crates/v/indicium.svg?maxAge=2592000)](https://crates.io/crates/indicium)
+[![msrv](https://img.shields.io/badge/rustc-1.62.1+-red)](https://blog.rust-lang.org/2023/06/01/Rust-1.62.1.html)
 
 🔎 A simple in-memory search for collections (Vec, HashMap, BTreeMap, etc) and
 key-value stores. Features autocompletion.
