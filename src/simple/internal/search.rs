@@ -39,21 +39,19 @@ impl<K: Hash + Ord> SearchIndex<K> {
         }; // if */
 
         // Attempt to get matching keys for the search keyword from BTreeMap:
-        let search_results: BTreeSet<&K> = if let Some(keys) = self.b_tree_map.get(keyword) {
-            // Attempt to get matching keys for search keyword:
-            keys
-                // Iterate over all matching keys and only return
-                // `maximum_search_results` number of keys:
-                .iter()
-                // Only return `maximum_search_results` number of keys:
-                .take(self.maximum_keys_per_keyword)
-                // Insert a reference to each resulting key into the hash set:
-                .collect()
-        } else {
-            // The search keyword did not result in any matches. Return an
-            // empty `BTreeSet`:
-            BTreeSet::new()
-        }; // if
+        let search_results: BTreeSet<&K> =
+            self.b_tree_map
+                .get(keyword)
+                .map_or_else(BTreeSet::new, |keys| {
+                    keys
+                        // Iterate over all matching keys and only return
+                        // `maximum_search_results` number of keys:
+                        .iter()
+                        // Only return `maximum_search_results` number of keys:
+                        .take(self.maximum_keys_per_keyword)
+                        // Insert a reference to each resulting key into hash set:
+                        .collect()
+                }); // map_or_else
 
         // For debug builds:
         #[cfg(debug_assertions)]

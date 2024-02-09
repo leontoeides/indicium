@@ -91,10 +91,11 @@ impl<K: Hash + Ord> SearchIndex<K> {
     pub fn eddie_autocomplete(&self, keyword: &str) -> Vec<&str> {
         // If case sensitivity set, leave case intact. Otherwise, normalize
         // keyword to lower case:
-        let keyword = match self.case_sensitive {
-            true => keyword.to_string(),
-            false => keyword.to_lowercase(),
-        }; // match
+        let keyword = if self.case_sensitive {
+            keyword.to_string()
+        } else {
+            keyword.to_lowercase()
+        }; // if
 
         // Call global autocompletion provider:
         self.eddie_global_autocomplete(&keyword)

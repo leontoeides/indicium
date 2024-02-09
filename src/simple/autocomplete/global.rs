@@ -103,7 +103,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     ) -> Vec<String> {
         // Split search `String` into keywords according to the `SearchIndex`
         // settings. Force "use entire string as a keyword" option off:
-        let mut keywords: Vec<KString> = self.string_keywords(string, SplitContext::Searching);
+        let mut keywords: Vec<KString> = self.string_keywords(string, &SplitContext::Searching);
 
         // For debug builds:
         #[cfg(debug_assertions)]
@@ -111,7 +111,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
         // Pop the last keyword off the list. It's the keyword that we'll be
         // autocompleting:
-        if let Some(last_keyword) = keywords.pop() {
+        keywords.pop().map_or_else(Vec::new, |last_keyword| {
             // Autocomplete the last keyword:
             let mut autocompletions: Vec<&KString> = self
                 .b_tree_map
@@ -216,10 +216,6 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 })
                 // Collect all string autocompletions into a `Vec`:
                 .collect()
-        } else {
-            // The search string did not have a last keyword to autocomplete.
-            // Return an empty `Vec`:
-            Vec::new()
-        } // if
+        }) // map_or_else
     } // fn
 } // impl

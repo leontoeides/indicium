@@ -57,8 +57,9 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
         // Attempt to find the closest match for the user's keyword using the
         // selected string similarity metric defined in the `SearchIndex`:
-        if let Some(eddie_metric) = &self.eddie_metric {
-            match eddie_metric {
+        self.eddie_metric
+            .as_ref()
+            .and_then(|eddie_metric| match eddie_metric {
                 EddieMetric::DamerauLevenshtein => {
                     self.eddie_keyword_global_damerau_levenshtein(index_range, user_keyword)
                 }
@@ -72,12 +73,6 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 EddieMetric::Levenshtein => {
                     self.eddie_keyword_global_levenshtein(index_range, user_keyword)
                 }
-            } // match
-        } else {
-            // No string similarity metric was defined in the `SearchIndex`
-            // settings. Fuzzy string matching effectively turned off.
-            // Return a `None` to the caller:
-            None
-        } // if
+            }) // map_or
     } // fn
 } // impl

@@ -14,14 +14,14 @@ use std::{cmp::Ord, cmp::PartialOrd, hash::Hash};
 
 impl<'a, K: Hash + Ord, S: PartialOrd> FuzzyTopScores<'a, K, S> {
     // -------------------------------------------------------------------------
-    //
+    #![allow(clippy::default_trait_access)]
     /// Instantiates a new "top scores" struct with the caller provided
     /// capacity. If the caller wants to track the "top 10 matches" for a user
     /// provided keyword, the caller would call `FuzzyTopScores::with_capacity(10)`.
 
     pub(crate) fn with_capacity(capacity: usize) -> FuzzyTopScores<'a, K, S> {
         FuzzyTopScores {
-            top: HashMap::with_capacity_and_hasher(capacity, std::default::Default::default()), // HashMap
+            top: HashMap::with_capacity_and_hasher(capacity, std::default::Default::default()),
             bottom: None,
             capacity,
         } // FuzzyTopScores

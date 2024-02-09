@@ -101,33 +101,28 @@ impl<K: Hash + Ord> SearchIndex<K> {
     pub(crate) fn search_keyword(&self, maximum_search_results: &usize, keyword: &str) -> Vec<&K> {
         // If case sensitivity set, leave case intact. Otherwise, normalize
         // keyword to lower case:
-        let keyword = match self.case_sensitive {
-            true => keyword.to_string(),
-            false => keyword.to_lowercase(),
-        }; // match
+        let keyword = if self.case_sensitive {
+            keyword.to_string()
+        } else {
+            keyword.to_lowercase()
+        }; // if
 
         // For debug builds:
         #[cfg(debug_assertions)]
         tracing::debug!("searching: {}", keyword);
 
         // Attempt to get matching keys for the search keyword from BTreeMap:
-        if let Some(keys) = self.b_tree_map.get(&KString::from_ref(&keyword)) {
-            // Attempt to get matching keys for search keyword:
-            keys
-                // Iterate over all matching keys and only return
-                // `maximum_search_results` number of keys:
-                .iter()
-                // Only return `maximum_search_results` number of keys:
-                .take(*maximum_search_results)
-                // Insert a reference to each resulting key into the hash set:
-                .collect()
-
-            // -> If fuzzy matching were to be implemented for
-            // `indicium::simple` it would probably be put here. <-
-        } else {
-            // The search keyword did not result in any matches. Return an
-            // empty `Vec`:
-            Vec::new()
-        } // if
+        self.b_tree_map
+            .get(&KString::from_ref(&keyword))
+            .map_or_else(Vec::new, |keys| {
+                keys
+                    // Iterate over all matching keys and only return
+                    // `maximum_search_results` number of keys:
+                    .iter()
+                    // Only return `maximum_search_results` number of keys:
+                    .take(*maximum_search_results)
+                    // Insert a reference to each resulting key into the hash set:
+                    .collect()
+            }) // map_or_else
     } // fn
 } // impl

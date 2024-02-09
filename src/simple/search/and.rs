@@ -97,7 +97,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
         // Split search `String` into keywords (according to the `SearchIndex`
         // settings). `string_keywords` will **not** allow "use entire string as
         // a keyword," even if enabled in user settings:
-        let keywords: Vec<KString> = self.string_keywords(string, SplitContext::Searching);
+        let keywords: Vec<KString> = self.string_keywords(string, &SplitContext::Searching);
 
         // For debug builds:
         #[cfg(debug_assertions)]
@@ -118,32 +118,27 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 Some(keyword_results) => {
                     search_results = Some(
                         // Check if `search_results` is already populated:
-                        match &search_results {
-                            // If `search_results` is is not empty, intersect
-                            // the current keyword's results with the master
-                            // search results:
-                            Some(search_results) => search_results
-                                // Iterate over each search result record:
-                                .iter()
-                                // Intersect the search result record with the
-                                // keyword results. If the search result record
-                                // doesn't exist in this keyword's results,
-                                // filter it out:
-                                .filter(|key| keyword_results.contains(key))
-                                // Clone each key from the `Intersection`
-                                // iterator or we'll get a doubly-referenced
-                                // `&&K` key:
-                                .copied()
-                                // And collect each key into a `BTreeSet` that
-                                // will become the new `search_results`:
-                                .collect(),
-
-                            // If `search_results` is currently empty,
-                            // initialize it with the first keyword's full
-                            // search results:
-                            None => self.internal_keyword_search(&keyword),
-                        }, // match
-                    );
+                        search_results.as_ref().map_or_else(
+                            || self.internal_keyword_search(&keyword),
+                            |search_results| {
+                                search_results
+                                    // Iterate over each search result record:
+                                    .iter()
+                                    // Intersect the search result record with the
+                                    // keyword results. If the search result record
+                                    // doesn't exist in this keyword's results,
+                                    // filter it out:
+                                    .filter(|key| keyword_results.contains(key))
+                                    // Clone each key from the `Intersection`
+                                    // iterator or we'll get a doubly-referenced
+                                    // `&&K` key:
+                                    .copied()
+                                    // And collect each key into a `BTreeSet` that
+                                    // will become the new `search_results`:
+                                    .collect()
+                            },
+                        ), // map_or_else
+                    ); // Some
                 } // Some
 
                 // Any keyword that returns no results will short-circuit
@@ -153,15 +148,11 @@ impl<K: Hash + Ord> SearchIndex<K> {
         } // for_each
 
         // Return search results:
-        match search_results {
-            // If `search_results` is is not empty, convert the `BTreeMap` to a
-            // `Vec` for caller while observing `maximum_search_results`:
-            Some(search_results) => search_results
+        search_results.map_or_else(Vec::new, |search_results| {
+            search_results
                 .into_iter()
                 .take(*maximum_search_results)
-                .collect(),
-            // If `search_results` is empty, return an empty `Vec`:
-            None => Vec::new(),
-        } // match
+                .collect()
+        }) // map_or_else
     } // fn
 } // impl

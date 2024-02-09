@@ -26,17 +26,11 @@ pub enum SplitContext {
 
 pub fn exclude_keyword(keyword: &str, exclude_keywords: &Option<Vec<KString>>) -> bool {
     // Check to see if there's any keywords in the exclusion list:
-    if let Some(exclude_keywords) = exclude_keywords {
-        // If there are keywords to be excluded, scan the list to see if this
-        // keyword is in it. If so, filter it out (true = filter, false = keep):
+    exclude_keywords.as_ref().map_or(false, |exclude_keywords| {
         exclude_keywords
             .iter()
             .any(|excluded| excluded.as_str() == keyword)
-    } else {
-        // If there are no keywords to be excluded, always allow the keyword
-        // (true = filter, false = keep):
-        false
-    } // if
+    }) // map_or
 } // fn
 
 // -----------------------------------------------------------------------------
@@ -72,39 +66,38 @@ impl<K: Ord> SearchIndex<K> {
     /// keywords that don't meet the defined length restrictions, and remove
     /// excluded keywords.
 
-    pub(crate) fn string_keywords(&self, string: &str, context: SplitContext) -> Vec<KString> {
+    pub(crate) fn string_keywords(&self, string: &str, context: &SplitContext) -> Vec<KString> {
         // If case sensitivity set, leave case intact. Otherwise, normalize the
         // entire string to lower case:
-        let string: KString = match self.case_sensitive {
-            true => KString::from_ref(string),
-            false => KString::from(string.to_lowercase()),
-        }; // match
+        let string: KString = if self.case_sensitive {
+            KString::from_ref(string)
+        } else {
+            KString::from(string.to_lowercase())
+        }; // if
 
         // Split the the string into keywords:
-        let mut keywords: Vec<KString> = if let Some(split_pattern) = &self.split_pattern {
-            // Use the split pattern (a `Vec<char>`) to split the `KString` into
-            // keywords and filter the results:
-            string
-                // Split the `KString` into smaller strings / keywords on
-                // specified characters:
-                .split(split_pattern.as_slice())
-                // Only keep the keyword if it's longer than the minimum length
-                // and shorter than the maximum length:
-                .filter(|keyword| {
-                    let chars = keyword.chars().count();
-                    chars >= self.minimum_keyword_length && chars <= self.maximum_keyword_length
-                }) // filter
-                // Only keep the keyword if it's not in the exclusion list:
-                .filter(|keyword| !exclude_keyword(keyword, &self.exclude_keywords)) // filter
-                // Copy string from reference:
-                .map(KString::from_ref)
-                // Collect all keywords into a `Vec`:
-                .collect()
-        } else {
-            // Split pattern was set to `None`, so do not split the `KString`
-            // into keywords. Return an empty `Vec` instead:
-            Vec::new()
-        };
+        let mut keywords: Vec<KString> =
+            self.split_pattern
+                .as_ref()
+                .map_or_else(Vec::new, |split_pattern| {
+                    string
+                        // Split the `KString` into smaller strings / keywords on
+                        // specified characters:
+                        .split(split_pattern.as_slice())
+                        // Only keep the keyword if it's longer than the minimum length
+                        // and shorter than the maximum length:
+                        .filter(|keyword| {
+                            let chars = keyword.chars().count();
+                            chars >= self.minimum_keyword_length
+                                && chars <= self.maximum_keyword_length
+                        }) // filter
+                        // Only keep the keyword if it's not in the exclusion list:
+                        .filter(|keyword| !exclude_keyword(keyword, &self.exclude_keywords)) // filter
+                        // Copy string from reference:
+                        .map(KString::from_ref)
+                        // Collect all keywords into a `Vec`:
+                        .collect()
+                }); // map_or_else
 
         // Using the whole string as a keyword:
         //
@@ -120,7 +113,7 @@ impl<K: Ord> SearchIndex<K> {
         // If we're searching, keep the whole string if there is no split
         // pattern defined. We'll search by the whole search string without
         // any keyword splitting:
-        if context == SplitContext::Searching
+        if context == &SplitContext::Searching
             && self.split_pattern.is_none()
             && chars >= self.minimum_keyword_length
         {
@@ -131,7 +124,7 @@ impl<K: Ord> SearchIndex<K> {
         // criteria: 1) we're using whole strings as keywords, 2) it's shorter
         // than the maximum, and 3) the keyword is not in the exclusion list.
         } else if let Some(maximum_string_length) = self.maximum_string_length {
-            if context == SplitContext::Indexing
+            if context == &SplitContext::Indexing
                 && chars >= self.minimum_keyword_length
                 && chars <= maximum_string_length
                 && !exclude_keyword(&string, &self.exclude_keywords)

@@ -32,31 +32,27 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 Some(keyword_results) => {
                     search_results = Some(
                         // Check if `search_results` is already populated:
-                        match &search_results {
-                            // If `search_results` is is not empty, intersect
-                            // the current keyword's results with the master
-                            // search results:
-                            Some(search_results) => search_results
-                                // Iterate over each search result record:
-                                .iter()
-                                // Intersect the search result record with the
-                                // keyword results. If the search result record
-                                // doesn't exist in this keyword's results,
-                                // filter it out:
-                                .filter(|key| keyword_results.contains(key))
-                                // Copy each key from the `Intersection`
-                                // iterator or we'll get a doubly-referenced
-                                // `&&K` key:
-                                .copied()
-                                // And collect each key into a `BTreeSet` that
-                                // will become the new `search_results`:
-                                .collect(),
-
-                            // If `search_results` is empty, initialize it with
-                            // the first keyword's full search results:
-                            None => self.internal_keyword_search(keyword),
-                        }, // match
-                    );
+                        search_results.as_ref().map_or_else(
+                            || self.internal_keyword_search(keyword),
+                            |search_results| {
+                                search_results
+                                    // Iterate over each search result record:
+                                    .iter()
+                                    // Intersect the search result record with the
+                                    // keyword results. If the search result record
+                                    // doesn't exist in this keyword's results,
+                                    // filter it out:
+                                    .filter(|key| keyword_results.contains(key))
+                                    // Copy each key from the `Intersection`
+                                    // iterator or we'll get a doubly-referenced
+                                    // `&&K` key:
+                                    .copied()
+                                    // And collect each key into a `BTreeSet` that
+                                    // will become the new `search_results`:
+                                    .collect()
+                            },
+                        ), // map_or_else
+                    ); // Some
                 } // Some
 
                 // Any keyword that returns no results will short-circuit
@@ -80,11 +76,6 @@ impl<K: Hash + Ord> SearchIndex<K> {
         } // if
 
         // Return search results:
-        match search_results {
-            // If master `search_results` is not empty, return it:
-            Some(search_results) => search_results,
-            // If master `search_results` is empty, return an empty `BTreeSet`:
-            None => BTreeSet::new(),
-        } // match
+        search_results.map_or_else(BTreeSet::new, |search_results| search_results)
     } // fn
 } // impl

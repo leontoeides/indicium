@@ -159,40 +159,33 @@ impl<K: Clone + Ord> SearchIndex<K> {
             .for_each(|keyword|
                 // Attempt to get mutuable reference to the _keyword entry_ in
                 // the search index:
-                match self.b_tree_map.get_mut(&keyword) {
-                    // If keyword was found in search index, add _key reference_
-                    // for this record to _keyword entry_:
-                    Some(keys) => {
-                        // Check if the maximum number of keys per keyword
-                        // (records per keyword) limit has been reached. Note
-                        // that the `dump_keyword` does not observe this
-                        // limit.
-                        if keys.len() < self.maximum_keys_per_keyword
-                            || self.dump_keyword == Some(keyword.as_ref().into()) {
+                if let Some(keys) = self.b_tree_map.get_mut(&keyword) {
+                    // Check if the maximum number of keys per keyword
+                    // (records per keyword) limit has been reached. Note
+                    // that the `dump_keyword` does not observe this
+                    // limit.
+                    if keys.len() < self.maximum_keys_per_keyword
+                        || self.dump_keyword == Some(keyword.as_ref().into()) {
                             // If it hasn't, insert the key (record) into the
                             // list:
                             keys.insert(key.clone());
-                        } else {
-                            // If the limit has been reached, do not insert.
-                            // Display warning for debug builds.
-                            #[cfg(debug_assertions)]
-                            tracing::warn!(
-                                "Internal table limit of {} keys per keyword has been reached on insert. \
-                                Record was not attached to `{}` keyword. \
-                                This will impact accuracy of results. \
-                                For this data set, consider using a more comprehensive search solution like MeiliSearch.",
-                                self.maximum_keys_per_keyword,
-                                keyword,
-                            ); // warn!
-                        } // if
-                    }, // Some
-                    // If keyword was not found in search index, initialize
-                    // _keyword entry_ with the _key reference_ for this record:
-                    None => {
-                        let mut b_tree_set = BTreeSet::new();
-                        b_tree_set.insert(key.clone());
-                        self.b_tree_map.insert(keyword.as_ref().into(), b_tree_set);
-                    }, // None
+                    } else {
+                        // If the limit has been reached, do not insert.
+                        // Display warning for debug builds.
+                        #[cfg(debug_assertions)]
+                        tracing::warn!(
+                            "Internal table limit of {} keys per keyword has been reached on insert. \
+                            Record was not attached to `{}` keyword. \
+                            This will impact accuracy of results. \
+                            For this data set, consider using a more comprehensive search solution like MeiliSearch.",
+                            self.maximum_keys_per_keyword,
+                            keyword,
+                        ); // warn!
+                    } // if
+                } else {
+                    let mut b_tree_set = BTreeSet::new();
+                    b_tree_set.insert(key.clone());
+                    self.b_tree_map.insert(keyword.as_ref().into(), b_tree_set);
                 } // match
             ); // for_each
     } // fn

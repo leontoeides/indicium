@@ -1,3 +1,5 @@
+#![allow(clippy::cognitive_complexity)]
+#![allow(clippy::too_many_lines)]
 #[test]
 fn simple() {
     use crate::simple::internal::string_keywords::SplitContext;
@@ -51,7 +53,7 @@ fn simple() {
     let string_keywords: Vec<KString> = search_index.string_keywords(
         "All is not lost, the unconquerable will, and study of revenge, \
         immortal hate, and the courage never to submit or yield.",
-        SplitContext::Indexing,
+        &SplitContext::Indexing,
     );
 
     assert_eq!(
@@ -77,7 +79,7 @@ fn simple() {
     let string_keywords: Vec<KString> = search_index.string_keywords(
         "He prayeth best, who loveth best All things both great and small; For \
         the dear God who loveth us, He made and loveth all.",
-        SplitContext::Searching,
+        &SplitContext::Searching,
     );
 
     assert_eq!(
@@ -92,7 +94,7 @@ fn simple() {
         "Digby was a floccinaucinihilipilificator at heart—which is an \
         eight-dollar word meaning a joker who does not believe in anything he \
         can't bite.",
-        SplitContext::Indexing,
+        &SplitContext::Indexing,
     );
 
     assert_eq!(
