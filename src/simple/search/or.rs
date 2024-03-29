@@ -2,7 +2,7 @@ use crate::simple::internal::string_keywords::SplitContext;
 use crate::simple::internal::SearchTopScores;
 use crate::simple::search_index::SearchIndex;
 use kstring::KString;
-use std::{cmp::Ord, collections::BTreeMap, hash::Hash};
+use std::{collections::BTreeMap, hash::Hash};
 
 // -----------------------------------------------------------------------------
 

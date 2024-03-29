@@ -10,7 +10,6 @@ mod results;
 
 use crate::select2::{Pagination, Record};
 use serde::{Deserialize, Serialize};
-use std::clone::Clone;
 use std::cmp::{Eq, PartialEq};
 use std::fmt::Debug;
 use std::hash::Hash;

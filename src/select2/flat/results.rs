@@ -1,6 +1,5 @@
 use crate::select2::flat::{FlatResults, Selectable};
 use crate::select2::{Pagination, Record, Request};
-use std::clone::Clone;
 use std::io::{Error, ErrorKind};
 
 // -----------------------------------------------------------------------------

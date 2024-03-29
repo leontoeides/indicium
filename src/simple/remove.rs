@@ -9,7 +9,6 @@ use std::collections::HashSet;
 // Static dependencies:
 use crate::simple::{indexable::Indexable, search_index::SearchIndex};
 use kstring::KString;
-use std::{clone::Clone, cmp::Ord};
 
 // -----------------------------------------------------------------------------
 

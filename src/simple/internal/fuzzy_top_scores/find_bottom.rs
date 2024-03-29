@@ -1,5 +1,5 @@
 use crate::simple::internal::FuzzyTopScores;
-use std::{clone::Clone, cmp::Ord, cmp::PartialOrd, hash::Hash};
+use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 

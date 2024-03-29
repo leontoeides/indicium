@@ -8,7 +8,7 @@ use std::collections::HashMap;
 
 // Static dependencies:
 use crate::simple::internal::SearchTopScores;
-use std::{cmp::Ord, hash::Hash};
+use std::{hash::Hash};
 
 // -----------------------------------------------------------------------------
 
@@ -19,7 +19,7 @@ impl<'a, K: Hash + Ord> SearchTopScores<'a, K> {
     /// capacity. If the caller wants to track the "top 10 matches" for a user
     /// provided keyword, the caller would call `SearchTopScores::with_capacity(10)`.
 
-    pub(crate) fn with_capacity(capacity: usize) -> SearchTopScores<'a, K> {
+    pub(crate) fn with_capacity(capacity: usize) -> Self {
         SearchTopScores {
             top: HashMap::with_capacity_and_hasher(capacity, std::default::Default::default()),
             bottom: None,

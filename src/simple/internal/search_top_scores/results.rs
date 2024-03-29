@@ -1,5 +1,5 @@
 use crate::simple::internal::SearchTopScores;
-use std::{cmp::Ord, hash::Hash};
+use std::{hash::Hash};
 
 // -----------------------------------------------------------------------------
 

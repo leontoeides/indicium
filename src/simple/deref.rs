@@ -1,7 +1,7 @@
 use crate::simple::search_index::SearchIndex;
 use kstring::KString;
 use std::collections::{BTreeMap, BTreeSet};
-use std::{cmp::Ord, ops::Deref};
+use std::{ops::Deref};
 
 // -----------------------------------------------------------------------------
 //

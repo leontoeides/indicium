@@ -1,6 +1,5 @@
 use crate::select2::grouped::{Group, Groupable, GroupableRecord, GroupedResults};
 use crate::select2::{Pagination, Record, Request};
-use std::clone::Clone;
 use std::cmp::{Eq, PartialEq};
 use std::collections::BTreeMap;
 use std::fmt::{Debug, Display};

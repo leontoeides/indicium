@@ -1,5 +1,6 @@
+#![allow(clippy::too_many_lines)]
+
 use crate::simple::{AutocompleteType, EddieMetric, SearchIndex, SearchType, StrsimMetric};
-use std::cmp::Ord;
 
 // -----------------------------------------------------------------------------
 //
@@ -7,7 +8,7 @@ use std::cmp::Ord;
 /// `SearchIndex::new()` or `SearchIndexBuilder`.
 
 impl<K: Ord> Default for SearchIndex<K> {
-    #![allow(clippy::too_many_lines)]
+
     fn default() -> Self {
         Self::new(
             SearchType::Live,                // Search type.

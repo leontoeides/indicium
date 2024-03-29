@@ -1,7 +1,7 @@
 use crate::simple::search_index::SearchIndex;
 use crate::simple::StrsimMetric;
 use kstring::KString;
-use std::{cmp::Ord, collections::BTreeSet, hash::Hash};
+use std::{collections::BTreeSet, hash::Hash};
 
 // -----------------------------------------------------------------------------
 

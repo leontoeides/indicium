@@ -1,5 +1,4 @@
 use crate::simple::search_index::SearchIndex;
-use std::cmp::Ord;
 use std::collections::BTreeSet;
 use std::hash::Hash;
 

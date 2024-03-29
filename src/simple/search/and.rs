@@ -1,7 +1,7 @@
 use crate::simple::internal::string_keywords::SplitContext;
 use crate::simple::search_index::SearchIndex;
 use kstring::KString;
-use std::{cmp::Ord, collections::BTreeSet, hash::Hash};
+use std::{collections::BTreeSet, hash::Hash};
 
 // -----------------------------------------------------------------------------
 

@@ -20,7 +20,7 @@ use std::collections::HashMap;
 // Static dependencies:
 use kstring::KString;
 use std::collections::BTreeSet;
-use std::{cmp::Ord, cmp::PartialOrd, hash::Hash};
+use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 //

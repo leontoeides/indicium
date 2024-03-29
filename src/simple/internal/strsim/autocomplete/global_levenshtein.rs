@@ -1,7 +1,7 @@
 use crate::simple::internal::FuzzyTopScores;
 use crate::simple::search_index::SearchIndex;
 use kstring::KString;
-use std::{cmp::Ord, collections::BTreeSet, hash::Hash};
+use std::{collections::BTreeSet, hash::Hash};
 use strsim::normalized_levenshtein;
 
 // -----------------------------------------------------------------------------

@@ -8,7 +8,7 @@ use std::collections::HashMap;
 
 // Static dependencies:
 use crate::simple::internal::FuzzyTopScores;
-use std::{cmp::Ord, cmp::PartialOrd, hash::Hash};
+use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
@@ -19,7 +19,7 @@ impl<'a, K: Hash + Ord, S: PartialOrd> FuzzyTopScores<'a, K, S> {
     /// capacity. If the caller wants to track the "top 10 matches" for a user
     /// provided keyword, the caller would call `FuzzyTopScores::with_capacity(10)`.
 
-    pub(crate) fn with_capacity(capacity: usize) -> FuzzyTopScores<'a, K, S> {
+    pub(crate) fn with_capacity(capacity: usize) -> Self {
         FuzzyTopScores {
             top: HashMap::with_capacity_and_hasher(capacity, std::default::Default::default()),
             bottom: None,

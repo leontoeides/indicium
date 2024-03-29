@@ -1,7 +1,6 @@
 use crate::simple::{AutocompleteType, EddieMetric, SearchIndex, SearchType, StrsimMetric};
 use kstring::KString;
 use std::collections::{BTreeMap, BTreeSet};
-use std::{clone::Clone, cmp::Ord};
 
 // -----------------------------------------------------------------------------
 //

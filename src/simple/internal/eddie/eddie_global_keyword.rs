@@ -1,7 +1,7 @@
 use crate::simple::search_index::SearchIndex;
 use crate::simple::EddieMetric;
 use kstring::KString;
-use std::{cmp::Ord, hash::Hash};
+use std::{hash::Hash};
 
 // -----------------------------------------------------------------------------
 

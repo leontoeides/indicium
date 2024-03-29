@@ -1,6 +1,6 @@
 use crate::simple::internal::FuzzyTopScores;
 use kstring::KString;
-use std::{cmp::Ord, cmp::PartialOrd, collections::BTreeSet, hash::Hash};
+use std::{collections::BTreeSet, hash::Hash};
 
 // -----------------------------------------------------------------------------
 
