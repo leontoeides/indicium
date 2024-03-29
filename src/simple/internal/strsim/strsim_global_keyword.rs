@@ -57,6 +57,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
         // Attempt to find the closest match for the user's keyword using the
         // selected string similarity metric defined in the `SearchIndex`:
+        #[allow(clippy::option_if_let_else)] // I hate this lint
         if let Some(strsim_metric) = &self.strsim_metric {
             match strsim_metric {
                 StrsimMetric::DamerauLevenshtein => {

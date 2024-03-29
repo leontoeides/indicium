@@ -182,7 +182,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                         .take(*maximum_search_results)
                         // Collect all keyword autocompletions into a
                         // `BTreeSet`:
-                        .collect()
+                        .collect();
                 } // if
 
                 // Return search results to caller:
@@ -296,7 +296,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                         .take(*maximum_search_results)
                         // Collect all keyword autocompletions into a
                         // `BTreeSet`:
-                        .collect()
+                        .collect();
                 } // if
 
                 // Return search results to caller:
