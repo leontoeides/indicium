@@ -1,5 +1,5 @@
 use crate::simple::search_index::SearchIndex;
-use std::{hash::Hash};
+use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 

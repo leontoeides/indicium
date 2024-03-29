@@ -8,7 +8,6 @@ use crate::simple::{AutocompleteType, EddieMetric, SearchIndex, SearchType, Strs
 /// `SearchIndex::new()` or `SearchIndexBuilder`.
 
 impl<K: Ord> Default for SearchIndex<K> {
-
     fn default() -> Self {
         Self::new(
             SearchType::Live,                // Search type.

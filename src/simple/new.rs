@@ -1,5 +1,5 @@
 use crate::simple::{AutocompleteType, EddieMetric, SearchIndex, SearchType, StrsimMetric};
-use std::{collections::BTreeMap};
+use std::collections::BTreeMap;
 
 // -----------------------------------------------------------------------------
 

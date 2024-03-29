@@ -3,7 +3,7 @@
 use crate::simple::internal::string_keywords::SplitContext;
 use crate::simple::search_index::SearchIndex;
 use kstring::KString;
-use std::{hash::Hash};
+use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 

@@ -18,7 +18,7 @@ use ahash::HashMap;
 use std::collections::HashMap;
 
 // Static dependencies:
-use std::{hash::Hash};
+use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 //

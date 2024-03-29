@@ -133,7 +133,8 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     ///
     /// [`StrsimMetric`]: enum.StrsimMetric.html
     #[cfg(feature = "strsim")]
-    #[must_use] pub const fn strsim_metric(mut self, strsim_metric: Option<StrsimMetric>) -> Self {
+    #[must_use]
+    pub const fn strsim_metric(mut self, strsim_metric: Option<StrsimMetric>) -> Self {
         self.strsim_metric = strsim_metric;
         self
     } // fn

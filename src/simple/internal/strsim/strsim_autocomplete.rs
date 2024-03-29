@@ -1,5 +1,5 @@
 use crate::simple::search_index::SearchIndex;
-use std::{hash::Hash};
+use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
@@ -87,7 +87,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// );
     /// ```
 
-    #[must_use] pub fn strsim_autocomplete(&self, keyword: &str) -> Vec<&str> {
+    #[must_use]
+    pub fn strsim_autocomplete(&self, keyword: &str) -> Vec<&str> {
         // If case sensitivity set, leave case intact. Otherwise, normalize
         // keyword to lower case:
         let keyword = if self.case_sensitive {

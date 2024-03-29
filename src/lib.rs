@@ -245,7 +245,6 @@
 #![forbid(unsafe_code)]
 #![warn(clippy::all, clippy::pedantic, clippy::nursery, clippy::cargo)]
 #![allow(clippy::module_name_repetitions)]
-
 #![doc(html_favicon_url = "https://www.arkiteq.ca/crates/indicium/icon.png")]
 #![doc(html_logo_url = "https://www.arkiteq.ca/crates/indicium/logo.png")]
 
