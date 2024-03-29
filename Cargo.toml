@@ -26,10 +26,10 @@ strsim = [ "dep:strsim" ]
 [dependencies]
 ahash = { version = "0.8", optional = true }
 eddie = { version = "0.4", optional = true }
-gxhash = { version = "2.2", optional = true }
+gxhash = { version = "3.1", optional = true }
 kstring = "2.0"
 serde = { version = "1.0", features = [ "derive" ], optional = true }
-strsim = { version = "0.10", optional = true }
+strsim = { version = "0.11", optional = true }
 tracing = "0.1"
 
 [dev-dependencies]
