@@ -11,9 +11,7 @@ license = "MIT OR Apache-2.0"
 publish = true
 readme = "README.md"
 repository = "https://github.com/leontoeides/indicium"
-
-[badges]
-maintenance = { status = "actively-developed" }
+rust-version = "1.62.1"
 
 [features]
 default = [ "simple", "eddie", "ahash" ]
@@ -36,3 +34,6 @@ tracing = "0.1"
 
 [dev-dependencies]
 pretty_assertions = "1"
+
+[badges]
+maintenance = { status = "actively-developed" }
