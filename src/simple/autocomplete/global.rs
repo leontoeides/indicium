@@ -190,7 +190,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                     // discard the keys:
                     .map(|(keyword, _keys)| keyword)
                     // Collect all keyword autocompletions into a `Vec`:
-                    .collect()
+                    .collect();
             } // if
 
             // Push a blank placeholder onto the end of the keyword list. We

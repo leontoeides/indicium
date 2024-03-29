@@ -35,6 +35,9 @@ performance may begin to degrade at a point.
 log](https://github.com/leontoeides/indicium/blob/master/CHANGELOG.md) is
 available on GitHub.
 
+* `0.6.1`: Removed `eddie` as the default string similarity crate, for now, due
+to a potential `panic`.
+
 * `0.6.0`: Fix for contextual fuzzy matching for `Live` interactive searches.
 In some cases `Live` search would return global results without properly
 observing the `maximum_search_results` setting. This has been fixed. This will

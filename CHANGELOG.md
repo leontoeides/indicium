@@ -3,6 +3,9 @@
 * Release notes are available on
 [GitHub](https://github.com/leontoeides/indicium/releases).
 
+* `0.6.1`: Removed `eddie` as the default string similarity crate, for now, due
+to a potential `panic`.
+
 * `0.6.0`: Fix for contextual fuzzy matching for `Live` interactive searches.
 In some cases `Live` search would return global results without properly
 observing the `maximum_search_results` setting. This has been fixed. This will

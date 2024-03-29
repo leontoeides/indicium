@@ -173,7 +173,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
             // There were some matches. Return the results without processing:
             autocomplete_options
                 .into_iter()
-                .map(|kstring| kstring.as_str())
+                .map(kstring::KStringBase::as_str)
                 .collect()
         } // if
 
