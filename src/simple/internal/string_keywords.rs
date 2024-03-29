@@ -46,11 +46,9 @@ fn test_exclude_keyword() {
         "fall’n".into(),
     ]); // vec!
 
-    let keyword: KString = "arise".into();
-    assert!(exclude_keyword(&keyword, &excluded_keywords));
+    assert!(exclude_keyword("arise", &excluded_keywords));
 
-    let keyword: KString = "arose".into();
-    assert!(!exclude_keyword(&keyword, &excluded_keywords));
+    assert!(!exclude_keyword("arose", &excluded_keywords));
 }
 
 // -----------------------------------------------------------------------------

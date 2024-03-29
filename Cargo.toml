@@ -14,7 +14,7 @@ repository = "https://github.com/leontoeides/indicium"
 rust-version = "1.62.1"
 
 [features]
-default = [ "simple", "eddie", "ahash" ]
+default = [ "simple", "strsim", "ahash" ]
 simple = []
 select2 = [ "simple", "serde" ]
 fuzzy = [ "eddie" ] # Deprecated feature. Redirects to `eddie` feature.
