@@ -291,4 +291,9 @@ fn simple() {
         search_index.autocomplete_type(&AutocompleteType::Context, "stars are dancers");
     #[cfg(any(feature = "eddie", feature = "strsim"))]
     assert_eq!(autocomplete_options, vec!["stars are dancing".to_string()]);
+
+    // Test UTF-8:
+    let index = crate::simple::SearchIndex::<usize>::default();
+    index.search("лол"); // lol in Cyrillic
+
 } // fn

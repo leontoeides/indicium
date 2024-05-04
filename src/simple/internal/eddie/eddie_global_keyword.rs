@@ -41,9 +41,19 @@ impl<K: Hash + Ord> SearchIndex<K> {
             // The user keyword must be longer than the match length to be
             // evaluated for fuzzy-matches:
             if user_keyword.len() >= self.fuzzy_length {
-                // Use the first _n_ characters of the user's keyword to find
-                // search index keywords to compare against:
-                &user_keyword[0..self.fuzzy_length]
+                // Get the byte index of the _n_th character:
+                let byte_index: Option<usize> = user_keyword
+                    .char_indices()
+                    .take(self.fuzzy_length)
+                    .map(|(idx, _ch)| idx)
+                    .max();
+                // Use the first _n_ characters of the user's keyword. These
+                // first characters are used to find search index keywords to
+                // fuzzy match against:
+                match byte_index {
+                    Some(byte_index) => &user_keyword[0..byte_index],
+                    None => return vec![],
+                } // match
             } else {
                 // The user's keyword is too short. Do not perform any fuzzy
                 // matching:

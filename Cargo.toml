@@ -1,6 +1,6 @@
 [package]
 name = "indicium"
-version = "0.6.1"
+version = "0.6.2"
 authors = ["Dylan Bowker <dylan.bowker@arkiteq.ca>"]
 edition = "2021"
 categories = [ "database-implementations" ]
@@ -17,7 +17,7 @@ rust-version = "1.62.1"
 default = [ "simple", "strsim", "ahash" ]
 simple = []
 select2 = [ "simple", "serde" ]
-fuzzy = [ "eddie" ] # Deprecated feature. Redirects to `eddie` feature.
+fuzzy = [ "strsim" ] # Deprecated feature. Redirects to `strsim` feature.
 ahash = [ "dep:ahash" ]
 eddie = [ "dep:eddie" ]
 gxhash = [ "dep:gxhash" ]
