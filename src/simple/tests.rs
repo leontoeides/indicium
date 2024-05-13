@@ -293,7 +293,12 @@ fn simple() {
     assert_eq!(autocomplete_options, vec!["stars are dancing".to_string()]);
 
     // Test UTF-8:
-    let index = crate::simple::SearchIndex::<usize>::default();
-    index.search("лол"); // lol in Cyrillic
+    let mut search_index = crate::simple::SearchIndex::<usize>::default();
+    search_index.insert(&0, &"лол"); // lol in Cyrillic
+    search_index.insert(&1, &"lol");
+    search_index.insert(&2, &"lol лол");
+    search_index.insert(&3, &"лол lol");
+    let search_results = search_index.search("лол");
+    assert_eq!(search_results, vec![&0, &2, &3]);
 
 } // fn
