@@ -13,11 +13,11 @@
 //! # What's New?
 //!
 //! * Release notes are available on
-//! [GitHub](https://github.com/leontoeides/indicium/releases).
+//!   [GitHub](https://github.com/leontoeides/indicium/releases).
 //!
 //! * The full [change
-//! log](https://github.com/leontoeides/indicium/blob/master/CHANGELOG.md) is
-//! available on GitHub.
+//!   log](https://github.com/leontoeides/indicium/blob/master/CHANGELOG.md) is
+//!   available on GitHub.
 //!
 //! # Quick Start Guide
 //!

@@ -18,15 +18,15 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// find the best match for substitution.
     ///
     /// * `index_range` limits which keywords to compare the user's keyword
-    /// against. For example, if the `index_range` is "super" and the user's
-    /// keyword is "supersonic": only search index keywords beginning with
-    /// "super" will be compared against the user's keyword: "supersonic"
-    /// against "superalloy", "supersonic" against "supergiant" and so on...
+    ///   against. For example, if the `index_range` is "super" and the user's
+    ///   keyword is "supersonic": only search index keywords beginning with
+    ///   "super" will be compared against the user's keyword: "supersonic"
+    ///   against "superalloy", "supersonic" against "supergiant" and so on...
     ///
     /// * `key_set` limits which keywords to compare the user's keyword
-    /// against. For a search index keyword to be considered as a fuzzy match,
-    /// it must contain at least one key that is in this key set. This is how
-    /// fuzzy matching is made contextual.
+    ///   against. For a search index keyword to be considered as a fuzzy match,
+    ///   it must contain at least one key that is in this key set. This is how
+    ///   fuzzy matching is made contextual.
     //
     // Note: these `strsim_autocomplete_*` methods are very similar and may seem
     // repetitive with a lot of boiler plate. These were intentionally made more

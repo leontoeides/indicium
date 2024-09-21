@@ -166,17 +166,17 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// | 3       | Pseudopseudohypoparathyroidism     | 0              |                                  |
     ///
     /// * In example **1**, since the length is set to `2`, the user's keyword
-    /// will only be fuzzy matched against keywords in the search index that
-    /// begin with `su`.
+    ///   will only be fuzzy matched against keywords in the search index that
+    ///   begin with `su`.
     ///
     /// * In example **2**, since the length is set to `4`, the user's keyword
-    /// will only be fuzzy matched against keywords in the search index that
-    /// begin with `anti`.
+    ///   will only be fuzzy matched against keywords in the search index that
+    ///   begin with `anti`.
     ///
     /// * In example **3**, since the length is set to `0`, the user's keyword
-    /// will be fuzzy matched against every keyword in the search index. This is
-    /// OK (or even desirable) if the search index is small, however, this will
-    /// be crippling slow on very large search indicies.
+    ///   will be fuzzy matched against every keyword in the search index. This
+    ///   is OK (or even desirable) if the search index is small, however, this
+    ///   will be crippling slow on very large search indicies.
     ///
     /// **Default:** `3` characters
     #[cfg(any(feature = "eddie", feature = "strsim"))]

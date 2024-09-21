@@ -16,10 +16,10 @@ impl<K: Ord> SearchIndex<K> {
     /// match for substitution.
     ///
     /// * `index_range` limits which keywords to compare the user's keyword
-    /// against. For example, if the `index_range` is "super" and the user's
-    /// keyword is "supersonic": only search index keywords beginning with
-    /// "super" will be compared against the user's keyword: "supersonic"
-    /// against "superalloy", "supersonic" against "supergiant" and so on...
+    ///   against. For example, if the `index_range` is "super" and the user's
+    ///   keyword is "supersonic": only search index keywords beginning with
+    ///   "super" will be compared against the user's keyword: "supersonic"
+    ///   against "superalloy", "supersonic" against "supergiant" and so on...
     //
     // Note: these `strsim_keyword_*` methods are very similar and may seem
     // repetitive with a lot of boiler plate. These were intentionally made more
