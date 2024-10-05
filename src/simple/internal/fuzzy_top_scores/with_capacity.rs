@@ -12,7 +12,7 @@ use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<'a, K: Hash + Ord, S: PartialOrd> FuzzyTopScores<'a, K, S> {
+impl<K: Hash + Ord, S: PartialOrd> FuzzyTopScores<'_, K, S> {
     // -------------------------------------------------------------------------
     #![allow(clippy::default_trait_access)]
     /// Instantiates a new "top scores" struct with the caller provided

@@ -12,7 +12,7 @@ use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<'a, K: Hash + Ord> SearchTopScores<'a, K> {
+impl<K: Hash + Ord> SearchTopScores<'_, K> {
     // -------------------------------------------------------------------------
     #![allow(clippy::default_trait_access)]
     /// Instantiates a new "top scores" struct with the caller provided

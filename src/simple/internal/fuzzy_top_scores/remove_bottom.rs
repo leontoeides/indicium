@@ -3,7 +3,7 @@ use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<'a, K: Hash + Ord, S: PartialOrd> FuzzyTopScores<'a, K, S> {
+impl<K: Hash + Ord, S: PartialOrd> FuzzyTopScores<'_, K, S> {
     // -------------------------------------------------------------------------
     //
     /// Removes the lowest top score from the list. This is normally done before

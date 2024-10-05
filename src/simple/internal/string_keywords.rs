@@ -23,7 +23,7 @@ pub enum SplitContext {
 /// keywords. If it is, function will return `true`. If there are no excluded
 /// keywords, function will always return `false`.
 
-pub fn exclude_keyword(keyword: &str, exclude_keywords: &Option<Vec<KString>>) -> bool {
+pub fn exclude_keyword(keyword: &str, exclude_keywords: Option<&Vec<KString>>) -> bool {
     // Check to see if there's any keywords in the exclusion list:
     exclude_keywords.as_ref().map_or(false, |exclude_keywords| {
         exclude_keywords
@@ -46,9 +46,9 @@ fn test_exclude_keyword() {
         "fall’n".into(),
     ]); // vec!
 
-    assert!(exclude_keyword("arise", &excluded_keywords));
+    assert!(exclude_keyword("arise", excluded_keywords.as_ref()));
 
-    assert!(!exclude_keyword("arose", &excluded_keywords));
+    assert!(!exclude_keyword("arose", excluded_keywords.as_ref()));
 }
 
 // -----------------------------------------------------------------------------
@@ -89,7 +89,7 @@ impl<K: Ord> SearchIndex<K> {
                                 && chars <= self.maximum_keyword_length
                         }) // filter
                         // Only keep the keyword if it's not in the exclusion list:
-                        .filter(|keyword| !exclude_keyword(keyword, &self.exclude_keywords)) // filter
+                        .filter(|keyword| !exclude_keyword(keyword, self.exclude_keywords.as_ref())) // filter
                         // Copy string from reference:
                         .map(KString::from_ref)
                         // Collect all keywords into a `Vec`:
@@ -124,7 +124,7 @@ impl<K: Ord> SearchIndex<K> {
             if context == &SplitContext::Indexing
                 && chars >= self.minimum_keyword_length
                 && chars <= maximum_string_length
-                && !exclude_keyword(&string, &self.exclude_keywords)
+                && !exclude_keyword(&string, self.exclude_keywords.as_ref())
             {
                 // Add field text / entire string to the keyword `Vec`:
                 keywords.push(string);

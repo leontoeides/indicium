@@ -244,7 +244,11 @@
 
 #![forbid(unsafe_code)]
 #![warn(clippy::all, clippy::pedantic, clippy::nursery, clippy::cargo)]
-#![allow(clippy::module_name_repetitions)]
+#![allow(
+    clippy::empty_line_after_doc_comments,
+    clippy::module_name_repetitions,
+    clippy::too_long_first_doc_paragraph
+)]
 #![doc(html_favicon_url = "https://www.arkiteq.ca/crates/indicium/icon.png")]
 #![doc(html_logo_url = "https://www.arkiteq.ca/crates/indicium/logo.png")]
 

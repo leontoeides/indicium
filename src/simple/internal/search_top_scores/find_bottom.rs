@@ -3,7 +3,7 @@ use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<'a, K: Hash + Ord> SearchTopScores<'a, K> {
+impl<K: Hash + Ord> SearchTopScores<'_, K> {
     // -------------------------------------------------------------------------
     //
     /// Finds and caches the lowest (or bottom) top score.
