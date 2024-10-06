@@ -14,10 +14,10 @@ repository = "https://github.com/leontoeides/indicium"
 rust-version = "1.62.1"
 
 [features]
-default = [ "simple", "strsim", "ahash" ]
+default = [ "simple", "dep:strsim", "dep:ahash" ]
 simple = []
-select2 = [ "simple", "serde" ]
-fuzzy = [ "strsim" ] # Deprecated feature. Redirects to `strsim` feature.
+select2 = [ "simple", "dep:serde" ]
+fuzzy = [ "dep:strsim" ] # Deprecated feature. Redirects to `strsim` feature.
 ahash = [ "dep:ahash" ]
 eddie = [ "dep:eddie" ]
 gxhash = [ "dep:gxhash" ]
