@@ -11,7 +11,7 @@ require compiling a separate server binary. I wanted something simple and
 light-weight - an easy-to-use crate that could conveniently search structs and
 collections within my own binary. So, I made `indicium`.
 
-![alt text](https://www.arkiteq.ca/crates/indicium/banner.jpg "Indicium: A Simple In-Memory Search for Rust")
+![alt text](https://www.arkiteq.io.ca/crates/indicium/banner.jpg "Indicium: A Simple In-Memory Search for Rust")
 
 While `indicium` was made with web apps in mind, it is an in-memory search and
 it does not scale indefinitely or to cloud size (i.e. Facebook or Google size).
