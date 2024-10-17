@@ -1,7 +1,7 @@
 [package]
 name = "indicium"
 version = "0.6.3"
-authors = ["Dylan Bowker <dylan.bowker@arkiteq.io.ca>"]
+authors = ["Dylan Bowker <dylan.bowker@arkiteq.io>"]
 edition = "2021"
 categories = [ "database-implementations" ]
 description = "Simple in-memory search for collections and key-value stores."

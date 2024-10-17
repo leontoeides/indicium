@@ -8,7 +8,7 @@
 //! weight, easy to use, and that could conveniently search structs and
 //! collections in my binary. So, I made `indicium`.
 //!
-//! ![alt text](https://www.arkiteq.io.ca/crates/indicium/banner.jpg "Indicium Search - In-Memory Search for Rust Collections")
+//! ![alt text](https://www.arkiteq.io/crates/indicium/banner.jpg "Indicium Search - In-Memory Search for Rust Collections")
 //!
 //! # What's New?
 //!
@@ -249,8 +249,8 @@
     clippy::module_name_repetitions,
     clippy::too_long_first_doc_paragraph
 )]
-#![doc(html_favicon_url = "https://www.arkiteq.io.ca/crates/indicium/icon.png")]
-#![doc(html_logo_url = "https://www.arkiteq.io.ca/crates/indicium/logo.png")]
+#![doc(html_favicon_url = "https://www.arkiteq.io/crates/indicium/icon.png")]
+#![doc(html_logo_url = "https://www.arkiteq.io/crates/indicium/logo.png")]
 
 #[cfg(feature = "simple")]
 pub mod simple;
