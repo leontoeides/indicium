@@ -1,7 +1,8 @@
 # indicium
-[![Docs](https://docs.rs/indicium/badge.svg)](https://docs.rs/indicium)
-[![Crates.io](https://img.shields.io/crates/v/indicium.svg?maxAge=2592000)](https://crates.io/crates/indicium)
-[![msrv](https://img.shields.io/badge/rustc-1.62.1+-red)](https://blog.rust-lang.org/2023/06/01/Rust-1.62.1.html)
+![Crates.io Version](https://img.shields.io/crates/v/indicium)
+![Crates.io MSRV](https://img.shields.io/crates/msrv/indicium)
+![Crates.io License](https://img.shields.io/crates/l/indicium)
+![Crates.io Total Downloads](https://img.shields.io/crates/d/indicium)
 
 A simple in-memory search for collections (Vec, HashMap, BTreeMap, etc) and
 key-value stores. Features autocompletion.
@@ -11,7 +12,7 @@ require compiling a separate server binary. I wanted something simple and
 light-weight - an easy-to-use crate that could conveniently search structs and
 collections within my own binary. So, I made `indicium`.
 
-![alt text](https://www.arkiteq.io/crates/indicium/banner.jpg "Indicium: A Simple In-Memory Search for Rust")
+<img src="https://www.arkiteq.io/crates/indicium/banner.jpg" alt="Indicium: A Simple In-Memory Search for Rust" width="400"/>
 
 While `indicium` was made with web apps in mind, it is an in-memory search and
 it does not scale indefinitely or to cloud size (i.e. Facebook or Google size).
@@ -26,7 +27,16 @@ crate is primarily limited by available memory. However, depending on the nature
 your data-set and if there are keywords that are repeated many times,
 performance may begin to degrade at a point.
 
-# What's New?
+# Installation
+
+Configure the dependencies in your project's `Cargo.toml` file:
+
+```toml
+[dependencies]
+indicium = "0.6"
+```
+
+# Release Notes
 
 * Release notes are available on
 [GitHub](https://github.com/leontoeides/indicium/releases).
@@ -34,29 +44,6 @@ performance may begin to degrade at a point.
 * The full [change
 log](https://github.com/leontoeides/indicium/blob/master/CHANGELOG.md) is
 available on GitHub.
-
-* `0.6.2`: Corrected a [panic on UTF-8
-searches](https://github.com/leontoeides/indicium/issues/2).
-
-* `0.6.1`: Removed `eddie` as the default string similarity crate, for now, due
-to a potential `panic`.
-
-* `0.6.0`: Fix for contextual fuzzy matching for `Live` interactive searches.
-In some cases `Live` search would return global results without properly
-observing the `maximum_search_results` setting. This has been fixed. This will
-improve performance and user experience.
-
-* `0.6.0`: New, optional `eddie` feature which is turned on by default. When
-this feature is enabled, this library will utilize
-[Ilia Schelokov](https://github.com/thaumant)'s [eddie](https://lib.rs/crates/eddie)
-crate for [faster](https://github.com/thaumant/eddie/blob/master/benchmarks.md)
-UTF-8 string distance and string similarity calculations.
-
-* `0.6.0`: New, optional `gxhash` feature. `ahash` is still the default hasher.
-When this feature is enabled, this library will utilize
-[Olivier Giniaux](https://github.com/ogxd)'s bleeding edge
-[gxhash](https://lib.rs/crates/gxhash) crate for faster `HashMap` and `HashSet`
-hashing.
 
 # Quick Start Guide
 
@@ -227,3 +214,8 @@ assert_eq!(
     vec!["a very big bird", "a very big birthday"]
 );
 ```
+
+# Crate Status
+
+This crate is passively maintained. This crate does what it's expected to do and
+does it quite well, in my opinion. Frequent updates are not expected.

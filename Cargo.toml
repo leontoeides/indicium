@@ -11,7 +11,7 @@ license = "MIT OR Apache-2.0"
 publish = true
 readme = "README.md"
 repository = "https://github.com/leontoeides/indicium"
-rust-version = "1.62.1"
+rust-version = "1.73.0"
 
 [features]
 default = [ "simple", "dep:strsim", "dep:ahash" ]
