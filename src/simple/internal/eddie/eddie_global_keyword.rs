@@ -16,7 +16,10 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// matches, these `eddie_keyword_*` methods can be used to find the best
     /// match for substitution.
 
-    pub(crate) fn eddie_global_keyword(&self, user_keyword: &str) -> Option<&KString> {
+    pub(crate) fn eddie_global_keyword(
+        &self,
+        user_keyword: &str
+    ) -> Option<&KString> {
         // Build an index keyword range to fuzzy match against.
         //
         // | Example | User Keyword                       | Length | Index Keyword Must Start With... |
@@ -52,7 +55,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // fuzzy match against:
                 match byte_index {
                     Some(byte_index) => &user_keyword[0..byte_index],
-                    None => return vec![],
+                    None => return None,
                 } // match
             } else {
                 // The user's keyword is too short. Do not perform any fuzzy

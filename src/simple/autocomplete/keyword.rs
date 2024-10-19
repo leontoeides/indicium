@@ -103,7 +103,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
         tracing::debug!("autocompleting: {:?}", keyword);
 
         // Attempt to get matching keywords from `BTreeMap`:
-        let autocomplete_options = self
+        let autocomplete_options: Vec<&KString> = self
             .b_tree_map
             // Get matching keywords starting with (partial) keyword string:
             .range(KString::from_ref(&keyword)..)
@@ -121,12 +121,14 @@ impl<K: Hash + Ord> SearchIndex<K> {
             // in New York), do not return "new" as an auto-completed keyword:
             // .filter(|autocompletion| *autocompletion != &keyword)
             // Only return `maximum_autocomplete_options` number of keywords:
-            .take(*maximum_autocomplete_options);
+            .take(*maximum_autocomplete_options)
+            // Collect all keyword autocompletions into a `Vec`:
+            .collect();
 
         // If `eddie` fuzzy matching enabled, examine the resulting
         // auto-complete options before returning them:
         #[cfg(feature = "eddie")]
-        if autocomplete_options.peek().is_none() {
+        if autocomplete_options.is_empty() {
             // No autocomplete options were found for the user's last
             // (partial) keyword. Attempt to use fuzzy string search to find
             // other autocomplete options:
@@ -138,7 +140,9 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // `eddie_autocomplete` returns both the keyword and keys.
                 // We're autocompleting the last (partial) keyword, so discard
                 // the keys:
-                .map(|(keyword, _keys)| keyword.as_str());
+                .map(|(keyword, _keys)| keyword.as_str())
+                // Collect all keyword autocompletions into a `Vec`:
+                .collect()
         } else {
             // There were some matches. Return the results without processing:
             autocomplete_options
@@ -150,7 +154,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
         // If `strsim` fuzzy matching enabled, examine the resulting
         // auto-complete options before returning them:
         #[cfg(all(feature = "strsim", not(feature = "eddie")))]
-        if autocomplete_options.peek().is_none() {
+        if autocomplete_options.is_empty() {
             // No autocomplete options were found for the user's last
             // (partial) keyword. Attempt to use fuzzy string search to find
             // other autocomplete options:
@@ -162,12 +166,15 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // `strsim_autocomplete` returns both the keyword and keys.
                 // We're autocompleting the last (partial) keyword, so discard
                 // the keys:
-                .map(|(keyword, _keys)| keyword.as_str());
+                .map(|(keyword, _keys)| keyword.as_str())
+                // Collect all keyword autocompletions into a `Vec`:
+                .collect()
         } else {
             // There were some matches. Return the results without processing:
             autocomplete_options
                 .into_iter()
                 .map(kstring::KStringBase::as_str)
+                .collect()
         } // if
 
         // If fuzzy string searching disabled, return the resulting
@@ -175,7 +182,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
         #[cfg(not(any(feature = "strsim", feature = "eddie")))]
         autocomplete_options
             .into_iter()
-            .map(KString::as_str)
+            .map(|kstring| kstring.as_str())
             .collect()
     } // fn
 } // impl

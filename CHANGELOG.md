@@ -5,9 +5,7 @@
 
 # 0.6.3
 
-* 2024-10-19: Removed unnecessary `collect` on some iterators. Thank you for
-  pointing this out, `clippy`. This should provide a small performance
-  improvement.
+* 2024-10-19: `strsim` fuzzy matching feature is now enabled on by default.
 
 # 0.6.2
 
