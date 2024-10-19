@@ -49,20 +49,20 @@
 
 # 0.5.1
 
-* Fixes compile failure for the experimental `select2` feature and when not
-  using `fuzzy` feature.
+* 2023-09-01: Fixes compile failure for the experimental `select2` feature and
+  when not using `fuzzy` feature.
 
 # 0.5.0
 
-* 2023-09-01: The `simple` search index now internally employs
+* The `simple` search index now internally employs
   [Ed Page](https://github.com/epage)'s
   [kstring](https://crates.io/crates/kstring)
   crate.
 
-* 2023-09-01: The `dump_keyword` and `profile` function signatures were changed
+* The `dump_keyword` and `profile` function signatures were changed
   slightly, otherwise there's no expected impact to callers.
 
-* 2023-09-01: Miscellaneous performance improvements.
+* Miscellaneous performance improvements.
 
 # 0.4.2
 
