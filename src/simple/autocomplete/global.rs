@@ -113,7 +113,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
         // autocompleting:
         keywords.pop().map_or_else(Vec::new, |last_keyword| {
             // Autocomplete the last keyword:
-            let mut autocompletions: Vec<&KString> = self
+            let mut autocompletions = self
                 .b_tree_map
                 // Get matching keywords starting with (partial) keyword string:
                 .range(KString::from_ref(&last_keyword)..)
@@ -141,9 +141,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // .filter(|autocompletion| *autocompletion != &keyword)
                 // Only return `maximum_autocomplete_options` number of
                 // keywords:
-                .take(*maximum_autocomplete_options)
-                // Collect all keyword autocompletions into a `Vec`:
-                .collect();
+                .take(*maximum_autocomplete_options);
 
             // If `eddie` fuzzy matching enabled, examine the resulting
             // auto-complete options before using them:
@@ -164,9 +162,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                     // `eddie_autocomplete` returns both the keyword and keys.
                     // We're autocompleting the last (partial) keyword, so
                     // discard the keys:
-                    .map(|(keyword, _keys)| keyword)
-                    // Collect all keyword autocompletions into a `Vec`:
-                    .collect();
+                    .map(|(keyword, _keys)| keyword);
             } // if
 
             // If `strsim` fuzzy matching enabled, examine the resulting
@@ -188,31 +184,28 @@ impl<K: Hash + Ord> SearchIndex<K> {
                     // `strsim_autocomplete` returns both the keyword and keys.
                     // We're autocompleting the last (partial) keyword, so
                     // discard the keys:
-                    .map(|(keyword, _keys)| keyword)
-                    // Collect all keyword autocompletions into a `Vec`:
-                    .collect();
+                    .map(|(keyword, _keys)| keyword);
             } // if
 
             // Push a blank placeholder onto the end of the keyword list. We
             // will be putting our autocompletions for the last keyword into
             // this spot:
-            keywords.push("".into());
+            let mut autocompleted_string = keywords.clone();
+            autocompleted_string.push("".into());
 
             // Build autocompleted search strings from the autocompletions
             // derived from the last keyword:
             autocompletions
-                // Iterate over each autocompleted last keyword:
-                .into_iter()
                 // Use the prepended `keywords` and autocompleted last keyword
                 // to build an autocompleted search string:
                 .map(|autocompletion| {
                     // Remove previous autocompleted last keyword from list:
-                    keywords.pop();
+                    autocompleted_string.pop();
                     // Add current autocompleted last keyword to end of list:
-                    keywords.push(autocompletion.clone());
+                    autocompleted_string.push(autocompletion.clone());
                     // Join all keywords together into a single `String` using a
                     // space delimiter:
-                    keywords.join(" ").trim_end().to_string()
+                    autocompleted_string.join(" ").trim_end().to_string()
                 })
                 // Collect all string autocompletions into a `Vec`:
                 .collect()
