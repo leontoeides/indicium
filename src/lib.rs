@@ -1,16 +1,43 @@
-//! # Indicium Search
+//! # indicium
+//! ![Crates.io Version](https://img.shields.io/crates/v/indicium)
+//! ![Crates.io MSRV](https://img.shields.io/crates/msrv/indicium)
+//! ![Crates.io License](https://img.shields.io/crates/l/indicium)
+//! ![Crates.io Total Downloads](https://img.shields.io/crates/d/indicium)
 //!
-//! 🔎 A simple in-memory search for collections (Vec, `HashMap`, `BTreeMap`, etc)
-//! and key-value stores. Features autocompletion.
+//! A simple in-memory search for collections (`Vec`, `HashMap`, `BTreeMap`,
+//! etc.) and key-value stores. Features autocompletion and fuzzy matching.
 //!
 //! There are many incredible search engines available for Rust. Many seem to
-//! require compiling a separate server binary. I wanted something simple, light
-//! weight, easy to use, and that could conveniently search structs and
-//! collections in my binary. So, I made `indicium`.
+//! require compiling a separate server binary. I wanted something simple and
+//! light-weight - an easy-to-use crate that could conveniently search structs
+//! and collections within my own binary. So, I made `indicium`.
 //!
-//! ![alt text](https://www.arkiteq.io/crates/indicium/banner.jpg "Indicium Search - In-Memory Search for Rust Collections")
+//! <img src="https://www.arkiteq.io/crates/indicium/banner.jpg" alt="Indicium: A Simple In-Memory Search for Rust" width="400"/>
 //!
-//! # What's New?
+//! While `indicium` was made with web apps in mind, it is an in-memory search
+//! and it does not scale indefinitely or to cloud size (i.e. Facebook or Google
+//! size). Even in such an environment, it would still be a convenient way of
+//! searching large lists (such as currencies, languages, countries, etc.) It's
+//! also great for applications where there is an anticipated scale limit (i.e.
+//! searching a list of company assets, list of users in a corporate intranet,
+//! etc.)
+//!
+//! Indicium easily can handle millions of records without breaking a sweat
+//! thanks to Rust's [BTreeMap](https://cglab.ca/~abeinges/blah/rust-btree-case/).
+//! This crate is primarily limited by available memory. However, depending on
+//! the nature your data-set and if there are keywords that are repeated many
+//! times, performance may begin to degrade at a point.
+//!
+//! # Installation
+//!
+//! Configure the dependencies in your project's `Cargo.toml` file:
+//!
+//! ```toml
+//! [dependencies]
+//! indicium = "0.6"
+//! ```
+//!
+//! # Release Notes
 //!
 //! * Release notes are available on
 //!   [GitHub](https://github.com/leontoeides/indicium/releases).
@@ -241,6 +268,11 @@
 //!     vec!["a very big bird", "a very big birthday"]
 //! );
 //! ```
+//!
+//! # Crate Status
+//!
+//! This crate is passively maintained. This crate does what it's expected to do
+//! and does it pretty well, in my opinion. Frequent updates are not expected.
 
 #![forbid(unsafe_code)]
 #![warn(clippy::all, clippy::pedantic, clippy::nursery, clippy::cargo)]

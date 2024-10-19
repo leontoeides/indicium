@@ -4,8 +4,8 @@
 ![Crates.io License](https://img.shields.io/crates/l/indicium)
 ![Crates.io Total Downloads](https://img.shields.io/crates/d/indicium)
 
-A simple in-memory search for collections (Vec, HashMap, BTreeMap, etc) and
-key-value stores. Features autocompletion.
+A simple in-memory search for collections (`Vec`, `HashMap`, `BTreeMap`, etc.)
+and key-value stores. Features autocompletion and fuzzy matching.
 
 There are many incredible search engines available for Rust. Many seem to
 require compiling a separate server binary. I wanted something simple and
@@ -39,11 +39,11 @@ indicium = "0.6"
 # Release Notes
 
 * Release notes are available on
-[GitHub](https://github.com/leontoeides/indicium/releases).
+  [GitHub](https://github.com/leontoeides/indicium/releases).
 
 * The full [change
-log](https://github.com/leontoeides/indicium/blob/master/CHANGELOG.md) is
-available on GitHub.
+  log](https://github.com/leontoeides/indicium/blob/master/CHANGELOG.md) is
+  available on GitHub.
 
 # Quick Start Guide
 
@@ -218,4 +218,4 @@ assert_eq!(
 # Crate Status
 
 This crate is passively maintained. This crate does what it's expected to do and
-does it quite well, in my opinion. Frequent updates are not expected.
+does it pretty well, in my opinion. Frequent updates are not expected.
