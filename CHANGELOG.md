@@ -1,46 +1,49 @@
 # What's New?
 
 * Release notes are available on
-[GitHub](https://github.com/leontoeides/indicium/releases).
+  [GitHub](https://github.com/leontoeides/indicium/releases).
 
 # 0.6.3
 
-* Removed unnecessary `collect`s on some iterators. Thank you for pointing this
-  out, `clippy`. This should provide a small performance improvement.
+* 2024-10-19: Removed unnecessary `collect` on some iterators. Thank you for
+  pointing this out, `clippy`. This should provide a small performance
+  improvement.
 
 # 0.6.2
 
-* Corrected a [panic on UTF-8
+* 2024-05-04: Corrected a [panic on UTF-8
   searches](https://github.com/leontoeides/indicium/issues/2).
 
 # 0.6.1
 
-* Removed `eddie` as the default string similarity crate, for now, due to a
-  potential `panic`.
+* 2024-03-28: Removed `eddie` as the default string similarity crate, for now,
+  due to a potential `panic`.
 
 # 0.6.0
 
-* Fix for contextual fuzzy matching for `Live` interactive searches. In some
-  cases `Live` search would return global results without properly observing the
-  `maximum_search_results` setting. This has been fixed. This will improve
-  performance and user experience.
+* 2023-11-18: Fix for contextual fuzzy matching for `Live` interactive searches.
+  In some cases `Live` search would return global results without properly
+  observing the `maximum_search_results` setting. This has been fixed. This will
+  improve performance and user experience.
 
-* New, optional `eddie` feature which is turned on by default. When this feature
-  is enabled, this library will utilize [Ilia Schelokov](https://github.com/thaumant)'s
+* 2023-11-18: New, optional `eddie` feature which is turned on by default. When
+  this feature is enabled, this library will utilize
+  [Ilia Schelokov](https://github.com/thaumant)'s
   [eddie](https://lib.rs/crates/eddie) crate for
   [faster](https://github.com/thaumant/eddie/blob/master/benchmarks.md)
   UTF-8 string distance and string similarity calculations.
 
-* New, optional `gxhash` feature. `ahash` is still the default hasher. When this
-  feature is enabled, this library will utilize
+* 2023-11-18: New, optional `gxhash` feature. `ahash` is still the default
+  hasher. When this feature is enabled, this library will utilize
   [Olivier Giniaux](https://github.com/ogxd)'s bleeding edge
-  [gxhash](https://lib.rs/crates/gxhash) crate for faster `HashMap` and `HashSet`
-  operations.
+  [gxhash](https://lib.rs/crates/gxhash) crate for faster `HashMap` and
+  `HashSet` operations.
 
 # 0.5.2
 
-* New, optional `ahash` feature which is turned on by default. When this feature
-  is enabled, this library will utilize [Tom Kaitchuck](https://crates.io/users/tkaitchuck)'s
+* 2023-10-09: New, optional `ahash` feature which is turned on by default. When
+  this feature is enabled, this library will utilize
+  [Tom Kaitchuck](https://crates.io/users/tkaitchuck)'s
   [ahash](https://lib.rs/crates/ahash) crate for faster `HashMap` and `HashSet`
   operations rather than using the standard library's SipHash.
 
@@ -51,14 +54,15 @@
 
 # 0.5.0
 
-* The `simple` search index now internally employs
-  [Ed Page](https://github.com/epage)'s [kstring](https://crates.io/crates/kstring)
+* 2023-09-01: The `simple` search index now internally employs
+  [Ed Page](https://github.com/epage)'s
+  [kstring](https://crates.io/crates/kstring)
   crate.
 
-* The `dump_keyword` and `profile` function signatures were changed slightly,
-  otherwise there's no expected impact to callers.
+* 2023-09-01: The `dump_keyword` and `profile` function signatures were changed
+  slightly, otherwise there's no expected impact to callers.
 
-* Performance improvements.
+* 2023-09-01: Miscellaneous performance improvements.
 
 # 0.4.2
 
