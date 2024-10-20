@@ -7,6 +7,8 @@
 
 * 2024-10-19: `strsim` fuzzy matching feature is now enabled on by default.
 
+* Applied several `clippy` suggestions.
+
 # 0.6.2
 
 * 2024-05-04: Corrected a [panic on UTF-8
