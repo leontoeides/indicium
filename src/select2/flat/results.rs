@@ -19,6 +19,7 @@ impl Request {
         name = "build flat results",
         skip(self, search_results_keys, search_results_values)
     )]
+    #[allow(clippy::option_if_let_else)]
     pub fn flat_response<K: Clone + Ord + ToString, S: Selectable>(
         &self,
         items_per_page: &Option<usize>,
@@ -60,7 +61,7 @@ impl Request {
             // records dumped from a key-value store:
             let paginated_results: Vec<Record> = search_results_keys
                 // Iterate over each passed record:
-                .into_iter()
+                .iter()
                 // Track the number of keys we've iterated over, so we can
                 // look-up the corresponding values from the
                 // `search_results_values` slice:
@@ -81,11 +82,8 @@ impl Request {
                         // ...was set. Update record with comparison result and
                         // return record:
                         record.selected = record.id == *selected_record;
-                        record
-                    } else {
-                        // ...wasn't set, return record as-is:
-                        record
-                    } // if
+                    } // ...wasn't set, return record as-is:
+                    record
                 }) // map
                 // Collect all Select2 records into a `Vec<Record>`:
                 .collect();
@@ -104,7 +102,7 @@ impl Request {
             // records dumped from a key-value store:
             let unpaginated_results = search_results_keys
                 // Iterate over each passed record:
-                .into_iter()
+                .iter()
                 // Track the number of keys we've iterated over, so we can
                 // look-up the corresponding values from the
                 // `search_results_values` slice:
@@ -121,11 +119,8 @@ impl Request {
                         // ...was set. Update record with comparison result and
                         // return record:
                         record.selected = record.id == *selected_record;
-                        record
-                    } else {
-                        // ...wasn't set, return record as-is:
-                        record
-                    } // if
+                    } // ...wasn't set, return record as-is:
+                    record
                 }) // map
                 // Collect all select2 records into a `Vec<Record>`:
                 .collect();

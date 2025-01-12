@@ -1,6 +1,6 @@
 [package]
 name = "indicium"
-version = "0.6.4"
+version = "0.6.5"
 authors = ["Dylan Bowker <dylan.bowker@arkiteq.io>"]
 edition = "2021"
 categories = ["database-implementations"]
@@ -14,9 +14,9 @@ repository = "https://github.com/leontoeides/indicium"
 rust-version = "1.73.0"
 
 [features]
-default = ["simple", "rustc-hash"]
+default = ["simple"]
 
-simple = ["rapidfuzz"]
+simple = ["rapidfuzz", "rustc-hash"]
 select2 = ["simple", "dep:serde"]
 
 fuzzy = ["dep:strsim"]

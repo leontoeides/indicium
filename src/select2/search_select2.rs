@@ -12,6 +12,7 @@ impl<'a, K: 'a + Debug + Hash + Ord> SearchIndex<K> {
     /// method will return all search results for the client's query.
 
     #[tracing::instrument(level = "trace", name = "select2 search", skip(self))]
+    #[allow(clippy::option_if_let_else)]
     pub fn search_select2(&'a self, request: &'a Request) -> Vec<&'a K> {
         // Get query (or "search term"), if any:
         let query_term: Option<&str> = request.query_term(self.dump_keyword());

@@ -22,23 +22,23 @@
 //! Steps for processing a Select2 request:
 //!
 //! 1. Setup a route to your Select2 server in your Rust web framework. In your
-//! route function, convert the query-string received from the Select2 plug-in
-//! into a [`Request`] struct. Your chosen web framework should provide some
-//! facilities for processing a query-string into a `struct`.
+//!    route function, convert the query-string received from the Select2
+//!    plug-in into a [`Request`] struct. Your chosen web framework should
+//!    provide some facilities for processing a query-string into a `struct`.
 //!
 //! 2. Your search index must already be initialized. Search the index using the
-//! [`search_select2`] method, supplying it with the `Request` struct you've
-//! built from the query-string. This search function will return keys as the
-//! search results.
+//!    [`search_select2`] method, supplying it with the `Request` struct you've
+//!    built from the query-string. This search function will return keys as the
+//!    search results.
 //!
 //! 3. If desired, filter (and further process) the search results.
 //!
 //! 4. Using the keys returned from the `search_select2` search, get the values
-//! from your collection. This crate does not know how to look up values from
-//! your collection, so you must get them.
+//!    from your collection. This crate does not know how to look up values from
+//!    your collection, so you must get them.
 //!
 //! 5. Use either the [`flat_response`] or [`grouped_response`] method to
-//! produce a response for the Select2 plug-in, providing:
+//!    produce a response for the Select2 plug-in, providing:
 //!     * the `Request` struct _in step #1_,
 //!     * the keys from `search_select2` _in step #2_,
 //!     * and the values you got from your collection _in step #4_,
@@ -47,8 +47,8 @@
 //! [`grouped_response`]: struct.Request.html#method.grouped_response
 //!
 //! 6. Depending on whether flat or grouped output was selected, convert the
-//! [`FlatResults`] or [`GroupedResults`] struct into `JSON` and return it to
-//! the client.
+//!    [`FlatResults`] or [`GroupedResults`] struct into `JSON` and return it to
+//!    the client.
 //!
 //! [`FlatResults`]: flat/struct.FlatResults.html
 //! [`GroupedResults`]: grouped/struct.GroupedResults.html
@@ -144,14 +144,13 @@ impl<'a> Request {
     /// For some reason, `Select2` can send the user's search term in either
     /// the `term` field or in the `q` field. This convenience method checks
     /// both fields and returns the user's query term, if available.
+    #[must_use]
+    #[allow(clippy::option_if_let_else)]
     pub fn query_term(&'a self, dump_keyword: Option<&'a str>) -> Option<&'a str> {
         // Get query (search term) if any:
         match &self.q {
             Some(q) => Some(q.as_str()),
-            None => match &self.term {
-                Some(term) => Some(term.as_str()),
-                None => dump_keyword,
-            }, // None
+            None => self.term.as_ref().map_or(dump_keyword, |term| Some(term.as_str())), // None
         } // match
     } // fn
 } // impl
@@ -161,13 +160,14 @@ impl<'a> Request {
 impl Request {
     /// This convenience method will return the appropriate page number for
     /// pagination.
+    #[must_use]
+    #[allow(clippy::missing_panics_doc)] // `None` is handled, `unwrap` is safe
     pub fn page_number(&self) -> usize {
         // Ensure that the `page` number is set correctly before processing:
         match self.page {
             // If no page number specified, assume page 1:
-            None => 1,
             // There is no page 0. Assume caller meant page 1:
-            Some(0) => 1,
+            Some(0) | None => 1,
             // Otherwise continue with caller's page number:
             _ => self.page.unwrap(),
         } // match

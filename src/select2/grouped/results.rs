@@ -24,6 +24,7 @@ impl Request {
         name = "build grouped results",
         skip(self, search_results_keys, search_results_values)
     )]
+    #[allow(clippy::option_if_let_else)]
     pub fn grouped_response<
         K: Clone + Debug + Display + Eq + Hash + PartialEq + ToString,
         G: Groupable,
@@ -69,7 +70,7 @@ impl Request {
             // records dumped from a key-value store:
             let paginated_results: Vec<(&K, &G)> = search_results_keys
                 // Iterate over each key:
-                .into_iter()
+                .iter()
                 // Track the number of keys we've iterated over, so we can
                 // look-up the corresponding values from the
                 // `search_results_values` slice:
@@ -95,7 +96,7 @@ impl Request {
             // records dumped from a key-value store:
             let unpaginated_results: Vec<(&K, &G)> = search_results_keys
                 // Iterate over each key:
-                .into_iter()
+                .iter()
                 // Track the number of keys we've iterated over, so we can
                 // look-up the corresponding values from the
                 // `search_results_values` slice:
@@ -140,7 +141,7 @@ impl Request {
                     Some(group) => group.push(record),
                     // If group does not exist, initialize with this record:
                     None => {
-                        grouped_results.insert(groupable_record.group.to_owned(), vec![record]);
+                        grouped_results.insert(groupable_record.group.clone(), vec![record]);
                     } // None
                 } // match
             }); // for_each
@@ -151,8 +152,8 @@ impl Request {
         let grouped_results: Vec<Group> = grouped_results
             .into_iter()
             .map(|(group, records)| Group {
-                text: group.to_string(),
-                children: records.to_owned(),
+                text: group,
+                children: records,
             }) // map
             .collect();
 
