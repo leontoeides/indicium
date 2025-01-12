@@ -21,7 +21,7 @@ select2 = ["simple", "dep:serde"]
 
 fuzzy = ["dep:strsim"]
 strsim = ["dep:strsim"]
-eddie = ["dep:eddie"] # Quite fast but unstable. Not recommended
+eddie = ["dep:eddie"] # Quite fast but not stable. Not recommended
 rapidfuzz = ["dep:rapidfuzz"]
 
 ahash = ["dep:ahash"]

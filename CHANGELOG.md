@@ -16,8 +16,9 @@
   feature is enabled, this library will utilize
   [Orson Peters](https://github.com/orlp)'
   custom hasher for [rustc-hash](https://crates.io/crates/rustc-hash). The
-  performance improvment is extremely tiny, but this is specifically designed
-  for smaller inputs & strings, and the code-base is signficantly smaller.
+  performance improvment is extremely tiny. However, this hasher is specifically
+  designed for smaller inputs & strings and the code-base is signficantly
+  smaller. Note: hashing is _not_ used extensively in this crate.
 
 * Applied several `clippy` suggestions.
 
