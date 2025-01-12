@@ -25,11 +25,11 @@ pub enum SplitContext {
 
 pub fn exclude_keyword(keyword: &str, exclude_keywords: Option<&Vec<KString>>) -> bool {
     // Check to see if there's any keywords in the exclusion list:
-    exclude_keywords.as_ref().map_or(false, |exclude_keywords| {
+    exclude_keywords.as_ref().is_some_and(|exclude_keywords| {
         exclude_keywords
             .iter()
             .any(|excluded| excluded.as_str() == keyword)
-    }) // map_or
+    }) // is_some_and
 } // fn
 
 // -----------------------------------------------------------------------------

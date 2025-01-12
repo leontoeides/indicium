@@ -1,4 +1,4 @@
-use crate::simple::{AutocompleteType, EddieMetric, SearchType, StrsimMetric};
+use crate::simple::{AutocompleteType, EddieMetric, RapidfuzzMetric, SearchType, StrsimMetric};
 use kstring::KString;
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -15,7 +15,6 @@ use std::collections::{BTreeMap, BTreeSet};
 /// implement the `insert`, `replace`, `remove`, etc. methods for this new
 /// `struct` type that will update both the collection and search index. This
 /// will ensure that both your collection and index are always synchronized.
-
 #[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub struct SearchIndex<K: Ord> {
     /// Search index data structure.
@@ -26,12 +25,16 @@ pub struct SearchIndex<K: Ord> {
     /// The `AutocompleteType` for autocompletions. This setting may be manually
     /// overridden by using the `autocompletion_type` method.
     pub(crate) autocomplete_type: AutocompleteType,
-    /// Used for the `strsim` optional feature. The `StrsimMetric` is used to
-    /// select the string similarity metric (or algorithm) for fuzzy matching.
-    pub(crate) strsim_metric: Option<StrsimMetric>,
     /// Used for the `eddie` optional feature. The `EddieMetric` is used to
     /// select the string similarity metric (or algorithm) for fuzzy matching.
     pub(crate) eddie_metric: Option<EddieMetric>,
+    /// Used for the `rapidfuzz` optional feature. The `RapidfuzzMetric` is used
+    /// to select the string similarity metric (or algorithm) for fuzzy
+    /// matching.
+    pub(crate) rapidfuzz_metric: Option<RapidfuzzMetric>,
+    /// Used for the `strsim` optional feature. The `StrsimMetric` is used to
+    /// select the string similarity metric (or algorithm) for fuzzy matching.
+    pub(crate) strsim_metric: Option<StrsimMetric>,
     /// Used for both the `strsim` and `eddie` optional features. Search index
     /// keyword must match the first _n_ characters of the user's keyword in
     /// order to be evaluated for fuzzy matching.

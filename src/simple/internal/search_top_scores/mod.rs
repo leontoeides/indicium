@@ -12,9 +12,14 @@ mod with_capacity;
 // Conditionally select hash map type based on feature flags:
 #[cfg(feature = "gxhash")]
 type HashMap<K, V> = std::collections::HashMap<K, V, gxhash::GxBuildHasher>;
-#[cfg(all(feature = "ahash", not(feature = "gxhash")))]
+
+#[cfg(feature = "ahash")]
 use ahash::HashMap;
-#[cfg(all(not(feature = "ahash"), not(feature = "gxhash")))]
+
+#[cfg(feature = "rustc-hash")]
+use rustc_hash::FxHashMap as HashMap;
+
+#[cfg(all(not(feature = "ahash"), not(feature = "gxhash"), not(feature = "rustc-hash")))]
 use std::collections::HashMap;
 
 // Static dependencies:
@@ -24,7 +29,6 @@ use std::hash::Hash;
 //
 /// Tracks the top scoring keys. This is intended to track the best _n_ matches
 /// for returning search results.
-
 #[derive(Debug, Default)]
 pub struct SearchTopScores<'a, K: Hash + Ord> {
     /// Tracks the top _n_ scores.

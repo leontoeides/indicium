@@ -222,8 +222,8 @@
 //!
 //! Search only supports exact keyword matches. For `Live` searches, fuzzy
 //! matching is only applied to the last keyword. Consider providing the
-//! `autocomplete` feature to your users as an ergonomic alternative to fuzzy
-//! matching.
+//! `autocomplete` feature to your users to help them build their search as they
+//! type.
 //!
 //! ## 4. Autocompletion
 //!

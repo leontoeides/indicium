@@ -1,4 +1,4 @@
-use crate::simple::{AutocompleteType, EddieMetric, SearchIndex, SearchType, StrsimMetric};
+use crate::simple::{AutocompleteType, EddieMetric, RapidfuzzMetric, SearchIndex, SearchType, StrsimMetric};
 use kstring::KString;
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -11,13 +11,13 @@ use std::collections::{BTreeMap, BTreeSet};
 ///
 /// If you're in a hurry, you can instantiate your search index with
 /// `SearchIndex::default()` instead.
-
 pub struct SearchIndexBuilder<K> {
     b_tree_map: BTreeMap<KString, BTreeSet<K>>,
     search_type: SearchType,
     autocomplete_type: AutocompleteType,
-    strsim_metric: Option<StrsimMetric>,
     eddie_metric: Option<EddieMetric>,
+    rapidfuzz_metric: Option<RapidfuzzMetric>,
+    strsim_metric: Option<StrsimMetric>,
     fuzzy_length: usize,
     fuzzy_minimum_score: f64,
     split_pattern: Option<Vec<char>>,
@@ -41,8 +41,9 @@ impl<K: Clone + Ord> From<SearchIndex<K>> for SearchIndexBuilder<K> {
             b_tree_map: search_index.b_tree_map,
             search_type: search_index.search_type,
             autocomplete_type: search_index.autocomplete_type,
-            strsim_metric: search_index.strsim_metric,
             eddie_metric: search_index.eddie_metric,
+            rapidfuzz_metric: search_index.rapidfuzz_metric,
+            strsim_metric: search_index.strsim_metric,
             fuzzy_length: search_index.fuzzy_length,
             fuzzy_minimum_score: search_index.fuzzy_minimum_score,
             split_pattern: search_index.split_pattern,
@@ -68,8 +69,9 @@ impl<K: Clone + Ord> From<SearchIndexBuilder<K>> for SearchIndex<K> {
             b_tree_map: search_index.b_tree_map,
             search_type: search_index.search_type,
             autocomplete_type: search_index.autocomplete_type,
-            strsim_metric: search_index.strsim_metric,
             eddie_metric: search_index.eddie_metric,
+            rapidfuzz_metric: search_index.rapidfuzz_metric,
+            strsim_metric: search_index.strsim_metric,
             fuzzy_length: search_index.fuzzy_length,
             fuzzy_minimum_score: search_index.fuzzy_minimum_score,
             split_pattern: search_index.split_pattern,
@@ -141,8 +143,8 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
 
     /// String similarity metric type from Ilia Schelokov's
     /// [eddie](https://crates.io/crates/eddie) crate. Used for fuzzy matching
-    /// user's keywords when no exact matches were found. See [`EddieMetric`] for
-    /// more information.
+    /// user's keywords when no exact matches were found. See [`EddieMetric`]
+    /// for more information.
     ///
     /// **Default:** `EddieMetric::Levenshtein`
     ///
@@ -151,6 +153,21 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     #[must_use]
     pub const fn eddie_metric(mut self, eddie_metric: Option<EddieMetric>) -> Self {
         self.eddie_metric = eddie_metric;
+        self
+    } // fn
+
+    /// String similarity metric type from the
+    /// [rapidfuzz](https://crates.io/crates/rapidfuzz) crate. Used for fuzzy
+    /// matching user's keywords when no exact matches were found. See
+    /// [`RapidfuzzMetric`] for more information.
+    ///
+    /// **Default:** `RapidfuzzMetric::Levenshtein`
+    ///
+    /// [`RapidfuzzMetric`]: enum.RapidfuzzMetric.html
+    #[cfg(feature = "rapidfuzz")]
+    #[must_use]
+    pub const fn rapidfuzz_metric(mut self, rapidfuzz_metric: Option<RapidfuzzMetric>) -> Self {
+        self.rapidfuzz_metric = rapidfuzz_metric;
         self
     } // fn
 
@@ -179,7 +196,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     ///   will be crippling slow on very large search indicies.
     ///
     /// **Default:** `3` characters
-    #[cfg(any(feature = "eddie", feature = "strsim"))]
+    #[cfg(any(feature = "eddie", feature = "rapidfuzz", feature = "strsim"))]
     #[must_use]
     pub const fn fuzzy_length(mut self, fuzzy_length: usize) -> Self {
         self.fuzzy_length = fuzzy_length;
@@ -199,7 +216,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// be returned to the user.
     ///
     /// **Default:** `0.3`
-    #[cfg(any(feature = "eddie", feature = "strsim"))]
+    #[cfg(any(feature = "eddie", feature = "rapidfuzz", feature = "strsim"))]
     #[must_use]
     pub const fn fuzzy_minimum_score(mut self, fuzzy_minimum_score: f64) -> Self {
         self.fuzzy_minimum_score = fuzzy_minimum_score;

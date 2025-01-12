@@ -13,15 +13,14 @@ impl<'a, K: Hash + Ord, S: Clone + PartialOrd> FuzzyTopScores<'a, K, S> {
     /// If the caller provided score is higher than the current lowest top
     /// score, the caller's score will be inserted into the collection. If it
     /// provided score doesn't beat the lowest top score, it will be ignored.
-
     pub(crate) fn insert(&mut self, keyword: &'a KString, keys: &'a BTreeSet<K>, score: S) {
         // Check if the `FuzzyTopScores` struct has reached its maximum capacity:
         if self.top.len() >= self.capacity {
-            // If the `FuzzyTopScores` is at capacity and the lowest top score (the
-            // bottom) is currently unknown, find it:
+            // If the `FuzzyTopScores` is at capacity and the lowest top score
+            // (the bottom) is currently unknown, find it:
             if self.bottom.is_none() {
                 self.find_bottom();
-            }
+            } // if
 
             // The lowest top score should be known at this point:
             if let Some(bottom) = &self.bottom {

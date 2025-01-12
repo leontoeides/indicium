@@ -15,7 +15,6 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// Search only supports exact keyword matches and does not use fuzzy
     /// matching. Consider providing the `autocomplete` feature to your users as
     /// an ergonomic alternative to fuzzy matching.
-
     pub(crate) fn internal_search_and(&self, keywords: &[KString]) -> BTreeSet<&K> {
         // This `BTreeSet` is used to contain the search results:
         let mut search_results: Option<BTreeSet<&K>> = None;

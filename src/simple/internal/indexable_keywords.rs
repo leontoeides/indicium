@@ -1,9 +1,14 @@
 // Conditionally select hash map type based on feature flags:
 #[cfg(feature = "gxhash")]
 type HashSet<T> = std::collections::HashSet<T, gxhash::GxBuildHasher>;
-#[cfg(all(feature = "ahash", not(feature = "gxhash")))]
+
+#[cfg(feature = "ahash")]
 use ahash::HashSet;
-#[cfg(all(not(feature = "ahash"), not(feature = "gxhash")))]
+
+#[cfg(feature = "rustc-hash")]
+use rustc_hash::FxHashSet as HashSet;
+
+#[cfg(all(not(feature = "ahash"), not(feature = "gxhash"), not(feature = "rustc-hash")))]
 use std::collections::HashSet;
 
 // Static dependencies:

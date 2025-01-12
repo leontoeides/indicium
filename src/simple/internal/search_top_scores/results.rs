@@ -8,7 +8,6 @@ impl<'a, K: Hash + Ord> SearchTopScores<'a, K> {
     //
     /// Returns the top scoring keywords with their keys, in order of descending
     /// score.
-
     pub(crate) fn results(self) -> impl Iterator<Item = (&'a K, usize)> {
         // Dump the contents of the `HashMap` so that the top scores can be
         // sorted:

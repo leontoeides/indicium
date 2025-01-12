@@ -100,7 +100,6 @@ impl<K: Hash + Ord> SearchIndex<K> {
     ///
     /// assert_eq!(search_results, vec![&2]);
     /// ```
-
     #[tracing::instrument(level = "trace", name = "live search", skip(self))]
     pub(crate) fn search_live(&self, maximum_search_results: &usize, string: &str) -> BTreeSet<&K> {
         // Split search `String` into keywords according to the `SearchIndex`
@@ -137,17 +136,17 @@ impl<K: Hash + Ord> SearchIndex<K> {
                     // Collect all keyword search results into a `BTreeSet`:
                     .collect();
 
-                // If `eddie` fuzzy matching enabled, examine the search
+                // If `rapidfuzz` fuzzy matching enabled, examine the search
                 // results before returning them:
-                #[cfg(feature = "eddie")]
+                #[cfg(feature = "rapidfuzz")]
                 if search_results.is_empty() {
                     // No search results were found for the user's last
                     // (partial) keyword. Attempt to use fuzzy string
                     // search to find other options:
                     search_results = self
-                        .eddie_context_autocomplete(&search_results, &last_keyword)
+                        .rapidfuzz_context_autocomplete(&search_results, &last_keyword)
                         .into_iter()
-                        // `strsim_autocomplete` returns both the keyword
+                        // `rapidfuzz_autocomplete` returns both the keyword
                         // and keys. We're searching for the last (partial)
                         // keyword, so discard the keywords. Flatten the
                         // `BTreeSet<K>` from each search result into our
@@ -163,13 +162,37 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
                 // If `strsim` fuzzy matching enabled, examine the search
                 // results before returning them:
-                #[cfg(all(feature = "strsim", not(feature = "eddie")))]
+                #[cfg(feature = "strsim")]
                 if search_results.is_empty() {
                     // No search results were found for the user's last
                     // (partial) keyword. Attempt to use fuzzy string
                     // search to find other options:
                     search_results = self
                         .strsim_context_autocomplete(&search_results, &last_keyword)
+                        .into_iter()
+                        // `strsim_autocomplete` returns both the keyword
+                        // and keys. We're searching for the last (partial)
+                        // keyword, so discard the keywords. Flatten the
+                        // `BTreeSet<K>` from each search result into our
+                        // collection:
+                        .flat_map(|(_keyword, keys)| keys)
+                        // Only return `maximum_search_results` number of
+                        // keys:
+                        .take(*maximum_search_results)
+                        // Collect all keyword autocompletions into a
+                        // `BTreeSet`:
+                        .collect();
+                } // if
+
+                // If `eddie` fuzzy matching enabled, examine the search
+                // results before returning them:
+                #[cfg(feature = "eddie")]
+                if search_results.is_empty() {
+                    // No search results were found for the user's last
+                    // (partial) keyword. Attempt to use fuzzy string
+                    // search to find other options:
+                    search_results = self
+                        .eddie_context_autocomplete(&search_results, &last_keyword)
                         .into_iter()
                         // `strsim_autocomplete` returns both the keyword
                         // and keys. We're searching for the last (partial)
@@ -225,13 +248,13 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
                 // If fuzzy string searching enabled, examine the search
                 // results before returning them:
-                #[cfg(feature = "eddie")]
+                #[cfg(feature = "rapidfuzz")]
                 if last_results.is_empty() {
                     // No search results were found for the user's last
                     // (partial) keyword. Attempt to use fuzzy string
                     // search to find other options:
                     last_results = self
-                        .eddie_context_autocomplete(&search_results, &last_keyword)
+                        .rapidfuzz_context_autocomplete(&search_results, &last_keyword)
                         .into_iter()
                         // Only keep this result if hasn't already been used
                         // as a keyword:
@@ -263,13 +286,51 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
                 // If fuzzy string searching enabled, examine the search
                 // results before returning them:
-                #[cfg(all(feature = "strsim", not(feature = "eddie")))]
+                #[cfg(feature = "strsim")]
                 if last_results.is_empty() {
                     // No search results were found for the user's last
                     // (partial) keyword. Attempt to use fuzzy string
                     // search to find other options:
                     last_results = self
                         .strsim_context_autocomplete(&search_results, &last_keyword)
+                        .into_iter()
+                        // Only keep this result if hasn't already been used
+                        // as a keyword:
+                        .filter(|(keyword, _keys)| !keywords.contains(keyword))
+                        // Intersect the key results from the autocomplete
+                        // options (produced from this iterator) with the
+                        // search results produced at the top:
+                        .map(|(keyword, keys)| {
+                            (
+                                keyword,
+                                keys.iter()
+                                    .filter(|key| search_results.contains(key))
+                                    .collect::<BTreeSet<_>>(),
+                            )
+                        }) // map
+                        // Autocomplete returns both the keyword and keys.
+                        // We're searching for the last (partial) keyword,
+                        // so discard the keywords. Flatten the
+                        // `BTreeSet<K>` from each search result into our
+                        // collection:
+                        .flat_map(|(_keyword, keys)| keys)
+                        // Only return `maximum_search_results` number of
+                        // keys:
+                        .take(*maximum_search_results)
+                        // Collect all keyword autocompletions into a
+                        // `BTreeSet`:
+                        .collect();
+                } // if
+
+                // If fuzzy string searching enabled, examine the search
+                // results before returning them:
+                #[cfg(feature = "eddie")]
+                if last_results.is_empty() {
+                    // No search results were found for the user's last
+                    // (partial) keyword. Attempt to use fuzzy string
+                    // search to find other options:
+                    last_results = self
+                        .eddie_context_autocomplete(&search_results, &last_keyword)
                         .into_iter()
                         // Only keep this result if hasn't already been used
                         // as a keyword:

@@ -19,7 +19,6 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// Note: This function is lower-level and for internal use only. It does
     /// not observe any settings such as _case-sensitivity_ or _maximum
     /// results_. These constraints should be observed at higher levels.
-
     pub(crate) fn internal_keyword_search(&self, keyword: &str) -> BTreeSet<&K> {
         // Uncomment below if I intend to perform full fuzzy matching in this
         // function:

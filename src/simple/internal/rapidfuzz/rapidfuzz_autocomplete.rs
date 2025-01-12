@@ -1,5 +1,4 @@
 use crate::simple::search_index::SearchIndex;
-use kstring::KString;
 use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
@@ -7,23 +6,18 @@ use std::hash::Hash;
 impl<K: Hash + Ord> SearchIndex<K> {
     // -------------------------------------------------------------------------
     //
-    /// This search function will return keys as the search results. Each
-    /// resulting key can then be used to retrieve the full record from its
-    /// collection. _This search method only accepts a single keyword as the
-    /// search string._ Search keywords must be an exact match.
+    /// Scans the entire search index for the closest matching _n_ keywords
+    /// using the provided keyword and configured string similarity metric. This
+    /// feature relies on the [rapidfuzz](https://crates.io/crates/rapidfuzz)
+    /// crate.
     ///
-    /// The search string is expected to only contain a single keyword. This is
-    /// the lightest and fastest type. It is good for compact interfaces, where
-    /// records are very simple, or data-sets are quite small. Results are
-    /// returned in lexographic order.
-    ///
-    /// Search only supports exact keyword matches and does not use fuzzy
-    /// matching. Consider providing the `autocomplete` feature to your users as
-    /// an ergonomic alternative to fuzzy matching.
+    /// When the user's last (partial) keyword that is meant to be autocompleted
+    /// returns no matches, these `rapidfuzz_autocomplete_*` methods can be used
+    /// to find the best match for substitution.
     ///
     /// Basic usage:
     ///
-    /// ```ignore
+    /// ```rust
     /// # use indicium::simple::{AutocompleteType, Indexable, SearchIndex, SearchType};
     /// # use pretty_assertions::assert_eq;
     /// #
@@ -80,48 +74,32 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// #       search_index.insert(&index, element)
     /// #   );
     /// #
-    /// let search_results = search_index.search_keyword(&20, "Wessex");
+    /// #
+    /// let autocomplete_options = search_index.rapidfuzz_autocomplete(
+    ///     "Wesley"
+    /// );
     ///
     /// assert_eq!(
-    ///     // Convert `BTreeMap<&K>` to `Vec<&K>` for comparison:
-    ///     search_results.into_iter().collect::<Vec<&usize>>(),
-    ///     vec![&1]
+    ///     autocomplete_options,
+    ///     vec![
+    ///         &"wessex".to_string()
+    ///     ]
     /// );
     /// ```
-    //
-    // Note: This function is a variation of the `internal_keyword_search`
-    // function. If this function is modified, it is likely the
-    // `internal_keyword_search` function should be updated also.
-    //
-    // The difference between these two functions is that `keyword_search`
-    // observes `maximum_search_results`, while `internal_keyword_search` does
-    // not.
-    #[tracing::instrument(level = "trace", name = "keyword search", skip(self))]
-    pub(crate) fn search_keyword(&self, maximum_search_results: &usize, keyword: &str) -> Vec<&K> {
+    #[must_use]
+    pub fn rapidfuzz_autocomplete(&self, keyword: &str) -> Vec<&str> {
         // If case sensitivity set, leave case intact. Otherwise, normalize
         // keyword to lower case:
         let keyword = if self.case_sensitive {
             keyword.to_string()
         } else {
             keyword.to_lowercase()
-        }; // if
+        };
 
-        // For debug builds:
-        #[cfg(debug_assertions)]
-        tracing::debug!("searching: {}", keyword);
-
-        // Attempt to get matching keys for the search keyword from BTreeMap:
-        self.b_tree_map
-            .get(&KString::from_ref(&keyword))
-            .map_or_else(Vec::new, |keys| {
-                keys
-                    // Iterate over all matching keys and only return
-                    // `maximum_search_results` number of keys:
-                    .iter()
-                    // Only return `maximum_search_results` number of keys:
-                    .take(*maximum_search_results)
-                    // Insert a reference to each resulting key into the hash set:
-                    .collect()
-            }) // map_or_else
+        // Call global autocompletion provider:
+        self.rapidfuzz_global_autocomplete(&keyword)
+            .into_iter()
+            .map(|(keyword, _keys)| keyword.as_str())
+            .collect()
     } // fn
 } // impl

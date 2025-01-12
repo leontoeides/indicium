@@ -94,8 +94,11 @@ impl<K: Hash + Ord> SearchIndex<K> {
     ///     ]
     /// );
     /// ```
-
     #[tracing::instrument(level = "trace", name = "global autocomplete", skip(self))]
+    // The `collect` is needless only when fuzzy matching is off. I don't think
+    // that removing the `collect` to accomodate this uncommon crate feature
+    // setup is worthwhile.
+    #[allow(clippy::needless_collect)]
     pub(crate) fn autocomplete_global(
         &self,
         maximum_autocomplete_options: &usize,
@@ -145,6 +148,54 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // Collect all keyword autocompletions into a `Vec`:
                 .collect();
 
+            // If `rapidfuzz` fuzzy matching enabled, examine the resulting
+            // auto-complete options before using them:
+            #[cfg(feature = "rapidfuzz")]
+            if autocompletions.is_empty() {
+                // No autocomplete options were found for the user's last
+                // (partial) keyword. Attempt to use fuzzy string search to find
+                // other autocomplete options:
+                autocompletions = self
+                    .rapidfuzz_global_autocomplete(&last_keyword)
+                    .into_iter()
+                    // Only keep this autocompletion if hasn't already been used
+                    // as a keyword:
+                    .filter(|(keyword, _keys)| !keywords.contains(keyword))
+                    // Only return `maximum_autocomplete_options` number of
+                    // keywords:
+                    .take(*maximum_autocomplete_options)
+                    // `rapidfuzz_autocomplete` returns both the keyword and
+                    // keys. We're autocompleting the last (partial) keyword, so
+                    // discard the keys:
+                    .map(|(keyword, _keys)| keyword)
+                    // Collect all keyword autocompletions into a `Vec`:
+                    .collect();
+            } // if
+
+            // If `strsim` fuzzy matching enabled, examine the resulting
+            // auto-complete options before using them:
+            #[cfg(feature = "strsim")]
+            if autocompletions.is_empty() {
+                // No autocomplete options were found for the user's last
+                // (partial) keyword. Attempt to use fuzzy string search to find
+                // other autocomplete options:
+                autocompletions = self
+                    .strsim_global_autocomplete(&last_keyword)
+                    .into_iter()
+                    // Only keep this autocompletion if hasn't already been used
+                    // as a keyword:
+                    .filter(|(keyword, _keys)| !keywords.contains(keyword))
+                    // Only return `maximum_autocomplete_options` number of
+                    // keywords:
+                    .take(*maximum_autocomplete_options)
+                    // `strsim_autocomplete` returns both the keyword and keys.
+                    // We're autocompleting the last (partial) keyword, so
+                    // discard the keys:
+                    .map(|(keyword, _keys)| keyword)
+                    // Collect all keyword autocompletions into a `Vec`:
+                    .collect();
+            } // if
+
             // If `eddie` fuzzy matching enabled, examine the resulting
             // auto-complete options before using them:
             #[cfg(feature = "eddie")]
@@ -162,30 +213,6 @@ impl<K: Hash + Ord> SearchIndex<K> {
                     // keywords:
                     .take(*maximum_autocomplete_options)
                     // `eddie_autocomplete` returns both the keyword and keys.
-                    // We're autocompleting the last (partial) keyword, so
-                    // discard the keys:
-                    .map(|(keyword, _keys)| keyword)
-                    // Collect all keyword autocompletions into a `Vec`:
-                    .collect();
-            } // if
-
-            // If `strsim` fuzzy matching enabled, examine the resulting
-            // auto-complete options before using them:
-            #[cfg(all(feature = "strsim", not(feature = "eddie")))]
-            if autocompletions.is_empty() {
-                // No autocomplete options were found for the user's last
-                // (partial) keyword. Attempt to use fuzzy string search to find
-                // other autocomplete options:
-                autocompletions = self
-                    .strsim_global_autocomplete(&last_keyword)
-                    .into_iter()
-                    // Only keep this autocompletion if hasn't already been used
-                    // as a keyword:
-                    .filter(|(keyword, _keys)| !keywords.contains(keyword))
-                    // Only return `maximum_autocomplete_options` number of
-                    // keywords:
-                    .take(*maximum_autocomplete_options)
-                    // `strsim_autocomplete` returns both the keyword and keys.
                     // We're autocompleting the last (partial) keyword, so
                     // discard the keys:
                     .map(|(keyword, _keys)| keyword)

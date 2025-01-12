@@ -97,7 +97,6 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
     /// let search_results = search_index.search_or(&20, "last England");
     /// assert_eq!(search_results, vec![&0, &1, &2]);
     /// ```
-
     #[tracing::instrument(level = "trace", name = "or search", skip(self))]
     pub(crate) fn search_or(
         &'a self,

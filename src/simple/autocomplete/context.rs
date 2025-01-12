@@ -91,8 +91,11 @@ impl<K: Hash + Ord> SearchIndex<K> {
     ///     ]
     /// );
     /// ```
-
     #[tracing::instrument(level = "trace", name = "context autocomplete", skip(self))]
+    // The `collect` is needless only when fuzzy matching is off. I don't think
+    // that removing the `collect` to accomodate this uncommon crate feature
+    // setup is worthwhile.
+    #[allow(clippy::needless_collect)]
     pub(crate) fn autocomplete_context(
         &self,
         maximum_autocomplete_options: &usize,
@@ -147,15 +150,15 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // Collect all keyword autocompletions into a `Vec`:
                 .collect();
 
-            // If `eddie` fuzzy matching enabled, examine the resulting
+            // If `rapidfuzz` fuzzy matching enabled, examine the resulting
             // auto-complete options before using them:
-            #[cfg(feature = "eddie")]
+            #[cfg(feature = "rapidfuzz")]
             if autocompletions.is_empty() {
                 // No autocomplete options were found for the user's last
                 // (partial) keyword. Attempt to use fuzzy string search to find
                 // other autocomplete options:
                 autocompletions = self
-                    .eddie_context_autocomplete(&search_results, &last_keyword) // eddie_context_autocomplete
+                    .rapidfuzz_context_autocomplete(&search_results, &last_keyword)
                     .into_iter()
                     // Only keep this autocompletion if hasn't already been used
                     // as a keyword:
@@ -163,8 +166,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
                     // Only return `maximum_autocomplete_options` number of
                     // keywords:
                     .take(*maximum_autocomplete_options)
-                    // `eddie_autocomplete` returns both the keyword and keys.
-                    // We're autocompleting the last (partial) keyword, so
+                    // `rapidfuzz_autocomplete` returns both the keyword and
+                    // keys. We're autocompleting the last (partial) keyword, so
                     // discard the keys:
                     .map(|(keyword, _keys)| keyword)
                     // Collect all keyword autocompletions into a `Vec`:
@@ -173,13 +176,13 @@ impl<K: Hash + Ord> SearchIndex<K> {
 
             // If `strsim` fuzzy matching enabled, examine the resulting
             // auto-complete options before using them:
-            #[cfg(all(feature = "strsim", not(feature = "eddie")))]
+            #[cfg(feature = "strsim")]
             if autocompletions.is_empty() {
                 // No autocomplete options were found for the user's last
                 // (partial) keyword. Attempt to use fuzzy string search to find
                 // other autocomplete options:
                 autocompletions = self
-                    .strsim_context_autocomplete(&search_results, &last_keyword) // strsim_context_autocomplete
+                    .strsim_context_autocomplete(&search_results, &last_keyword)
                     .into_iter()
                     // Only keep this autocompletion if hasn't already been used
                     // as a keyword:
@@ -188,6 +191,30 @@ impl<K: Hash + Ord> SearchIndex<K> {
                     // keywords:
                     .take(*maximum_autocomplete_options)
                     // `strsim_autocomplete` returns both the keyword and keys.
+                    // We're autocompleting the last (partial) keyword, so
+                    // discard the keys:
+                    .map(|(keyword, _keys)| keyword)
+                    // Collect all keyword autocompletions into a `Vec`:
+                    .collect();
+            } // if
+
+            // If `eddie` fuzzy matching enabled, examine the resulting
+            // auto-complete options before using them:
+            #[cfg(feature = "eddie")]
+            if autocompletions.is_empty() {
+                // No autocomplete options were found for the user's last
+                // (partial) keyword. Attempt to use fuzzy string search to find
+                // other autocomplete options:
+                autocompletions = self
+                    .eddie_context_autocomplete(&search_results, &last_keyword)
+                    .into_iter()
+                    // Only keep this autocompletion if hasn't already been used
+                    // as a keyword:
+                    .filter(|(keyword, _keys)| !keywords.contains(keyword))
+                    // Only return `maximum_autocomplete_options` number of
+                    // keywords:
+                    .take(*maximum_autocomplete_options)
+                    // `eddie_autocomplete` returns both the keyword and keys.
                     // We're autocompleting the last (partial) keyword, so
                     // discard the keys:
                     .map(|(keyword, _keys)| keyword)

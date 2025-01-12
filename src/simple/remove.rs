@@ -1,9 +1,14 @@
 // Conditionally select hash map type based on feature flags:
 #[cfg(feature = "gxhash")]
 type HashSet<T> = std::collections::HashSet<T, gxhash::GxBuildHasher>;
-#[cfg(all(feature = "ahash", not(feature = "gxhash")))]
+
+#[cfg(feature = "ahash")]
 use ahash::HashSet;
-#[cfg(all(not(feature = "ahash"), not(feature = "gxhash")))]
+
+#[cfg(feature = "rustc-hash")]
+use rustc_hash::FxHashSet as HashSet;
+
+#[cfg(all(not(feature = "ahash"), not(feature = "gxhash"), not(feature = "rustc-hash")))]
 use std::collections::HashSet;
 
 // Static dependencies:
@@ -112,16 +117,17 @@ impl<K: Clone + Ord> SearchIndex<K> {
         for keyword in keywords {
             // Attempt to get mutuable reference to the _keyword entry_ in
             // the search index:
-            let is_empty = self.b_tree_map.get_mut(&keyword).map_or(false, |keys| {
+            let is_empty = self.b_tree_map.get_mut(&keyword).is_some_and(|keys| {
                 // If keyword found in search index, remove the _key
                 // reference_ for this record from _keyword entry_:
                 keys.remove(key);
                 // Return whether the _keyword entry_ is now empty or not:
                 keys.is_empty()
-            }); // map_or
+            }); // is_some_and
+
             if is_empty {
                 self.b_tree_map.remove(&keyword);
-            }
+            } // if
         } // for_each
     } // fn
 } // impl

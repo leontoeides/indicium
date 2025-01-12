@@ -1,12 +1,12 @@
 [package]
 name = "indicium"
-version = "0.6.3"
+version = "0.6.4"
 authors = ["Dylan Bowker <dylan.bowker@arkiteq.io>"]
 edition = "2021"
-categories = [ "database-implementations" ]
+categories = ["database-implementations"]
 description = "Simple in-memory search for collections and key-value stores."
 documentation = "https://docs.rs/indicium"
-keywords = [ "search", "autocomplete", "struct", "vec", "hashmap" ]
+keywords = ["search", "autocomplete", "struct", "vec", "hashmap"]
 license = "MIT OR Apache-2.0"
 publish = true
 readme = "README.md"
@@ -14,29 +14,40 @@ repository = "https://github.com/leontoeides/indicium"
 rust-version = "1.73.0"
 
 [features]
-default = [ "simple" ]
+default = ["simple", "rustc-hash"]
 
-simple = [ "strsim", "ahash" ]
-select2 = [ "simple", "dep:serde" ]
+simple = ["rapidfuzz"]
+select2 = ["simple", "dep:serde"]
 
-fuzzy = [ "dep:strsim" ]
-strsim = [ "dep:strsim" ]
-eddie = [ "dep:eddie" ]
+fuzzy = ["dep:strsim"]
+strsim = ["dep:strsim"]
+eddie = ["dep:eddie"] # Quite fast but unstable. Not recommended
+rapidfuzz = ["dep:rapidfuzz"]
 
-ahash = [ "dep:ahash" ]
-gxhash = [ "dep:gxhash" ]
+ahash = ["dep:ahash"]
+gxhash = ["dep:gxhash"]
+rustc-hash = ["dep:rustc-hash"]
 
 [dependencies]
 ahash = { version = "0.8", optional = true }
 eddie = { version = "0.4", optional = true }
 gxhash = { version = "3.4", optional = true }
 kstring = "2.0"
-serde = { version = "1.0", features = [ "derive" ], optional = true }
+rapidfuzz = { version = "0.5", optional = true }
+rustc-hash = { version = "2.1", optional = true }
+serde = { version = "1.0", features = ["derive"], optional = true }
 strsim = { version = "0.11", optional = true }
 tracing = "0.1"
 
 [dev-dependencies]
+criterion = { version = "0.5", features = ["html_reports"] }
+gabble = "0.1"
 pretty_assertions = "1"
+rand = "0.8.*"
 
 [badges]
 maintenance = { status = "passively-maintained" }
+
+[[bench]]
+name = "all_bench"
+harness = false

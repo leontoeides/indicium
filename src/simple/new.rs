@@ -1,4 +1,4 @@
-use crate::simple::{AutocompleteType, EddieMetric, SearchIndex, SearchType, StrsimMetric};
+use crate::simple::{AutocompleteType, EddieMetric, RapidfuzzMetric, SearchIndex, SearchType, StrsimMetric};
 use std::collections::BTreeMap;
 
 // -----------------------------------------------------------------------------
@@ -13,34 +13,35 @@ impl<K: Ord> SearchIndex<K> {
     /// Basic usage:
     ///
     /// ```rust
-    /// # use indicium::simple::{AutocompleteType, EddieMetric, SearchIndex, SearchType, StrsimMetric};
+    /// # use indicium::simple::{AutocompleteType, EddieMetric, RapidfuzzMetric, SearchIndex, SearchType, StrsimMetric};
     /// #
     /// let mut search_index = SearchIndex::<usize>::new(
-    ///     SearchType::Or,                 // Search type.
-    ///     AutocompleteType::Context,      // Autocompletion type.
-    ///     Some(StrsimMetric::Levenshtein),// String similarity metric type.
-    ///     Some(EddieMetric::Levenshtein), // String similarity metric type.
-    ///     3,                              // String similarity match length.
-    ///     0.5,                            // String similarity minimum score.
+    ///     SearchType::Or,                     // Search type.
+    ///     AutocompleteType::Context,          // Autocompletion type.
+    ///     Some(EddieMetric::Levenshtein),     // String similarity metric type.
+    ///     Some(RapidfuzzMetric::Levenshtein), // String similarity metric type.
+    ///     Some(StrsimMetric::Levenshtein),    // String similarity metric type.
+    ///     3,                                  // String similarity match length.
+    ///     0.5,                                // String similarity minimum score.
     ///     Some(vec![' ', '\n', '\r', '\t', ',', '.']), // Split characters.
-    ///     false,                          // Case sensitive?
-    ///     1,                              // Minimum keyword length (in chars or codepoints.)
-    ///     24,                             // Maximum keyword length (in chars or codepoints.)
-    ///     Some(24),                       // Maximum text length (in chars or codepoints.)
+    ///     false,                              // Case sensitive?
+    ///     1,                                  // Minimum keyword length (in chars or codepoints.)
+    ///     24,                                 // Maximum keyword length (in chars or codepoints.)
+    ///     Some(24),                           // Maximum text length (in chars or codepoints.)
     ///     Some(vec!["a".to_string(), "the".to_string()]), // Keyword exclusions.
-    ///     5,                              // Maximum number of auto-complete options.
-    ///     100,                            // Maximum number of search results.
-    ///     40_960,                         // Maximum keys per keyword.
-    ///     Some("\0".to_string()),         // Dump keyword.
+    ///     5,                                  // Maximum number of auto-complete options.
+    ///     100,                                // Maximum number of search results.
+    ///     40_960,                             // Maximum keys per keyword.
+    ///     Some("\0".to_string()),             // Dump keyword.
     /// );
     /// ```
-
     #[allow(clippy::too_many_arguments)]
     pub fn new(
         search_type: SearchType,
         autocomplete_type: AutocompleteType,
-        strsim_metric: Option<StrsimMetric>,
         eddie_metric: Option<EddieMetric>,
+        rapidfuzz_metric: Option<RapidfuzzMetric>,
+        strsim_metric: Option<StrsimMetric>,
         fuzzy_length: usize,
         fuzzy_minimum_score: f64,
         split_pattern: Option<Vec<char>>,
@@ -58,8 +59,9 @@ impl<K: Ord> SearchIndex<K> {
             b_tree_map: BTreeMap::new(),
             search_type,
             autocomplete_type,
-            strsim_metric,
             eddie_metric,
+            rapidfuzz_metric,
+            strsim_metric,
             fuzzy_length,
             fuzzy_minimum_score,
             split_pattern,

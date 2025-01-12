@@ -91,7 +91,6 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// let search_results = search_index.search_and(&20, "Conqueror third");
     /// assert_eq!(search_results, vec![&3]);
     /// ```
-
     #[tracing::instrument(level = "trace", name = "and search", skip(self))]
     pub(crate) fn search_and(&self, maximum_search_results: &usize, string: &str) -> Vec<&K> {
         // Split search `String` into keywords (according to the `SearchIndex`

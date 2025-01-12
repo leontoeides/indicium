@@ -2,7 +2,6 @@
 //
 /// This is used to select a string similarity metric implemented by Danny Guo's
 /// [strsim](https://crates.io/crates/strsim) crate.
-
 #[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub enum StrsimMetric {
     /// Like optimal string alignment, but substrings can be edited an unlimited
