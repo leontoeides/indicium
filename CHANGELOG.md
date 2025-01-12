@@ -3,6 +3,24 @@
 * Release notes are available on
   [GitHub](https://github.com/leontoeides/indicium/releases).
 
+# 0.6.4
+
+* 2025-01-12: New, default feature for fuzzy matching: `rapidfuzz`. When this
+  feature is enabled, this library will utilize
+  [Max Bachmann](https://crates.io/users/maxbachmann)'s
+  [rapidfuzz](https://crates.io/crates/rapidfuzz) crate for batch `one × many`
+  comparisons. This crate provides a substantial improvement to fuzzy matching
+  performance.
+
+* 2025-01-12: New, default feature for hashing: `rustc-hash`. When this
+  feature is enabled, this library will utilize
+  [Orson Peters](https://github.com/orlp)'
+  custom hasher for [rustc-hash](https://crates.io/crates/rustc-hash). The
+  performance improvment is extremely tiny, but this is specifically designed
+  for smaller inputs & strings, and the code-base is signficantly smaller.
+
+* Applied several `clippy` suggestions.
+
 # 0.6.3
 
 * 2024-10-19: `strsim` fuzzy matching feature is now enabled on by default.
