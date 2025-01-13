@@ -11,12 +11,12 @@ pub struct Osa(BatchComparator<char>);
 /// Optimal String Alignment algorithm, as implemented by the
 /// [rapidfuzz](https://crates.io/crates/rapidfuzz) crate, in a generic manner.
 impl crate::simple::internal::rapidfuzz::BatchComparator for Osa {
-    /// Intantiates a new batch comparator.
+    /// Instantiates a new batch comparator.
     fn new(one: &str) -> Self {
         Self(BatchComparator::new(one.chars()))
     } // fn
 
-    /// Normalized similarity calculated.
+    /// Calculates normalized similarity.
     fn normalized_similarity(
         &self,
         many: &str,

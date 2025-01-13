@@ -289,6 +289,10 @@ fn criterion_benchmark(c: &mut Criterion) {
         "allyls",           // 277
     ]; // vec!
 
+    let chars: Vec<char> = vec!['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
+        'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w',
+        'x', 'y', 'z'];
+
     let mut search_index: SearchIndex<usize> = SearchIndex::default();
 
     all_vec
@@ -298,9 +302,34 @@ fn criterion_benchmark(c: &mut Criterion) {
 
     let mut rng: ThreadRng = rand::thread_rng();
 
-    c.bench_function("all277", |b| b.iter(|| {
-        let all_word = random_all_word(&mut rng);
-        search_index.search_type(&SearchType::Live, black_box(&all_word));
+    // Search for words contained in the `all_vec` set. Since these words
+    // already exist, no autocompletion or fuzzy-matching will be performed:
+    c.bench_function("all277_words_from_set", |b| b.iter(|| {
+        let word = &all_vec[rng.gen_range(0..276)];
+        search_index.search_type(&SearchType::Live, black_box(word));
+    } ));
+
+    // Search for `all` repeatedly. The word `all` doesn't exist in the set,
+    // so this will repeatedly autocomplete the text "all". No fuzzy-matching
+    // will be performed in this scenario:
+    c.bench_function("all277_stub_autocompletion", |b| b.iter(|| {
+        search_index.search_type(&SearchType::Live, black_box("all"));
+    } ));
+
+    // Search for words that start with "all" + a single random character at
+    // the end. For example: `ally`, `allz`, `alla`, etc. Some words will be
+    // autocompleted, and others will be fuzzy matched:
+    c.bench_function("all277_random_partial_words", |b| b.iter(|| {
+        let word = "all".to_string() + &String::from(chars[rng.gen_range(0..25)]);
+        search_index.search_type(&SearchType::Live, black_box(&word));
+    } ));
+
+    // Search for words that start with "all" + a random pseudo-word at the
+    // end. For example: `allilaincy`, `allgruimsab`, `allduieyaior`, etc.
+    // Pretty much all words will be fuzzy matched:
+    c.bench_function("all277_random_full_words", |b| b.iter(|| {
+        let word = random_all_word(&mut rng);
+        search_index.search_type(&SearchType::Live, black_box(&word));
     } ));
 }
 

@@ -193,7 +193,7 @@ fn simple() {
     #[cfg(feature = "eddie")]
     let similar_keyword = search_index.eddie_global_keyword(&"Willy".to_lowercase());
     #[cfg(feature = "rapidfuzz")]
-    let similar_keyword = search_index.rapidfuzz_global_keyword(&"Willy".to_lowercase());
+    let similar_keyword = search_index.rapidfuzz_keyword_global(&"Willy".to_lowercase());
     #[cfg(feature = "strsim")]
     let similar_keyword = search_index.strsim_global_keyword(&"Willy".to_lowercase());
     #[cfg(any(feature = "eddie", feature = "strsim"))]
@@ -205,7 +205,7 @@ fn simple() {
     #[cfg(feature = "eddie")]
     let similar_autocompletions = search_index.eddie_global_autocomplete(&"Normy".to_lowercase());
     #[cfg(feature = "rapidfuzz")]
-    let similar_autocompletions = search_index.rapidfuzz_global_autocomplete(&"Normy".to_lowercase());
+    let similar_autocompletions = search_index.rapidfuzz_autocomplete_global(&"Normy".to_lowercase());
     #[cfg(feature = "strsim")]
     let similar_autocompletions = search_index.strsim_global_autocomplete(&"Normy".to_lowercase());
     #[cfg(any(feature = "eddie", feature = "rapidfuzz", feature = "strsim"))]

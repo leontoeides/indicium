@@ -14,7 +14,6 @@
 ///
 /// [`SearchIndexBuilder`]: struct.SearchIndexBuilder.html
 /// [`SearchIndex::new()`]: struct.SearchIndex.html#method.new
-
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub enum AutocompleteType {
     /// The search string may contain multiple keywords and the last (partial)

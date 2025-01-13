@@ -5,10 +5,10 @@
 /// This batch comparator trait provides a small, generic subset of the
 /// `One × Many comparisons` provided by different algorithms in `rapidfuzz`.
 pub trait BatchComparator {
-    /// Intantiates a new batch comparator.
+    /// Instantiates a new batch comparator.
     fn new(one: &str) -> Self;
 
-    /// Normalized similarity calculated.
+    /// Calculates normalized similarity.
     ///
     /// A `None` will be returned if the score is less than the specified
     /// cut-off.

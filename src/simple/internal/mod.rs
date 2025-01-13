@@ -1,4 +1,6 @@
+mod index_range;
 mod indexable_keywords;
+mod normalize;
 mod search;
 mod search_and;
 pub mod search_top_scores;

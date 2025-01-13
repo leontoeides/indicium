@@ -1,11 +1,31 @@
 //! Integration with the [rapidfuzz](https://crates.io/crates/rapidfuzz)
 //! string similarity crate.
 
+// -----------------------------------------------------------------------------
+
+pub mod autocomplete_global;
+pub mod autocomplete_global_comparator;
+
+pub mod autocomplete_context;
+pub mod autocomplete_context_comparator;
+
+pub mod keyword_global;
+pub mod keyword_global_comparator;
+
+// -----------------------------------------------------------------------------
+//
+// The `BatchComparator` trait allows `indicium` to treat the various distance
+// and string similarity algorithms in the
+// [rapidfuzz](https://crates.io/crates/rapidfuzz) crate generically.
+
 mod batch_comparator;
 
 use crate::simple::internal::rapidfuzz::batch_comparator::BatchComparator;
 
 // -----------------------------------------------------------------------------
+//
+// The `BatchComparator` implementations for the various string distance and
+// string similarity algorithms in the `rapidfuzz` crate.
 
 mod batch_comparators;
 
@@ -19,13 +39,3 @@ use crate::simple::internal::rapidfuzz::batch_comparators::levenshtein::Levensht
 use crate::simple::internal::rapidfuzz::batch_comparators::osa::Osa;
 use crate::simple::internal::rapidfuzz::batch_comparators::postfix::Postfix;
 use crate::simple::internal::rapidfuzz::batch_comparators::prefix::Prefix;
-
-// -----------------------------------------------------------------------------
-
-pub mod autocomplete_context_generic;
-pub mod autocomplete_global_generic;
-pub mod keyword_global_generic;
-pub mod rapidfuzz_autocomplete;
-pub mod rapidfuzz_context_autocomplete;
-pub mod rapidfuzz_global_autocomplete;
-pub mod rapidfuzz_keyword;

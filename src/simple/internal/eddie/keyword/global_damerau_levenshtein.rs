@@ -3,8 +3,6 @@ use kstring::KString;
 // -----------------------------------------------------------------------------
 
 impl<K: std::cmp::Ord> crate::simple::search_index::SearchIndex<K> {
-    // -------------------------------------------------------------------------
-    //
     /// Scans the entire search index for the closest matching keyword using
     /// the Damerau-Levenshtein string distance metric from Ilia Schelokov's
     /// [eddie](https://crates.io/crates/eddie) crate.
@@ -23,7 +21,6 @@ impl<K: std::cmp::Ord> crate::simple::search_index::SearchIndex<K> {
     // Note: these `eddie_keyword_*` methods are very similar and may seem
     // repetitive with a lot of boiler plate. These were intentionally made more
     // "concrete" and less modular in order to be more efficient.
-
     pub(crate) fn eddie_keyword_global_damerau_levenshtein(
         &self,
         index_range: &str,
@@ -56,7 +53,7 @@ impl<K: std::cmp::Ord> crate::simple::search_index::SearchIndex<K> {
             .filter(|(_keyword, score)| score >= &self.fuzzy_minimum_score)
             // Find the `(keyword, score)` tuple with the highest score:
             .max_by(|(_a_keyword, a_score), (_b_keyword, b_score)| {
-                a_score.partial_cmp(b_score).unwrap()
+                a_score.total_cmp(b_score)
             }) // max_by
             // Return the `keyword` portion of the `(keyword, score)` tuple
             // to the caller:

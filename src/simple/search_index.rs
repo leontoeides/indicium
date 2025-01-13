@@ -35,9 +35,9 @@ pub struct SearchIndex<K: Ord> {
     /// Used for the `strsim` optional feature. The `StrsimMetric` is used to
     /// select the string similarity metric (or algorithm) for fuzzy matching.
     pub(crate) strsim_metric: Option<StrsimMetric>,
-    /// Used for both the `strsim` and `eddie` optional features. Search index
-    /// keyword must match the first _n_ characters of the user's keyword in
-    /// order to be evaluated for fuzzy matching.
+    /// Used for the `eddie`, `rapidfuzz`, and `strsim` optional features.
+    /// Search index keyword must match the first _n_ characters of the user's
+    /// keyword in order to be evaluated for fuzzy matching.
     pub(crate) fuzzy_length: usize,
     /// Used for both the `strsim` and `eddie` optional features. Minimum score
     /// for the search index's keyword to be returned as an alternative to the

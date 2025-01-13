@@ -3,26 +3,44 @@ use kstring::KString;
 // -----------------------------------------------------------------------------
 
 impl<K: Ord> crate::simple::search_index::SearchIndex<K> {
-    // -------------------------------------------------------------------------
-    //
     /// Scans the entire search index for the closest matching keyword using
     /// the the specified string similarity metric from the
     /// [rapidfuzz](https://crates.io/crates/rapidfuzz) crate.
     ///
     /// When the user's search string contains a keyword that returns no
-    /// matches, these `rapidfuzz_keyword_*` methods can be used to find the
-    /// match for substitution.
+    /// matches, this method can be used to find the best match for
+    /// substitution.
     ///
-    /// * `index_range` limits which keywords to compare the user's keyword
+    /// # Input
+    ///
+    /// * `index_range` · Limits which keywords to compare the user's keyword
     ///   against. For example, if the `index_range` is "super" and the user's
-    ///   keyword is "supersonic": only search index keywords beginning with
-    ///   "super" will be compared against the user's keyword: "supersonic"
+    ///   keyword is "supersonic", only index keywords beginning with "super"
+    ///   will be fuzzy compared against the user's keyword: "supersonic"
     ///   against "superalloy", "supersonic" against "supergiant" and so on...
-    //
-    // Note: these `rapidfuzz_keyword_*` methods are very similar and may seem
-    // repetitive with a lot of boiler plate. These were intentionally made more
-    // "concrete" and less modular in order to be more efficient.
-    pub(crate) fn rapidfuzz_keyword_global_generic<BC>(
+    ///
+    /// * `user_keyword` · Keywords most similar to this specified user keyword
+    ///   will be returned.
+    ///
+    /// # Output
+    ///
+    /// * This method will return `None` if no keywords could be found. Settings
+    ///   such as `fuzzy_length` and `fuzzy_minimum_score` can affect the
+    ///   outcome.
+    ///
+    /// # Notes
+    ///
+    /// * `global` means that all keywords in the search index will potentially
+    ///   be examined.
+    ///
+    /// * This method differs from `rapidfuzz_global_keyword` in that this is a
+    ///   generic method. This method will be monomorphized for each `rapidfuzz`
+    ///   string similarity metric (`DamerauLevenshtein`, `Jaro`, `Osa`, etc.)
+    ///
+    ///   `rapidfuzz_global_keyword` will call these monomorphized methods
+    ///   using dynamic-dispatch, based on the search index's string similarity
+    ///   metric settings.
+    pub(crate) fn rapidfuzz_keyword_global_comparator<BC>(
         &self,
         index_range: &str,
         user_keyword: &str,
@@ -51,15 +69,15 @@ impl<K: Ord> crate::simple::search_index::SearchIndex<K> {
             // If `None` is returned from the batch comparator, then that
             // keyword didn't reach the minimum score and it will be filtered
             // out.
-            .filter_map(|(index_keyword, _keys)| {
+            .filter_map(|(index_keyword, _keys)|
                 scorer
                     .normalized_similarity(index_keyword, self.fuzzy_minimum_score)
                     .map(|score| (index_keyword, score))
-            }) // map
+            ) // map
             // Find the `(keyword, score)` tuple with the highest score:
-            .max_by(|(_a_keyword, a_score), (_b_keyword, b_score)| {
+            .max_by(|(_a_keyword, a_score), (_b_keyword, b_score)|
                 a_score.total_cmp(b_score)
-            }) // max_by
+            ) // max_by
             // Return the `keyword` portion of the `(keyword, score)` tuple
             // to the caller:
             .map(|(keyword, _score)| keyword)

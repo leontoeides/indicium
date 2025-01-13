@@ -89,13 +89,9 @@ impl<K: Hash + Ord> SearchIndex<K> {
         maximum_autocomplete_options: &usize,
         keyword: &str,
     ) -> Vec<&str> {
-        // If case sensitivity set, leave case intact. Otherwise, normalize
-        // keyword to lower case:
-        let keyword = if self.case_sensitive {
-            keyword.to_string()
-        } else {
-            keyword.to_lowercase()
-        }; // match
+        // If the search index is set to be case insensitive, normalize the
+        // keyword to lower-case:
+        let keyword = self.normalize(keyword);
 
         // For debug builds:
         #[cfg(debug_assertions)]
@@ -114,7 +110,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
             // supplied keyword. The below `take_while` will effectively break
             // iteration when we reach a keyword that does not start with our
             // supplied (partial) keyword.
-            .take_while(|autocompletion| autocompletion.starts_with(&keyword))
+            .take_while(|autocompletion| autocompletion.starts_with(keyword.as_ref()))
             // If the index's keyword matches the user's keyword, don't return
             // it as a result. For example, if the user's keyword was "new" (as
             // in New York), do not return "new" as an auto-completed keyword:
@@ -131,7 +127,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
             // No autocomplete options were found for the user's last
             // (partial) keyword. Attempt to use fuzzy string search to find
             // other autocomplete options:
-            self.rapidfuzz_global_autocomplete(&keyword)
+            self.rapidfuzz_autocomplete_global(&keyword)
                 .into_iter()
                 // Only return `maximum_autocomplete_options` number of
                 // keywords:

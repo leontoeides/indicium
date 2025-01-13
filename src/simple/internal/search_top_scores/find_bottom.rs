@@ -20,7 +20,7 @@ impl<K: Hash + Ord> SearchTopScores<'_, K> {
             // Note that `min_by_key` was considered because it could be more
             // efficient but it requires `Ord` to be implemented for the `S`
             // score type which could be a floating-point number.
-            .min_by(|(_a_key, a_score), (_b_key, b_score)| a_score.partial_cmp(b_score).unwrap()) // min_by
+            .min_by(|(_a_key, a_score), (_b_key, b_score)| a_score.cmp(b_score))
             // Remove the `keys` for the lowest score (or bottom) field since we
             // don't need them for comparisons or look-ups:
             .map(|(key, score)| (*key, *score));

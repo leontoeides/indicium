@@ -5,8 +5,6 @@ use std::hash::Hash;
 // -----------------------------------------------------------------------------
 
 impl<K: Hash + Ord> SearchIndex<K> {
-    // -------------------------------------------------------------------------
-    //
     /// This search function will return keys as the search results. Each
     /// resulting key can then be used to retrieve the full record from its
     /// collection. _This search method only accepts a single keyword as the
@@ -98,13 +96,9 @@ impl<K: Hash + Ord> SearchIndex<K> {
     // not.
     #[tracing::instrument(level = "trace", name = "keyword search", skip(self))]
     pub(crate) fn search_keyword(&self, maximum_search_results: &usize, keyword: &str) -> Vec<&K> {
-        // If case sensitivity set, leave case intact. Otherwise, normalize
-        // keyword to lower case:
-        let keyword = if self.case_sensitive {
-            keyword.to_string()
-        } else {
-            keyword.to_lowercase()
-        }; // if
+        // If the search index is set to be case insensitive, normalize the
+        // keyword to lower-case:
+        let keyword = self.normalize(keyword);
 
         // For debug builds:
         #[cfg(debug_assertions)]

@@ -49,7 +49,7 @@ impl<K: Ord> SearchIndex<K> {
             .filter(|(_keyword, score)| score >= &self.fuzzy_minimum_score)
             // Find the `(keyword, score)` tuple with the highest score:
             .max_by(|(_a_keyword, a_score), (_b_keyword, b_score)| {
-                a_score.partial_cmp(b_score).unwrap()
+                a_score.total_cmp(b_score)
             }) // max_by
             // Return the `keyword` portion of the `(keyword, score)` tuple
             // to the caller:

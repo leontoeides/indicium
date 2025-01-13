@@ -156,7 +156,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // (partial) keyword. Attempt to use fuzzy string search to find
                 // other autocomplete options:
                 autocompletions = self
-                    .rapidfuzz_global_autocomplete(&last_keyword)
+                    .rapidfuzz_autocomplete_global(&last_keyword)
                     .into_iter()
                     // Only keep this autocompletion if hasn't already been used
                     // as a keyword:

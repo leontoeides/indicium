@@ -28,8 +28,12 @@ ahash = ["dep:ahash"]
 gxhash = ["dep:gxhash"]
 rustc-hash = ["dep:rustc-hash"]
 
+[badges]
+maintenance = { status = "passively-maintained" }
+
 [dependencies]
 ahash = { version = "0.8", optional = true }
+beef = "0.5"
 eddie = { version = "0.4", optional = true }
 gxhash = { version = "3.4", optional = true }
 kstring = "2.0"
@@ -44,9 +48,6 @@ criterion = { version = "0.5", features = ["html_reports"] }
 gabble = "0.1"
 pretty_assertions = "1"
 rand = "0.8.*"
-
-[badges]
-maintenance = { status = "passively-maintained" }
 
 [[bench]]
 name = "all_bench"
