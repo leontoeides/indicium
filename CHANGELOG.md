@@ -9,8 +9,12 @@
   feature is enabled, this library will utilize
   [Max Bachmann](https://crates.io/users/maxbachmann)'s
   [rapidfuzz](https://crates.io/crates/rapidfuzz) crate for batch `one × many`
-  comparisons. This crate provides a substantial improvement to fuzzy matching
-  performance.
+  comparisons.
+
+  Rapidfuzz provides a substantial improvement to fuzzy matching performance.
+  Roughly a 62%-78% improvement in some cases. Note that this performance
+  improvement applies when the crate falls to fuzzy matching for autocompleting
+  keywords that cannot be found in the index.
 
 * 2025-01-12: New, default feature for hashing: `rustc-hash`. When this
   feature is enabled, this library will utilize
