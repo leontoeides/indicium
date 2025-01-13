@@ -195,10 +195,8 @@ fn simple() {
     #[cfg(feature = "rapidfuzz")]
     let similar_keyword = search_index.rapidfuzz_keyword_global(&"Willy".to_lowercase());
     #[cfg(feature = "strsim")]
-    let similar_keyword = search_index.strsim_global_keyword(&"Willy".to_lowercase());
-    #[cfg(feature = "strsim")]
-    assert_eq!(similar_keyword, Some(&KString::from_ref("william")));
-    #[cfg(any(feature = "eddie", feature = "rapidfuzz"))]
+    let similar_keyword = search_index.strsim_keyword_global(&"Willy".to_lowercase());
+    #[cfg(any(feature = "eddie", feature = "rapidfuzz", feature = "strsim"))]
     assert_eq!(similar_keyword, Some("william"));
 
     // Test internal global fuzzy autocompletion interface:
@@ -207,7 +205,7 @@ fn simple() {
     #[cfg(feature = "rapidfuzz")]
     let similar_autocompletions = search_index.rapidfuzz_autocomplete_global(&"Normy".to_lowercase());
     #[cfg(feature = "strsim")]
-    let similar_autocompletions = search_index.strsim_global_autocomplete(&"Normy".to_lowercase());
+    let similar_autocompletions = search_index.strsim_autocomplete_global(&"Normy".to_lowercase());
     #[cfg(any(feature = "eddie", feature = "rapidfuzz", feature = "strsim"))]
     let similar_autocompletions_vec: Vec<&KString> = similar_autocompletions
         .into_iter()

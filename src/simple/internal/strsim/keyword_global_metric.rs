@@ -1,35 +1,51 @@
-use crate::simple::search_index::SearchIndex;
 use kstring::KString;
-use strsim::sorensen_dice;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Ord> SearchIndex<K> {
-    // -------------------------------------------------------------------------
-    //
+impl<K: Ord> crate::simple::search_index::SearchIndex<K> {
     /// Scans the entire search index for the closest matching keyword using
-    /// the Sørensen-Dice string similarity metric from Danny Guo's
+    /// the the specified string similarity metric from the
     /// [strsim](https://crates.io/crates/strsim) crate.
     ///
     /// When the user's search string contains a keyword that returns no
-    /// matches, these `strsim_keyword_*` methods can be used to find the best
-    /// match for substitution.
+    /// matches, this method can be used to find the best match for
+    /// substitution.
     ///
-    /// * `index_range` limits which keywords to compare the user's keyword
+    /// # Input
+    ///
+    /// * `index_range` · Limits which keywords to compare the user's keyword
     ///   against. For example, if the `index_range` is "super" and the user's
-    ///   keyword is "supersonic": only search index keywords beginning with
-    ///   "super" will be compared against the user's keyword: "supersonic"
+    ///   keyword is "supersonic", only index keywords beginning with "super"
+    ///   will be fuzzy compared against the user's keyword: "supersonic"
     ///   against "superalloy", "supersonic" against "supergiant" and so on...
-    //
-    // Note: these `strsim_keyword_*` methods are very similar and may seem
-    // repetitive with a lot of boiler plate. These were intentionally made more
-    // "concrete" and less modular in order to be more efficient.
-
-    pub(crate) fn strsim_keyword_global_sorensen_dice(
+    ///
+    /// * `user_keyword` · Keywords most similar to this specified user keyword
+    ///   will be returned.
+    ///
+    /// # Output
+    ///
+    /// * This method will return `None` if no keywords could be found. Settings
+    ///   such as `fuzzy_length` and `fuzzy_minimum_score` can affect the
+    ///   outcome.
+    ///
+    /// # Notes
+    ///
+    /// * `global` means that all keywords in the search index will potentially
+    ///   be examined.
+    ///
+    /// * This method differs from `strsim_global_keyword` in that this is a
+    ///   generic method. This method will be monomorphized for each `strsim`
+    ///   string similarity metric (`DamerauLevenshtein`, `Jaro`, etc.)
+    ///
+    ///   `strsim_global_keyword` will call these monomorphized methods
+    ///   using dynamic-dispatch, based on the search index's string similarity
+    ///   metric settings.
+    pub(crate) fn strsim_keyword_global_comparator<M>(
         &self,
         index_range: &str,
         user_keyword: &str,
-    ) -> Option<&KString> {
+    ) -> Option<&KString>
+    where M: crate::simple::internal::strsim::Metric {
         // Scan the search index for the highest scoring keyword:
         self.b_tree_map
             // Get matching keywords starting with (partial) keyword string:
@@ -44,15 +60,15 @@ impl<K: Ord> SearchIndex<K> {
             // to the user's keyword. Map the `(keyword, keys)` tuple into
             // a `(keyword, score)` tuple:
             .map(|(index_keyword, _keys)| {
-                (index_keyword, sorensen_dice(index_keyword, user_keyword))
+                (index_keyword, M::similarity(index_keyword, user_keyword))
             }) // map
             // Search index keyword must meet minimum score to be considered as
             // a fuzzy match:
             .filter(|(_keyword, score)| score >= &self.fuzzy_minimum_score)
             // Find the `(keyword, score)` tuple with the highest score:
-            .max_by(|(_a_keyword, a_score), (_b_keyword, b_score)| {
+            .max_by(|(_a_keyword, a_score), (_b_keyword, b_score)|
                 a_score.total_cmp(b_score)
-            }) // max_by
+            ) // max_by
             // Return the `keyword` portion of the `(keyword, score)` tuple
             // to the caller:
             .map(|(keyword, _score)| keyword)

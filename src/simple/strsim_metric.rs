@@ -14,8 +14,7 @@ pub enum StrsimMetric {
     JaroWinkler,
     /// Calculates the minimum number of insertions, deletions, and
     /// substitutions required to change one string into the other.
-    #[default]
-    Levenshtein,
+    #[default] Levenshtein,
     /// Calculates a Sørensen-Dice similarity distance using bigrams.
     /// See <http://en.wikipedia.org/wiki/S%C3%B8rensen%E2%80%93Dice_coefficient>.
     SorensenDice,

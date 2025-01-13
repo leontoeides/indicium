@@ -2,7 +2,7 @@
 /// similarity metrics in Ilia Schelokov's
 /// [eddie](https://crates.io/crates/eddie) crate generically.
 ///
-/// This trait provides a small, generic subset of the feature provided in
+/// This trait provides a small, generic subset of the features provided in
 /// `eddie`.
 pub trait Metric {
     /// Creates a new instance of a metric `struct` with an internal state for

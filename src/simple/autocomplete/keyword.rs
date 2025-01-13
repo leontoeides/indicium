@@ -153,7 +153,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
             // No autocomplete options were found for the user's last
             // (partial) keyword. Attempt to use fuzzy string search to find
             // other autocomplete options:
-            self.strsim_global_autocomplete(&keyword)
+            self.strsim_autocomplete_global(&keyword)
                 .into_iter()
                 // Only return `maximum_autocomplete_options` number of
                 // keywords:

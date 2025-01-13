@@ -17,8 +17,8 @@ pub mod keyword_global_metric;
 // -----------------------------------------------------------------------------
 //
 // The `Metric` trait allows `indicium` to treat the various distance/string
-// similarity metrics in Ilia Schelokov's [eddie](https://crates.io/crates/eddie)
-// string similarity crate generically.
+// similarity metrics in Ilia Schelokov's
+// [eddie](https://crates.io/crates/eddie) crate generically.
 
 mod metric;
 

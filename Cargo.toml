@@ -16,7 +16,7 @@ rust-version = "1.73.0"
 [features]
 default = ["simple"]
 
-simple = ["eddie", "rustc-hash"]
+simple = ["rapidfuzz", "rustc-hash"]
 select2 = ["simple", "dep:serde"]
 
 fuzzy = ["dep:strsim"]
