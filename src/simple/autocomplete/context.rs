@@ -206,7 +206,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // (partial) keyword. Attempt to use fuzzy string search to find
                 // other autocomplete options:
                 autocompletions = self
-                    .eddie_context_autocomplete(&search_results, &last_keyword)
+                    .eddie_autocomplete_context(&search_results, &last_keyword)
                     .into_iter()
                     // Only keep this autocompletion if hasn't already been used
                     // as a keyword:

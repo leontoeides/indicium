@@ -191,19 +191,19 @@ fn simple() {
 
     // Test internal global fuzzy keyword search interface:
     #[cfg(feature = "eddie")]
-    let similar_keyword = search_index.eddie_global_keyword(&"Willy".to_lowercase());
+    let similar_keyword = search_index.eddie_keyword_global(&"Willy".to_lowercase());
     #[cfg(feature = "rapidfuzz")]
     let similar_keyword = search_index.rapidfuzz_keyword_global(&"Willy".to_lowercase());
     #[cfg(feature = "strsim")]
     let similar_keyword = search_index.strsim_global_keyword(&"Willy".to_lowercase());
-    #[cfg(any(feature = "eddie", feature = "strsim"))]
+    #[cfg(feature = "strsim")]
     assert_eq!(similar_keyword, Some(&KString::from_ref("william")));
-    #[cfg(feature = "rapidfuzz")]
+    #[cfg(any(feature = "eddie", feature = "rapidfuzz"))]
     assert_eq!(similar_keyword, Some("william"));
 
     // Test internal global fuzzy autocompletion interface:
     #[cfg(feature = "eddie")]
-    let similar_autocompletions = search_index.eddie_global_autocomplete(&"Normy".to_lowercase());
+    let similar_autocompletions = search_index.eddie_autocomplete_global(&"Normy".to_lowercase());
     #[cfg(feature = "rapidfuzz")]
     let similar_autocompletions = search_index.rapidfuzz_autocomplete_global(&"Normy".to_lowercase());
     #[cfg(feature = "strsim")]

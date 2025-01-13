@@ -2,6 +2,8 @@
 //! string similarity crate.
 
 // -----------------------------------------------------------------------------
+//
+// Interfaces for the `rapidfuzz` crate integration.
 
 pub mod autocomplete_global;
 pub mod autocomplete_global_comparator;

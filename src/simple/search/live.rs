@@ -192,7 +192,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                     // (partial) keyword. Attempt to use fuzzy string
                     // search to find other options:
                     search_results = self
-                        .eddie_context_autocomplete(&search_results, &last_keyword)
+                        .eddie_autocomplete_context(&search_results, &last_keyword)
                         .into_iter()
                         // `strsim_autocomplete` returns both the keyword
                         // and keys. We're searching for the last (partial)
@@ -330,7 +330,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                     // (partial) keyword. Attempt to use fuzzy string
                     // search to find other options:
                     last_results = self
-                        .eddie_context_autocomplete(&search_results, &last_keyword)
+                        .eddie_autocomplete_context(&search_results, &last_keyword)
                         .into_iter()
                         // Only keep this result if hasn't already been used
                         // as a keyword:
