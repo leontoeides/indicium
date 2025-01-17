@@ -1,3 +1,5 @@
+#![allow(clippy::inline_always)]
+
 use crate::simple::internal::fuzzies::rapidfuzz::{
     DamerauLevenshtein,
     Hamming,
@@ -51,99 +53,101 @@ impl<K: Hash + Ord> crate::simple::search_index::SearchIndex<K> {
     ///   in that this method will perform some common setup, and dynamically
     ///   dispatch to the generic method indicated by the chosen string
     ///   similarity metric (`DamerauLevenshtein`, `Jaro`, `Osa`, etc.)
-    pub(crate) fn rapidfuzz_autocomplete_context(
-        &self,
+    #[must_use]
+    #[inline(always)]
+    pub(crate) fn rapidfuzz_autocomplete_context<'s>(
+        &'s self,
         key_set: &BTreeSet<&K>,
         user_keyword: &str,
-    ) -> Vec<(&kstring::KString, &BTreeSet<K>)> {
+    ) -> Box<dyn Iterator<Item = (&'s kstring::KString, &'s BTreeSet<K>)> + 's> {
         // Build an keyword index range to fuzzy match against. This is used to
         // restrict fuzzy-matching to the strings that match the first _n_
         // characters in the user's keyword. This helps reduce required compute.
         // If a `None` is returned then no fuzzy-matching should be performed:
         let Some(index_range) = self.index_range(user_keyword) else {
-            return vec![]
+            return Box::new(Vec::<(&kstring::KString, &BTreeSet<K>)>::new().into_iter())
         };
 
         // If no string similarity metric was defined in the search index, fuzzy
         // string matching is effectively turned off. Return a `None` to the
         // caller:
         let Some(rapidfuzz_metric) = self.rapidfuzz_metric.as_ref() else {
-            return vec![]
+            return Box::new(Vec::<(&kstring::KString, &BTreeSet<K>)>::new().into_iter())
         };
 
         // Attempt to find the top matches for the user's (partial) keyword
         // using the selected string similarity metric defined in the
         // `SearchIndex`:
         match rapidfuzz_metric {
-            RapidfuzzMetric::DamerauLevenshtein => self
+            RapidfuzzMetric::DamerauLevenshtein => Box::new(self
                 .rapidfuzz_autocomplete_context_comparator::<DamerauLevenshtein>(
                     &index_range,
                     key_set,
                     user_keyword
-                ).collect(),
+                )),
 
-            RapidfuzzMetric::Hamming => self
+            RapidfuzzMetric::Hamming => Box::new(self
                 .rapidfuzz_autocomplete_context_comparator::<Hamming>(
                     &index_range,
                     key_set,
                     user_keyword
-                ).collect(),
+                )),
 
-            RapidfuzzMetric::Indel => self
+            RapidfuzzMetric::Indel => Box::new(self
                 .rapidfuzz_autocomplete_context_comparator::<Indel>(
                     &index_range,
                     key_set,
                     user_keyword
-                ).collect(),
+                )),
 
-            RapidfuzzMetric::Jaro => self
+            RapidfuzzMetric::Jaro => Box::new(self
                 .rapidfuzz_autocomplete_context_comparator::<Jaro>(
                     &index_range,
                     key_set,
                     user_keyword
-                ).collect(),
+                )),
 
-            RapidfuzzMetric::JaroWinkler => self
+            RapidfuzzMetric::JaroWinkler => Box::new(self
                 .rapidfuzz_autocomplete_context_comparator::<JaroWinkler>(
                     &index_range,
                     key_set,
                     user_keyword
-                ).collect(),
+                )),
 
-            RapidfuzzMetric::LcsSeq => self
+            RapidfuzzMetric::LcsSeq => Box::new(self
                 .rapidfuzz_autocomplete_context_comparator::<LcsSeq>(
                     &index_range,
                     key_set,
                     user_keyword
-                ).collect(),
+                )),
 
-            RapidfuzzMetric::Levenshtein => self
+            RapidfuzzMetric::Levenshtein => Box::new(self
                 .rapidfuzz_autocomplete_context_comparator::<Levenshtein>(
                     &index_range,
                     key_set,
                     user_keyword
-                ).collect(),
+                )),
 
-            RapidfuzzMetric::Osa => self
+            RapidfuzzMetric::Osa => Box::new(self
                 .rapidfuzz_autocomplete_context_comparator::<Osa>(
                     &index_range,
                     key_set,
                     user_keyword
-                ).collect(),
+                )),
 
-            RapidfuzzMetric::Postfix => self
+            RapidfuzzMetric::Postfix => Box::new(self
                 .rapidfuzz_autocomplete_context_comparator::<Postfix>(
                     &index_range,
                     key_set,
                     user_keyword
-                ).collect(),
+                )),
 
-            RapidfuzzMetric::Prefix => self
+            RapidfuzzMetric::Prefix => Box::new(self
                 .rapidfuzz_autocomplete_context_comparator::<Prefix>(
                     &index_range,
                     key_set,
                     user_keyword
-                ).collect(),
+                )),
         } // match
     } // fn
 } // impl

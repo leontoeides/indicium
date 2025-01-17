@@ -5,10 +5,9 @@ use std::{collections::BTreeSet, hash::Hash};
 // -----------------------------------------------------------------------------
 
 impl<'a, K: Hash + Ord, S: PartialOrd> FuzzyTopScores<'a, K, S> {
-    // -------------------------------------------------------------------------
-    //
     /// Returns the top scoring keywords with their keys, in order of descending
     /// score.
+    #[inline]
     pub(crate) fn results(self) -> impl Iterator<Item = (&'a KString, &'a BTreeSet<K>)> {
         // Dump the contents of the `HashMap` so that the top scores can be
         // sorted:

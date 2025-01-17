@@ -131,6 +131,8 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// user's keywords when no exact matches were found. See [`StrsimMetric`] for
     /// more information.
     ///
+    /// Providing a value of `None` effective turns off fuzzy-matching.
+    ///
     /// **Default:** `StrsimMetric::Levenshtein`
     ///
     /// [`StrsimMetric`]: enum.StrsimMetric.html
@@ -146,6 +148,8 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// user's keywords when no exact matches were found. See [`EddieMetric`]
     /// for more information.
     ///
+    /// Providing a value of `None` effective turns off fuzzy-matching.
+    ///
     /// **Default:** `EddieMetric::Levenshtein`
     ///
     /// [`EddieMetric`]: enum.EddieMetric.html
@@ -160,6 +164,8 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     /// [rapidfuzz](https://crates.io/crates/rapidfuzz) crate. Used for fuzzy
     /// matching user's keywords when no exact matches were found. See
     /// [`RapidfuzzMetric`] for more information.
+    ///
+    /// Providing a value of `None` effective turns off fuzzy-matching.
     ///
     /// **Default:** `RapidfuzzMetric::Levenshtein`
     ///

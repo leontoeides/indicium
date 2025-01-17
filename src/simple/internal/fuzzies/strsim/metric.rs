@@ -7,5 +7,7 @@
 pub trait Metric {
     /// Calculates a normalized score between 0.0 and 1.0 (inclusive), where 1.0
     /// means the strings are the same.
+    #[must_use]
+    #[inline(always)]
     fn similarity(a: &str, b: &str) -> f64;
 } // trait Metric

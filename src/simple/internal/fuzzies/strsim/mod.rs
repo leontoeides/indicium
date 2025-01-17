@@ -5,7 +5,7 @@
 //
 // Generic `Fuzzy` trait interface to the `strsim` crate.
 
-// pub mod fuzzy;
+pub mod fuzzy;
 
 // -----------------------------------------------------------------------------
 //

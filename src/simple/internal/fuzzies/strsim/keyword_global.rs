@@ -1,3 +1,5 @@
+#![allow(clippy::inline_always)]
+
 use crate::simple::StrsimMetric;
 use crate::simple::internal::fuzzies::strsim::{
     Jaro,
@@ -108,7 +110,8 @@ impl<K: Hash + Ord> crate::simple::search_index::SearchIndex<K> {
     /// );
     /// ```
     #[must_use]
-    pub fn strsim_keyword_global(
+    #[inline(always)]
+    pub(crate) fn strsim_keyword_global(
         &self,
         keyword: &str
     ) -> Option<&str> {

@@ -1,5 +1,7 @@
 //! Levenshtein distance
 
+#![allow(clippy::inline_always)]
+
 use rapidfuzz::distance::levenshtein::{Args, BatchComparator};
 
 /// This `struct` is used to access the Levenshtein algorithm, as implemented by
@@ -12,11 +14,15 @@ pub struct Levenshtein(BatchComparator<char>);
 /// [rapidfuzz](https://crates.io/crates/rapidfuzz) crate, in a generic manner.
 impl crate::simple::internal::fuzzies::rapidfuzz::BatchComparator for Levenshtein {
     /// Instantiates a new batch comparator.
+    #[must_use]
+    #[inline(always)]
     fn new(one: &str) -> Self {
         Self(BatchComparator::new(one.chars()))
     } // fn
 
     /// Calculates normalized similarity.
+    #[must_use]
+    #[inline(always)]
     fn normalized_similarity(
         &self,
         many: &str,

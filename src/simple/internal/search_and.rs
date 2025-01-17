@@ -5,8 +5,6 @@ use std::{collections::BTreeSet, hash::Hash};
 // -----------------------------------------------------------------------------
 
 impl<K: Hash + Ord> SearchIndex<K> {
-    // -------------------------------------------------------------------------
-    //
     /// This search function will return keys as the search results. Each
     /// resulting key can then be used to retrieve the full record from its
     /// collection. _This search method accepts multiple keywords in the search
@@ -15,66 +13,67 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// Search only supports exact keyword matches and does not use fuzzy
     /// matching. Consider providing the `autocomplete` feature to your users as
     /// an ergonomic alternative to fuzzy matching.
-    pub(crate) fn internal_search_and(&self, keywords: &[KString]) -> BTreeSet<&K> {
+    #[allow(clippy::option_if_let_else)] // `map_or_else` is illegible
+    pub(crate) fn internal_search_and(
+        &self,
+        keywords: &[KString],
+    ) -> BTreeSet<&K> {
         // This `BTreeSet` is used to contain the search results:
-        let mut search_results: Option<BTreeSet<&K>> = None;
+        let mut search_results = BTreeSet::<&K>::new();
 
         // Get each keyword from our `BTreeMap`, and intersect the resulting
         // keys with our current keys:
         for keyword in keywords {
-            // Attempt to retrieve keyword from search index. If keyword
-            // found, intersect keyword records with search results records.
-            // If keyword not found, empty search results:
+            // Attempt to retrieve keyword from search index. If keyword found,
+            // intersect keyword records with search results records. If keyword
+            // not found, empty search results:
             match self.b_tree_map.get(keyword) {
                 // Keyword found. Update `search_results` with product of an
                 // intersection with this keyword's records:
-                Some(keyword_results) => {
-                    search_results = Some(
-                        // Check if `search_results` is already populated:
-                        search_results.as_ref().map_or_else(
-                            || self.internal_keyword_search(keyword),
-                            |search_results| {
-                                search_results
-                                    // Iterate over each search result record:
-                                    .iter()
-                                    // Intersect the search result record with the
-                                    // keyword results. If the search result record
-                                    // doesn't exist in this keyword's results,
-                                    // filter it out:
-                                    .filter(|key| keyword_results.contains(key))
-                                    // Copy each key from the `Intersection`
-                                    // iterator or we'll get a doubly-referenced
-                                    // `&&K` key:
-                                    .copied()
-                                    // And collect each key into a `BTreeSet` that
-                                    // will become the new `search_results`:
-                                    .collect()
-                            },
-                        ), // map_or_else
-                    ); // Some
-                } // Some
+                Some(keyword_results) => search_results =
+                    // Check if `search_results` is already populated:
+                    if search_results.is_empty() {
+                        self.internal_keyword_search(keyword)
+                    } else {
+                        search_results
+                            // Iterate over each search result record:
+                            .into_iter()
+                            // Intersect the search result record with the
+                            // keyword results. If the search result record
+                            // doesn't exist in this keyword's results, filter
+                            // it out:
+                            .filter(|key| keyword_results.contains(key))
+                            // And collect each key into a `BTreeSet` that will
+                            // become the new `search_results`:
+                            .collect()
+                    }, // Some
 
-                // Any keyword that returns no results will short-circuit
-                // the search results into an empty set:
-                None => search_results = Some(BTreeSet::new()),
+                // Any keyword that returns no results will short-circuit the
+                // search results into an empty set.
+                //
+                // Note: the previous setup involved returning an
+                // `BTreeSet::new`. This setup looks strange, but involves no
+                // allocations.
+                None => {
+                    search_results.clear();
+                    return search_results
+                }, // None
             } // match
         } // for_each
 
         // For debug builds:
         #[cfg(debug_assertions)]
-        if let Some(search_results) = &search_results {
-            if search_results.len() >= self.maximum_keys_per_keyword {
-                tracing::warn!(
-                    "Internal table limit of {} results has been exceeded on internal `and` search. \
-                    Data has been dropped. \
-                    This will impact accuracy of results. \
-                    For this data set, consider using a more comprehensive search solution like MeiliSearch.",
-                    self.maximum_keys_per_keyword
-                ); // warn!
-            } // if
+        if search_results.len() >= self.maximum_keys_per_keyword {
+            tracing::warn!(
+                "Internal table limit of {} results has been exceeded on internal `and` search. \
+                Data has been dropped. \
+                This will impact accuracy of results. \
+                For this data set, consider using a more comprehensive search solution like MeiliSearch.",
+                self.maximum_keys_per_keyword
+            ); // warn!
         } // if
 
         // Return search results:
-        search_results.map_or_else(BTreeSet::new, |search_results| search_results)
+        search_results
     } // fn
 } // impl

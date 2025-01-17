@@ -4,11 +4,8 @@ use std::hash::Hash;
 // -----------------------------------------------------------------------------
 
 impl<K: Hash + Ord, S: PartialOrd> FuzzyTopScores<'_, K, S> {
-    // -------------------------------------------------------------------------
-    //
     /// Removes the lowest top score from the list. This is normally done before
     /// replacing it with a higher score.
-
     pub(crate) fn remove_bottom(&mut self) {
         // Remove the lowest top score from the collection:
         if let Some(bottom) = &self.bottom {

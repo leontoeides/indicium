@@ -1,3 +1,5 @@
+#![allow(clippy::inline_always)]
+
 use crate::simple::StrsimMetric;
 use crate::simple::internal::fuzzies::strsim::{
     Jaro,
@@ -40,6 +42,8 @@ impl<K: Hash + Ord> crate::simple::search_index::SearchIndex<K> {
     ///   that this method will perform some common setup, and dynamically
     ///   dispatch to the generic method indicated by the chosen string
     ///   similarity metric (`DamerauLevenshtein`, `Jaro`, `Osa`, etc.)
+    #[must_use]
+    #[inline(always)]
     pub(crate) fn strsim_autocomplete_global(
         &self,
         user_keyword: &str,

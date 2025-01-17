@@ -1,3 +1,5 @@
+#![allow(clippy::inline_always)]
+
 use crate::simple::EddieMetric;
 use eddie::str::{
     Levenshtein,
@@ -41,7 +43,7 @@ impl<K: Hash + Ord> crate::simple::search_index::SearchIndex<K> {
     ///
     /// # Basic Usage
     ///
-    /// ```rust
+    /// ```ignore
     /// # use indicium::simple::{AutocompleteType, Indexable, SearchIndex, SearchType};
     /// # use pretty_assertions::assert_eq;
     /// #
@@ -107,7 +109,8 @@ impl<K: Hash + Ord> crate::simple::search_index::SearchIndex<K> {
     /// );
     /// ```
     #[must_use]
-    pub fn eddie_keyword_global(
+    #[inline(always)]
+    pub(crate) fn eddie_keyword_global(
         &self,
         keyword: &str
     ) -> Option<&str> {

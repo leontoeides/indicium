@@ -1,3 +1,5 @@
+#![allow(clippy::inline_always)]
+
 use kstring::KString;
 
 // -----------------------------------------------------------------------------
@@ -40,6 +42,8 @@ impl<K: Ord> crate::simple::search_index::SearchIndex<K> {
     ///   `rapidfuzz_global_keyword` will call these monomorphized methods
     ///   using dynamic-dispatch, based on the search index's string similarity
     ///   metric settings.
+    #[must_use]
+    #[inline(always)]
     pub(crate) fn rapidfuzz_keyword_global_comparator<BC>(
         &self,
         index_range: &str,

@@ -1,3 +1,5 @@
+#![allow(clippy::inline_always)]
+
 use kstring::KString;
 use std::{collections::BTreeSet, hash::Hash};
 
@@ -49,6 +51,7 @@ impl<K: Hash + Ord> crate::simple::search_index::SearchIndex<K> {
     ///   `rapidfuzz_autocomplete_context` will call these monomorphized methods
     ///   using dynamic-dispatch, based on the search index's string similarity
     ///   metric settings.
+    #[inline(always)]
     pub(crate) fn rapidfuzz_autocomplete_context_comparator<BC>(
         &self,
         index_range: &str,

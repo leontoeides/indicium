@@ -1,3 +1,5 @@
+#![allow(clippy::inline_always)]
+
 use kstring::KString;
 use std::hash::Hash;
 
@@ -42,6 +44,7 @@ impl<K: Hash + Ord> crate::simple::search_index::SearchIndex<K> {
     ///   `strsim_autocomplete_global` will call these monomorphized methods
     ///   using dynamic-dispatch, based on the search index's string similarity
     ///   metric settings.
+    #[inline(always)]
     pub(crate) fn strsim_autocomplete_global_comparator<M>(
         &self,
         index_range: &str,

@@ -53,6 +53,7 @@ pub trait Fuzzy<'s, K: Ord> {
     ///
     /// * `global` means that all keywords in the search index will potentially
     ///   be examined.
+    #[must_use]
     fn autocomplete_global(
         search_index: &'s crate::simple::search_index::SearchIndex<K>,
         user_keyword: &str,
@@ -85,6 +86,7 @@ pub trait Fuzzy<'s, K: Ord> {
     /// * `context` means that only keywords associated with the provided
     ///   key-set can be returned. This effectively makes the fuzzy
     ///   autocompletion contextual.
+    #[must_use]
     fn autocomplete_context(
         search_index: &'s crate::simple::search_index::SearchIndex<K>,
         key_set: &BTreeSet<&K>,

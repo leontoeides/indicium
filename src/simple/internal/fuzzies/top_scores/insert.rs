@@ -5,8 +5,6 @@ use std::{collections::BTreeSet, hash::Hash};
 // -----------------------------------------------------------------------------
 
 impl<'a, K: Hash + Ord, S: Clone + PartialOrd> FuzzyTopScores<'a, K, S> {
-    // -----------------------------------------------------------------------------
-    //
     /// Attempts to insert the provided _keyword_, _keys_, & _score_ into the
     /// top scores.
     ///

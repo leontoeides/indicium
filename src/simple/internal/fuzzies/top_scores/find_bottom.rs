@@ -4,13 +4,10 @@ use std::hash::Hash;
 // -----------------------------------------------------------------------------
 
 impl<K: Hash + Ord, S: Clone + PartialOrd> FuzzyTopScores<'_, K, S> {
-    // -------------------------------------------------------------------------
-    //
     /// Finds and caches the lowest (or bottom) top score.
     ///
     /// By caching the lowest score in the `FuzzyTopScores` struct, comparisons
     /// can be done more efficiently.
-
     pub(crate) fn find_bottom(&mut self) {
         // Iterate over all _keyword-keys-score_ elements in the top scores:
         self.bottom = self

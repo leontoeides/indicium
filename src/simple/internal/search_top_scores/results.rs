@@ -1,9 +1,8 @@
-use crate::simple::internal::SearchTopScores;
 use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<'a, K: Hash + Ord> SearchTopScores<'a, K> {
+impl<'a, K: Hash + Ord> crate::simple::internal::SearchTopScores<'a, K> {
     // -------------------------------------------------------------------------
     //
     /// Returns the top scoring keywords with their keys, in order of descending

@@ -1,18 +1,14 @@
-use crate::simple::internal::SearchTopScores;
 use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<'a, K: Hash + Ord> SearchTopScores<'a, K> {
-    // -----------------------------------------------------------------------------
-    //
+impl<'a, K: Hash + Ord> crate::simple::internal::SearchTopScores<'a, K> {
     /// Attempts to insert the provided _keyword_, _keys_, & _score_ into the
     /// top scores.
     ///
     /// If the caller provided score is higher than the current lowest top
     /// score, the caller's score will be inserted into the collection. If it
     /// provided score doesn't beat the lowest top score, it will be ignored.
-
     pub(crate) fn insert(&mut self, key: &'a K, score: usize) {
         // Check if the `SearchTopScores` struct has reached its maximum capacity:
         if self.top.len() >= self.capacity {

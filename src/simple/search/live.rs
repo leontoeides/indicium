@@ -1,15 +1,12 @@
 #![allow(unused_mut)]
 
 use crate::simple::internal::string_keywords::SplitContext;
-use crate::simple::SearchIndex;
 use kstring::KString;
 use std::{collections::BTreeSet, hash::Hash};
 
 // -----------------------------------------------------------------------------
 
-impl<K: Hash + Ord> SearchIndex<K> {
-    // -------------------------------------------------------------------------
-    //
+impl<K: Hash + Ord> crate::simple::SearchIndex<K> {
     /// This search function will return keys as the search results. Each
     /// resulting key can then be used to retrieve the full record from its
     /// collection. _This search method accepts multiple keywords in the search
@@ -101,7 +98,11 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// assert_eq!(search_results, vec![&2]);
     /// ```
     #[tracing::instrument(level = "trace", name = "live search", skip(self))]
-    pub(crate) fn search_live(&self, maximum_search_results: &usize, string: &str) -> BTreeSet<&K> {
+    pub(crate) fn search_live(
+        &self,
+        maximum_search_results: &usize,
+        string: &str
+    ) -> BTreeSet<&K> {
         // Split search `String` into keywords according to the `SearchIndex`
         // settings. Force "use entire string as a keyword" option off:
         let mut keywords: Vec<KString> = self.string_keywords(string, &SplitContext::Searching);
@@ -145,7 +146,6 @@ impl<K: Hash + Ord> SearchIndex<K> {
                     // search to find other options:
                     search_results = self
                         .rapidfuzz_autocomplete_context(&search_results, &last_keyword)
-                        .into_iter()
                         // `rapidfuzz_autocomplete` returns both the keyword
                         // and keys. We're searching for the last (partial)
                         // keyword, so discard the keywords. Flatten the
@@ -213,7 +213,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
             } else {
                 // Perform `And` search for entire string, excluding the
                 // last (partial) keyword:
-                let search_results: BTreeSet<&K> = self.internal_search_and(keywords.as_slice());
+                let search_results: BTreeSet<&K> = self
+                    .internal_search_and(keywords.as_slice());
 
                 // Get keys for the last (partial) keyword:
                 let mut last_results: BTreeSet<&K> = self
@@ -255,7 +256,6 @@ impl<K: Hash + Ord> SearchIndex<K> {
                     // search to find other options:
                     last_results = self
                         .rapidfuzz_autocomplete_context(&search_results, &last_keyword)
-                        .into_iter()
                         // Only keep this result if hasn't already been used
                         // as a keyword:
                         .filter(|(keyword, _keys)| !keywords.contains(keyword))

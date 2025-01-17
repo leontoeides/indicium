@@ -1,3 +1,5 @@
+#![allow(clippy::inline_always)]
+
 use std::{collections::BTreeSet, hash::Hash};
 
 // -----------------------------------------------------------------------------
@@ -32,6 +34,8 @@ impl<'s, K: Hash + Ord> crate::simple::internal::fuzzies::Fuzzy<'s, K> for Eddie
     ///
     /// * `global` means that all keywords in the search index will potentially
     ///   be examined.
+    #[must_use]
+    #[inline(always)]
     fn keyword_global(
         search_index: &'s crate::simple::search_index::SearchIndex<K>,
         keyword: &str,
@@ -61,6 +65,8 @@ impl<'s, K: Hash + Ord> crate::simple::internal::fuzzies::Fuzzy<'s, K> for Eddie
     ///
     /// * `global` means that all keywords in the search index will potentially
     ///   be examined.
+    #[must_use]
+    #[inline(always)]
     fn autocomplete_global(
         search_index: &'s crate::simple::search_index::SearchIndex<K>,
         user_keyword: &str,
@@ -95,6 +101,8 @@ impl<'s, K: Hash + Ord> crate::simple::internal::fuzzies::Fuzzy<'s, K> for Eddie
     /// * `context` means that only keywords associated with the provided
     ///   key-set can be returned. This effectively makes the fuzzy
     ///   autocompletion contextual.
+    #[must_use]
+    #[inline(always)]
     fn autocomplete_context(
         search_index: &'s crate::simple::search_index::SearchIndex<K>,
         key_set: &BTreeSet<&K>,

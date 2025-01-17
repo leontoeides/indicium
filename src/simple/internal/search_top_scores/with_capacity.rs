@@ -12,12 +12,11 @@ use rustc_hash::FxHashMap as HashMap;
 use std::collections::HashMap;
 
 // Static dependencies:
-use crate::simple::internal::SearchTopScores;
 use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Hash + Ord> SearchTopScores<'_, K> {
+impl<K: Hash + Ord> crate::simple::internal::SearchTopScores<'_, K> {
     // -------------------------------------------------------------------------
     #![allow(clippy::default_trait_access)]
     /// Instantiates a new "top scores" struct with the caller provided
@@ -25,7 +24,7 @@ impl<K: Hash + Ord> SearchTopScores<'_, K> {
     /// provided keyword, the caller would call `SearchTopScores::with_capacity(10)`.
 
     pub(crate) fn with_capacity(capacity: usize) -> Self {
-        SearchTopScores {
+        Self {
             top: HashMap::with_capacity_and_hasher(capacity, std::default::Default::default()),
             bottom: None,
             capacity,

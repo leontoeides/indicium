@@ -1,3 +1,5 @@
+#![allow(clippy::inline_always)]
+
 use kstring::KString;
 
 // -----------------------------------------------------------------------------
@@ -40,6 +42,8 @@ impl<K: Ord> crate::simple::search_index::SearchIndex<K> {
     ///   `eddie_global_keyword` will call these monomorphized methods
     ///   using dynamic-dispatch, based on the search index's string similarity
     ///   metric settings.
+    #[must_use]
+    #[inline(always)]
     pub(crate) fn eddie_keyword_global_comparator<M>(
         &self,
         index_range: &str,

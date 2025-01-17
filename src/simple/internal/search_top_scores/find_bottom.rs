@@ -1,16 +1,12 @@
-use crate::simple::internal::SearchTopScores;
 use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Hash + Ord> SearchTopScores<'_, K> {
-    // -------------------------------------------------------------------------
-    //
+impl<K: Hash + Ord> crate::simple::internal::SearchTopScores<'_, K> {
     /// Finds and caches the lowest (or bottom) top score.
     ///
     /// By caching the lowest score in the `SearchTopScores` struct, comparisons can
     /// be done more efficiently.
-
     pub(crate) fn find_bottom(&mut self) {
         // Iterate over all _key-keys-score_ elements in the top scores:
         self.bottom = self
