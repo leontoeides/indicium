@@ -1,3 +1,7 @@
+const EMPTY_STRING: &str = "";
+
+// -----------------------------------------------------------------------------
+
 impl<K: Ord> crate::simple::SearchIndex<K> {
     /// Returns the index range for the provided keyword by using the
     /// `fuzzy_length` in the search index settings.
@@ -45,6 +49,7 @@ impl<K: Ord> crate::simple::SearchIndex<K> {
     ///   be fuzzy matched against every keyword in the index. This is OK (or
     ///   even desirable) if the search index isn't large, however, this will be
     ///   crippling slow on very large search indicies.
+    #[inline]
     pub(crate) fn index_range<'k>(
         &self,
         user_keyword: &'k str
@@ -72,7 +77,7 @@ impl<K: Ord> crate::simple::SearchIndex<K> {
         } else {
             // The fuzzy length is 0, compare user's keyword against all search
             // index keywords:
-            Some("".into())
-        }
+            Some(EMPTY_STRING.into())
+        } // if
     } // fn
 } // impl

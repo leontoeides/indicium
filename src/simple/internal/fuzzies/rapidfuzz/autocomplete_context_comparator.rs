@@ -52,12 +52,12 @@ impl<K: Hash + Ord> crate::simple::search_index::SearchIndex<K> {
     ///   using dynamic-dispatch, based on the search index's string similarity
     ///   metric settings.
     #[inline(always)]
-    pub(crate) fn rapidfuzz_autocomplete_context_comparator<BC>(
-        &self,
+    pub(crate) fn rapidfuzz_autocomplete_context_comparator<'s, BC>(
+        &'s self,
         index_range: &str,
         key_set: &BTreeSet<&K>,
         user_keyword: &str,
-    ) -> impl Iterator<Item = (&KString, &BTreeSet<K>)>
+    ) -> impl Iterator<Item = (&'s KString, &'s BTreeSet<K>)>
     where BC: crate::simple::internal::fuzzies::rapidfuzz::BatchComparator {
         // This structure will track the top scoring keywords:
         let mut top_scores =

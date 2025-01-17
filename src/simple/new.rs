@@ -1,11 +1,4 @@
-use crate::simple::{AutocompleteType, EddieMetric, RapidfuzzMetric, SearchIndex, SearchType, StrsimMetric};
-use std::collections::BTreeMap;
-
-// -----------------------------------------------------------------------------
-
-impl<K: Ord> SearchIndex<K> {
-    // -------------------------------------------------------------------------
-    //
+impl<K: Ord> crate::simple::SearchIndex<K> {
     /// Makes a new, empty `SearchIndex`. It might be more convenient to use
     /// `SearchIndex::default()` or `SearchIndexBuilder::default()` to create
     /// a new search index.
@@ -37,11 +30,11 @@ impl<K: Ord> SearchIndex<K> {
     /// ```
     #[allow(clippy::too_many_arguments)]
     pub fn new(
-        search_type: SearchType,
-        autocomplete_type: AutocompleteType,
-        eddie_metric: Option<EddieMetric>,
-        rapidfuzz_metric: Option<RapidfuzzMetric>,
-        strsim_metric: Option<StrsimMetric>,
+        search_type: crate::simple::SearchType,
+        autocomplete_type: crate::simple::AutocompleteType,
+        eddie_metric: Option<crate::simple::EddieMetric>,
+        rapidfuzz_metric: Option<crate::simple::RapidfuzzMetric>,
+        strsim_metric: Option<crate::simple::StrsimMetric>,
         fuzzy_length: usize,
         fuzzy_minimum_score: f64,
         split_pattern: Option<Vec<char>>,
@@ -56,7 +49,7 @@ impl<K: Ord> SearchIndex<K> {
         dump_keyword: Option<String>,
     ) -> Self {
         Self {
-            b_tree_map: BTreeMap::new(),
+            b_tree_map: std::collections::BTreeMap::new(),
             search_type,
             autocomplete_type,
             eddie_metric,
@@ -75,6 +68,7 @@ impl<K: Ord> SearchIndex<K> {
             maximum_search_results,
             maximum_keys_per_keyword,
             dump_keyword: dump_keyword.map(std::convert::Into::into),
+            empty_key_set: std::collections::BTreeSet::new(),
         } // SearchIndex
     } // fn
 } // impl

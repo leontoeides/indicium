@@ -1,15 +1,12 @@
 #![allow(unused_mut)]
 
 use crate::simple::internal::string_keywords::SplitContext;
-use crate::simple::SearchIndex;
 use kstring::KString;
 use std::{collections::BTreeSet, hash::Hash};
 
 // -----------------------------------------------------------------------------
 
-impl<K: Hash + Ord> SearchIndex<K> {
-    // -------------------------------------------------------------------------
-    //
+impl<K: Hash + Ord> crate::simple::SearchIndex<K> {
     /// Returns matching autocompleted keywords for the provided search string.
     /// _This search method accepts multiple keywords in the search string._
     /// The last partial search keyword must be an exact match.
@@ -113,7 +110,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
         // autocompleting:
         keywords.pop().map_or_else(Vec::new, |last_keyword| {
             // Perform `And` search for entire string without the last keyword:
-            let search_results: BTreeSet<&K> = self.internal_search_and(keywords.as_slice());
+            let search_results: BTreeSet<&K> =
+                self.internal_and_search(keywords.as_slice());
 
             // Intersect the autocompletions for the last keyword with the
             // search results for the preceding keywords. This way, only
@@ -159,7 +157,6 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // other autocomplete options:
                 autocompletions = self
                     .rapidfuzz_autocomplete_context(&search_results, &last_keyword)
-                    .into_iter()
                     // Only keep this autocompletion if hasn't already been used
                     // as a keyword:
                     .filter(|(keyword, _keys)| !keywords.contains(keyword))

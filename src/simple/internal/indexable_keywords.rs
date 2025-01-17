@@ -13,19 +13,18 @@ use std::collections::HashSet;
 
 // Static dependencies:
 use crate::simple::internal::string_keywords::SplitContext;
-use crate::simple::{Indexable, SearchIndex};
-use kstring::KString;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Ord> SearchIndex<K> {
-    // -------------------------------------------------------------------------
-    //
+impl<K: Ord> crate::simple::SearchIndex<K> {
     /// An associated helper method that returns all keywords for the given
     /// `Indexable` record. This function also relies on the `string_keywords`
     /// helper method.
-
-    pub(crate) fn indexable_keywords(&self, value: &dyn Indexable) -> HashSet<KString> {
+    #[inline]
+    pub(crate) fn indexable_keywords(
+        &self,
+        value: &dyn crate::simple::Indexable
+    ) -> HashSet<kstring::KString> {
         // The implemented trait method `strings()` will return the strings from
         // the record that are meant to be indexed:
         let strings = value.strings();

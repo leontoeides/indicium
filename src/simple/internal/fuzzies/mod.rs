@@ -21,6 +21,22 @@ mod strsim;
 #[cfg(feature = "strsim")]
 pub use crate::simple::internal::fuzzies::strsim::fuzzy::Strsim;
 
+
+// -----------------------------------------------------------------------------
+//
+// Enumerations used for selecting the desired string similarity metric in the
+// search index settings.
+
+pub mod eddie_metric;
+pub mod rapidfuzz_metric;
+pub mod strsim_metric;
+
+pub use crate::simple::internal::fuzzies::{
+    rapidfuzz_metric::RapidfuzzMetric,
+    eddie_metric::EddieMetric,
+    strsim_metric::StrsimMetric
+};
+
 // -----------------------------------------------------------------------------
 //
 /// The `Fuzzy` trait allows `indicium` to treat the various string similarity

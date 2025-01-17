@@ -105,7 +105,8 @@ impl<K: Hash + Ord> crate::simple::SearchIndex<K> {
     ) -> BTreeSet<&K> {
         // Split search `String` into keywords according to the `SearchIndex`
         // settings. Force "use entire string as a keyword" option off:
-        let mut keywords: Vec<KString> = self.string_keywords(string, &SplitContext::Searching);
+        let mut keywords: Vec<KString> =
+            self.string_keywords(string, &SplitContext::Searching);
 
         // For debug builds:
         #[cfg(debug_assertions)]
@@ -214,11 +215,10 @@ impl<K: Hash + Ord> crate::simple::SearchIndex<K> {
                 // Perform `And` search for entire string, excluding the
                 // last (partial) keyword:
                 let search_results: BTreeSet<&K> = self
-                    .internal_search_and(keywords.as_slice());
+                    .internal_and_search(keywords.as_slice());
 
                 // Get keys for the last (partial) keyword:
-                let mut last_results: BTreeSet<&K> = self
-                    .b_tree_map
+                let mut last_results: BTreeSet<&K> = self.b_tree_map
                     // Get matching keywords starting with (partial) keyword
                     // string:
                     .range(last_keyword.clone()..)
@@ -262,22 +262,10 @@ impl<K: Hash + Ord> crate::simple::SearchIndex<K> {
                         // Intersect the key results from the autocomplete
                         // options (produced from this iterator) with the
                         // search results produced at the top:
-                        .map(|(keyword, keys)| {
-                            (
-                                keyword,
-                                keys.iter()
-                                    .filter(|key| search_results.contains(key))
-                                    .collect::<BTreeSet<_>>(),
-                            )
-                        }) // map
-                        // Autocomplete returns both the keyword and keys.
-                        // We're searching for the last (partial) keyword,
-                        // so discard the keywords. Flatten the
-                        // `BTreeSet<K>` from each search result into our
-                        // collection:
-                        .flat_map(|(_keyword, keys)| keys)
-                        // Only return `maximum_search_results` number of
-                        // keys:
+                        .flat_map(|(_keyword, keys)|
+                            keys.iter().filter(|key| search_results.contains(key))
+                        ) // map
+                        // Only return `maximum_search_results` number of keys:
                         .take(*maximum_search_results)
                         // Collect all keyword autocompletions into a
                         // `BTreeSet`:
@@ -300,22 +288,10 @@ impl<K: Hash + Ord> crate::simple::SearchIndex<K> {
                         // Intersect the key results from the autocomplete
                         // options (produced from this iterator) with the
                         // search results produced at the top:
-                        .map(|(keyword, keys)| {
-                            (
-                                keyword,
-                                keys.iter()
-                                    .filter(|key| search_results.contains(key))
-                                    .collect::<BTreeSet<_>>(),
-                            )
-                        }) // map
-                        // Autocomplete returns both the keyword and keys.
-                        // We're searching for the last (partial) keyword,
-                        // so discard the keywords. Flatten the
-                        // `BTreeSet<K>` from each search result into our
-                        // collection:
-                        .flat_map(|(_keyword, keys)| keys)
-                        // Only return `maximum_search_results` number of
-                        // keys:
+                        .flat_map(|(_keyword, keys)|
+                            keys.iter().filter(|key| search_results.contains(key))
+                        ) // map
+                        // Only return `maximum_search_results` number of keys:
                         .take(*maximum_search_results)
                         // Collect all keyword autocompletions into a
                         // `BTreeSet`:
@@ -338,22 +314,10 @@ impl<K: Hash + Ord> crate::simple::SearchIndex<K> {
                         // Intersect the key results from the autocomplete
                         // options (produced from this iterator) with the
                         // search results produced at the top:
-                        .map(|(keyword, keys)| {
-                            (
-                                keyword,
-                                keys.iter()
-                                    .filter(|key| search_results.contains(key))
-                                    .collect::<BTreeSet<_>>(),
-                            )
-                        }) // map
-                        // Autocomplete returns both the keyword and keys.
-                        // We're searching for the last (partial) keyword,
-                        // so discard the keywords. Flatten the
-                        // `BTreeSet<K>` from each search result into our
-                        // collection:
-                        .flat_map(|(_keyword, keys)| keys)
-                        // Only return `maximum_search_results` number of
-                        // keys:
+                        .flat_map(|(_keyword, keys)|
+                            keys.iter().filter(|key| search_results.contains(key))
+                        ) // map
+                        // Only return `maximum_search_results` number of keys:
                         .take(*maximum_search_results)
                         // Collect all keyword autocompletions into a
                         // `BTreeSet`:
@@ -362,7 +326,7 @@ impl<K: Hash + Ord> crate::simple::SearchIndex<K> {
 
                 // Return search results to caller:
                 last_results
-            }
+            } // if
         }) // if
     } // fn
 } // impl

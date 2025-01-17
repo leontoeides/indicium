@@ -94,7 +94,7 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
     #[tracing::instrument(level = "trace", name = "search", skip(self))]
     pub fn search(&'a self, string: &'a str) -> Vec<&'a K> {
         let search_results: Vec<&'a K> = match self.search_type {
-            SearchType::And => self.search_and(&self.maximum_search_results, string),
+            SearchType::And => self.and_search(&self.maximum_search_results, string),
             SearchType::Keyword => self.search_keyword(&self.maximum_search_results, string),
             SearchType::Live => self
                 .search_live(&self.maximum_search_results, string)
@@ -196,7 +196,7 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
     #[tracing::instrument(level = "trace", name = "search", skip(self))]
     pub fn search_type(&'a self, search_type: &SearchType, string: &'a str) -> Vec<&'a K> {
         let search_results: Vec<&'a K> = match search_type {
-            SearchType::And => self.search_and(&self.maximum_search_results, string),
+            SearchType::And => self.and_search(&self.maximum_search_results, string),
             SearchType::Keyword => self.search_keyword(&self.maximum_search_results, string),
             SearchType::Live => self
                 .search_live(&self.maximum_search_results, string)
@@ -309,7 +309,7 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
         string: &'a str,
     ) -> Vec<&'a K> {
         let search_results: Vec<&'a K> = match search_type {
-            SearchType::And => self.search_and(maximum_search_results, string),
+            SearchType::And => self.and_search(maximum_search_results, string),
             SearchType::Keyword => self.search_keyword(maximum_search_results, string),
             SearchType::Live => self
                 .search_live(maximum_search_results, string)

@@ -14,7 +14,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// matching. Consider providing the `autocomplete` feature to your users as
     /// an ergonomic alternative to fuzzy matching.
     #[allow(clippy::option_if_let_else)] // `map_or_else` is illegible
-    pub(crate) fn internal_search_and(
+    pub(crate) fn internal_and_search(
         &self,
         keywords: &[KString],
     ) -> BTreeSet<&K> {
@@ -33,7 +33,9 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 Some(keyword_results) => search_results =
                     // Check if `search_results` is already populated:
                     if search_results.is_empty() {
-                        self.internal_keyword_search(keyword)
+                        self
+                            .internal_keyword_search(keyword)
+                            .collect()
                     } else {
                         search_results
                             // Iterate over each search result record:

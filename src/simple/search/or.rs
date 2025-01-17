@@ -1,14 +1,11 @@
 use crate::simple::internal::string_keywords::SplitContext;
 use crate::simple::internal::SearchTopScores;
-use crate::simple::search_index::SearchIndex;
 use kstring::KString;
 use std::{collections::BTreeMap, hash::Hash};
 
 // -----------------------------------------------------------------------------
 
-impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
-    // -------------------------------------------------------------------------
-    //
+impl<'a, K: 'a + Hash + Ord> crate::simple::SearchIndex<K> {
     /// This search function will return keys as the search results. Each
     /// resulting key can then be used to retrieve the full record from its
     /// collection. _This search method accepts multiple keywords in the search
@@ -106,7 +103,8 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
         // Split search `String` into keywords (according to the `SearchIndex`
         // settings). `string_keywords` will allow "use entire string as a
         // keyword" if enabled in user settings:
-        let keywords: Vec<KString> = self.string_keywords(string, &SplitContext::Searching);
+        let keywords: Vec<KString> =
+            self.string_keywords(string, &SplitContext::Searching);
 
         // For debug builds:
         #[cfg(debug_assertions)]
@@ -122,8 +120,6 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
         for keyword in keywords {
             // Search for keyword in our `BTreeMap`:
             self.internal_keyword_search(&keyword)
-                // Iterate over the resulting keys (if any):
-                .into_iter()
                 // For each resulting key from the keyword search:
                 .for_each(|key| match search_results.get_mut(key) {
                     // Add "hit" to counter for an already existing key:

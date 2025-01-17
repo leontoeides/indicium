@@ -1,10 +1,8 @@
-use crate::simple::search_index::SearchIndex;
-use kstring::KString;
 use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Hash + Ord> SearchIndex<K> {
+impl<K: Hash + Ord> crate::simple::search_index::SearchIndex<K> {
     /// This search function will return keys as the search results. Each
     /// resulting key can then be used to retrieve the full record from its
     /// collection. _This search method only accepts a single keyword as the
@@ -95,7 +93,12 @@ impl<K: Hash + Ord> SearchIndex<K> {
     // observes `maximum_search_results`, while `internal_keyword_search` does
     // not.
     #[tracing::instrument(level = "trace", name = "keyword search", skip(self))]
-    pub(crate) fn search_keyword(&self, maximum_search_results: &usize, keyword: &str) -> Vec<&K> {
+    #[allow(clippy::option_if_let_else)] // `map_or_else` is illegible
+    pub(crate) fn search_keyword(
+        &self,
+        maximum_search_results: &usize,
+        keyword: &str
+    ) -> Vec<&K> {
         // If the search index is set to be case insensitive, normalize the
         // keyword to lower-case:
         let keyword = self.normalize(keyword);
@@ -105,17 +108,16 @@ impl<K: Hash + Ord> SearchIndex<K> {
         tracing::debug!("searching: {}", keyword);
 
         // Attempt to get matching keys for the search keyword from BTreeMap:
-        self.b_tree_map
-            .get(&KString::from_ref(&keyword))
-            .map_or_else(Vec::new, |keys| {
-                keys
-                    // Iterate over all matching keys and only return
-                    // `maximum_search_results` number of keys:
-                    .iter()
-                    // Only return `maximum_search_results` number of keys:
-                    .take(*maximum_search_results)
-                    // Insert a reference to each resulting key into the hash set:
-                    .collect()
-            }) // map_or_else
+        match self.b_tree_map.get(&kstring::KString::from_ref(&keyword)) {
+            Some(keys) => keys
+                // Iterate over all matching keys and only return
+                // `maximum_search_results` number of keys:
+                .iter()
+                // Only return `maximum_search_results` number of keys:
+                .take(*maximum_search_results)
+                // Insert a reference to each resulting key into the hash set:
+                .collect(),
+            None => Vec::new(),
+        } // match
     } // fn
 } // impl

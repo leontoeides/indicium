@@ -1,7 +1,3 @@
-use beef::lean::Cow;
-
-// -----------------------------------------------------------------------------
-
 impl<K: Ord> crate::simple::SearchIndex<K> {
     /// Returns a normalized string according to the search index's case
     /// sensitivity settings.
@@ -14,7 +10,7 @@ impl<K: Ord> crate::simple::SearchIndex<K> {
     pub(crate) fn normalize<'k>(
         &self,
         keyword: &'k str
-    ) -> Cow<'k, str> {
+    ) -> beef::lean::Cow<'k, str> {
         if self.case_sensitive {
             keyword.into()
         } else {

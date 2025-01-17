@@ -7,7 +7,6 @@ use kstring::KString;
 /// for the keywords changes how the keywords are split & processed. The results
 /// of splitting a string for `Indexing` may differ from splitting a string for
 /// `Searching`. (In particular when no split-pattern has been defined.)
-
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub enum SplitContext {
     /// The intended use for split keywords is for indexing:
@@ -22,14 +21,15 @@ pub enum SplitContext {
 /// Function will check if the provided keyword is in the list of excluded
 /// keywords. If it is, function will return `true`. If there are no excluded
 /// keywords, function will always return `false`.
-
+#[inline]
 pub fn exclude_keyword(keyword: &str, exclude_keywords: Option<&Vec<KString>>) -> bool {
     // Check to see if there's any keywords in the exclusion list:
-    exclude_keywords.as_ref().is_some_and(|exclude_keywords| {
-        exclude_keywords
+    exclude_keywords
+        .as_ref()
+        .is_some_and(|exclude_keywords| exclude_keywords
             .iter()
             .any(|excluded| excluded.as_str() == keyword)
-    }) // is_some_and
+        ) // is_some_and
 } // fn
 
 // -----------------------------------------------------------------------------
@@ -81,6 +81,7 @@ impl<K: Ord> SearchIndex<K> {
                 // and shorter than the maximum length:
                 .filter(|keyword| {
                     let chars = keyword.chars().count();
+
                     chars >= self.minimum_keyword_length
                         && chars <= self.maximum_keyword_length
                 }) // filter

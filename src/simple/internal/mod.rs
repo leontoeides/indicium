@@ -1,10 +1,10 @@
 //! Structures, traits, and methods that are meant for internal use.
 
+mod and_search;
 mod index_range;
 mod indexable_keywords;
+mod keyword_search;
 mod normalize;
-mod search;
-mod search_and;
 pub mod string_keywords;
 
 // -----------------------------------------------------------------------------

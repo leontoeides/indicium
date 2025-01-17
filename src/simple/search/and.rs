@@ -1,13 +1,9 @@
 use crate::simple::internal::string_keywords::SplitContext;
-use crate::simple::search_index::SearchIndex;
-use kstring::KString;
 use std::{collections::BTreeSet, hash::Hash};
 
 // -----------------------------------------------------------------------------
 
-impl<K: Hash + Ord> SearchIndex<K> {
-    // -------------------------------------------------------------------------
-    //
+impl<K: Hash + Ord> crate::simple::search_index::SearchIndex<K> {
     /// This search function will return keys as the search results. Each
     /// resulting key can then be used to retrieve the full record from its
     /// collection. _This search method accepts multiple keywords in the search
@@ -88,22 +84,27 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// #       search_index.insert(&index, element)
     /// #   );
     /// #
-    /// let search_results = search_index.search_and(&20, "Conqueror third");
+    /// let search_results = search_index.and_search(&20, "Conqueror third");
     /// assert_eq!(search_results, vec![&3]);
     /// ```
     #[tracing::instrument(level = "trace", name = "and search", skip(self))]
-    pub(crate) fn search_and(&self, maximum_search_results: &usize, string: &str) -> Vec<&K> {
+    pub(crate) fn and_search(
+        &self,
+        maximum_search_results: &usize,
+        string: &str
+    ) -> Vec<&K> {
         // Split search `String` into keywords (according to the `SearchIndex`
         // settings). `string_keywords` will **not** allow "use entire string as
         // a keyword," even if enabled in user settings:
-        let keywords: Vec<KString> = self.string_keywords(string, &SplitContext::Searching);
+        let keywords: Vec<kstring::KString> =
+            self.string_keywords(string, &SplitContext::Searching);
 
         // For debug builds:
         #[cfg(debug_assertions)]
         tracing::debug!("searching: {:?}", keywords);
 
         // This `BTreeSet` is used to contain the search results:
-        let mut search_results: Option<BTreeSet<&K>> = None;
+        let mut search_results = BTreeSet::<&K>::new();
 
         // Get each keyword from our `BTreeMap`, and intersect the resulting
         // keys with our current keys:
@@ -114,44 +115,46 @@ impl<K: Hash + Ord> SearchIndex<K> {
             match self.b_tree_map.get(&keyword) {
                 // Keyword found. Update `search_results` with product of an
                 // intersection with this keyword's records:
-                Some(keyword_results) => {
-                    search_results = Some(
-                        // Check if `search_results` is already populated:
-                        search_results.as_ref().map_or_else(
-                            || self.internal_keyword_search(&keyword),
-                            |search_results| {
-                                search_results
-                                    // Iterate over each search result record:
-                                    .iter()
-                                    // Intersect the search result record with the
-                                    // keyword results. If the search result record
-                                    // doesn't exist in this keyword's results,
-                                    // filter it out:
-                                    .filter(|key| keyword_results.contains(key))
-                                    // Clone each key from the `Intersection`
-                                    // iterator or we'll get a doubly-referenced
-                                    // `&&K` key:
-                                    .copied()
-                                    // And collect each key into a `BTreeSet` that
-                                    // will become the new `search_results`:
-                                    .collect()
-                            },
-                        ), // map_or_else
-                    ); // Some
-                } // Some
+                Some(keyword_results) => search_results =
+                    // Check if `search_results` is already populated:
+                    if search_results.is_empty() {
+                        self
+                            .internal_keyword_search(&keyword)
+                            .collect()
+                    } else {
+                        search_results
+                            // Iterate over each search result record:
+                            .into_iter()
+                            // Intersect the search result record with the
+                            // keyword results. If the search result record
+                            // doesn't exist in this keyword's results, filter
+                            // it out:
+                            .filter(|key| keyword_results.contains(key))
+                            // And collect each key into a `BTreeSet` that will
+                            // become the new `search_results`:
+                            .collect()
+                    }, // Some
 
-                // Any keyword that returns no results will short-circuit
-                // the search results into an empty set:
-                None => search_results = Some(BTreeSet::new()),
+                // Any keyword that returns no results will short-circuit the
+                // search results into an empty set.
+                //
+                // Note: the previous setup involved returning an
+                // `BTreeSet::new`. This setup looks strange, but involves no
+                // allocations.
+                None => {
+                    search_results.clear();
+                    return search_results
+                        .into_iter()
+                        .take(*maximum_search_results)
+                        .collect()
+                }, // None
             } // match
         } // for_each
 
         // Return search results:
-        search_results.map_or_else(Vec::new, |search_results| {
-            search_results
-                .into_iter()
-                .take(*maximum_search_results)
-                .collect()
-        }) // map_or_else
+        search_results
+            .into_iter()
+            .take(*maximum_search_results)
+            .collect()
     } // fn
 } // impl
