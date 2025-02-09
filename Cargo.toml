@@ -19,7 +19,7 @@ default = ["simple"]
 simple = ["rapidfuzz", "rustc-hash"]
 select2 = ["simple", "dep:serde"]
 
-fuzzy = ["dep:strsim"]
+fuzzy = ["rapidfuzz"]
 strsim = ["dep:strsim"]
 eddie = ["dep:eddie"] # Quite fast but not stable. Not recommended
 rapidfuzz = ["dep:rapidfuzz"]

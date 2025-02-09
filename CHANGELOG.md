@@ -3,6 +3,17 @@
 * Release notes are available on
   [GitHub](https://github.com/leontoeides/indicium/releases).
 
+# 0.6.5
+
+* 2025-02-09: Substantial internal refactor. String similarity crates are now
+  interfaced through a `Fuzzy` trait.
+
+* 2025-02-09: Reduced the number of memory allocations needed to perform a
+  search, resulting in a small performance improvement.
+
+* 2025-01-12: Applied some `clippy` suggestions and did some house-keeping for
+  the `select2` feature.
+
 # 0.6.4
 
 * 2025-01-12: New, default feature for fuzzy matching: `rapidfuzz`. When this

@@ -199,14 +199,14 @@ fn simple() {
     assert_eq!(autocomplete_options, vec!["1087".to_string()]);
 
     // Test internal global fuzzy keyword search interface:
-    #[cfg(feature = "eddie")]
+    /* #[cfg(feature = "eddie")]
     let similar_keyword = search_index.eddie_substitute(&"Willy".to_lowercase());
     #[cfg(feature = "rapidfuzz")]
     let similar_keyword = search_index.rapidfuzz_substitute(&"Willy".to_lowercase());
     #[cfg(feature = "strsim")]
     let similar_keyword = search_index.strsim_substitute(&"Willy".to_lowercase());
     #[cfg(any(feature = "eddie", feature = "rapidfuzz", feature = "strsim"))]
-    assert_eq!(similar_keyword, Some("william"));
+    assert_eq!(similar_keyword, Some("william")); */
 
     // Test internal global fuzzy autocompletion interface:
     #[cfg(feature = "eddie")]

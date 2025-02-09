@@ -20,8 +20,8 @@ pub mod global_comparator;
 pub mod context;
 pub mod context_comparator;
 
-pub mod substitute;
-pub mod substitute_comparator;
+// pub mod substitute;
+// pub mod substitute_comparator;
 
 // -----------------------------------------------------------------------------
 //
