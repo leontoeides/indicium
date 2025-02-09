@@ -68,7 +68,7 @@ impl<K: Ord> crate::simple::SearchIndex<K> {
             maximum_search_results,
             maximum_keys_per_keyword,
             dump_keyword: dump_keyword.map(std::convert::Into::into),
-            empty_key_set: std::collections::BTreeSet::new(),
+            empty_b_tree_set: std::collections::BTreeSet::new(),
         } // SearchIndex
     } // fn
 } // impl

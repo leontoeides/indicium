@@ -90,10 +90,11 @@ pub struct SearchIndex<K: Ord> {
     /// for a user inadvertently trigger this behaviour.
     pub(crate) dump_keyword: Option<KString>,
 
-    /// The `empty_key_set` allows us to trick the compiler into returning an
-    /// empty `impl Iterator` when there are no keys associated with a keyword.
+    /// The `empty_b_tree_set` allows us to trick the compiler into returning an
+    /// empty `impl Iterator` with no memory allocations when there are no keys
+    /// associated with a keyword.
     ///
     /// Without this, we would get a "distinct uses of `impl Trait` result in
-    /// different opaque types" errors.
-    pub(crate) empty_key_set: BTreeSet<K>,
+    /// different opaque types" error.
+    pub(crate) empty_b_tree_set: BTreeSet<K>,
 } // SearchIndex

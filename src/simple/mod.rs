@@ -56,7 +56,7 @@ pub use crate::simple::indexable::Indexable;
 pub use crate::simple::search_index::SearchIndex;
 pub use crate::simple::search_type::SearchType;
 
-pub use crate::simple::internal::fuzzies::{
+pub use crate::simple::internal::fuzzers::{
     RapidfuzzMetric,
     EddieMetric,
     StrsimMetric

@@ -51,7 +51,7 @@ impl<K: Hash + Ord> crate::simple::search_index::SearchIndex<K> {
             search_results */
         } else {
             // BTreeSet::new()
-            self.empty_key_set
+            self.empty_b_tree_set
                 // Iterate over all matching keys and only return
                 // `maximum_keys_per_keyword` number of keys:
                 .iter()

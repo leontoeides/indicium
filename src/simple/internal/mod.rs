@@ -15,4 +15,4 @@ pub use crate::simple::internal::search_top_scores::SearchTopScores;
 // -----------------------------------------------------------------------------
 
 #[cfg(any(feature = "eddie", feature = "rapidfuzz", feature = "strsim"))]
-pub mod fuzzies;
+pub mod fuzzers;

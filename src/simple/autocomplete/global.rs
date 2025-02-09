@@ -1,6 +1,6 @@
 #![allow(unused_mut)]
 
-use crate::simple::internal::string_keywords::SplitContext;
+use crate::simple::internal::{fuzzers::Fuzzy, string_keywords::SplitContext};
 use crate::simple::search_index::SearchIndex;
 use kstring::KString;
 use std::hash::Hash;
@@ -148,77 +148,38 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // Collect all keyword autocompletions into a `Vec`:
                 .collect();
 
-            // If `rapidfuzz` fuzzy matching enabled, examine the resulting
-            // auto-complete options before using them:
+            // If `rapidfuzz` fuzzy matching enabled, this will examine the
+            // search results. If the search results are empty, it will use
+            // fuzzy matching to find closest alternatives:
             #[cfg(feature = "rapidfuzz")]
-            if autocompletions.is_empty() {
-                // No autocomplete options were found for the user's last
-                // (partial) keyword. Attempt to use fuzzy string search to find
-                // other autocomplete options:
-                autocompletions = self
-                    .rapidfuzz_autocomplete_global(&last_keyword)
-                    .into_iter()
-                    // Only keep this autocompletion if hasn't already been used
-                    // as a keyword:
-                    .filter(|(keyword, _keys)| !keywords.contains(keyword))
-                    // Only return `maximum_autocomplete_options` number of
-                    // keywords:
-                    .take(*maximum_autocomplete_options)
-                    // `rapidfuzz_autocomplete` returns both the keyword and
-                    // keys. We're autocompleting the last (partial) keyword, so
-                    // discard the keys:
-                    .map(|(keyword, _keys)| keyword)
-                    // Collect all keyword autocompletions into a `Vec`:
-                    .collect();
-            } // if
+            crate::simple::internal::fuzzers::Rapidfuzz::autocomplete_global(
+                self,
+                &keywords,
+                &mut autocompletions,
+                &last_keyword,
+            );
 
-            // If `strsim` fuzzy matching enabled, examine the resulting
-            // auto-complete options before using them:
+            // If `strsim` fuzzy matching enabled, this will examine the
+            // search results. If the search results are empty, it will use
+            // fuzzy matching to find closest alternatives:
             #[cfg(feature = "strsim")]
-            if autocompletions.is_empty() {
-                // No autocomplete options were found for the user's last
-                // (partial) keyword. Attempt to use fuzzy string search to find
-                // other autocomplete options:
-                autocompletions = self
-                    .strsim_autocomplete_global(&last_keyword)
-                    .into_iter()
-                    // Only keep this autocompletion if hasn't already been used
-                    // as a keyword:
-                    .filter(|(keyword, _keys)| !keywords.contains(keyword))
-                    // Only return `maximum_autocomplete_options` number of
-                    // keywords:
-                    .take(*maximum_autocomplete_options)
-                    // `strsim_autocomplete` returns both the keyword and keys.
-                    // We're autocompleting the last (partial) keyword, so
-                    // discard the keys:
-                    .map(|(keyword, _keys)| keyword)
-                    // Collect all keyword autocompletions into a `Vec`:
-                    .collect();
-            } // if
+            crate::simple::internal::fuzzers::Strsim::autocomplete_global(
+                self,
+                &keywords,
+                &mut autocompletions,
+                &last_keyword,
+            );
 
-            // If `eddie` fuzzy matching enabled, examine the resulting
-            // auto-complete options before using them:
+            // If `eddie` fuzzy matching enabled, this will examine the
+            // search results. If the search results are empty, it will use
+            // fuzzy matching to find closest alternatives:
             #[cfg(feature = "eddie")]
-            if autocompletions.is_empty() {
-                // No autocomplete options were found for the user's last
-                // (partial) keyword. Attempt to use fuzzy string search to find
-                // other autocomplete options:
-                autocompletions = self
-                    .eddie_autocomplete_global(&last_keyword)
-                    .into_iter()
-                    // Only keep this autocompletion if hasn't already been used
-                    // as a keyword:
-                    .filter(|(keyword, _keys)| !keywords.contains(keyword))
-                    // Only return `maximum_autocomplete_options` number of
-                    // keywords:
-                    .take(*maximum_autocomplete_options)
-                    // `eddie_autocomplete` returns both the keyword and keys.
-                    // We're autocompleting the last (partial) keyword, so
-                    // discard the keys:
-                    .map(|(keyword, _keys)| keyword)
-                    // Collect all keyword autocompletions into a `Vec`:
-                    .collect();
-            } // if
+            crate::simple::internal::fuzzers::Eddie::autocomplete_global(
+                self,
+                &keywords,
+                &mut autocompletions,
+                &last_keyword,
+            );
 
             // Push a blank placeholder onto the end of the keyword list. We
             // will be putting our autocompletions for the last keyword into

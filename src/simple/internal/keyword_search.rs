@@ -35,9 +35,9 @@ impl<K: Hash + Ord> crate::simple::search_index::SearchIndex<K> {
                 .take(self.maximum_keys_per_keyword)
             )
             // If there are no keys for the keyword, then return an empty
-            // iterator. The `empty_key_set` allows us to trick the compiler
+            // iterator. The `empty_b_tree_set` allows us to trick the compiler
             // into returning an empty iterator.
-            .unwrap_or_else(|| self.empty_key_set
+            .unwrap_or_else(|| self.empty_b_tree_set
                 .iter()
                 .take(self.maximum_keys_per_keyword))
     } // fn

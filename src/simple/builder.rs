@@ -30,7 +30,7 @@ pub struct SearchIndexBuilder<K> {
     maximum_search_results: usize,
     maximum_keys_per_keyword: usize,
     dump_keyword: Option<KString>,
-    empty_key_set: BTreeSet<K>,
+    empty_b_tree_set: BTreeSet<K>,
 } // SearchIndexBuilder
 
 // -----------------------------------------------------------------------------
@@ -57,7 +57,7 @@ impl<K: Clone + Ord> From<SearchIndex<K>> for SearchIndexBuilder<K> {
             maximum_search_results: search_index.maximum_search_results,
             maximum_keys_per_keyword: search_index.maximum_keys_per_keyword,
             dump_keyword: search_index.dump_keyword,
-            empty_key_set: search_index.empty_key_set,
+            empty_b_tree_set: search_index.empty_b_tree_set,
         } // SearchIndexBuilder
     } // fn
 } // impl
@@ -86,7 +86,7 @@ impl<K: Clone + Ord> From<SearchIndexBuilder<K>> for SearchIndex<K> {
             maximum_search_results: search_index.maximum_search_results,
             maximum_keys_per_keyword: search_index.maximum_keys_per_keyword,
             dump_keyword: search_index.dump_keyword,
-            empty_key_set: search_index.empty_key_set,
+            empty_b_tree_set: search_index.empty_b_tree_set,
         } // SearchIndexBuilder
     } // fn
 } // impl

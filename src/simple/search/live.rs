@@ -1,6 +1,6 @@
 #![allow(unused_mut)]
 
-use crate::simple::internal::string_keywords::SplitContext;
+use crate::simple::internal::{fuzzers::Fuzzy, string_keywords::SplitContext};
 use kstring::KString;
 use std::{collections::BTreeSet, hash::Hash};
 
@@ -138,76 +138,35 @@ impl<K: Hash + Ord> crate::simple::SearchIndex<K> {
                     // Collect all keyword search results into a `BTreeSet`:
                     .collect();
 
-                // If `rapidfuzz` fuzzy matching enabled, examine the search
-                // results before returning them:
+                // If `rapidfuzz` fuzzy matching enabled, this will examine the
+                // search results. If the search results are empty, it will use
+                // fuzzy matching to find closest alternatives:
                 #[cfg(feature = "rapidfuzz")]
-                if search_results.is_empty() {
-                    // No search results were found for the user's last
-                    // (partial) keyword. Attempt to use fuzzy string
-                    // search to find other options:
-                    search_results = self
-                        .rapidfuzz_autocomplete_context(&search_results, &last_keyword)
-                        // `rapidfuzz_autocomplete` returns both the keyword
-                        // and keys. We're searching for the last (partial)
-                        // keyword, so discard the keywords. Flatten the
-                        // `BTreeSet<K>` from each search result into our
-                        // collection:
-                        .flat_map(|(_keyword, keys)| keys)
-                        // Only return `maximum_search_results` number of
-                        // keys:
-                        .take(*maximum_search_results)
-                        // Collect all keyword autocompletions into a
-                        // `BTreeSet`:
-                        .collect();
-                } // if
+                crate::simple::internal::fuzzers::Rapidfuzz::live_search_keyword(
+                    self,
+                    &mut search_results,
+                    &last_keyword,
+                );
 
-                // If `strsim` fuzzy matching enabled, examine the search
-                // results before returning them:
+                // If `strsim` fuzzy matching enabled, this will examine the
+                // search results. If the search results are empty, it will use
+                // fuzzy matching to find closest alternatives:
                 #[cfg(feature = "strsim")]
-                if search_results.is_empty() {
-                    // No search results were found for the user's last
-                    // (partial) keyword. Attempt to use fuzzy string
-                    // search to find other options:
-                    search_results = self
-                        .strsim_autocomplete_context(&search_results, &last_keyword)
-                        .into_iter()
-                        // `strsim_autocomplete` returns both the keyword
-                        // and keys. We're searching for the last (partial)
-                        // keyword, so discard the keywords. Flatten the
-                        // `BTreeSet<K>` from each search result into our
-                        // collection:
-                        .flat_map(|(_keyword, keys)| keys)
-                        // Only return `maximum_search_results` number of
-                        // keys:
-                        .take(*maximum_search_results)
-                        // Collect all keyword autocompletions into a
-                        // `BTreeSet`:
-                        .collect();
-                } // if
+                crate::simple::internal::fuzzers::Strsim::live_search_keyword(
+                    self,
+                    &mut search_results,
+                    &last_keyword,
+                );
 
-                // If `eddie` fuzzy matching enabled, examine the search
-                // results before returning them:
+                // If `eddie` fuzzy matching enabled, this will examine the
+                // search results. If the search results are empty, it will use
+                // fuzzy matching to find closest alternatives:
                 #[cfg(feature = "eddie")]
-                if search_results.is_empty() {
-                    // No search results were found for the user's last
-                    // (partial) keyword. Attempt to use fuzzy string
-                    // search to find other options:
-                    search_results = self
-                        .eddie_autocomplete_context(&search_results, &last_keyword)
-                        .into_iter()
-                        // `strsim_autocomplete` returns both the keyword
-                        // and keys. We're searching for the last (partial)
-                        // keyword, so discard the keywords. Flatten the
-                        // `BTreeSet<K>` from each search result into our
-                        // collection:
-                        .flat_map(|(_keyword, keys)| keys)
-                        // Only return `maximum_search_results` number of
-                        // keys:
-                        .take(*maximum_search_results)
-                        // Collect all keyword autocompletions into a
-                        // `BTreeSet`:
-                        .collect();
-                } // if
+                crate::simple::internal::fuzzers::Eddie::live_search_keyword(
+                    self,
+                    &mut search_results,
+                    &last_keyword,
+                );
 
                 // Return search results to caller:
                 search_results
@@ -247,82 +206,41 @@ impl<K: Hash + Ord> crate::simple::SearchIndex<K> {
                     // `BTreetSet`:
                     .collect();
 
-                // If fuzzy string searching enabled, examine the search
-                // results before returning them:
+                // If `rapidfuzz` fuzzy matching enabled, this will examine the
+                // search results. If the search results are empty, it will use
+                // fuzzy matching to find closest alternatives:
                 #[cfg(feature = "rapidfuzz")]
-                if last_results.is_empty() {
-                    // No search results were found for the user's last
-                    // (partial) keyword. Attempt to use fuzzy string
-                    // search to find other options:
-                    last_results = self
-                        .rapidfuzz_autocomplete_context(&search_results, &last_keyword)
-                        // Only keep this result if hasn't already been used
-                        // as a keyword:
-                        .filter(|(keyword, _keys)| !keywords.contains(keyword))
-                        // Intersect the key results from the autocomplete
-                        // options (produced from this iterator) with the
-                        // search results produced at the top:
-                        .flat_map(|(_keyword, keys)|
-                            keys.iter().filter(|key| search_results.contains(key))
-                        ) // map
-                        // Only return `maximum_search_results` number of keys:
-                        .take(*maximum_search_results)
-                        // Collect all keyword autocompletions into a
-                        // `BTreeSet`:
-                        .collect();
-                } // if
+                crate::simple::internal::fuzzers::Rapidfuzz::live_search_context(
+                    self,
+                    &search_results,
+                    &keywords,
+                    &mut last_results,
+                    &last_keyword,
+                );
 
-                // If fuzzy string searching enabled, examine the search
-                // results before returning them:
+                // If `strsim` fuzzy matching enabled, this will examine the
+                // search results. If the search results are empty, it will use
+                // fuzzy matching to find closest alternatives:
                 #[cfg(feature = "strsim")]
-                if last_results.is_empty() {
-                    // No search results were found for the user's last
-                    // (partial) keyword. Attempt to use fuzzy string
-                    // search to find other options:
-                    last_results = self
-                        .strsim_autocomplete_context(&search_results, &last_keyword)
-                        .into_iter()
-                        // Only keep this result if hasn't already been used
-                        // as a keyword:
-                        .filter(|(keyword, _keys)| !keywords.contains(keyword))
-                        // Intersect the key results from the autocomplete
-                        // options (produced from this iterator) with the
-                        // search results produced at the top:
-                        .flat_map(|(_keyword, keys)|
-                            keys.iter().filter(|key| search_results.contains(key))
-                        ) // map
-                        // Only return `maximum_search_results` number of keys:
-                        .take(*maximum_search_results)
-                        // Collect all keyword autocompletions into a
-                        // `BTreeSet`:
-                        .collect();
-                } // if
+                crate::simple::internal::fuzzers::Strsim::live_search_context(
+                    self,
+                    &search_results,
+                    &keywords,
+                    &mut last_results,
+                    &last_keyword,
+                );
 
-                // If fuzzy string searching enabled, examine the search
-                // results before returning them:
+                // If `eddie` fuzzy matching enabled, this will examine the
+                // search results. If the search results are empty, it will use
+                // fuzzy matching to find closest alternatives:
                 #[cfg(feature = "eddie")]
-                if last_results.is_empty() {
-                    // No search results were found for the user's last
-                    // (partial) keyword. Attempt to use fuzzy string
-                    // search to find other options:
-                    last_results = self
-                        .eddie_autocomplete_context(&search_results, &last_keyword)
-                        .into_iter()
-                        // Only keep this result if hasn't already been used
-                        // as a keyword:
-                        .filter(|(keyword, _keys)| !keywords.contains(keyword))
-                        // Intersect the key results from the autocomplete
-                        // options (produced from this iterator) with the
-                        // search results produced at the top:
-                        .flat_map(|(_keyword, keys)|
-                            keys.iter().filter(|key| search_results.contains(key))
-                        ) // map
-                        // Only return `maximum_search_results` number of keys:
-                        .take(*maximum_search_results)
-                        // Collect all keyword autocompletions into a
-                        // `BTreeSet`:
-                        .collect();
-                } // if
+                crate::simple::internal::fuzzers::Eddie::live_search_context(
+                    self,
+                    &search_results,
+                    &keywords,
+                    &mut last_results,
+                    &last_keyword,
+                );
 
                 // Return search results to caller:
                 last_results

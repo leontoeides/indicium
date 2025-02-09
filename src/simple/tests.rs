@@ -51,6 +51,8 @@ fn simple() {
 
     let mut search_index: SearchIndex<usize> = SearchIndex::default();
 
+    // Ensure that the default index splitting behaves as expected:
+
     let string_keywords: Vec<KString> = search_index.string_keywords(
         "All is not lost, the unconquerable will, and study of revenge, \
         immortal hate, and the courage never to submit or yield.",
@@ -77,6 +79,8 @@ fn simple() {
         ]
     );
 
+    // Ensure that the default search splitting behaves as expected:
+
     let string_keywords: Vec<KString> = search_index.string_keywords(
         "He prayeth best, who loveth best All things both great and small; For \
         the dear God who loveth us, He made and loveth all.",
@@ -90,6 +94,9 @@ fn simple() {
             "small", "dear", "god", "who", "loveth", "us", "he", "made", "loveth", "all"
         ]
     );
+
+    // Ensure that the default index splitting removes very short and very long
+    // words:
 
     let string_keywords: Vec<KString> = search_index.string_keywords(
         "Digby was a floccinaucinihilipilificator at heart—which is an \
@@ -111,6 +118,7 @@ fn simple() {
         .enumerate()
         .for_each(|(index, element)| search_index.insert(&index, element));
 
+    // Continue search tests:
     let search_results = search_index.search("third william");
     assert_eq!(search_results, vec![&3]);
 
@@ -192,21 +200,21 @@ fn simple() {
 
     // Test internal global fuzzy keyword search interface:
     #[cfg(feature = "eddie")]
-    let similar_keyword = search_index.eddie_keyword_global(&"Willy".to_lowercase());
+    let similar_keyword = search_index.eddie_substitute(&"Willy".to_lowercase());
     #[cfg(feature = "rapidfuzz")]
-    let similar_keyword = search_index.rapidfuzz_keyword_global(&"Willy".to_lowercase());
+    let similar_keyword = search_index.rapidfuzz_substitute(&"Willy".to_lowercase());
     #[cfg(feature = "strsim")]
-    let similar_keyword = search_index.strsim_keyword_global(&"Willy".to_lowercase());
+    let similar_keyword = search_index.strsim_substitute(&"Willy".to_lowercase());
     #[cfg(any(feature = "eddie", feature = "rapidfuzz", feature = "strsim"))]
     assert_eq!(similar_keyword, Some("william"));
 
     // Test internal global fuzzy autocompletion interface:
     #[cfg(feature = "eddie")]
-    let similar_autocompletions = search_index.eddie_autocomplete_global(&"Normy".to_lowercase());
+    let similar_autocompletions = search_index.eddie_global(&[], &"Normy".to_lowercase());
     #[cfg(feature = "rapidfuzz")]
-    let similar_autocompletions = search_index.rapidfuzz_autocomplete_global(&"Normy".to_lowercase());
+    let similar_autocompletions = search_index.rapidfuzz_global(&[], &"Normy".to_lowercase());
     #[cfg(feature = "strsim")]
-    let similar_autocompletions = search_index.strsim_autocomplete_global(&"Normy".to_lowercase());
+    let similar_autocompletions = search_index.strsim_global(&[], &"Normy".to_lowercase());
     #[cfg(any(feature = "eddie", feature = "rapidfuzz", feature = "strsim"))]
     let similar_autocompletions_vec: Vec<&KString> = similar_autocompletions
         .into_iter()
