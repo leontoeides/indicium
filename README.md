@@ -215,6 +215,85 @@ assert_eq!(
 );
 ```
 
+# Bonus Points
+
+## 5. Custom Result Ordering with `Ord`
+
+`indicium` returns a list of matching keys (`K`) in the order defined by their `Ord` implementation.
+This means you can use your own types for `K` that embed ranking signals like `popularity`,
+`edge_weight`, or even a custom timestamp-based score.
+
+By customizing `Ord`, you can make search results automatically favor more relevant or recent
+entries without doing any post-sorting.
+
+Here's how:
+
+```rust
+#[derive(Debug, Clone)]
+pub struct MyKey {
+    pub id: String,
+    pub popularity: u32,
+}
+
+// Used for ordering search results
+
+impl Ord for MyKey {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        // Descending order: more popular keys come first
+        other.popularity.cmp(&self.popularity)
+    }
+}
+
+impl PartialOrd for MyKey {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+// Used for equality & lookup
+
+impl PartialEq for MyKey {
+    fn eq(&self, other: &Self) -> bool {
+        self.id == other.id
+    }
+}
+
+impl Eq for MyKey {}
+
+use std::hash::{Hash, Hasher};
+
+impl Hash for MyKey {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.id.hash(state)
+    }
+}
+```
+
+If you're using indicium to:
+
+* Rank search hits by popularity
+* Rank suggestions by recency
+* Sort links by edge weight
+
+...then this pattern will give you accurate result ordering for free at the key level.
+
+Tip: Lookup Map Compatibility
+
+Since you likely want to fetch a full record from a map or DB after search:
+
+```rust
+let hits = indicium.search("silver thread of dawn")?;
+
+for key in hits {
+    if let Some(record) = records.get(&key) {
+        println!("Result: {:?}", record);
+    }
+}
+```
+
+Make sure your `Eq` and `Hash` impls exclude transient fields like `popularity` so you can use the
+key for lookups.
+
 # Crate Status
 
 This crate is passively maintained. This crate does what it's expected to do and
