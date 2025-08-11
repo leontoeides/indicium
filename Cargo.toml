@@ -14,9 +14,9 @@ repository = "https://github.com/leontoeides/indicium"
 rust-version = "1.73.0"
 
 [features]
-default = ["simple"]
+default = ["simple", "rustc-hash", "rapidfuzz"]
 
-simple = ["rapidfuzz", "rustc-hash"]
+simple = []
 select2 = ["simple", "dep:serde"]
 
 fuzzy = ["rapidfuzz"]
