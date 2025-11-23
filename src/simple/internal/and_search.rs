@@ -27,40 +27,29 @@ impl<K: Hash + Ord> SearchIndex<K> {
             // Attempt to retrieve keyword from search index. If keyword found,
             // intersect keyword records with search results records. If keyword
             // not found, empty search results:
-            match self.b_tree_map.get(keyword) {
-                // Keyword found. Update `search_results` with product of an
-                // intersection with this keyword's records:
-                Some(keyword_results) => search_results =
-                    // Check if `search_results` is already populated:
-                    if search_results.is_empty() {
-                        self
-                            .internal_keyword_search(keyword)
-                            .collect()
-                    } else {
-                        search_results
-                            // Iterate over each search result record:
-                            .into_iter()
-                            // Intersect the search result record with the
-                            // keyword results. If the search result record
-                            // doesn't exist in this keyword's results, filter
-                            // it out:
-                            .filter(|key| keyword_results.contains(key))
-                            // And collect each key into a `BTreeSet` that will
-                            // become the new `search_results`:
-                            .collect()
-                    }, // Some
-
-                // Any keyword that returns no results will short-circuit the
-                // search results into an empty set.
-                //
-                // Note: the previous setup involved returning an
-                // `BTreeSet::new`. This setup looks strange, but involves no
-                // allocations.
-                None => {
-                    search_results.clear();
-                    return search_results
-                }, // None
-            } // match
+            if let Some(keyword_results) = self.b_tree_map.get(keyword) {
+                // Check if `search_results` is already populated:
+                search_results = if search_results.is_empty() {
+                    self
+                        .internal_keyword_search(keyword)
+                        .collect()
+                } else {
+                    search_results
+                        // Iterate over each search result record:
+                        .into_iter()
+                        // Intersect the search result record with the
+                        // keyword results. If the search result record
+                        // doesn't exist in this keyword's results, filter
+                        // it out:
+                        .filter(|key| keyword_results.contains(key))
+                        // And collect each key into a `BTreeSet` that will
+                        // become the new `search_results`:
+                        .collect()
+                }
+            } else {
+                search_results.clear();
+                return search_results
+            } // if
         } // for_each
 
         // For debug builds:

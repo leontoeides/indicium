@@ -52,3 +52,7 @@ rand = "0.8.*"
 [[bench]]
 name = "all_bench"
 harness = false
+
+[[bench]]
+name = "search_bench"
+harness = false

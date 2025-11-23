@@ -17,14 +17,12 @@ pub struct Prefix(BatchComparator<char>);
 /// [rapidfuzz](https://crates.io/crates/rapidfuzz) crate, in a generic manner.
 impl crate::simple::internal::fuzzers::rapidfuzz::BatchComparator for Prefix {
     /// Instantiates a new batch comparator.
-    #[must_use]
     #[inline(always)]
     fn new(one: &str) -> Self {
         Self(BatchComparator::new(one.chars()))
     } // fn
 
     /// Calculates normalized similarity.
-    #[must_use]
     #[inline(always)]
     fn normalized_similarity(
         &self,
