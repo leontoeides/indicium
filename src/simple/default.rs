@@ -14,7 +14,7 @@ impl<K: Ord> Default for SearchIndex<K> {
             Some(EddieMetric::Levenshtein),     // String similarity metric type.
             Some(RapidfuzzMetric::Osa),         // String similarity metric type.
             Some(StrsimMetric::Levenshtein),    // String similarity metric type.
-            3,                                  // String similarity match length.
+            2,                                  // String similarity match length.
             0.3,                                // String similarity minimum score.
             // Default split pattern:
             Some(vec![
@@ -64,6 +64,11 @@ impl<K: Ord> Default for SearchIndex<K> {
                 '‹',  // Single Left-Pointing Angle Quotation Mark
                 '›',  // Single Right-Pointing Angle Quotation Mark
                 '—',  // Em Dash
+                '–',  // En Dash, U+2013
+                '…',  // Ellipsis, U+2026
+                '•',  // Bullet, U+2022
+                '§',  // Section Sign
+                '¶',  // Pilcrow
             ]),
             false,    // Case sensitive?
             1,        // Minimum keyword length (in chars or codepoints.)
@@ -124,7 +129,6 @@ impl<K: Ord> Default for SearchIndex<K> {
                 "por".to_string(),
                 "que".to_string(),
                 "sí".to_string(),
-                "si".to_string(),
                 "tan".to_string(),
                 "una".to_string(),
                 "uno".to_string(),

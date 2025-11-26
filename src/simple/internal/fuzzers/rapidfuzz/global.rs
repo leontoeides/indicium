@@ -170,11 +170,8 @@ impl<K: std::hash::Hash + Ord> crate::simple::search_index::SearchIndex<K> {
         // is "supersonic", only index keywords beginning with "super" will be
         // fuzzy compared against the user's keyword: "supersonic" against
         // "superalloy", "supersonic" against "supergiant" and so on...
-        match self.index_range(last_keyword) {
-            // Attempt to find the top matches for the user's (partial) keyword
-            // using the selected string similarity metric defined in the
-            // `SearchIndex`:
-            Some(index_range) => match self.rapidfuzz_metric.as_ref() {
+        if let Some(index_range) = self.index_range(last_keyword) {
+            match self.rapidfuzz_metric.as_ref() {
                 Some(RapidfuzzMetric::DamerauLevenshtein) => self
                     .rapidfuzz_global_comparator::<DamerauLevenshtein>(
                         preceding_keywords,
@@ -258,12 +255,8 @@ impl<K: std::hash::Hash + Ord> crate::simple::search_index::SearchIndex<K> {
                 // If no string similarity metric was defined in the search
                 // index, fuzzy string matching is effectively turned off.
                 None => { /* Do nothing */ },
-            }, // Some(index_range)
-
-            // If a `None` is returned by `index_range` then no fuzzy-matching
-            // should be performed.
-            None => { /* Do nothing */ },
-        }; // match
+            } // match
+        } // if
 
         // Return the top scoring keywords that could be used as autocomplete
         // options, and their keys, to the caller:

@@ -219,12 +219,13 @@ assert_eq!(
 
 ## 5. Custom Result Ordering with `Ord`
 
-`indicium` returns a list of matching keys (`K`) in the order defined by their `Ord` implementation.
-This means you can use your own types for `K` that embed ranking signals like `popularity`,
-`edge_weight`, or even a custom timestamp-based score.
+`indicium` returns a list of matching keys (`K`) in the order defined by their
+`Ord` implementation. This means you can use your own types for `K` that embed
+ranking signals like `popularity`, `edge_weight`, or even a custom
+timestamp-based score.
 
-By customizing `Ord`, you can make search results automatically favor more relevant or recent
-entries without doing any post-sorting.
+By customizing `Ord`, you can make search results automatically favor more
+relevant or recent entries without doing any post-sorting.
 
 Here's how:
 
