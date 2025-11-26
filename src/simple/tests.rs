@@ -171,7 +171,7 @@ fn simple() {
     let autocomplete_options =
         search_index.autocomplete_type(&AutocompleteType::Global, "1100 Englelund");
     #[cfg(any(feature = "eddie", feature = "rapidfuzz", feature = "strsim"))]
-    assert_eq!(autocomplete_options, vec!["1100 england".to_string()]);
+    assert!(autocomplete_options.contains(&"1100 england".to_string()));
 
     // The only `w` keywords that `1087` should contain are `William` and
     // `William Rufus`. `Wessex` exists in the index but it is not related to
@@ -618,3 +618,67 @@ fn simple_all() {
     #[cfg(any(feature = "eddie", feature = "rapidfuzz", feature = "strsim"))]
     assert_eq!(search_results, vec!["ally", "allying", "allyl", "allylic", "allyls"]);
 } // fn
+
+#[test]
+#[cfg(feature = "unicode-normalization")]
+fn unicode_normalization() {
+    use crate::simple::{SearchIndex, SearchType};
+    use pretty_assertions::assert_eq;
+
+    let mut search_index: SearchIndex<usize> = SearchIndex::default();
+
+    // Compatibility equivalents that NFKC should normalize:
+    search_index.insert(&0, &"file");           // ASCII "fi"
+    search_index.insert(&1, &"ﬁle");            // U+FB01 Latin small ligature fi
+    search_index.insert(&2, &"ﬂood");           // U+FB02 Latin small ligature fl
+    search_index.insert(&3, &"flood");          // ASCII "fl"
+    search_index.insert(&4, &"①②③");           // Circled digits
+    search_index.insert(&5, &"123");            // ASCII digits
+    search_index.insert(&6, &"Ω resistor");     // U+2126 Ohm sign
+    search_index.insert(&7, &"Ω resistor");     // U+03A9 Greek capital omega
+    search_index.insert(&8, &"ｆｕｌｌｗｉｄｔｈ");  // Fullwidth ASCII
+    search_index.insert(&9, &"fullwidth");      // ASCII
+
+    // Ligature searches should find both forms:
+    let results = search_index.search_type(&SearchType::Keyword, "file");
+    assert_eq!(results, vec![&0, &1]);
+
+    let results = search_index.search_type(&SearchType::Keyword, "ﬁle");
+    assert_eq!(results, vec![&0, &1]);
+
+    let results = search_index.search_type(&SearchType::Keyword, "flood");
+    assert_eq!(results, vec![&2, &3]);
+
+    // Ohm sign and Greek omega should match:
+    let results = search_index.search_type(&SearchType::Keyword, "resistor");
+    assert_eq!(results, vec![&6, &7]);
+
+    // Fullwidth and ASCII should match:
+    let results = search_index.search_type(&SearchType::Keyword, "fullwidth");
+    assert_eq!(results, vec![&8, &9]);
+
+    let results = search_index.search_type(&SearchType::Keyword, "ｆｕｌｌｗｉｄｔｈ");
+    assert_eq!(results, vec![&8, &9]);
+}
+
+#[test]
+#[cfg(feature = "unicode-normalization")]
+fn unicode_normalization_case_insensitive() {
+    use crate::simple::{SearchIndex, SearchType};
+    use pretty_assertions::assert_eq;
+
+    let mut search_index: SearchIndex<usize> = SearchIndex::default();
+
+    // Case folding combined with normalization:
+    search_index.insert(&0, &"ＦＩＬＥ");  // Fullwidth uppercase
+    search_index.insert(&1, &"ﬁle");       // Ligature lowercase
+    search_index.insert(&2, &"FILE");      // ASCII uppercase
+    search_index.insert(&3, &"file");      // ASCII lowercase
+
+    // All four should match regardless of search case:
+    let results = search_index.search_type(&SearchType::Keyword, "file");
+    assert_eq!(results, vec![&0, &1, &2, &3]);
+
+    let results = search_index.search_type(&SearchType::Keyword, "FILE");
+    assert_eq!(results, vec![&0, &1, &2, &3]);
+}

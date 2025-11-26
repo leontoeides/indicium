@@ -3,6 +3,12 @@
 * Release notes are available on
   [GitHub](https://github.com/leontoeides/indicium/releases).
 
+# 0.6.6
+
+* 2025-11-25: Added `unicode-normalization` feature. This feature is turned on
+  by default. It has a performance penalty but provides a much better user
+  experience.
+
 # 0.6.5
 
 * 2025-02-09: Substantial internal refactor. String similarity crates are now

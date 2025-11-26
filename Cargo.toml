@@ -1,6 +1,6 @@
 [package]
 name = "indicium"
-version = "0.6.5"
+version = "0.6.6"
 authors = ["Dylan Bowker <dylan.bowker@arkiteq.io>"]
 edition = "2021"
 categories = ["database-implementations"]
@@ -16,7 +16,7 @@ rust-version = "1.73.0"
 [features]
 default = ["simple"]
 
-simple = ["rapidfuzz", "rustc-hash"]
+simple = ["rapidfuzz", "rustc-hash", "unicode-normalization"]
 select2 = ["simple", "dep:serde"]
 
 fuzzy = ["rapidfuzz"]
@@ -28,6 +28,8 @@ ahash = ["dep:ahash"]
 gxhash = ["dep:gxhash"]
 rustc-hash = ["dep:rustc-hash"]
 
+unicode-normalization = ["dep:unicode-normalization"]
+
 [badges]
 maintenance = { status = "passively-maintained" }
 
@@ -35,13 +37,14 @@ maintenance = { status = "passively-maintained" }
 ahash = { version = "0.8", optional = true }
 beef = "0.5"
 eddie = { version = "0.4", optional = true }
-gxhash = { version = "3.4", optional = true }
+gxhash = { version = "3.5", optional = true }
 kstring = "2.0"
 rapidfuzz = { version = "0.5", optional = true }
 rustc-hash = { version = "2.1", optional = true }
 serde = { version = "1.0", features = ["derive"], optional = true }
 strsim = { version = "0.11", optional = true }
 tracing = "0.1"
+unicode-normalization = { version = "0.1", optional = true }
 
 [dev-dependencies]
 criterion = { version = "0.5", features = ["html_reports"] }

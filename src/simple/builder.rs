@@ -204,7 +204,7 @@ impl<K: Clone + Ord> SearchIndexBuilder<K> {
     ///   is OK (or even desirable) if the search index is small, however, this
     ///   will be crippling slow on very large search indicies.
     ///
-    /// **Default:** `3` characters
+    /// **Default:** `2` characters
     #[cfg(any(feature = "eddie", feature = "rapidfuzz", feature = "strsim"))]
     #[must_use]
     pub const fn fuzzy_length(mut self, fuzzy_length: usize) -> Self {
