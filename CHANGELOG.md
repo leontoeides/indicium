@@ -3,11 +3,20 @@
 * Release notes are available on
   [GitHub](https://github.com/leontoeides/indicium/releases).
 
+# 0.6.7
+
+* 2025-11-25: Fixed `Cargo.toml` feature structure. `simple` no longer forces
+  `rustc-hash`, allowing users to actually use the hasher flexibility that was
+  already built into the code. Oops. Thanks to [Mag
+  Mell](https://github.com/eatradish).
+
 # 0.6.6
 
-* 2025-11-25: Added `unicode-normalization` feature. This feature is turned on
-  by default. It has a performance penalty but provides a much better user
-  experience.
+* 2025-11-25: Added `unicode-normalization` feature (enabled by default).
+  Applies NFKC normalization during indexing and search, allowing equivalent
+  Unicode representations to match (e.g., "ﬁle" matches "file", fullwidth
+  characters match ASCII). Adds minor overhead but significantly improves search
+  reliability for international text.
 
 # 0.6.5
 
