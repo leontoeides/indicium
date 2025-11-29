@@ -217,83 +217,80 @@ assert_eq!(
 
 # Bonus Points
 
-## 5. Custom Result Ordering with `Ord`
+## 5. Custom Result Ordering
 
-`indicium` returns a list of matching keys (`K`) in the order defined by their
-`Ord` implementation. This means you can use your own types for `K` that embed
-ranking signals like `popularity`, `edge_weight`, or even a custom
-timestamp-based score.
+By default, search results are returned in the order defined by your key type's
+`Ord` implementation. This means you can control result ordering by using a
+custom key type instead of simple integers or strings.
 
-By customizing `Ord`, you can make search results automatically favor more
-relevant or recent entries without doing any post-sorting.
-
-Here's how:
+For example, if you want popular items to appear first in search results, you
+can create a key that sorts by popularity:
 
 ```rust
+use std::cmp::Ordering;
+use std::hash::{Hash, Hasher};
+
+/// A search key that sorts results by popularity (highest first).
 #[derive(Debug, Clone)]
-pub struct MyKey {
+pub struct RankedKey {
     pub id: String,
     pub popularity: u32,
 }
 
-// Used for ordering search results
-
-impl Ord for MyKey {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        // Descending order: more popular keys come first
+impl Ord for RankedKey {
+    fn cmp(&self, other: &Self) -> Ordering {
+        // Higher popularity comes first
         other.popularity.cmp(&self.popularity)
     }
 }
 
-impl PartialOrd for MyKey {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+impl PartialOrd for RankedKey {
+    fn partial_cmp(&self, other: &Self) -> Option {
         Some(self.cmp(other))
     }
 }
 
-// Used for equality & lookup
+// For equality and lookups, we only compare the id, not popularity. This lets
+// us find records in a HashMap using just the id.
 
-impl PartialEq for MyKey {
+impl PartialEq for RankedKey {
     fn eq(&self, other: &Self) -> bool {
         self.id == other.id
     }
 }
 
-impl Eq for MyKey {}
+impl Eq for RankedKey {}
 
-use std::hash::{Hash, Hasher};
-
-impl Hash for MyKey {
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        self.id.hash(state)
+impl Hash for RankedKey {
+    fn hash(&self, state: &mut H) {
+        self.id.hash(state);
     }
 }
 ```
 
-If you're using indicium to:
+Now when you search, results automatically come back sorted by popularity. No
+extra sorting step needed.
 
-* Rank search hits by popularity
-* Rank suggestions by recency
-* Sort links by edge weight
+This pattern works for any ranking signal: recency, relevance scores, manual
+sort order, etc. Just change what `Ord` compares.
 
-...then this pattern will give you accurate result ordering for free at the key level.
+### Using Keys for Lookups
 
-Tip: Lookup Map Compatibility
-
-Since you likely want to fetch a full record from a map or DB after search:
+After searching, you'll typically fetch the full record from your collection:
 
 ```rust
-let hits = indicium.search("silver thread of dawn")?;
+let results = search_index.search("dawn");
 
-for key in hits {
-    if let Some(record) = records.get(&key) {
-        println!("Result: {:?}", record);
+for key in results {
+    if let Some(record) = my_records.get(key) {
+        println!("{:?}", record);
     }
 }
 ```
 
-Make sure your `Eq` and `Hash` impls exclude transient fields like `popularity` so you can use the
-key for lookups.
+Because the `Eq` and `Hash` traits that we implemented in the example only look
+at the `id` field (not `popularity`), you can still use search result keys
+directly for `HashMap` lookups.
 
 # Crate Status
 

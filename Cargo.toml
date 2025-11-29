@@ -1,6 +1,6 @@
 [package]
 name = "indicium"
-version = "0.6.7"
+version = "0.6.8"
 authors = ["Dylan Bowker <dylan.bowker@arkiteq.io>"]
 edition = "2021"
 categories = ["database-implementations"]
@@ -11,18 +11,20 @@ license = "MIT OR Apache-2.0"
 publish = true
 readme = "README.md"
 repository = "https://github.com/leontoeides/indicium"
-rust-version = "1.73.0"
+rust-version = "1.82.0"
 
 [features]
 default = ["simple", "rapidfuzz", "rustc-hash", "unicode-normalization"]
 simple = []
 select2 = ["simple", "dep:serde"]
 
+# String similarity options:
 fuzzy = ["rapidfuzz"]
 strsim = ["dep:strsim"]
 eddie = ["dep:eddie"] # Quite fast but not stable. Not recommended
 rapidfuzz = ["dep:rapidfuzz"]
 
+# Hasher options:
 ahash = ["dep:ahash"]
 gxhash = ["dep:gxhash"]
 rustc-hash = ["dep:rustc-hash"]

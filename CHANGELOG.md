@@ -3,12 +3,16 @@
 * Release notes are available on
   [GitHub](https://github.com/leontoeides/indicium/releases).
 
+# 0.6.8
+
+* 2025-11-29: Minor performance improvements. Corrected some feature-gate
+  combinations. Applied `clippy` suggestions.
+
 # 0.6.7
 
-* 2025-11-25: Fixed `Cargo.toml` feature structure. `simple` no longer forces
-  `rustc-hash`, allowing users to actually use the hasher flexibility that was
-  already built into the code. Oops. Thanks to [Mag
-  Mell](https://github.com/eatradish).
+* 2025-11-25: Fixed `Cargo.toml` feature structure. `simple` search no longer
+  forces `rustc-hash` allowing users to actually use the hasher features that
+  are available. Oops. Thanks to [Mag Mell](https://github.com/eatradish).
 
 # 0.6.6
 

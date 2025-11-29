@@ -41,8 +41,10 @@ pub use crate::simple::internal::fuzzers::{
 /// The `Fuzzy` trait allows `indicium` to treat the various string similarity
 /// crates (such as `eddie`, `rapidfuzz`, `strsim`, etc.) generically.
 
+#[cfg(any(feature = "strsim", feature = "eddie", feature = "rapidfuzz"))]
 pub mod fuzzy;
 
+#[cfg(any(feature = "strsim", feature = "eddie", feature = "rapidfuzz"))]
 pub use crate::simple::internal::fuzzers::fuzzy::Fuzzy;
 
 // -----------------------------------------------------------------------------
@@ -50,6 +52,8 @@ pub use crate::simple::internal::fuzzers::fuzzy::Fuzzy;
 // Used for tracking the top string similarity scores for (fuzzy matching) user
 // keywords that are not found in the search index.
 
-pub mod top_scores;
+#[cfg(any(feature = "strsim", feature = "eddie", feature = "rapidfuzz"))]
+pub mod fuzzy_top_scores;
 
-pub use crate::simple::internal::fuzzers::top_scores::FuzzyTopScores;
+#[cfg(any(feature = "strsim", feature = "eddie", feature = "rapidfuzz"))]
+pub use crate::simple::internal::fuzzers::fuzzy_top_scores::FuzzyTopScores;

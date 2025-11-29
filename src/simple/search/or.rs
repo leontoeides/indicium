@@ -1,7 +1,25 @@
-use crate::simple::internal::string_keywords::SplitContext;
-use crate::simple::internal::SearchTopScores;
+use crate::simple::internal::{string_keywords::SplitContext, SearchTopScores};
 use kstring::KString;
-use std::{collections::BTreeMap, hash::Hash};
+
+// Conditionally select hash map type based on feature flags:
+#[cfg(feature = "gxhash")]
+type HashMap<K, V> = std::collections::HashMap<K, V, gxhash::GxBuildHasher>;
+
+#[cfg(feature = "ahash")]
+use ahash::HashMap;
+
+#[cfg(feature = "rustc-hash")]
+use rustc_hash::FxHashMap as HashMap;
+
+#[cfg(all(
+    not(feature = "ahash"),
+    not(feature = "gxhash"),
+    not(feature = "rustc-hash")
+))]
+use std::collections::HashMap;
+
+// Static dependencies:
+use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
@@ -91,8 +109,8 @@ impl<'a, K: 'a + Hash + Ord> crate::simple::SearchIndex<K> {
     /// #       search_index.insert(&index, element)
     /// #   );
     /// #
-    /// let search_results = search_index.search_or(&20, "last England");
-    /// assert_eq!(search_results, vec![&0, &1, &2]);
+    /// let hit_counts = search_index.search_or(&20, "last England");
+    /// assert_eq!(hit_counts, vec![&0, &1, &2]);
     /// ```
     #[tracing::instrument(level = "trace", name = "or search", skip(self))]
     pub(crate) fn search_or(
@@ -110,28 +128,28 @@ impl<'a, K: 'a + Hash + Ord> crate::simple::SearchIndex<K> {
         #[cfg(debug_assertions)]
         tracing::debug!("searching: {:?}", keywords);
 
-        // This `BTreeMap` is used to count the number of hits for each
+        // This `HashMap` is used to count the number of hits for each
         // resulting key. This is so we can return search results in order of
         // relevance:
-        let mut search_results: BTreeMap<&K, usize> = BTreeMap::new();
+        let mut hit_counts: HashMap<&K, usize> = HashMap::default();
 
         // Get each keyword from our search index, record the resulting keys in
-        // a our `BTreeMap`, and track the hit-count for each key:
+        // a our `HashMap`, and track the hit-count for each key:
         for keyword in keywords {
-            // Search for keyword in our `BTreeMap`:
+            // Search for keyword in our `HashMap`:
             self.internal_keyword_search(&keyword)
                 // For each resulting key from the keyword search:
-                .for_each(|key| match search_results.get_mut(key) {
+                .for_each(|key| match hit_counts.get_mut(key) {
                     // Add "hit" to counter for an already existing key:
                     Some(result_entry) => *result_entry += 1,
                     // No record for this key, initialize to one hit:
                     None => {
-                        search_results.insert(key, 1);
+                        hit_counts.insert(key, 1);
                     }
                 }); // for_each
         } // for_each
 
-        // At this point, we have a list of resulting keys in a `BTreeMap`. The
+        // At this point, we have a list of resulting keys in a `HashMap`. The
         // hash map value holds the number of times each key has been returned
         // in the above keywords search.
 
@@ -142,7 +160,7 @@ impl<'a, K: 'a + Hash + Ord> crate::simple::SearchIndex<K> {
 
         // Populate the top scores by iterating over each key's tally-count:
 
-        search_results
+        hit_counts
             // Iterate over keys in the hash map:
             .into_iter()
             // Collect the tuple elements into a `Vec`:

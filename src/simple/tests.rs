@@ -318,7 +318,10 @@ fn simple() {
 
 #[test]
 fn simple_all() {
-    use crate::simple::{SearchIndex, SearchType};
+    use crate::simple::SearchIndex;
+    #[cfg(any(feature = "strsim", feature = "eddie", feature = "rapidfuzz"))]
+    use crate::simple::SearchType;
+    #[cfg(any(feature = "strsim", feature = "eddie", feature = "rapidfuzz"))]
     use pretty_assertions::assert_eq;
 
     // The "all" test. Looks at 277 words that start with the prefix "all":

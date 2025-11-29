@@ -1,8 +1,11 @@
 #![allow(unused_mut)]
 
-use crate::simple::internal::{fuzzers::Fuzzy, string_keywords::SplitContext};
+use crate::simple::internal::string_keywords::SplitContext;
 use kstring::KString;
 use std::{collections::BTreeSet, hash::Hash};
+
+#[cfg(any(feature = "strsim", feature = "eddie", feature = "rapidfuzz"))]
+use crate::simple::internal::fuzzers::Fuzzy;
 
 // -----------------------------------------------------------------------------
 

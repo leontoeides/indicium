@@ -59,7 +59,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 "Internal table limit of {} results has been exceeded on internal `and` search. \
                 Data has been dropped. \
                 This will impact accuracy of results. \
-                For this data set, consider using a more comprehensive search solution like MeiliSearch.",
+                For this data set, \
+                consider using a more comprehensive search solution like MeiliSearch.",
                 self.maximum_keys_per_keyword
             ); // warn!
         } // if

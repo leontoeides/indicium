@@ -1,5 +1,7 @@
-use crate::simple::internal::fuzzers::Fuzzy;
 use kstring::KStringBase;
+
+#[cfg(any(feature = "strsim", feature = "eddie", feature = "rapidfuzz"))]
+use crate::simple::internal::fuzzers::Fuzzy;
 
 // -----------------------------------------------------------------------------
 
@@ -97,6 +99,7 @@ impl<K: std::hash::Hash + Ord> crate::simple::search_index::SearchIndex<K> {
         tracing::debug!("autocompleting: {:?}", keyword);
 
         // Attempt to get matching keywords from `BTreeMap`:
+        #[allow(unused_mut, reason = "compiler complains when fuzzy matching is off")]
         let mut autocomplete_options: Vec<&str> = self
             .b_tree_map
             // Get matching keywords starting with (partial) keyword string:
@@ -150,15 +153,6 @@ impl<K: std::hash::Hash + Ord> crate::simple::search_index::SearchIndex<K> {
             &mut autocomplete_options,
             &keyword,
         );
-
-        // If fuzzy string searching disabled, return the resulting
-        // auto-complete options without further processing:
-        #[cfg(not(any(feature = "eddie", feature = "rapidfuzz", feature = "strsim")))]
-        autocomplete_options
-            .into_iter()
-            .map(KStringBase::as_str)
-            .collect();
-
 
         autocomplete_options
     } // fn
