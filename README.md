@@ -219,9 +219,10 @@ assert_eq!(
 
 ## 5. Custom Result Ordering
 
-By default, search results are returned in the order defined by your key type's
-`Ord` implementation. This means you can control result ordering by using a
-custom key type instead of simple integers or strings.
+With the exception of `SearchType::Or` which uses relevance scoring, search
+results are returned in the order defined by your key type's `Ord`
+implementation. This means you can control result ordering by using a custom key
+type instead of simple integers or strings.
 
 For example, if you want popular items to appear first in search results, you
 can create a key that sorts by popularity:
