@@ -685,3 +685,27 @@ fn unicode_normalization_case_insensitive() {
     let results = search_index.search_type(&SearchType::Keyword, "FILE");
     assert_eq!(results, vec![&0, &1, &2, &3]);
 }
+
+#[test]
+#[cfg(feature = "unicode-normalization")]
+fn unicode_normalization_case_sensitive() {
+    use crate::simple::{SearchIndex, SearchIndexBuilder, SearchType};
+    use pretty_assertions::assert_eq;
+
+    let mut search_index: SearchIndex<usize> = SearchIndexBuilder::default()
+        .case_sensitive(true)
+        .build();
+
+    // Case folding combined with normalization:
+    search_index.insert(&0, &"ＦＩＬＥ");  // Fullwidth uppercase
+    search_index.insert(&1, &"ﬁle");       // Ligature lowercase
+    search_index.insert(&2, &"FILE");      // ASCII uppercase
+    search_index.insert(&3, &"file");      // ASCII lowercase
+
+    // All four should match regardless of search case:
+    let results = search_index.search_type(&SearchType::Keyword, "file");
+    assert_eq!(results, vec![&1, &3]);
+
+    let results = search_index.search_type(&SearchType::Keyword, "FILE");
+    assert_eq!(results, vec![&0, &2]);
+}
