@@ -79,37 +79,33 @@ impl<'a, K: Hash + Ord, S: Clone + PartialOrd> FuzzyTopScores<'a, K, S> {
     pub(crate) fn insert(
         &mut self,
         keyword: &'a KString,
-        keys: &'a BTreeSet<K>, score: S
+        keys: &'a BTreeSet<K>,
+        score: S,
     ) {
-        // If we're at capacity, only insert if the score beats the current
-        // bottom:
-        if self.top.len() >= self.capacity {
-            let dominated_by_bottom = self
-                .bottom
-                .as_ref()
-                .is_some_and(|(_, bottom_score)| score <= *bottom_score);
-
-            if dominated_by_bottom {
-                // Score doesn't qualify for the top scores:
-                return;
-            }
-
-            // New score beats the bottom. Remove the old bottom first:
-            self.remove_bottom();
-        }
-
-        // Insert the new entry:
-        self.top.insert(keyword, (keys, score.clone()));
-
-        // Update bottom tracking. If this is the new minimum (or we have no
-        // bottom yet), record it:
-        let dominated_by_new_score = self
+        let below_threshold = self.top.len() >= self.capacity && self
             .bottom
             .as_ref()
-            .is_none_or(|(_, bottom_score)| score < *bottom_score);
+            .is_some_and(|(_, bottom_score)| score <= *bottom_score);
 
-        if dominated_by_new_score {
-            self.bottom = Some((keyword, score));
+        if !below_threshold {
+            // If at capacity, the new score beats the bottom, so remove it first:
+            if self.top.len() >= self.capacity {
+                self.remove_bottom();
+            }
+
+            // Insert the new entry:
+            self.top.insert(keyword, (keys, score.clone()));
+
+            // Update bottom tracking. If this is the new minimum (or we have no
+            // bottom yet), record it:
+            let is_new_bottom = self
+                .bottom
+                .as_ref()
+                .is_none_or(|(_, bottom_score)| score < *bottom_score);
+
+            if is_new_bottom {
+                self.bottom = Some((keyword, score));
+            }
         }
     }
 
