@@ -115,7 +115,7 @@ impl<K: Clone + Ord> SearchIndex<K> {
     /// As long as the `Indexable` trait was implemented for your value type,
     /// the above examples will index a previously populated `Vec` or `HashMap`.
     /// However, the preferred method for large collections is to `insert` into
-    /// the `SearchIndex` as you insert into your collection (Vec, HashMap,
+    /// the `SearchIndex` as you insert into your collection (`Vec`, `HashMap`,
     /// etc.)
     ///
     /// #### Pro-Tip: Enum Keys
@@ -157,6 +157,7 @@ impl<K: Clone + Ord> SearchIndex<K> {
         } // if
 
         // Iterate over the keywords:
+        #[allow(clippy::needless_for_each, reason = "better performance")]
         keywords
             .into_iter()
             // For each keyword, add this record's _key_ to the _keyword entry_:

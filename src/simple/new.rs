@@ -69,6 +69,8 @@ impl<K: Ord> crate::simple::SearchIndex<K> {
             maximum_keys_per_keyword,
             dump_keyword: dump_keyword.map(std::convert::Into::into),
             empty_b_tree_set: std::collections::BTreeSet::new(),
+            #[cfg(feature = "icu_normalizer")]
+            icu_normalizer: icu_normalizer::ComposingNormalizer::new_nfkc(),
         } // SearchIndex
     } // fn
 } // impl

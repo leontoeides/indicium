@@ -3,6 +3,7 @@
 /// This is used to select a string similarity metric implemented by the 
 /// [rapidfuzz](https://crates.io/crates/rapidfuzz) crate.
 #[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[repr(u8)]
 pub enum RapidfuzzMetric {
     /// The Damerau-Levenshtein distance measures the minimum number of
     /// operations required to transform one string into another, considering
@@ -13,7 +14,7 @@ pub enum RapidfuzzMetric {
     ///
     /// It’s often used in applications where transpositions are common. An
     /// example for this would be typing errors involving adjacent characters.
-    DamerauLevenshtein,
+    DamerauLevenshtein = 0,
 
     /// The Hamming distance measures the similarity of two sequences of equal
     /// length. Specifically, it counts the minimum number of substitutions
@@ -23,7 +24,7 @@ pub enum RapidfuzzMetric {
     /// length, this implementation provides an addition argument `pad` to
     /// decide whether texts of unequal length should be padded or return an
     /// error.
-    Hamming,
+    Hamming = 1,
 
     /// The Indel distance is a specialized version of the `Levenshtein`
     /// distance with only insertions and deletions. It can be calculated from
@@ -32,7 +33,7 @@ pub enum RapidfuzzMetric {
     /// Similar to LCS it’s commonly used in Bioinformatics applications like
     /// DNA sequence analysis, where insertions and deletions play a crucial
     /// role in understanding evolutionary relationships and genetic variations.
-    Indel,
+    Indel = 2,
 
     /// The Jaro similarity is a measure of similarity between two strings,
     /// often used in the field of record linkage and string matching. It’s
@@ -40,13 +41,13 @@ pub enum RapidfuzzMetric {
     /// algorithm considers both the common characters and their order in the
     /// strings, as well as the number of transpositions needed to make the
     /// strings equal.
-    Jaro,
+    Jaro = 3,
 
     /// The Jaro-Winkler similarity extends the Jaro similarity to provide
     /// additional sensitivity to matching prefixes. It introduces a scaling
     /// mechanism that boosts the similarity score for strings with common
     /// prefixes.
-    JaroWinkler,
+    JaroWinkler = 4,
 
     /// The Longest Common Subsequence (LCS) measures the similarity between two
     /// sequences by identifying the longest sequence of elements (characters,
@@ -66,7 +67,7 @@ pub enum RapidfuzzMetric {
     ///
     /// * **Plagiarism Detection**: Identifying similarities between texts even
     ///   when the wording is rearranged or some content is added or removed.
-    LcsSeq,
+    LcsSeq = 5,
 
     /// The Levenshtein distance measures the minimum number of operations
     /// required to transform one string into another, considering three types
@@ -75,7 +76,7 @@ pub enum RapidfuzzMetric {
     ///
     /// It finds use in various applications such as text processing, DNA
     /// sequence analysis, and data cleaning.
-    Levenshtein,
+    Levenshtein = 6,
 
     /// The Optimal String Alignment distance (OSA) measures the minimum number
     /// of operations required to transform one string into another, considering
@@ -91,13 +92,13 @@ pub enum RapidfuzzMetric {
     ///
     /// The handling of transpositions in the OSA distance is simpler, which
     /// makes it computationally less intensive.
-    #[default] Osa,
+    #[default] Osa = 7,
 
     /// The Postfix similarity measures the length of the common postfix between
     /// two sequences.
-    Postfix,
+    Postfix = 8,
 
     /// The Prefix similarity measures the length of the common prefix between
     /// two sequences.
-    Prefix,
-} // RapidfuzzMetric
+    Prefix = 9,
+}

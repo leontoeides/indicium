@@ -2,16 +2,12 @@ mod context;
 mod global;
 mod keyword;
 
-// -----------------------------------------------------------------------------
-
-use crate::simple::{AutocompleteType, SearchIndex};
+use crate::simple::AutocompleteType;
 use std::hash::Hash;
 
 // -----------------------------------------------------------------------------
 
-impl<K: Hash + Ord> SearchIndex<K> {
-    // -------------------------------------------------------------------------
-    //
+impl<K: Hash + Ord> crate::simple::SearchIndex<K>{
     /// Returns matching autocompleted keywords for the provided search string.
     /// This function will use the `AutocompleteType` setting stored in the
     /// `SearchIndex`. Partial keywords must be an exact match. Results are
@@ -87,7 +83,6 @@ impl<K: Hash + Ord> SearchIndex<K> {
     /// let autocomplete_options = search_index.autocomplete("Edgar last c");
     /// assert_eq!(autocomplete_options, vec!["edgar last cerdic".to_string()]);
     /// ```
-
     #[tracing::instrument(level = "trace", name = "autocomplete", skip(self))]
     pub fn autocomplete(&self, string: &str) -> Vec<String> {
         let autocomplete_options: Vec<String> = match &self.autocomplete_type {
@@ -102,7 +97,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 .into_iter()
                 .map(std::string::ToString::to_string)
                 .collect(),
-        }; // match
+        };
 
         // For debug builds:
         #[cfg(debug_assertions)]
@@ -110,13 +105,11 @@ impl<K: Hash + Ord> SearchIndex<K> {
             "{} autocomplete options for \"{}\".",
             autocomplete_options.len(),
             string,
-        ); // debug!
+        );
 
         autocomplete_options
-    } // fn
+    }
 
-    // -------------------------------------------------------------------------
-    //
     /// This autocomplete method allows the caller to define an
     /// `AutocompleteType` parameter, effectively overriding the index settings.
     /// See [`AutocompleteType`] for more information on the different
@@ -199,7 +192,6 @@ impl<K: Hash + Ord> SearchIndex<K> {
     ///     ]
     /// );
     /// ```
-
     #[tracing::instrument(level = "trace", name = "autocomplete", skip(self))]
     pub fn autocomplete_type(
         &self,
@@ -218,7 +210,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 .into_iter()
                 .map(std::string::ToString::to_string)
                 .collect(),
-        }; // match
+        };
 
         // For debug builds:
         #[cfg(debug_assertions)]
@@ -226,13 +218,11 @@ impl<K: Hash + Ord> SearchIndex<K> {
             "{} autocomplete options for \"{}\".",
             autocomplete_options.len(),
             string,
-        ); // debug!
+        );
 
         autocomplete_options
-    } // fn
+    }
 
-    // -------------------------------------------------------------------------
-    //
     /// This autocomplete method allows the caller to define a
     /// `AutocompleteType` and the maximum number of autocomplete options to be
     /// returned. These parameters override the index settings. See
@@ -319,7 +309,6 @@ impl<K: Hash + Ord> SearchIndex<K> {
     ///     ]
     /// );
     /// ```
-
     #[tracing::instrument(level = "trace", name = "autocomplete", skip(self))]
     pub fn autocomplete_with(
         &self,
@@ -339,7 +328,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 .into_iter()
                 .map(std::string::ToString::to_string)
                 .collect(),
-        }; // match
+        };
 
         // For debug builds:
         #[cfg(debug_assertions)]
@@ -347,8 +336,8 @@ impl<K: Hash + Ord> SearchIndex<K> {
             "{} autocomplete options for \"{}\".",
             autocomplete_options.len(),
             string,
-        ); // debug!
+        );
 
         autocomplete_options
-    } // fn
-} // impl
+    }
+}

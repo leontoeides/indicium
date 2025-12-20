@@ -13,8 +13,8 @@
 ///
 /// [`SearchIndexBuilder`]: struct.SearchIndexBuilder.html
 /// [`SearchIndex::new()`]: struct.SearchIndex.html#method.new
-
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[repr(u8)]
 pub enum SearchType {
     /// Interactive `Live` search allows for "search as you type." It is a
     /// hybridization of `autocomplete` and `search`. This method will
@@ -37,7 +37,8 @@ pub enum SearchType {
     /// Modern Internet browsers often have a similar "type as you search"
     /// functionality in the address bar. _Spotify_ also has a cool
     /// implementation of a similar feature.
-    Live,
+    Live = 0,
+
     /// This search method accepts multiple keywords in the search string. The
     /// logical conjuction for multiple keywords is `And`. For example, a search
     /// of `this that` will only return records containing keywords both `this`
@@ -55,7 +56,8 @@ pub enum SearchType {
     /// because it uses less CPU resouces than `Or`.
     ///
     /// Probably best suited in a filter widget.
-    And,
+    And = 1,
+
     /// This search method accepts multiple keywords in the search string. The
     /// logical conjuction for multiple keywords is `Or`. For example, a search
     /// of `this that` will return records containing keywords `this` **or**
@@ -74,7 +76,8 @@ pub enum SearchType {
     /// too many records.
     ///
     /// Probably best suited for a search results screen.
-    Or,
+    Or = 2,
+
     /// The search string is expected to only contain a single keyword. This is
     /// the lightest and fastest search type. It is good for compact interfaces,
     /// where records are very simple, and data-sets are quite small.
@@ -84,5 +87,5 @@ pub enum SearchType {
     /// trait for your `K` key.
     ///
     /// Probably best suited in a form widget.
-    Keyword,
-} // SearchType
+    Keyword = 3,
+}

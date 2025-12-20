@@ -21,7 +21,7 @@ fn simple() {
         }
     }
 
-    let my_vec = vec![
+    let my_vec = [
         MyStruct {
             title: "Harold Godwinson".to_string(),
             year: 1066,
@@ -46,7 +46,7 @@ fn simple() {
             title: "Henry Beauclerc".to_string(),
             year: 1100,
             body: "Fourth son of William the Conqueror.".to_string(),
-        },
+        }
     ];
 
     let mut search_index: SearchIndex<usize> = SearchIndex::default();

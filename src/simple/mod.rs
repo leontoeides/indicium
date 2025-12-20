@@ -48,16 +48,14 @@ mod tests;
 #[cfg(debug_assertions)]
 mod profile;
 
-// -----------------------------------------------------------------------------
-
+// Exports:
 pub use crate::simple::autocomplete_type::AutocompleteType;
 pub use crate::simple::builder::SearchIndexBuilder;
 pub use crate::simple::indexable::Indexable;
-pub use crate::simple::search_index::SearchIndex;
-pub use crate::simple::search_type::SearchType;
-
 pub use crate::simple::internal::fuzzers::{
     RapidfuzzMetric,
     EddieMetric,
     StrsimMetric
 };
+pub use crate::simple::search_index::SearchIndex;
+pub use crate::simple::search_type::SearchType;

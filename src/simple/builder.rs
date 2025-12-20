@@ -87,6 +87,8 @@ impl<K: Clone + Ord> From<SearchIndexBuilder<K>> for SearchIndex<K> {
             maximum_keys_per_keyword: search_index.maximum_keys_per_keyword,
             dump_keyword: search_index.dump_keyword,
             empty_b_tree_set: search_index.empty_b_tree_set,
+            #[cfg(feature = "icu_normalizer")]
+            icu_normalizer: icu_normalizer::ComposingNormalizer::new_nfkc(),
         } // SearchIndexBuilder
     } // fn
 } // impl

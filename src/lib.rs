@@ -274,11 +274,11 @@
 //! This crate is passively maintained. This crate does what it's expected to do
 //! and does it pretty well, in my opinion. Frequent updates are not expected.
 
-#![forbid(unsafe_code)]
 #![warn(clippy::all, clippy::pedantic, clippy::nursery, clippy::cargo)]
 #![allow(
     clippy::empty_line_after_doc_comments,
     clippy::module_name_repetitions,
+    clippy::multiple_crate_versions,
     clippy::too_long_first_doc_paragraph
 )]
 #![doc(html_favicon_url = "https://www.arkiteq.io/crates/indicium/icon.png")]

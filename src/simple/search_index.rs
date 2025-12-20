@@ -15,7 +15,7 @@ use std::collections::{BTreeMap, BTreeSet};
 /// implement the `insert`, `replace`, `remove`, etc. methods for this new
 /// `struct` type that will update both the collection and search index. This
 /// will ensure that both your collection and index are always synchronized.
-#[derive(Clone, Debug, PartialEq, PartialOrd)]
+#[derive(Debug)]
 pub struct SearchIndex<K: Ord> {
     /// Search index data structure.
     pub(crate) b_tree_map: BTreeMap<KString, BTreeSet<K>>,
@@ -97,4 +97,66 @@ pub struct SearchIndex<K: Ord> {
     /// Without this, we would get a "distinct uses of `impl Trait` result in
     /// different opaque types" error.
     pub(crate) empty_b_tree_set: BTreeSet<K>,
+
+    /// A normalizer for performing composing Unicode normalization.
+    #[cfg(feature = "icu_normalizer")]
+    pub(crate) icu_normalizer: icu_normalizer::ComposingNormalizerBorrowed<'static>,
 } // SearchIndex
+
+// -----------------------------------------------------------------------------
+//
+// Trait Implementations
+
+impl<K: Ord + Clone> Clone for SearchIndex<K> {
+    fn clone(&self) -> Self {
+        Self {
+            b_tree_map: self.b_tree_map.clone(),
+            search_type: self.search_type.clone(),
+            autocomplete_type: self.autocomplete_type.clone(),
+            eddie_metric: self.eddie_metric.clone(),
+            rapidfuzz_metric: self.rapidfuzz_metric.clone(),
+            strsim_metric: self.strsim_metric.clone(),
+            fuzzy_length: self.fuzzy_length,
+            fuzzy_minimum_score: self.fuzzy_minimum_score,
+            split_pattern: self.split_pattern.clone(),
+            case_sensitive: self.case_sensitive,
+            minimum_keyword_length: self.minimum_keyword_length,
+            maximum_keyword_length: self.maximum_keyword_length,
+            maximum_string_length: self.maximum_string_length,
+            exclude_keywords: self.exclude_keywords.clone(),
+            maximum_autocomplete_options: self.maximum_autocomplete_options,
+            maximum_search_results: self.maximum_search_results,
+            maximum_keys_per_keyword: self.maximum_keys_per_keyword,
+            dump_keyword: self.dump_keyword.clone(),
+            empty_b_tree_set: self.empty_b_tree_set.clone(),
+            #[cfg(feature = "icu_normalizer")]
+            icu_normalizer: icu_normalizer::ComposingNormalizer::new_nfkc(),
+        }
+    }
+}
+
+impl<K: Ord + PartialEq> PartialEq for SearchIndex<K> {
+    fn eq(&self, other: &Self) -> bool {
+        self.b_tree_map == other.b_tree_map
+            && self.search_type == other.search_type
+            && self.autocomplete_type == other.autocomplete_type
+            && self.eddie_metric == other.eddie_metric
+            && self.rapidfuzz_metric == other.rapidfuzz_metric
+            && self.strsim_metric == other.strsim_metric
+            && self.fuzzy_length == other.fuzzy_length
+            && self.fuzzy_minimum_score == other.fuzzy_minimum_score
+            && self.split_pattern == other.split_pattern
+            && self.case_sensitive == other.case_sensitive
+            && self.minimum_keyword_length == other.minimum_keyword_length
+            && self.maximum_keyword_length == other.maximum_keyword_length
+            && self.maximum_string_length == other.maximum_string_length
+            && self.exclude_keywords == other.exclude_keywords
+            && self.maximum_autocomplete_options == other.maximum_autocomplete_options
+            && self.maximum_search_results == other.maximum_search_results
+            && self.maximum_keys_per_keyword == other.maximum_keys_per_keyword
+            && self.dump_keyword == other.dump_keyword
+            && self.empty_b_tree_set == other.empty_b_tree_set
+        // Note: icu_normalizer is intentionally excluded since
+        // ComposingNormalizer doesn't implement PartialEq
+    }
+}

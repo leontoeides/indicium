@@ -5,6 +5,9 @@
 
 # 0.6.8
 
+* 2025-12-20: Changed the default unicode normalizer to `icu_normalizer` for
+  slightly better performance. Applied `clippy` suggestions.
+
 * 2025-11-29: Minor performance improvements. Corrected some feature-gate
   combinations. Applied `clippy` suggestions.
 

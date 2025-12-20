@@ -88,7 +88,8 @@ impl<'a, K: Hash + Ord, S: Clone + PartialOrd> FuzzyTopScores<'a, K, S> {
             .is_some_and(|(_, bottom_score)| score <= *bottom_score);
 
         if !below_threshold {
-            // If at capacity, the new score beats the bottom, so remove it first:
+            // If at capacity, the new score beats the bottom, so remove it
+            // first:
             if self.top.len() >= self.capacity {
                 self.remove_bottom();
             }

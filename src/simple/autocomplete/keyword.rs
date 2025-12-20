@@ -5,9 +5,7 @@ use crate::simple::internal::fuzzers::Fuzzy;
 
 // -----------------------------------------------------------------------------
 
-impl<K: std::hash::Hash + Ord> crate::simple::search_index::SearchIndex<K> {
-    // -------------------------------------------------------------------------
-    //
+impl<K: std::hash::Hash + Ord> crate::simple::SearchIndex<K> {
     /// Returns matching autocompleted keywords for the provided search string.
     /// _This search method only accepts a single keyword as the search string._
     /// The partial search keyword must be an exact match.
@@ -155,5 +153,5 @@ impl<K: std::hash::Hash + Ord> crate::simple::search_index::SearchIndex<K> {
         );
 
         autocomplete_options
-    } // fn
-} // impl
+    }
+}

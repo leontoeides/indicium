@@ -1,6 +1,8 @@
 #[cfg(feature = "unicode-normalization")]
 use unicode_normalization::UnicodeNormalization;
 
+// -----------------------------------------------------------------------------
+
 impl<K: Ord> crate::simple::SearchIndex<K> {
     /// Returns a normalized string according to the search index's settings.
     ///
@@ -28,7 +30,10 @@ impl<K: Ord> crate::simple::SearchIndex<K> {
             #[cfg(feature = "unicode-normalization")]
             let normalized = keyword.nfkc().collect::<String>().into();
 
-            #[cfg(not(feature = "unicode-normalization"))]
+            #[cfg(feature = "icu_normalizer")]
+            let normalized = self.icu_normalizer.normalize(keyword).into();
+
+            #[cfg(not(any(feature = "unicode-normalization", feature = "icu_normalizer")))]
             let normalized = keyword.into();
 
             normalized
@@ -36,7 +41,10 @@ impl<K: Ord> crate::simple::SearchIndex<K> {
             #[cfg(feature = "unicode-normalization")]
             let normalized = keyword.nfkc().collect::<String>().to_lowercase().into();
 
-            #[cfg(not(feature = "unicode-normalization"))]
+            #[cfg(feature = "icu_normalizer")]
+            let normalized = self.icu_normalizer.normalize(keyword).to_lowercase().into();
+
+            #[cfg(not(any(feature = "unicode-normalization", feature = "icu_normalizer")))]
             let normalized = keyword.to_lowercase().into();
 
             normalized

@@ -16,9 +16,9 @@ fn indicium_benchmark(c: &mut Criterion) {
     let mut search_index: SearchIndex<MyKey> = SearchIndex::default();
 
     for i in 0..10_000 {
-        let key = MyKey(format!("record_{:05}", i));
+        let key = MyKey(format!("record_{i:05}"));
         let tokens = MyValue(vec![
-            format!("thread_{}", i),
+            format!("thread_{i}"),
             "silver".to_string(),
             "dawn".to_string(),
         ]);

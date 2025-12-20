@@ -160,6 +160,7 @@ impl<'a, K: 'a + Hash + Ord> crate::simple::SearchIndex<K> {
 
         // Populate the top scores by iterating over each key's tally-count:
 
+        #[allow(clippy::needless_for_each, reason = "better performance")]
         hit_counts
             // Iterate over keys in the hash map:
             .into_iter()

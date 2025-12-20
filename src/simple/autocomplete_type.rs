@@ -15,6 +15,7 @@
 /// [`SearchIndexBuilder`]: struct.SearchIndexBuilder.html
 /// [`SearchIndex::new()`]: struct.SearchIndex.html#method.new
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[repr(u8)]
 pub enum AutocompleteType {
     /// The search string may contain multiple keywords and the last (partial)
     /// keyword will be autocompleted. The last keyword in the search string
@@ -22,7 +23,8 @@ pub enum AutocompleteType {
     /// effectively provides contextual autocompletion. This is the heaviest and
     /// slowest autocompletion type but probably provides the best user
     /// experience.
-    Context,
+    Context = 0,
+
     /// The search string may contain multiple keywords and the last (partial)
     /// keyword will be autocompleted. The last keyword in the search string
     /// will be autocompleted from all available keywords in the search index.
@@ -30,9 +32,10 @@ pub enum AutocompleteType {
     /// [`profile`] utility method), this is the recommended autocomplete type.
     ///
     /// [`profile`]: struct.SearchIndex.html#method.profile
-    Global,
+    Global = 1,
+
     /// The search string is expected to only contain a single keyword. This is
     /// the lightest and fastest autocompletion type. It is good for compact
     /// interfaces or where records are very simple.
-    Keyword,
-} // AutocompleteType
+    Keyword = 2,
+}
