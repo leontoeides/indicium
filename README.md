@@ -1,3 +1,35 @@
+
+<div align="right">
+  <details>
+    <summary >🌐 Language</summary>
+    <div>
+      <div align="center">
+        <a href="https://openaitx.github.io/view.html?user=leontoeides&project=indicium&lang=en">English</a>
+        | <a href="https://openaitx.github.io/view.html?user=leontoeides&project=indicium&lang=zh-CN">简体中文</a>
+        | <a href="https://openaitx.github.io/view.html?user=leontoeides&project=indicium&lang=zh-TW">繁體中文</a>
+        | <a href="https://openaitx.github.io/view.html?user=leontoeides&project=indicium&lang=ja">日本語</a>
+        | <a href="https://openaitx.github.io/view.html?user=leontoeides&project=indicium&lang=ko">한국어</a>
+        | <a href="https://openaitx.github.io/view.html?user=leontoeides&project=indicium&lang=hi">हिन्दी</a>
+        | <a href="https://openaitx.github.io/view.html?user=leontoeides&project=indicium&lang=th">ไทย</a>
+        | <a href="https://openaitx.github.io/view.html?user=leontoeides&project=indicium&lang=fr">Français</a>
+        | <a href="https://openaitx.github.io/view.html?user=leontoeides&project=indicium&lang=de">Deutsch</a>
+        | <a href="https://openaitx.github.io/view.html?user=leontoeides&project=indicium&lang=es">Español</a>
+        | <a href="https://openaitx.github.io/view.html?user=leontoeides&project=indicium&lang=it">Italiano</a>
+        | <a href="https://openaitx.github.io/view.html?user=leontoeides&project=indicium&lang=ru">Русский</a>
+        | <a href="https://openaitx.github.io/view.html?user=leontoeides&project=indicium&lang=pt">Português</a>
+        | <a href="https://openaitx.github.io/view.html?user=leontoeides&project=indicium&lang=nl">Nederlands</a>
+        | <a href="https://openaitx.github.io/view.html?user=leontoeides&project=indicium&lang=pl">Polski</a>
+        | <a href="https://openaitx.github.io/view.html?user=leontoeides&project=indicium&lang=ar">العربية</a>
+        | <a href="https://openaitx.github.io/view.html?user=leontoeides&project=indicium&lang=fa">فارسی</a>
+        | <a href="https://openaitx.github.io/view.html?user=leontoeides&project=indicium&lang=tr">Türkçe</a>
+        | <a href="https://openaitx.github.io/view.html?user=leontoeides&project=indicium&lang=vi">Tiếng Việt</a>
+        | <a href="https://openaitx.github.io/view.html?user=leontoeides&project=indicium&lang=id">Bahasa Indonesia</a>
+        | <a href="https://openaitx.github.io/view.html?user=leontoeides&project=indicium&lang=as">অসমীয়া</
+      </div>
+    </div>
+  </details>
+</div>
+
 # indicium
 ![Crates.io Version](https://img.shields.io/crates/v/indicium)
 ![Crates.io MSRV](https://img.shields.io/crates/msrv/indicium)
