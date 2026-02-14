@@ -94,13 +94,13 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
     #[tracing::instrument(level = "trace", name = "search", skip(self))]
     pub fn search(&'a self, string: &'a str) -> Vec<&'a K> {
         let search_results: Vec<&'a K> = match self.search_type {
-            SearchType::And => self.and_search(&self.maximum_search_results, string),
-            SearchType::Keyword => self.search_keyword(&self.maximum_search_results, string),
+            SearchType::And => self.and_search(self.maximum_search_results, string),
+            SearchType::Keyword => self.search_keyword(self.maximum_search_results, string),
             SearchType::Live => self
-                .search_live(&self.maximum_search_results, string)
+                .search_live(self.maximum_search_results, string)
                 .into_iter()
                 .collect(),
-            SearchType::Or => self.search_or(&self.maximum_search_results, string),
+            SearchType::Or => self.search_or(self.maximum_search_results, string),
         }; // match
 
         // For debug builds:
@@ -196,13 +196,13 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
     #[tracing::instrument(level = "trace", name = "search", skip(self))]
     pub fn search_type(&'a self, search_type: &SearchType, string: &'a str) -> Vec<&'a K> {
         let search_results: Vec<&'a K> = match search_type {
-            SearchType::And => self.and_search(&self.maximum_search_results, string),
-            SearchType::Keyword => self.search_keyword(&self.maximum_search_results, string),
+            SearchType::And => self.and_search(self.maximum_search_results, string),
+            SearchType::Keyword => self.search_keyword(self.maximum_search_results, string),
             SearchType::Live => self
-                .search_live(&self.maximum_search_results, string)
+                .search_live(self.maximum_search_results, string)
                 .into_iter()
                 .collect(),
-            SearchType::Or => self.search_or(&self.maximum_search_results, string),
+            SearchType::Or => self.search_or(self.maximum_search_results, string),
         }; // match
 
         // For debug builds:
@@ -305,7 +305,7 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
     pub fn search_with(
         &'a self,
         search_type: &SearchType,
-        maximum_search_results: &usize,
+        maximum_search_results: usize,
         string: &'a str,
     ) -> Vec<&'a K> {
         let search_results: Vec<&'a K> = match search_type {

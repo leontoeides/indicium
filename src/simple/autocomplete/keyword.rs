@@ -85,7 +85,7 @@ impl<K: std::hash::Hash + Ord> crate::simple::SearchIndex<K> {
     #[tracing::instrument(level = "trace", name = "keyword autocomplete", skip(self))]
     pub(crate) fn autocomplete_keyword(
         &self,
-        maximum_autocomplete_options: &usize,
+        maximum_autocomplete_options: usize,
         keyword: &str,
     ) -> Vec<&str> {
         // If the search index is set to be case insensitive, normalize the
@@ -116,7 +116,7 @@ impl<K: std::hash::Hash + Ord> crate::simple::SearchIndex<K> {
             // in New York), do not return "new" as an auto-completed keyword:
             // .filter(|autocompletion| *autocompletion != &keyword)
             // Only return `maximum_autocomplete_options` number of keywords:
-            .take(*maximum_autocomplete_options)
+            .take(maximum_autocomplete_options)
             // Convert `&KString` to `&str`:
             .map(KStringBase::as_str)
             // Collect all keyword autocompletions into a `Vec`:

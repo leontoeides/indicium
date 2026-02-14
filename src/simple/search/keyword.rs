@@ -96,7 +96,7 @@ impl<K: Hash + Ord> crate::simple::search_index::SearchIndex<K> {
     #[allow(clippy::option_if_let_else)] // `map_or_else` is illegible
     pub(crate) fn search_keyword(
         &self,
-        maximum_search_results: &usize,
+        maximum_search_results: usize,
         keyword: &str
     ) -> Vec<&K> {
         // If the search index is set to be case insensitive, normalize the
@@ -114,7 +114,7 @@ impl<K: Hash + Ord> crate::simple::search_index::SearchIndex<K> {
                 // `maximum_search_results` number of keys:
                 .iter()
                 // Only return `maximum_search_results` number of keys:
-                .take(*maximum_search_results)
+                .take(maximum_search_results)
                 // Insert a reference to each resulting key into the hash set:
                 .collect(),
             None => Vec::new(),

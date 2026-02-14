@@ -1,7 +1,8 @@
-use rand::rngs::ThreadRng;
-use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use criterion::{criterion_group, criterion_main, Criterion};
 use indicium::simple::{SearchIndex, SearchType};
 use rand::Rng;
+use rand::rngs::ThreadRng;
+use std::hint::black_box;
 
 fn random_all_word(rng: &mut ThreadRng) -> String {
     "all".to_owned() + &rng.gen::<gabble::Gab>().to_string()

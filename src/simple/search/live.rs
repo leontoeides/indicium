@@ -103,7 +103,7 @@ impl<K: Hash + Ord> crate::simple::SearchIndex<K> {
     #[tracing::instrument(level = "trace", name = "live search", skip(self))]
     pub(crate) fn search_live(
         &self,
-        maximum_search_results: &usize,
+        maximum_search_results: usize,
         string: &str
     ) -> BTreeSet<&K> {
         // Split search `String` into keywords according to the `SearchIndex`
@@ -132,7 +132,7 @@ impl<K: Hash + Ord> crate::simple::SearchIndex<K> {
                     // (partial) keyword.
                     .take_while(|(keyword, _keys)| keyword.starts_with(&*last_keyword))
                     // Only return `maximum_search_results` number of keys:
-                    .take(*maximum_search_results)
+                    .take(maximum_search_results)
                     // We're not interested in the `keyword` since we're
                     // returning `&K` keys. Return only `&K` from the tuple.
                     // Flatten the `BTreeSet<K>` from each autocomplete
@@ -204,7 +204,7 @@ impl<K: Hash + Ord> crate::simple::SearchIndex<K> {
                     // results produced above:
                     .filter(|key| search_results.contains(key))
                     // Only return `maximum_search_results` number of keys:
-                    .take(*maximum_search_results)
+                    .take(maximum_search_results)
                     // Collect all keyword autocompletions into a
                     // `BTreetSet`:
                     .collect();

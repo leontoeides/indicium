@@ -37,7 +37,7 @@ impl<K: Clone + Ord> SearchIndex<K> {
 
         // Sort keywords by number of attached keys (i.e. associated records),
         // in descending order:
-        keywords.sort_unstable_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
+        keywords.sort_unstable_by(|a, b| b.1.cmp(&a.1));
 
         // Return only `count` number of records to the caller:
         keywords

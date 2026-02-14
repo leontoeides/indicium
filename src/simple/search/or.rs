@@ -115,7 +115,7 @@ impl<'a, K: 'a + Hash + Ord> crate::simple::SearchIndex<K> {
     #[tracing::instrument(level = "trace", name = "or search", skip(self))]
     pub(crate) fn search_or(
         &'a self,
-        maximum_search_results: &usize,
+        maximum_search_results: usize,
         string: &'a str,
     ) -> Vec<&'a K> {
         // Split search `String` into keywords (according to the `SearchIndex`
@@ -156,7 +156,7 @@ impl<'a, K: 'a + Hash + Ord> crate::simple::SearchIndex<K> {
         // This structure will track the top scoring keys:
 
         let mut top_scores: SearchTopScores<K> =
-            SearchTopScores::with_capacity(*maximum_search_results);
+            SearchTopScores::with_capacity(maximum_search_results);
 
         // Populate the top scores by iterating over each key's tally-count:
 

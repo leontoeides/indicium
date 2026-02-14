@@ -90,7 +90,7 @@ impl<K: Hash + Ord> crate::simple::search_index::SearchIndex<K> {
     #[tracing::instrument(level = "trace", name = "and search", skip(self))]
     pub(crate) fn and_search(
         &self,
-        maximum_search_results: &usize,
+        maximum_search_results: usize,
         string: &str
     ) -> Vec<&K> {
         // Split search `String` into keywords (according to the `SearchIndex`
@@ -135,7 +135,7 @@ impl<K: Hash + Ord> crate::simple::search_index::SearchIndex<K> {
                 search_results.clear();
                 return search_results
                     .into_iter()
-                    .take(*maximum_search_results)
+                    .take(maximum_search_results)
                     .collect()
             } // if
         } // for_each
@@ -143,7 +143,7 @@ impl<K: Hash + Ord> crate::simple::search_index::SearchIndex<K> {
         // Return search results:
         search_results
             .into_iter()
-            .take(*maximum_search_results)
+            .take(maximum_search_results)
             .collect()
     } // fn
 } // impl

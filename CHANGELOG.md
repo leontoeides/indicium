@@ -3,6 +3,10 @@
 * Release notes are available on
   [GitHub](https://github.com/leontoeides/indicium/releases).
 
+# 0.6.9
+
+* 2026-02-14: Applied `clippy` suggestions.
+
 # 0.6.8
 
 * 2025-12-20: Changed the default unicode normalizer to `icu_normalizer` for

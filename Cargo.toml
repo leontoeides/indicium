@@ -1,6 +1,6 @@
 [package]
 name = "indicium"
-version = "0.6.8"
+version = "0.6.9"
 authors = ["Dylan Bowker <dylan.bowker@arkiteq.io>"]
 edition = "2021"
 categories = ["database-implementations"]
@@ -51,7 +51,7 @@ tracing = "0.1"
 unicode-normalization = { version = "0.1", optional = true }
 
 [dev-dependencies]
-criterion = { version = "0.5", features = ["html_reports"] }
+criterion = { version = "0.8", features = ["html_reports"] }
 gabble = "0.1"
 pretty_assertions = "1"
 rand = "0.8.*"

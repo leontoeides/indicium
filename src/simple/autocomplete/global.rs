@@ -104,7 +104,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
     #[allow(clippy::needless_collect)]
     pub(crate) fn autocomplete_global(
         &self,
-        maximum_autocomplete_options: &usize,
+        maximum_autocomplete_options: usize,
         string: &str,
     ) -> Vec<String> {
         // Split search `String` into keywords according to the `SearchIndex`
@@ -147,7 +147,7 @@ impl<K: Hash + Ord> SearchIndex<K> {
                 // .filter(|autocompletion| *autocompletion != &keyword)
                 // Only return `maximum_autocomplete_options` number of
                 // keywords:
-                .take(*maximum_autocomplete_options)
+                .take(maximum_autocomplete_options)
                 // Collect all keyword autocompletions into a `Vec`:
                 .collect();
 

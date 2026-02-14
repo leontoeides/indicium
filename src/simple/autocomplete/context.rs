@@ -98,7 +98,7 @@ impl<K: Hash + Ord> crate::simple::SearchIndex<K> {
     #[allow(clippy::needless_collect)]
     pub(crate) fn autocomplete_context(
         &self,
-        maximum_autocomplete_options: &usize,
+        maximum_autocomplete_options: usize,
         string: &str,
     ) -> Vec<String> {
         // Split search `String` into keywords according to the `SearchIndex`
@@ -144,7 +144,7 @@ impl<K: Hash + Ord> crate::simple::SearchIndex<K> {
                 }) // filter
                 // Only return `maximum_autocomplete_options` number of
                 // keywords:
-                .take(*maximum_autocomplete_options)
+                .take(maximum_autocomplete_options)
                 // `range` returns a key-value pair. We're autocompleting the
                 // key (keyword), so discard the value (record key):
                 .map(|(key, _value)| key)

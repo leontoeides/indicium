@@ -87,13 +87,13 @@ impl<K: Hash + Ord> crate::simple::SearchIndex<K>{
     pub fn autocomplete(&self, string: &str) -> Vec<String> {
         let autocomplete_options: Vec<String> = match &self.autocomplete_type {
             AutocompleteType::Context => {
-                self.autocomplete_context(&self.maximum_autocomplete_options, string)
+                self.autocomplete_context(self.maximum_autocomplete_options, string)
             }
             AutocompleteType::Global => {
-                self.autocomplete_global(&self.maximum_autocomplete_options, string)
+                self.autocomplete_global(self.maximum_autocomplete_options, string)
             }
             AutocompleteType::Keyword => self
-                .autocomplete_keyword(&self.maximum_autocomplete_options, string)
+                .autocomplete_keyword(self.maximum_autocomplete_options, string)
                 .into_iter()
                 .map(std::string::ToString::to_string)
                 .collect(),
@@ -200,13 +200,13 @@ impl<K: Hash + Ord> crate::simple::SearchIndex<K>{
     ) -> Vec<String> {
         let autocomplete_options: Vec<String> = match autocomplete_type {
             AutocompleteType::Context => {
-                self.autocomplete_context(&self.maximum_autocomplete_options, string)
+                self.autocomplete_context(self.maximum_autocomplete_options, string)
             }
             AutocompleteType::Global => {
-                self.autocomplete_global(&self.maximum_autocomplete_options, string)
+                self.autocomplete_global(self.maximum_autocomplete_options, string)
             }
             AutocompleteType::Keyword => self
-                .autocomplete_keyword(&self.maximum_autocomplete_options, string)
+                .autocomplete_keyword(self.maximum_autocomplete_options, string)
                 .into_iter()
                 .map(std::string::ToString::to_string)
                 .collect(),
@@ -318,13 +318,13 @@ impl<K: Hash + Ord> crate::simple::SearchIndex<K>{
     ) -> Vec<String> {
         let autocomplete_options: Vec<String> = match autocomplete_type {
             AutocompleteType::Context => {
-                self.autocomplete_context(maximum_autocomplete_options, string)
+                self.autocomplete_context(*maximum_autocomplete_options, string)
             }
             AutocompleteType::Global => {
-                self.autocomplete_global(maximum_autocomplete_options, string)
+                self.autocomplete_global(*maximum_autocomplete_options, string)
             }
             AutocompleteType::Keyword => self
-                .autocomplete_keyword(maximum_autocomplete_options, string)
+                .autocomplete_keyword(*maximum_autocomplete_options, string)
                 .into_iter()
                 .map(std::string::ToString::to_string)
                 .collect(),
