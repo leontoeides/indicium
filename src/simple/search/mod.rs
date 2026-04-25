@@ -192,7 +192,6 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
     /// let search_results = search_index.search_type(&SearchType::And, "Conqueror third");
     /// assert_eq!(search_results, vec![&3]);
     /// ```
-
     #[tracing::instrument(level = "trace", name = "search", skip(self))]
     pub fn search_type(&'a self, search_type: &SearchType, string: &'a str) -> Vec<&'a K> {
         let search_results: Vec<&'a K> = match search_type {
@@ -294,13 +293,12 @@ impl<'a, K: 'a + Hash + Ord> SearchIndex<K> {
     /// #
     /// let search_results = search_index.search_with(
     ///     &SearchType::And,
-    ///     &20,
+    ///     20,
     ///     "Conqueror third"
     /// );
     ///
     /// assert_eq!(search_results, vec![&3]);
     /// ```
-
     #[tracing::instrument(level = "trace", name = "search", skip(self))]
     pub fn search_with(
         &'a self,

@@ -92,7 +92,6 @@ impl<K: Clone + Ord> SearchIndex<K> {
     /// let search_results = search_index.search("1042");
     /// assert_eq!(search_results, vec![&0]);
     /// ```
-
     #[tracing::instrument(
         level = "trace",
         name = "search index replace",

@@ -5,6 +5,7 @@
 
 # 0.6.9
 
+* 2026-04-25: Improved consistency of keyword normalizations.
 * 2026-02-14: Applied `clippy` suggestions.
 
 # 0.6.8

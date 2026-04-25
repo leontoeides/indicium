@@ -101,7 +101,6 @@ impl<K: Clone + Ord> SearchIndex<K> {
     /// let search_results = search_index.search("last");
     /// assert_eq!(search_results, vec![&1]);
     /// ```
-
     #[tracing::instrument(level = "trace", name = "search index remove", skip(self, key, value))]
     pub fn remove(&mut self, key: &K, value: &dyn Indexable) {
         // Get all keywords for the `Indexable` record:
@@ -115,9 +114,11 @@ impl<K: Clone + Ord> SearchIndex<K> {
 
         // Iterate over the keywords:
         for keyword in keywords {
+            let normalized_keyword: KString =
+                self.normalize(&keyword).to_string().into();
             // Attempt to get mutuable reference to the _keyword entry_ in
             // the search index:
-            let is_empty = self.b_tree_map.get_mut(&keyword).is_some_and(|keys| {
+            let is_empty = self.b_tree_map.get_mut(&normalized_keyword).is_some_and(|keys| {
                 // If keyword found in search index, remove the _key
                 // reference_ for this record from _keyword entry_:
                 keys.remove(key);
@@ -126,7 +127,7 @@ impl<K: Clone + Ord> SearchIndex<K> {
             }); // is_some_and
 
             if is_empty {
-                self.b_tree_map.remove(&keyword);
+                self.b_tree_map.remove(&normalized_keyword);
             } // if
         } // for_each
     } // fn

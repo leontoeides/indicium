@@ -144,7 +144,6 @@ impl<K: Clone + Ord> SearchIndex<K> {
     /// works with an owned iterator (`IntoIterator`) and uses owned values
     /// only. If there were a similar trait that worked with borrowed values,
     /// it would be do-able.
-
     #[tracing::instrument(level = "trace", name = "search index insert", skip(self, key, value))]
     pub fn insert(&mut self, key: &K, value: &dyn Indexable) {
         // Get all keywords for the `Indexable` record:
@@ -161,16 +160,18 @@ impl<K: Clone + Ord> SearchIndex<K> {
         keywords
             .into_iter()
             // For each keyword, add this record's _key_ to the _keyword entry_:
-            .for_each(|keyword|
+            .for_each(|keyword| {
+                let normalized_keyword: KString =
+                    self.normalize(&keyword).to_string().into();
                 // Attempt to get mutuable reference to the _keyword entry_ in
                 // the search index:
-                if let Some(keys) = self.b_tree_map.get_mut(&keyword) {
+                if let Some(keys) = self.b_tree_map.get_mut(&normalized_keyword) {
                     // Check if the maximum number of keys per keyword
                     // (records per keyword) limit has been reached. Note
                     // that the `dump_keyword` does not observe this
                     // limit.
                     if keys.len() < self.maximum_keys_per_keyword
-                        || self.dump_keyword == Some(keyword.as_ref().into()) {
+                        || self.dump_keyword == Some(normalized_keyword.clone()) {
                             // If it hasn't, insert the key (record) into the
                             // list:
                             keys.insert(key.clone());
@@ -184,14 +185,14 @@ impl<K: Clone + Ord> SearchIndex<K> {
                             This will impact accuracy of results. \
                             For this data set, consider using a more comprehensive search solution like MeiliSearch.",
                             self.maximum_keys_per_keyword,
-                            keyword,
+                            normalized_keyword,
                         ); // warn!
                     } // if
                 } else {
                     let mut b_tree_set = BTreeSet::new();
                     b_tree_set.insert(key.clone());
-                    self.b_tree_map.insert(keyword.as_ref().into(), b_tree_set);
+                    self.b_tree_map.insert(normalized_keyword, b_tree_set);
                 } // match
-            ); // for_each
+            }); // for_each
     } // fn
 } // impl
