@@ -5,7 +5,7 @@ use rand::rngs::ThreadRng;
 use std::hint::black_box;
 
 fn random_all_word(rng: &mut ThreadRng) -> String {
-    "all".to_owned() + &rng.gen::<gabble::Gab>().to_string()
+    "all".to_owned() + &rng.random::<gabble::Gab>().to_string()
 }
 
 fn criterion_benchmark(c: &mut Criterion) {
@@ -301,12 +301,12 @@ fn criterion_benchmark(c: &mut Criterion) {
         .enumerate()
         .for_each(|(index, element)| search_index.insert(&index, element));
 
-    let mut rng: ThreadRng = rand::thread_rng();
+    let mut rng: ThreadRng = rand::rng();
 
     // Search for words contained in the `all_vec` set. Since these words
     // already exist, no autocompletion or fuzzy-matching will be performed:
     c.bench_function("all277_words_from_set", |b| b.iter(|| {
-        let word = &all_vec[rng.gen_range(0..276)];
+        let word = &all_vec[rng.random_range(0..276)];
         search_index.search_type(&SearchType::Live, black_box(word));
     } ));
 
@@ -321,7 +321,7 @@ fn criterion_benchmark(c: &mut Criterion) {
     // the end. For example: `ally`, `allz`, `alla`, etc. Some words will be
     // autocompleted, and others will be fuzzy matched:
     c.bench_function("all277_random_partial_words", |b| b.iter(|| {
-        let word = "all".to_string() + &String::from(chars[rng.gen_range(0..25)]);
+        let word = "all".to_string() + &String::from(chars[rng.random_range(0..25)]);
         search_index.search_type(&SearchType::Live, black_box(&word));
     } ));
 
