@@ -3,6 +3,12 @@
 * Release notes are available on
   [GitHub](https://github.com/leontoeides/indicium/releases).
 
+# 0.6.10
+
+* 2026-07-12: Dependencies bump.
+
+* 2026-07-12: Clippy suggestions.
+
 # 0.6.9
 
 * 2026-04-25: Improved consistency of keyword normalizations.
