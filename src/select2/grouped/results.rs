@@ -18,7 +18,12 @@ impl Request {
     /// If no search is requested, the caller can pass the entire collection (in
     /// the form of a slice) to this function to be processed into the `Select2`
     /// format.
-
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if:
+    /// * The number of keys and values don't match, or
+    /// * the keys and values lists are empty.
     #[tracing::instrument(
         level = "trace",
         name = "build grouped results",

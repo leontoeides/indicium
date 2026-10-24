@@ -13,7 +13,10 @@ impl Request {
     /// If no search is requested, the caller can pass the entire collection (in
     /// the form of a slice) to this function to be processed into the `Select2`
     /// format.
-
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the number of keys and values don't match.
     #[tracing::instrument(
         level = "trace",
         name = "build flat results",

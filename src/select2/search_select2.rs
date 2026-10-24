@@ -19,7 +19,7 @@ impl<'a, K: 'a + Debug + Hash + Ord> SearchIndex<K> {
 
         if let Some(query_term) = query_term {
             // If valid query provided, perform search of index:
-            self.search_with(&SearchType::Live, &self.max_keys_per_keyword(), query_term)
+            self.search_with(&SearchType::Live, self.max_keys_per_keyword(), query_term)
         // search_with
         } else {
             // If no query (or "search term"), then return empty results:
