@@ -3,6 +3,12 @@
 * Release notes are available on
   [GitHub](https://github.com/leontoeides/indicium/releases).
 
+# 0.6.11
+
+* 2026-10-24: Fix compilation issue for `select2` feature.
+
+* 2026-10-24: Dependencies bump.
+
 # 0.6.10
 
 * 2026-07-12: Dependencies bump.
